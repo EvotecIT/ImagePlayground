@@ -150,7 +150,7 @@ $Configuration = @{
             CreateFileCatalog   = $false # not working
             Releases            = $true
             ReleasesUnpacked    = $false
-            RefreshPSD1Only     = $false
+            RefreshPSD1Only     = $true
         }
         BuildDocumentation = $false
         ImportModules      = @{

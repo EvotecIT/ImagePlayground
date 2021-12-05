@@ -1,4 +1,4 @@
-﻿function New-QRCode {
+﻿function New-ImageQRCode {
     [cmdletBinding()]
     param(
         [Parameter(Mandatory)][string] $Content,
