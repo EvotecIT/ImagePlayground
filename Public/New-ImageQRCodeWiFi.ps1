@@ -2,13 +2,12 @@
     [alias('New-QRCodeWiFi')]
     [cmdletBinding()]
     param(
-        [string] $SSID,
-        [string] $Password,
-        [string] $FilePath,
-        [System.Drawing.Imaging.ImageFormat] $ImageFormat,
+        [Parameter(Mandatory)][string] $SSID,
+        [Parameter(Mandatory)][string] $Password,
+        [Parameter(Mandatory)][string] $FilePath,
         [switch] $Transparent
     )
 
-    [ImagePlayground.QrCode]::GenerateWiFi($ssid, $password, $FilePath, $ImageFormat, $Transparent.IsPresent)
+    [ImagePlayground.QrCode]::GenerateWiFi($ssid, $password, $FilePath, $Transparent.IsPresent)
 
 }
