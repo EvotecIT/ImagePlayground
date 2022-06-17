@@ -12,8 +12,8 @@ $Configuration = @{
         FunctionsToExport    = 'Public'
         AliasesToExport      = 'Public'
 
-        LibrariesCore        = 'Lib\Standard'
-        LibrariesDefault     = 'Lib\Standard'
+        LibrariesCore        = 'Lib\Core'
+        LibrariesDefault     = 'Lib\Default'
 
         Manifest             = @{
             # Minimum version of the Windows PowerShell engine required by this module
