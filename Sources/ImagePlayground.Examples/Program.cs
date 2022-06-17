@@ -47,20 +47,19 @@ namespace ImagePlayground.Examples {
         private static void Example_QRCode(string folderPath) {
             Console.WriteLine("[*] Creating QR code - JPG");
             string filePath = System.IO.Path.Combine(folderPath, "QRCode1.jpg");
-            QrCode.Generate("https://evotec.xyz", filePath, imageFormat: ImageFormat.Jpeg);
+            QrCode.Generate("https://evotec.xyz", filePath);
 
             Console.WriteLine("[*] Creating QR code - ICO");
             filePath = System.IO.Path.Combine(folderPath, "QRCode1.ico");
-            QrCode.Generate("https://evotec.xyz", filePath, imageFormat: ImageFormat.Icon);
+            QrCode.Generate("https://evotec.xyz", filePath);
 
             Console.WriteLine("[*] Creating QR code - PNG (transparent)");
             filePath = System.IO.Path.Combine(folderPath, "QRCode1.png");
-            QrCode.Generate("https://evotec.xyz", filePath, imageFormat: ImageFormat.Png, true);
-
+            QrCode.Generate("https://evotec.xyz", filePath, true);
 
             Console.WriteLine("[*] Creating QR WIFI code - PNG (transparent)");
             filePath = System.IO.Path.Combine(folderPath, "QRCodeWifi.png");
-            QrCode.GenerateWiFi("myWifi", "password0!A", filePath, imageFormat: ImageFormat.Png, true);
+            QrCode.GenerateWiFi("myWifi", "password0!A", filePath, true);
         }
     }
 }

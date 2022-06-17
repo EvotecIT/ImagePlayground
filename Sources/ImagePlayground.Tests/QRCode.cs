@@ -24,13 +24,24 @@ namespace ImagePlayground.Tests {
         }
 
         [Fact]
-        public void Test1() {
+        public void Test_QRCodeUrl() {
 
-            string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCode1.jpg");
+            string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeUrl.jpg");
             File.Delete(filePath);
             Assert.True(File.Exists(filePath) == false);
 
-            QrCode.Generate("https://evotec.xyz", filePath, imageFormat: ImageFormat.Jpeg);
+            QrCode.Generate("https://evotec.xyz", filePath);
+
+            Assert.True(File.Exists(filePath) == true);
+        }
+
+        [Fact]
+        public void Test_QRCodeWiFi() {
+            string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeWiFi.png");
+            File.Delete(filePath);
+            Assert.True(File.Exists(filePath) == false);
+
+            QrCode.GenerateWiFi("Evotec", "superHardPassword123!", filePath, true);
 
             Assert.True(File.Exists(filePath) == true);
         }
