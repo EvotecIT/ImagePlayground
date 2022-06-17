@@ -5,23 +5,27 @@ $Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction Silen
 $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse )
 
 $AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue
-if ($AssemblyFolders.BaseName -contains 'Standard') {
-    $Assembly = @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue)
-} else {
-    if ($PSEdition -eq 'Core') {
-        $Assembly = @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue )
-    } else {
-        $Assembly = @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue )
+$Assembly = @(
+    if ($AssemblyFolders.BaseName -contains 'Standard') {
+        @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue)
     }
-}
+
+    if ($PSEdition -eq 'Core') {
+        @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue )
+    } else {
+        @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue )
+    }
+
+)
 $FoundErrors = @(
     Foreach ($Import in @($Assembly)) {
         try {
-           # if ($Import.Fullname -like "*libskia*") {
+            # if ($Import.Fullname -like "*libskia*") {
 
             #} else {
-                Add-Type -Path $Import.Fullname -ErrorAction Stop
-          #  }
+            Write-Verbose -Message $Import.FullName
+            Add-Type -Path $Import.Fullname -ErrorAction Stop
+            #  }
         } catch [System.Reflection.ReflectionTypeLoadException] {
             Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
             $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
