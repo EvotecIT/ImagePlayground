@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ImagePlayground</AssemblyName>
+    <AssemblyTitle>ImagePlayground</AssemblyTitle>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Company>Evotec</Company>
+    <Authors>Przemyslaw Klys</Authors>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net48;net5.0</TargetFrameworks>
+
+    <PackageId>ImagePlayground</PackageId>
+    <PackageTags>net472;net48;net50;netstandard;netstandard2.0,netstandard2.1</PackageTags>
+    <DelaySign>False</DelaySign>
+    <IsPublishable>True</IsPublishable>
+    <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Barcoder" Version="1.1.0" />
+    <PackageReference Include="Barcoder.Renderer.Image" Version="1.1.0" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="ScottPlot" Version="4.1.48" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="BarcodeReader.ImageSharp">
+      <Version>1.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
