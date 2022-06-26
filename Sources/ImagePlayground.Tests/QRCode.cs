@@ -13,10 +13,13 @@ using Xunit;
 namespace ImagePlayground.Tests {
     public class Tests {
         private readonly string _directoryWithImages;
+        private readonly string _directoryWithTests;
 
         public Tests() {
             _directoryWithImages = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Images");
             Setup(_directoryWithImages);
+            _directoryWithTests = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Tests");
+            Setup(_directoryWithTests);
         }
 
         public static void Setup(string path) {
@@ -50,15 +53,19 @@ namespace ImagePlayground.Tests {
 
         [Fact]
         public void Test_BarCode() {
-            var values = Enum.GetValues(typeof(BarCode.BarcodeTypes)).Cast<BarCode.BarcodeTypes>();
-            foreach (var barType in values) {
-                string filePath = System.IO.Path.Combine(_directoryWithImages, "BarCode_" + barType + ".png");
-                File.Delete(filePath);
-                string content = "123456789";
-                BarCode.Generate(barType, content, filePath);
-                Assert.True(File.Exists(filePath) == false);
+            string filePath = System.IO.Path.Combine(_directoryWithTests, "BarcodeEAN13.png");
+            BarCode.Generate(BarCode.BarcodeTypes.EAN, "9012341234571", filePath);
 
-            }
+            var read1 = BarCode.Read(filePath);
+            Assert.True(read1.Message == "9012341234571");
+            Assert.True(File.Exists(filePath) == true);
+
+            filePath = System.IO.Path.Combine(_directoryWithTests, "BarcodeEAN7.png");
+            BarCode.Generate(BarCode.BarcodeTypes.EAN, "96385074", filePath);
+            Assert.True(File.Exists(filePath) == true);
+
+            var read2 = BarCode.Read(filePath);
+            Assert.True(read2.Message == "96385074");
         }
     }
 }

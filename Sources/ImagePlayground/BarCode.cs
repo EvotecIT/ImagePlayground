@@ -107,7 +107,7 @@ namespace ImagePlayground {
                 GenerateEan(content, filePath);
             }
         }
-            
+        
         public static BarcodeResult<Rgba32> Read(string filePath) {
             Image<Rgba32> barcodeImage = Image.Load<Rgba32>(filePath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>();

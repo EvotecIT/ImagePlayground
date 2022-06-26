@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//using Barcoder.Renderer.Image;
-using System.Drawing;
-using System.Drawing.Imaging;
-using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace ImagePlayground.ExampleNET {
     internal class Program {
