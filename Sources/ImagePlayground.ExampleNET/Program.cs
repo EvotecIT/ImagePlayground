@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Barcoder.Renderer.Image;
+//using Barcoder.Renderer.Image;
 using System.Drawing;
 using System.Drawing.Imaging;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
@@ -24,7 +24,7 @@ namespace ImagePlayground.ExampleNET {
             Setup(folderPath);
 
             Example_QRCode(folderPath);
-            //Example_BarCode(folderPath);
+            Example_BarCode(folderPath);
 
             System.Diagnostics.Process.Start("explorer.exe", folderPath);
         }
@@ -43,10 +43,12 @@ namespace ImagePlayground.ExampleNET {
 
             //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Bmp);
 
-            string filePath = System.IO.Path.Combine(folderPath, "Barcode.png");
-            BarCode.Generate("FOO/BAR/12345", filePath, Barcoder.Renderer.Image.ImageFormat.Png);
+            string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN7.png");
+            BarCode.Generate(BarCode.BarcodeTypes.EAN, "96385074", filePath);
 
 
+
+            BarCode.Read(filePath);
 
         }
 

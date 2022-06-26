@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using QRCoder;
 using SixLabors.ImageSharp;
@@ -9,27 +7,36 @@ namespace ImagePlayground {
     public class QrCode {
         public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q) {
 
-            ImageFormat imageFormatDetected;
+            //ImageFormat imageFormatDetected;
             FileInfo fileInfo = new FileInfo(filePath);
 
-            if (fileInfo.Extension == ".png") {
-                imageFormatDetected = ImageFormat.Png;
-            } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                imageFormatDetected = ImageFormat.Jpeg;
-            } else if (fileInfo.Extension == ".ico") {
-                imageFormatDetected = ImageFormat.Icon;
-            } else {
-                throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-            }
+            //if (fileInfo.Extension == ".png") {
+            //    imageFormatDetected = ImageFormat.Png;
+            //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+            //    imageFormatDetected = ImageFormat.Jpeg;
+            //} else if (fileInfo.Extension == ".ico") {
+            //    imageFormatDetected = ImageFormat.Icon;
+            //} else {
+            //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+            //}
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
                 using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
                     using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
-                        using (Bitmap qrCodeImage = qrCode.GetGraphic(20)) {
+                        using (var qrCodeImage = qrCode.GetGraphic(20)) {
                             if (transparent) {
-                                qrCodeImage.MakeTransparent();
+                                //qrCodeImage.MakeTransparent();
                             }
-                            qrCodeImage.Save(filePath, imageFormatDetected);
+
+                            if (fileInfo.Extension == ".png") {
+                                qrCodeImage.SaveAsPng(filePath);
+                            } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+                                qrCodeImage.SaveAsJpeg(filePath);
+                            } else if (fileInfo.Extension == ".ico") {
+                                qrCodeImage.SaveAsWebp(filePath);
+                            } else {
+                                throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+                            }
                         }
                     }
                 }

@@ -38,10 +38,9 @@ namespace ImagePlayground.Examples {
             //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Bmp);
 
             string filePath = System.IO.Path.Combine(folderPath, "Barcode.png");
-            BarCode.Generate("FOO/BAR/12345", filePath, Barcoder.Renderer.Image.ImageFormat.Png);
+            BarCode.Generate(BarCode.BarcodeTypes.Code93, "FOO/BAR/12345", filePath);
 
-
-
+            BarCode.Read(@"C:\Users\przemyslaw.klys\source\repos\barcodereader-imagesharp\BarcodeReader.ImageSharp.UnitTests\codes\barcode.png");
         }
 
         private static void Example_QRCode(string folderPath) {
