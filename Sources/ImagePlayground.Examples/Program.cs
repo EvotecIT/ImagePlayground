@@ -37,10 +37,17 @@ namespace ImagePlayground.Examples {
 
             //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Bmp);
 
-            string filePath = System.IO.Path.Combine(folderPath, "Barcode.png");
-            BarCode.Generate(BarCode.BarcodeTypes.Code93, "FOO/BAR/12345", filePath);
+            Console.WriteLine("[*] Creating Barcode EAN13 - PNG");
+            string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN13.png");
+            BarCode.Generate(BarCode.BarcodeTypes.EAN, "901234123457", filePath);
 
-            BarCode.Read(@"C:\Users\przemyslaw.klys\source\repos\barcodereader-imagesharp\BarcodeReader.ImageSharp.UnitTests\codes\barcode.png");
+            Console.WriteLine("[*] Creating Barcode EAN8 - PNG");
+            filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN7.png");
+            BarCode.Generate(BarCode.BarcodeTypes.EAN, "96385074", filePath);
+
+            Console.WriteLine("[*] Reading Barcode code - PNG: ");
+            var read = BarCode.Read(filePath);
+            Console.Write(read.Message);
         }
 
         private static void Example_QRCode(string folderPath) {
