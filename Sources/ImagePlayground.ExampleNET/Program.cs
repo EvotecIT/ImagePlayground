@@ -30,7 +30,6 @@ namespace ImagePlayground.ExampleNET {
         }
 
         private static void Example_BarCode(string folderPath) {
-            Console.WriteLine("[*] Creating Barcode code - PNG");
             //string filePath = System.IO.Path.Combine(folderPath, "QR.png");
 
             //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Png);
@@ -43,12 +42,17 @@ namespace ImagePlayground.ExampleNET {
 
             //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Bmp);
 
-            string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN7.png");
+            Console.WriteLine("[*] Creating Barcode EAN13 - PNG");
+            string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN13.png");
+            BarCode.Generate(BarCode.BarcodeTypes.EAN, "901234123457", filePath);
+
+            Console.WriteLine("[*] Creating Barcode EAN8 - PNG");
+            filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN7.png");
             BarCode.Generate(BarCode.BarcodeTypes.EAN, "96385074", filePath);
 
-
-
-            BarCode.Read(filePath);
+            Console.WriteLine("[*] Reading Barcode code - PNG: ");
+            var read = BarCode.Read(filePath);
+            Console.Write(read.Message);
 
         }
 

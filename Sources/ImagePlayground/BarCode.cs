@@ -12,7 +12,10 @@ using Barcoder.Qr;
 using Barcoder.Renderer.Image;
 using Barcoder.UpcA;
 using Barcoder.UpcE;
+using BarcodeReader.ImageSharp;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Formats.Png;
 using Encoding = Barcoder.Qr.Encoding;
 
 namespace ImagePlayground {
@@ -105,18 +108,11 @@ namespace ImagePlayground {
             }
         }
             
-        public static void Read(string filePath) {
-            
-           
-
-            //var barcodeImage = Image.Load<Rgba32>(filePath);
-
-
-            //var barcodeReader = new BarcodeReader.ImageSharp.BarcodeReader();
-            //var response = barcodeReader.Decode(barcodeImage);
-            //Console.WriteLine(response.Message);
-
+        public static BarcodeResult<Rgba32> Read(string filePath) {
+            Image<Rgba32> barcodeImage = Image.Load<Rgba32>(filePath);
+            BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>();
+            var response = reader.Decode(barcodeImage);
+            return response;
         }
-        
     }
 }
