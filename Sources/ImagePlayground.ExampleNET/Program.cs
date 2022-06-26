@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+using ScottPlot;
 
 namespace ImagePlayground.ExampleNET {
     internal class Program {
@@ -17,6 +19,7 @@ namespace ImagePlayground.ExampleNET {
 
             Example_QRCode(folderPath);
             Example_BarCode(folderPath);
+            Example_Chart(folderPath);
 
             System.Diagnostics.Process.Start("explorer.exe", folderPath);
         }
@@ -66,5 +69,25 @@ namespace ImagePlayground.ExampleNET {
             filePath = System.IO.Path.Combine(folderPath, "QRCodeWifi.png");
             QrCode.GenerateWiFi("myWifi", "password0!A", filePath, true);
         }
+
+        private static void Example_Chart(string folderPath)
+        {
+            var plt = new ScottPlot.Plot(600, 400);
+
+            // create sample data
+            double[] values = { 26, 20, 23, 7, 16 };
+
+            // add a bar graph to the plot
+            plt.AddBar(values);
+
+            // adjust axis limits so there is no padding below the bar graph
+            plt.SetAxisLimits(yMin: 0);
+
+            
+            string filePath = System.IO.Path.Combine(folderPath, "Chart.png");
+
+            plt.SaveFig(filePath);
+        }
+        
     }
 }
