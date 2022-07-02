@@ -1,5 +1,4 @@
 ﻿Clear-Host
-Import-Module 'C:\Users\przemyslaw.klys\OneDrive - Evotec\Support\GitHub\PSPublishModule\PSPublishModule.psd1' -Force
 
 $Configuration = @{
     Information = @{
