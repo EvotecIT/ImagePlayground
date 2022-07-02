@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using Barcoder;
 using Barcoder.Code128;
 using Barcoder.Code39;
@@ -15,7 +12,6 @@ using Barcoder.UpcE;
 using BarcodeReader.ImageSharp;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Formats.Png;
 using Encoding = Barcoder.Qr.Encoding;
 
 namespace ImagePlayground {
