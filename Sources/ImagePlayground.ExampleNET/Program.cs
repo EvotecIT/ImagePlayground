@@ -21,6 +21,11 @@ namespace ImagePlayground.ExampleNET {
             Example_BarCode(folderPath);
             Example_Chart(folderPath);
 
+            Console.WriteLine("\npress any key to exit the process...");
+
+            // basic use of "Console.ReadKey()" method
+            Console.ReadKey();
+
             System.Diagnostics.Process.Start("explorer.exe", folderPath);
         }
 
@@ -56,6 +61,11 @@ namespace ImagePlayground.ExampleNET {
             string filePath = System.IO.Path.Combine(folderPath, "QRCode1.jpg");
             QrCode.Generate("https://evotec.xyz", filePath);
 
+            Console.WriteLine("[*] Reading QR code - JPG: ");
+            var read = QrCode.Read(filePath);
+            Console.Write(read.Message);
+            Console.WriteLine();
+
             Console.WriteLine("[*] Creating QR code - ICO");
             filePath = System.IO.Path.Combine(folderPath, "QRCode1.ico");
             QrCode.Generate("https://evotec.xyz", filePath);
@@ -63,11 +73,20 @@ namespace ImagePlayground.ExampleNET {
             Console.WriteLine("[*] Creating QR code - PNG (transparent)");
             filePath = System.IO.Path.Combine(folderPath, "QRCode1.png");
             QrCode.Generate("https://evotec.xyz", filePath, true);
-
+       
+            Console.WriteLine("[*] Reading QR code - PNG: "); 
+            read = QrCode.Read(filePath); 
+            Console.Write(read.Message);
+            Console.WriteLine();
 
             Console.WriteLine("[*] Creating QR WIFI code - PNG (transparent)");
             filePath = System.IO.Path.Combine(folderPath, "QRCodeWifi.png");
             QrCode.GenerateWiFi("myWifi", "password0!A", filePath, true);
+            
+            Console.WriteLine("[*] Reading QR code (WIFI) - PNG: ");
+            read = QrCode.Read(filePath);
+            Console.Write(read.Message);
+            Console.WriteLine();
         }
 
         private static void Example_Chart(string folderPath)
