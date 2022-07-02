@@ -7,8 +7,8 @@
         [string] $FilePath,
         [switch] $Show
     )
-
-    $Values = [System.Collections.Generic.List[double]]::new()
+    $ValueHash = [ordered] @{}
+    #$Values = [System.Collections.Generic.List[double]]::new()
     $Labels = [System.Collections.Generic.List[string]]::new()
     $Positions = [System.Collections.Generic.List[int]]::new()
     $Plot = [ScottPlot.Plot]::new($Width, $Height)
@@ -18,15 +18,22 @@
         $OutputDefintion = & $ChartsDefinition
         foreach ($Definition in $OutputDefintion) {
             if ($Definition.ObjectType -eq 'Bar') {
-                $Values.Add($Definition.Value)
+                for ($i = 0; $i -lt $Definition.Value.Count; $i++) {
+                    if (-not $ValueHash["$i"]) {
+                        $ValueHash["$i"] = [System.Collections.Generic.List[double]]::new()
+                    }
+                    $ValueHash["$i"].Add($Definition.Value[$i])
+                }
                 $Labels.Add($Definition.Name)
-                $Positions.Add($Position)
-                $Position++
+                #$Positions.Add($Position)
+                #$Position++
             }
         }
     }
-    if ($Values) {
-        $null = $Plot.AddBar($Values)
+    if ($ValueHash) {
+        foreach ($Value in $ValueHash.Keys) {
+            $null = $Plot.AddBar($ValueHash[$Value])
+        }
     }
     if ($Labels) {
         $null = $Plot.XTicks($Positions, $Labels)
@@ -35,9 +42,20 @@
     if (-not $FilePath) {
         $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).png")
     }
-    $null = $Plot.SaveFig($FilePath)
 
-    if ($Show) {
-        Invoke-Item -LiteralPath $FilePath
+
+    #void SetAxisLimits(System.Nullable[double] xMin, System.Nullable[double] xMax, System.Nullable[double] yMin, System.Nullable[double] yMax, int xAxisIndex, int yAxisIndex)
+    #void SetAxisLimits(ScottPlot.AxisLimits limits, int xAxisIndex, int yAxisIndex)
+    # adjust axis limits so there is no padding below the bar graph
+    # $Plot.SetAxisLimits(yMin: 0);
+
+    try {
+        $null = $Plot.SaveFig($FilePath)
+
+        if ($Show) {
+            Invoke-Item -LiteralPath $FilePath
+        }
+    } catch {
+        Write-Warning -Message "Error creating image chart $($_.Exception.Message)"
     }
 }

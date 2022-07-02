@@ -2,7 +2,7 @@
     [cmdletBinding()]
     param(
         [alias('Label')][string] $Name,
-        [object] $Value
+        [Array] $Value
     )
     [PSCustomObject] @{
         ObjectType = 'Bar'
