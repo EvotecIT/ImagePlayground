@@ -38,6 +38,9 @@ namespace ImagePlayground.Tests {
             QrCode.Generate("https://evotec.xyz", filePath);
 
             Assert.True(File.Exists(filePath) == true);
+
+            var read = QrCode.Read(filePath);
+            Assert.True(read.Message == "https://evotec.xyz");
         }
 
         [Fact]
@@ -49,6 +52,9 @@ namespace ImagePlayground.Tests {
             QrCode.GenerateWiFi("Evotec", "superHardPassword123!", filePath, true);
 
             Assert.True(File.Exists(filePath) == true);
+
+            var read = QrCode.Read(filePath);
+            Assert.True(read.Message == "WIFI:T:WPA;S:Evotec;P:superHardPassword123!;;");
         }
 
         [Fact]
