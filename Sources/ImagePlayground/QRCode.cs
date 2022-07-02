@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using BarcodeReader.ImageSharp;
 using QRCoder;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ImagePlayground {
     public class QrCode {
@@ -68,6 +70,13 @@ namespace ImagePlayground {
         public static void GenerateContact(string filePath, PayloadGenerator.ContactData.ContactOutputType outputType, string firstname, string lastname, string nickname = null, string phone = null, string mobilePhone = null, string workPhone = null, string email = null, DateTime? birthday = null, string website = null, string street = null, string houseNumber = null, string city = null, string zipCode = null, string country = null, string note = null, string stateRegion = null, PayloadGenerator.ContactData.AddressOrder addressOrder = PayloadGenerator.ContactData.AddressOrder.Default, string org = null, string orgTitle = null, bool transparent = false) {
             PayloadGenerator.ContactData generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, stateRegion, addressOrder, org, orgTitle);
             Generate(generator.ToString(), filePath, transparent);
+        }
+
+        public static BarcodeResult<Rgba32> Read(string filePath) {
+            Image<Rgba32> barcodeImage = Image.Load<Rgba32>(filePath);
+            BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
+            var response = reader.Decode(barcodeImage);
+            return response;
         }
     }
 }
