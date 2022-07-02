@@ -21,8 +21,7 @@
         [string] $StateRegion ,
         [ValidateSet('Default', 'Reversed')][string] $AddressOrder = 'Default',
         [string] $Org ,
-        [string] $OrgTitle ,
-        [switch] $Transparent
+        [string] $OrgTitle
     )
 
     [ImagePlayground.QrCode]::GenerateContact(
@@ -31,6 +30,6 @@
         $mobilePhone, $workPhone, $email,
         $birthday, $website, $street, $houseNumber,
         $city, $zipCode, $country, $note, $stateRegion, $addressOrder,
-        $org, $orgTitle, $transparent
+        $org, $orgTitle, $false
     )
 }

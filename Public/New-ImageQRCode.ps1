@@ -3,9 +3,8 @@
     [cmdletBinding()]
     param(
         [Parameter(Mandatory)][string] $Content,
-        [Parameter(Mandatory)][string] $FilePath,
-        [switch] $Transparent
+        [Parameter(Mandatory)][string] $FilePath
     )
 
-    [ImagePlayground.QrCode]::Generate($Content, $FilePath, $Transparent.IsPresent)
+    [ImagePlayground.QrCode]::Generate($Content, $FilePath, $false)
 }

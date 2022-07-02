@@ -4,10 +4,9 @@
     param(
         [Parameter(Mandatory)][string] $SSID,
         [Parameter(Mandatory)][string] $Password,
-        [Parameter(Mandatory)][string] $FilePath,
-        [switch] $Transparent
+        [Parameter(Mandatory)][string] $FilePath
     )
 
-    [ImagePlayground.QrCode]::GenerateWiFi($ssid, $password, $FilePath, $Transparent.IsPresent)
+    [ImagePlayground.QrCode]::GenerateWiFi($ssid, $password, $FilePath, $false)
 
 }
