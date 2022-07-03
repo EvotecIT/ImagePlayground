@@ -21,15 +21,32 @@
         [string] $StateRegion ,
         [ValidateSet('Default', 'Reversed')][string] $AddressOrder = 'Default',
         [string] $Org ,
-        [string] $OrgTitle
+        [string] $OrgTitle,
+        [switch] $Show
     )
 
-    [ImagePlayground.QrCode]::GenerateContact(
-        $filePath, $outputType, $firstname,
-        $lastname, $nickname, $phone,
-        $mobilePhone, $workPhone, $email,
-        $birthday, $website, $street, $houseNumber,
-        $city, $zipCode, $country, $note, $stateRegion, $addressOrder,
-        $org, $orgTitle, $false
-    )
+    if (-not $FilePath) {
+        $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).png")
+        Write-Warning -Message "New-ImageQRContact - No file path specified, saving to $FilePath"
+    }
+    try {
+        [ImagePlayground.QrCode]::GenerateContact(
+            $filePath, $outputType, $firstname,
+            $lastname, $nickname, $phone,
+            $mobilePhone, $workPhone, $email,
+            $birthday, $website, $street, $houseNumber,
+            $city, $zipCode, $country, $note, $stateRegion, $addressOrder,
+            $org, $orgTitle, $false
+        )
+
+        if ($Show) {
+            Invoke-Item -LiteralPath $FilePath
+        }
+    } catch {
+        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+            throw
+        } else {
+            Write-Warning -Message "New-ImageQRContact - Error creating image $($_.Exception.Message)"
+        }
+    }
 }

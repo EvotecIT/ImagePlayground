@@ -41,6 +41,7 @@
 
     if (-not $FilePath) {
         $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).png")
+        Write-Warning -Message "New-ImageChart - No file path specified, saving to $FilePath"
     }
 
 
