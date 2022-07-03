@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
-using ScottPlot;
 
 namespace ImagePlayground.ExampleNET {
     internal class Program {
@@ -26,7 +25,7 @@ namespace ImagePlayground.ExampleNET {
             // basic use of "Console.ReadKey()" method
             Console.ReadKey();
 
-            System.Diagnostics.Process.Start("explorer.exe", folderPath);
+            //System.Diagnostics.Process.Start("explorer.exe", folderPath);
         }
 
         private static void Example_BarCode(string folderPath) {
