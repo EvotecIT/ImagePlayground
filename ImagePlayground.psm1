@@ -11,18 +11,15 @@ $Assembly = @(
     }
 
     if ($PSEdition -eq 'Core') {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue )
+        @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue -Recurse )
     } else {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue )
+        @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue -Recurse )
     }
 
 )
 $FoundErrors = @(
     Foreach ($Import in @($Assembly)) {
         try {
-            # if ($Import.Fullname -like "*libskia*") {
-
-            #} else {
             Write-Verbose -Message $Import.FullName
             Add-Type -Path $Import.Fullname -ErrorAction Stop
             #  }
