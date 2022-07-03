@@ -30,13 +30,13 @@ $Configuration = @{
             # Copyright statement for this module
             Copyright            = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
             # Description of the functionality provided by this module
-            Description          = 'ImagePlayground'
+            Description          = 'ImagePlayground is a PowerShell module that provides a set of functions for image processing. Among other things it can create QRCodes, BarCodes, Charts, and do image processing that can help with daily tasks.'
             # Tags applied to this module. These help with module discovery in online galleries.
             Tags                 = @('windows', 'macos', 'linux')
             # A URL to the main website for this project.
             ProjectUri           = 'https://github.com/EvotecIT/ImagePlayground'
 
-            #IconUri              = 'https://evotec.xyz/wp-content/uploads/2021/08/PSPGP.png'
+            IconUri              = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
 
             #LicenseUri           = 'https://github.com/EvotecIT/PSWriteWord/blob/master/License'
 
@@ -149,7 +149,7 @@ $Configuration = @{
             CreateFileCatalog   = $false # not working
             Releases            = $true
             ReleasesUnpacked    = $false
-            RefreshPSD1Only     = $true
+            RefreshPSD1Only     = $false
         }
         BuildDocumentation = $false
         ImportModules      = @{
