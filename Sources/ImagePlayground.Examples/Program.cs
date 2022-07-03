@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ImagePlayground.ExampleNET {
+namespace ImagePlayground.Examples {
     internal class Program {
         private static void Setup(string path) {
             if (!Directory.Exists(path)) {
@@ -88,21 +88,21 @@ namespace ImagePlayground.ExampleNET {
         }
 
         private static void Example_Chart(string folderPath) {
-            var plt = new ScottPlot.Plot(600, 400);
+            //var plt = new ScottPlot.Plot(600, 400);
 
-            // create sample data
-            double[] values = { 26, 20, 23, 7, 16 };
+            //// create sample data
+            //double[] values = { 26, 20, 23, 7, 16 };
 
-            // add a bar graph to the plot
-            plt.AddBar(values);
+            //// add a bar graph to the plot
+            //plt.AddBar(values);
 
-            // adjust axis limits so there is no padding below the bar graph
-            plt.SetAxisLimits(yMin: 0);
+            //// adjust axis limits so there is no padding below the bar graph
+            //plt.SetAxisLimits(yMin: 0);
 
 
-            string filePath = System.IO.Path.Combine(folderPath, "Chart.png");
+            //string filePath = System.IO.Path.Combine(folderPath, "Chart.png");
 
-            plt.SaveFig(filePath);
+            //plt.SaveFig(filePath);
         }
 
     }
