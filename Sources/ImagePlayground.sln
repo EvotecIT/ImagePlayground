@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImagePlayground.Tests", "Im
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePlayground.ExamplesNET", "ImagePlayground.ExamplesNET\ImagePlayground.ExamplesNET.csproj", "{CF01ACDD-EC5B-4312-B185-CD3C84184F74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePlayground.PowerShell", "ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj", "{63642D6E-8C0B-4436-A50F-1CA2B9361659}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{CF01ACDD-EC5B-4312-B185-CD3C84184F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF01ACDD-EC5B-4312-B185-CD3C84184F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF01ACDD-EC5B-4312-B185-CD3C84184F74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63642D6E-8C0B-4436-A50F-1CA2B9361659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63642D6E-8C0B-4436-A50F-1CA2B9361659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63642D6E-8C0B-4436-A50F-1CA2B9361659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63642D6E-8C0B-4436-A50F-1CA2B9361659}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

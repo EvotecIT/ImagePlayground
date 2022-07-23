@@ -88,6 +88,8 @@ namespace ImagePlayground.ExamplesNET {
         }
 
         private static void Example_Chart(string folderPath) {
+            var plt = new ScottPlot.Plot(600, 400);
+
             //var plt = new ScottPlot.Plot(600, 400);
 
             //// create sample data
