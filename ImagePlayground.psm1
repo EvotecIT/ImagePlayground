@@ -7,15 +7,13 @@ $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyC
 $AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue
 $Assembly = @(
     if ($AssemblyFolders.BaseName -contains 'Standard') {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue)
+        @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue -Recurse)
     }
-
     if ($PSEdition -eq 'Core') {
         @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue -Recurse )
     } else {
         @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue -Recurse )
     }
-
 )
 $FoundErrors = @(
     Foreach ($Import in @($Assembly)) {
