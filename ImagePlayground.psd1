@@ -12,7 +12,7 @@
     PowerShellVersion    = '5.1'
     PrivateData          = @{
         PSData = @{
-            Tags       = @('windows', 'macos', 'linux')
+            Tags       = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
             ProjectUri = 'https://github.com/EvotecIT/ImagePlayground'
             IconUri    = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
         }
