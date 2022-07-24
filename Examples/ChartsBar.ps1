@@ -1,4 +1,4 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+﻿Import-Module .\ImagePlayground.psd1 -Force
 
 New-ImageChart {
     New-ImageChartBar -Value 5, 10 -Label "C#"
