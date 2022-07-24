@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.IO;
 using BarcodeReader.ImageSharp;
 using QRCoder;
@@ -9,18 +10,7 @@ namespace ImagePlayground {
     public class QrCode {
         public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q) {
 
-            //ImageFormat imageFormatDetected;
             FileInfo fileInfo = new FileInfo(filePath);
-
-            //if (fileInfo.Extension == ".png") {
-            //    imageFormatDetected = ImageFormat.Png;
-            //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-            //    imageFormatDetected = ImageFormat.Jpeg;
-            //} else if (fileInfo.Extension == ".ico") {
-            //    imageFormatDetected = ImageFormat.Icon;
-            //} else {
-            //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-            //}
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
                 using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
@@ -29,7 +19,20 @@ namespace ImagePlayground {
                             if (transparent) {
                                 //qrCodeImage.MakeTransparent();
                             }
+                            // this uses QRCoder
+                            //ImageFormat imageFormatDetected;
+                            //if (fileInfo.Extension == ".png") {
+                            //    imageFormatDetected = ImageFormat.Png;
+                            //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+                            //    imageFormatDetected = ImageFormat.Jpeg;
+                            //} else if (fileInfo.Extension == ".ico") {
+                            //    imageFormatDetected = ImageFormat.Icon;
+                            //} else {
+                            //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+                            //}
+                            //qrCodeImage.Save(filePath, imageFormatDetected);
 
+                            //this uses QRCoder.ImageSharp
                             if (fileInfo.Extension == ".png") {
                                 qrCodeImage.SaveAsPng(filePath);
                             } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
