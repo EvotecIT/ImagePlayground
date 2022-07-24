@@ -32,7 +32,7 @@ $Configuration = @{
             # Description of the functionality provided by this module
             Description          = 'ImagePlayground is a PowerShell module that provides a set of functions for image processing. Among other things it can create QRCodes, BarCodes, Charts, and do image processing that can help with daily tasks.'
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags                 = @('windows', 'macos', 'linux')
+            Tags                 = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
             # A URL to the main website for this project.
             ProjectUri           = 'https://github.com/EvotecIT/ImagePlayground'
 
