@@ -35,7 +35,8 @@ It works only on Windows as far as I know.
 - [x] QR Codes
   - [x] QR Code Standard
   - [x] QR Code WiFi
-  - [ ] QR Code Contact
+  - [x] QR Code Contact
+  - [ ] Others to be added
 - [x] Barcode
   - [x] EAN
   - [x] Code.39
