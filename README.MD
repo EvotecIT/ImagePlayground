@@ -20,7 +20,7 @@
   <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square"></a>
 </p>
 
-`ImagePlayground` is a PowerShell module that allows you to play with images. It allows to create QR codes, BAR codes or create Charts. Later on 
+`ImagePlayground` is a PowerShell module that allows you to play with images. It allows to create QR codes, BAR codes or create Charts and do other cool stuff.
 
 ## Known Issues
 
