@@ -11,8 +11,8 @@ $Configuration = @{
         FunctionsToExport    = 'Public'
         AliasesToExport      = 'Public'
 
-        LibrariesCore        = 'Lib\Core'
-        LibrariesDefault     = 'Lib\Default'
+        #LibrariesCore        = 'Lib\Core'
+        #LibrariesDefault     = 'Lib\Default'
 
         Manifest             = @{
             # Minimum version of the Windows PowerShell engine required by this module
@@ -147,9 +147,10 @@ $Configuration = @{
             ClassesDotSource    = $false
             SignMerged          = $true
             CreateFileCatalog   = $false # not working
-            Releases            = $true
+            Releases            = $false
             ReleasesUnpacked    = $false
             RefreshPSD1Only     = $false
+            DebugDLL            = $true
         }
         BuildDocumentation = $false
         ImportModules      = @{
