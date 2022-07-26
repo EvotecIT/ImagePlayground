@@ -1,4 +1,4 @@
-﻿function New-ImageQRContact {
+﻿function New-ImageQRContactOld {
     [cmdletBinding()]
     param(
         [Parameter(Mandatory)][string] $FilePath,
@@ -42,10 +42,12 @@
         if ($Show) {
             Invoke-Item -LiteralPath $FilePath
         }
-    } catch {
+    }
+    catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw
-        } else {
+        }
+        else {
             Write-Warning -Message "New-ImageQRContact - Error creating image $($_.Exception.Message)"
         }
     }

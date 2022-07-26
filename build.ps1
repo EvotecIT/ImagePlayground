@@ -11,6 +11,7 @@ New-Item -Path $moduleBuildFolder -ItemType Directory -Force | Out-Null
 
 Copy-Item (Join-Path $PSScriptRoot "$ModuleName.psd1") $moduleBuildFolder
 Copy-Item (Join-Path $PSScriptRoot "$ModuleName.psm1") $moduleBuildFolder
+Copy-Item (Join-Path $PSScriptRoot "Enums") $moduleBuildFolder -Recurse
 Copy-Item (Join-Path $PSScriptRoot "Public") $moduleBuildFolder -Recurse
 
 Push-Location -Path $sourceFolder
