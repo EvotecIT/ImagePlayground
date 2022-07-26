@@ -4,46 +4,27 @@ $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction Silen
 $Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue -Recurse )
 $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse )
 
-$AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue
-$Assembly = @(
-    if ($PSEdition -eq 'Core') {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue -Recurse )
-    } else {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue -Recurse )
+$importModule = Get-Command -Name Import-Module -Module Microsoft.PowerShell.Core
+if (-not ('ImagePlayground.PowerShell.NewImageChart' -as [type])) {
+    $framework = if ($PSVersionTable.PSVersion.Major -eq 5) {
+        'net472'
     }
-    if ($AssemblyFolders.BaseName -contains 'Standard') {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue -Recurse)
+    else {
+        'netcoreapp3.1'
     }
-)
-$FoundErrors = @(
-    Foreach ($Import in @($Assembly)) {
-        try {
-            Write-Verbose -Message $Import.FullName
-            Add-Type -Path $Import.Fullname -ErrorAction Stop
-            #  }
-        } catch [System.Reflection.ReflectionTypeLoadException] {
-            Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
-            $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
-            foreach ($E in $LoaderExceptions) {
-                Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
-            }
-            $true
-            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
-        } catch {
-            Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
-            $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
-            foreach ($E in $LoaderExceptions) {
-                Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
-            }
-            $true
-            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
-        }
-    }
-    #Dot source the files
-    Foreach ($Import in @($Private + $Public + $Classes + $Enums)) {
+
+    &$importModule ([IO.Path]::Combine($PSScriptRoot, 'bin', $framework, 'ImagePlayground.dll')) -ErrorAction Stop
+}
+else {
+    &$importModule -Force -Assembly ([ImagePlayground.PowerShell.NewImageChart].Assembly)
+}
+
+#Dot source the files
+$FoundErrors = @(Foreach ($Import in @($Private + $Public + $Classes + $Enums)) {
         Try {
             . $Import.Fullname
-        } Catch {
+        }
+        Catch {
             Write-Error -Message "Failed to import functions from $($import.Fullname): $_"
             $true
         }

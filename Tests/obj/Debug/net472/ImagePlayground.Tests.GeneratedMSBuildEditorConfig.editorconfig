@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = ImagePlayground.Tests
+build_property.ProjectDir = c:\temp\ImagePlayground\Tests\

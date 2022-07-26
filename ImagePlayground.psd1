@@ -1,7 +1,7 @@
 ﻿@{
     AliasesToExport      = @('New-QRCode', 'New-QRCodeWiFi')
     Author               = 'Przemyslaw Klys'
-    CmdletsToExport      = @()
+    CmdletsToExport      = @('Get-ImageChart1')
     CompanyName          = 'Evotec'
     CompatiblePSEditions = @('Desktop', 'Core')
     Copyright            = '(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.'

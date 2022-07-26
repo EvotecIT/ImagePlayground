@@ -3,15 +3,18 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using ImagePlayground;
 
-namespace ImagePlayground.PowerShell {
+namespace ImagePlayground.PowerShell
+{
     [Cmdlet(VerbsCommon.New, "ImageChart1")]
     [OutputType(typeof(void))]
-    public class NewImageChart : PSCmdlet {
+    public class NewImageChart : PSCmdlet
+    {
         [Parameter(Mandatory = false, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         public int FavoriteNumber { get; set; }
 
 
-        protected override void EndProcessing() {
+        protected override void EndProcessing()
+        {
             Charts.Generate("test");
         }
     }
@@ -20,7 +23,8 @@ namespace ImagePlayground.PowerShell {
 
     [Cmdlet(VerbsDiagnostic.Test, "SampleCmdlet")]
     [OutputType(typeof(FavoriteStuff))]
-    public class TestSampleCmdletCommand : PSCmdlet {
+    public class TestSampleCmdletCommand : PSCmdlet
+    {
         [Parameter(
             Mandatory = true,
             Position = 0,
@@ -35,13 +39,16 @@ namespace ImagePlayground.PowerShell {
         public string FavoritePet { get; set; } = "Dog";
 
         // This method gets called once for each cmdlet in the pipeline when the pipeline starts executing
-        protected override void BeginProcessing() {
+        protected override void BeginProcessing()
+        {
             WriteVerbose("Begin!");
         }
 
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
-        protected override void ProcessRecord() {
-            WriteObject(new FavoriteStuff {
+        protected override void ProcessRecord()
+        {
+            WriteObject(new FavoriteStuff
+            {
                 FavoriteNumber = FavoriteNumber,
                 FavoritePet = FavoritePet
             });
@@ -50,7 +57,8 @@ namespace ImagePlayground.PowerShell {
         }
 
         // This method will be called once at the end of pipeline execution; if no input is received, this method is not called
-        protected override void EndProcessing() {
+        protected override void EndProcessing()
+        {
 
 
 
@@ -58,7 +66,8 @@ namespace ImagePlayground.PowerShell {
         }
     }
 
-    public class FavoriteStuff {
+    public class FavoriteStuff
+    {
         public int FavoriteNumber { get; set; }
         public string FavoritePet { get; set; }
     }
