@@ -24,6 +24,9 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
         } else if (args.Name.StartsWith("System.Runtime.CompilerServices.Unsafe,")) {
             string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Runtime.CompilerServices.Unsafe.dll");
             return Assembly.LoadFile(binPath);
+        } else if (args.Name.StartsWith("System.Numerics.Vectors,")) {
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Numerics.Vectors.dll");
+            return Assembly.LoadFile(binPath);
         }
         return null;
     }
