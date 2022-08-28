@@ -11,3 +11,4 @@ Sources/*/obj
 Sources/*/bin
 Sources/*/*/obj
 Sources/*/*/bin
+Sources/packages/*
