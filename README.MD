@@ -24,11 +24,8 @@
 
 ## Known Issues
 
-This library will work fine for PowerShell 5.1 only when used within VSCode.
-When you use it outside of VSCode it will throw an error.
-**If you know how to fix it - please help!**
-PowerShell 7 works fine either way.
-It works only on Windows as far as I know.
+This library will work fine for PowerShell 5.1 and PowerShell 7+.
+It works only on Windows as far as I know. Requires testing.
 
 ### Features
 

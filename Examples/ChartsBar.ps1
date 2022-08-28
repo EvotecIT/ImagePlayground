@@ -1,4 +1,4 @@
-﻿Import-Module .\..\ImagePlayground.psd1 -Force
+﻿Import-Module .\ImagePlayground.psd1 -Force
 
 # doesn't work yet
 New-ImageChart {

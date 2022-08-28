@@ -1,0 +1,14 @@
+Ignore/*
+Publish/*
+.vs/*
+.vscode/*
+Releases/*
+Artefacts/*
+ReleasedUnpacked/*
+Sources/.vs
+Sources/*/.vs
+Sources/*/obj
+Sources/*/bin
+Sources/*/*/obj
+Sources/*/*/bin
+Sources/packages/*
