@@ -1,20 +1,22 @@
 ﻿Clear-Host
 
+Import-Module "C:\Support\GitHub\PSPublishModule\PSPublishModule.psd1" -Force
+
 $Configuration = @{
     Information = @{
-        ModuleName           = 'ImagePlayground'
+        ModuleName        = 'ImagePlayground'
 
-        DirectoryProjects    = 'C:\Support\GitHub'
-        DirectoryModulesCore = "$Env:USERPROFILE\Documents\PowerShell\Modules"
-        DirectoryModules     = "$Env:USERPROFILE\Documents\WindowsPowerShell\Modules"
+        DirectoryProjects = 'C:\Support\GitHub'
+        #DirectoryModulesCore = "$Env:USERPROFILE\Documents\PowerShell\Modules"
+        #DirectoryModules     = "$Env:USERPROFILE\Documents\WindowsPowerShell\Modules"
 
-        FunctionsToExport    = 'Public'
-        AliasesToExport      = 'Public'
+        #FunctionsToExport    = 'Public'
+        #AliasesToExport      = 'Public'
 
         #LibrariesCore        = 'Lib\Core'
         #LibrariesDefault     = 'Lib\Default'
 
-        Manifest             = @{
+        Manifest          = @{
             # Minimum version of the Windows PowerShell engine required by this module
             PowerShellVersion    = '5.1'
             # prevent using over CORE/PS 7
@@ -137,20 +139,28 @@ $Configuration = @{
         }
     }
     Steps       = @{
+        BuildLibraries     = @{
+            Enable        = $true # build once every time nuget gets updated
+            Configuration = 'Release'
+            ProjectName   = 'ImagePlayground.PowerShell'
+        }
         BuildModule        = @{  # requires Enable to be on to process all of that
-            Enable              = $true
-            DeleteBefore        = $true
-            Merge               = $true
-            MergeMissing        = $true
-            LibrarySeparateFile = $true
-            LibraryDotSource    = $false
-            ClassesDotSource    = $false
-            SignMerged          = $true
-            CreateFileCatalog   = $false # not working
-            Releases            = $false
-            ReleasesUnpacked    = $false
-            RefreshPSD1Only     = $false
-            DebugDLL            = $true
+            Enable                 = $true
+            DeleteBefore           = $true
+            Merge                  = $true
+            MergeMissing           = $true
+            LibrarySeparateFile    = $true
+            LibraryDotSource       = $true
+            ClassesDotSource       = $false
+            SignMerged             = $true
+            CreateFileCatalog      = $false # not working
+            Releases               = $false
+            ReleasesUnpacked       = $false
+            RefreshPSD1Only        = $false
+            DebugDLL               = $false
+            ResolveBinaryConflicts = @{
+                ProjectName   = 'ImagePlayground.PowerShell'
+            }
         }
         BuildDocumentation = $false
         ImportModules      = @{
@@ -159,10 +169,10 @@ $Configuration = @{
             Verbose         = $false
         }
         PublishModule      = @{  # requires Enable to be on to process all of that
-            Enabled      = $true
+            Enabled      = $false
             Prerelease   = ''
             RequireForce = $false
-            GitHub       = $true
+            GitHub       = $false
         }
     }
 }
