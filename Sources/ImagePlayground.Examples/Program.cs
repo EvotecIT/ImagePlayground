@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using SixLabors.ImageSharp;
 
 namespace ImagePlayground.Examples {
     internal class Program {
@@ -16,8 +17,10 @@ namespace ImagePlayground.Examples {
             Setup(folderPath);
 
             Example_QRCode(folderPath);
-            Example_BarCode(folderPath);
-            Example_Chart(folderPath);
+            //Example_BarCode(folderPath);
+            // Example_Chart(folderPath);
+            Example_Resize(folderPath);
+            //Example_ConvertTo(folderPath);
 
             Console.WriteLine("\npress any key to exit the process...");
 
@@ -105,5 +108,39 @@ namespace ImagePlayground.Examples {
             //plt.SaveFig(filePath);
         }
 
+        private static void Example_Resize(string folderPath) {
+            Console.WriteLine("[*] Resizing - JPG");
+            string filePath = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.jpg");
+            string filePathOut = System.IO.Path.Combine(folderPath, "KulekWSluchawkach-Resized.jpg");
+            Images.Resize(filePath, filePathOut, 50, 50);
+
+            Console.WriteLine("[*] Resizing - ICO");
+            string filePathIco = System.IO.Path.Combine(folderPath, "QRCode1.ico");
+            string filePathOutPng = System.IO.Path.Combine(folderPath, "QRCode2.png");
+            Images.ConvertTo(filePathIco, filePathOutPng);
+
+            string filePathOutTemporary = System.IO.Path.Combine(folderPath, "QRCode1-Temporary.png");
+            Images.Resize(filePathOutPng, filePathOutTemporary, 50, 50);
+
+            string filePathOutIco = System.IO.Path.Combine(folderPath, "QRCode1-Temporary.ico");
+            Images.ConvertTo(filePathOutTemporary, filePathOutIco);
+        }
+
+
+        private static void Example_ConvertTo(string folderPath) {
+            Console.WriteLine("[*] Converting JPG to PNG");
+            string filePath = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.jpg");
+            string filePathOut = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.png");
+            Images.ConvertTo(filePath, filePathOut);
+            Console.WriteLine("[*] Converting JPG to BMP");
+            filePathOut = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.bmp");
+            Images.ConvertTo(filePath, filePathOut);
+            Console.WriteLine("[*] Converting JPG to WEBP");
+            filePathOut = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.webp");
+            Images.ConvertTo(filePath, filePathOut);
+            Console.WriteLine("[*] Converting JPG to ICO");
+            filePathOut = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.ico");
+            Images.ConvertTo(filePath, filePathOut);
+        }
     }
 }

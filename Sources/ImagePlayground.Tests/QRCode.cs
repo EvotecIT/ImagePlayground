@@ -3,23 +3,7 @@ using Xunit;
 
 
 namespace ImagePlayground.Tests {
-    public class Tests {
-        private readonly string _directoryWithImages;
-        private readonly string _directoryWithTests;
-
-        public Tests() {
-            _directoryWithImages = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Images");
-            Setup(_directoryWithImages);
-            _directoryWithTests = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Tests");
-            Setup(_directoryWithTests);
-        }
-
-        public static void Setup(string path) {
-            if (!Directory.Exists(path)) {
-                Directory.CreateDirectory(path);
-            }
-        }
-
+    public partial class ImagePlayground {
         [Fact]
         public void Test_QRCodeUrl() {
 

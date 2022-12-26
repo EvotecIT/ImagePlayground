@@ -1,4 +1,4 @@
-@{
+﻿@{
     AliasesToExport      = @('New-QRCode', 'New-QRCodeWiFi')
     Author               = 'Przemyslaw Klys'
     CmdletsToExport      = @()

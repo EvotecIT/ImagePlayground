@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +11,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\KulekWSluchawkach.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\PrzemyslawKlysAndKulkozaurr.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -27,14 +27,20 @@ $FoundErrors = @(
 
     try {
         $ImportModule = Get-Command -Name Import-Module -Module Microsoft.PowerShell.Core
-        $Framework = if ($PSVersionTable.PSVersion.Major -eq 5) {
-            'Default'
+        if ($AssemblyFolders.BaseName -contains 'Standard') {
+            $Framework = 'Standard'
         } else {
-            'Core'
+            if ($PSEdition -eq 'Core') {
+                $Framework = 'Core'
+            } else {
+                $Framework = 'Default'
+            }
         }
         if (-not ($Class -as [type])) {
+            Write-Warning "Importing module $Library $Framework"
             & $ImportModule ([IO.Path]::Combine($PSScriptRoot, 'Lib', $Framework, $Library)) -ErrorAction Stop
         } else {
+            Write-Warning "Loading module $Library $Framework"
             $Type = "$Class" -as [Type]
             & $importModule -Force -Assembly ($Type.Assembly)
         }
