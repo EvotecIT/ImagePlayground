@@ -156,7 +156,18 @@ $Configuration = @{
             SignMerged             = $true
             CreateFileCatalog      = $false # not working
             Releases               = $false
-            ReleasesUnpacked       = $true
+            ReleasesUnpacked       = @{
+                Enabled         = $true
+                IncludeTagName  = $true
+                Path            = "$PSScriptRoot\..\Artefacts"
+                RequiredModules = $false
+                DirectoryOutput = @{
+
+                }
+                FilesOutput     = @{
+
+                }
+            }
             RefreshPSD1Only        = $false
             DebugDLL               = $false
             ResolveBinaryConflicts = @{
