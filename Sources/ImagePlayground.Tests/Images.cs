@@ -9,11 +9,9 @@ using Xunit;
 
 namespace ImagePlayground.Tests {
     public partial class ImagePlayground {
-
-
         [Fact]
         public void Test_ResizeImage() {
-            string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeUrl.jpg");
+            string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeUrlBefore.jpg");
             File.Delete(filePath);
             Assert.True(File.Exists(filePath) == false);
 
@@ -31,6 +29,7 @@ namespace ImagePlayground.Tests {
             var imageResized = Images.GetImage(newImage);
             Assert.True(imageResized.Width == 100);
             Assert.True(imageResized.Height == 100);
+            imageResized.Dispose();
         }
 
     }
