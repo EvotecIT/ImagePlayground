@@ -1,14 +1,13 @@
 ﻿function Save-Image {
     [cmdletBinding()]
     param(
-        [ImagePlayground.Image] $Image,
+        [parameter(Mandatory)][ImagePlayground.Image] $Image,
+        [string] $FilePath,
         [switch] $Open
     )
-    if ($null -ne $Image) {
-        if ($FilePath) {
-            $Image.Save($FilePath, $Open.IsPresent)
-        } else {
-            $Image.Save($Open.IsPresent)
-        }
+    if ($FilePath) {
+        $Image.Save($FilePath, $Open.IsPresent)
+    } else {
+        $Image.Save($Open.IsPresent)
     }
 }
