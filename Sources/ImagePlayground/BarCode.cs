@@ -108,7 +108,7 @@ namespace ImagePlayground {
         }
 
         public static BarcodeResult<Rgba32> Read(string filePath) {
-            Image<Rgba32> barcodeImage = Image.Load<Rgba32>(filePath);
+            Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>();
             var response = reader.Decode(barcodeImage);
             return response;
