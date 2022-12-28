@@ -39,7 +39,10 @@ namespace ImagePlayground {
                 throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
             }
 
-            var renderer = new ImageRenderer(imageFormat: imageFormatDetected);
+            var options = new ImageRendererOptions();
+            options.ImageFormat = imageFormatDetected;
+            var renderer = new ImageRenderer(options);
+            //var renderer = new ImageRenderer(imageFormat: imageFormatDetected);
 
             using (var stream = new FileStream(filePath, FileMode.Create)) {
                 renderer.Render(barcode, stream);
@@ -103,9 +106,9 @@ namespace ImagePlayground {
                 GenerateEan(content, filePath);
             }
         }
-        
+
         public static BarcodeResult<Rgba32> Read(string filePath) {
-            Image<Rgba32> barcodeImage = Image.Load<Rgba32>(filePath);
+            Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>();
             var response = reader.Decode(barcodeImage);
             return response;

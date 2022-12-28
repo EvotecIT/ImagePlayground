@@ -142,6 +142,7 @@ $Configuration = @{
         BuildLibraries     = @{
             Enable        = $true # build once every time nuget gets updated
             Configuration = 'Release'
+            Framework     = 'netstandard2.0', 'net472'
             ProjectName   = 'ImagePlayground.PowerShell'
         }
         BuildModule        = @{  # requires Enable to be on to process all of that
@@ -149,22 +150,33 @@ $Configuration = @{
             DeleteBefore           = $true
             Merge                  = $true
             MergeMissing           = $true
-            LibrarySeparateFile    = $true
+            LibrarySeparateFile    = $false
             LibraryDotSource       = $true
             ClassesDotSource       = $false
             SignMerged             = $true
             CreateFileCatalog      = $false # not working
             Releases               = $false
-            ReleasesUnpacked       = $false
+            ReleasesUnpacked       = @{
+                Enabled         = $true
+                IncludeTagName  = $true
+                Path            = "$PSScriptRoot\..\Artefacts"
+                RequiredModules = $false
+                DirectoryOutput = @{
+
+                }
+                FilesOutput     = @{
+
+                }
+            }
             RefreshPSD1Only        = $false
             DebugDLL               = $false
             ResolveBinaryConflicts = @{
-                ProjectName   = 'ImagePlayground.PowerShell'
+                ProjectName = 'ImagePlayground.PowerShell'
             }
         }
-        BuildDocumentation = $false
+        BuildDocumentation = $true
         ImportModules      = @{
-            Self            = $true
+            Self            = $false
             RequiredModules = $false
             Verbose         = $false
         }

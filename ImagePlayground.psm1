@@ -5,15 +5,65 @@ $Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction Silen
 $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse )
 # Get all assemblies
 $AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue
+
+# Lets find which libraries we need to load
+$Default = $false
+$Core = $false
+$Standard = $false
+foreach ($A in $AssemblyFolders.Name) {
+    if ($A -eq 'Default') {
+        $Default = $true
+    } elseif ($A -eq 'Core') {
+        $Core = $true
+    } elseif ($A -eq 'Standard') {
+        $Standard = $true
+    }
+}
+if ($Standard -and $Core -and $Default) {
+    $FrameworkNet = 'Default'
+    $Framework = 'Standard'
+} elseif ($Standard -and $Core) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Standard'
+} elseif ($Core -and $Default) {
+    $Framework = 'Core'
+    $FrameworkNet = 'Default'
+} elseif ($Standard -and $Default) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Default'
+} elseif ($Standard) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Standard'
+} elseif ($Core) {
+    $Framework = 'Core'
+    $FrameworkNet = ''
+} elseif ($Default) {
+    $Framework = ''
+    $FrameworkNet = 'Default'
+} else {
+    Write-Error -Message 'No assemblies found'
+}
+if ($PSEdition -eq 'Core') {
+    $LibFolder = $Framework
+} else {
+    $LibFolder = $FrameworkNet
+}
+
 $Assembly = @(
-    if ($AssemblyFolders.BaseName -contains 'Standard') {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue -Recurse)
+    if ($Framework -and $PSEdition -eq 'Core') {
+        Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue -Recurse
     }
-    if ($PSEdition -eq 'Core') {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue -Recurse )
-    } else {
-        @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue -Recurse )
+    if ($FrameworkNet -and $PSEdition -ne 'Core') {
+        Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue -Recurse
     }
+    # if ($AssemblyFolders.BaseName -contains 'Standard') {
+    #     @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue -Recurse)
+    # }
+    # if ($PSEdition -eq 'Core') {
+    #     @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue -Recurse )
+    # } else {
+    #     @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue -Recurse )
+    # }
 )
 
 # This is special way of importing DLL if multiple frameworks are in use
@@ -27,13 +77,9 @@ $FoundErrors = @(
 
     try {
         $ImportModule = Get-Command -Name Import-Module -Module Microsoft.PowerShell.Core
-        $Framework = if ($PSVersionTable.PSVersion.Major -eq 5) {
-            'Default'
-        } else {
-            'Core'
-        }
+
         if (-not ($Class -as [type])) {
-            & $ImportModule ([IO.Path]::Combine($PSScriptRoot, 'Lib', $Framework, $Library)) -ErrorAction Stop
+            & $ImportModule ([IO.Path]::Combine($PSScriptRoot, 'Lib', $LibFolder, $Library)) -ErrorAction Stop
         } else {
             $Type = "$Class" -as [Type]
             & $importModule -Force -Assembly ($Type.Assembly)
@@ -53,7 +99,6 @@ $FoundErrors = @(
                 Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
             }
             $true
-            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         } catch {
             Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
             $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
@@ -61,7 +106,6 @@ $FoundErrors = @(
                 Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
             }
             $true
-            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         }
     }
 

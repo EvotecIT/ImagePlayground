@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
 using BarcodeReader.ImageSharp;
 using QRCoder;
@@ -76,7 +75,7 @@ namespace ImagePlayground {
         }
 
         public static BarcodeResult<Rgba32> Read(string filePath) {
-            Image<Rgba32> barcodeImage = Image.Load<Rgba32>(filePath);
+            Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
             var response = reader.Decode(barcodeImage);
             return response;

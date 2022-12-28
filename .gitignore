@@ -2,6 +2,7 @@ Ignore/*
 Publish/*
 .vs/*
 .vscode/*
+Examples/Output/*
 Releases/*
 Artefacts/*
 ReleasedUnpacked/*

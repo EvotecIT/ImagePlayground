@@ -27,6 +27,18 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
         } else if (args.Name.StartsWith("System.Numerics.Vectors,")) {
             string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Numerics.Vectors.dll");
             return Assembly.LoadFile(binPath);
+        } else if (args.Name.StartsWith("System.Drawing.Common,")) {
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Drawing.Common.dll");
+            return Assembly.LoadFile(binPath);
+        } else if (args.Name.StartsWith("System.Buffers,")) {
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Buffers.dll");
+            return Assembly.LoadFile(binPath);
+        } else if (args.Name.StartsWith("System.ValueTuple,")) {
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.ValueTuple.dll");
+            return Assembly.LoadFile(binPath);
+        } else if (args.Name.StartsWith("System.Text.Encoding.CodePages,")) {
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Text.Encoding.CodePagesdll");
+            return Assembly.LoadFile(binPath);
         }
         return null;
     }
