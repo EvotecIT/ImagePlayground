@@ -39,11 +39,13 @@ It works only on Windows as far as I know. Requires testing.
   - [x] Code.39
 - [x] Barcode Reader - library can read barcodes
 - [x] QR Code Reader - library can read QR codes
-- [ ] Image Resize
-- [ ] Image Crop
-- [ ] Image Rotate
-- [ ] Image Grayscale
-- [ ] Image Blur
+- [x] Image Resize
+- [x] Image Crop
+- [x] Image Rotate
+- [x] Image Grayscale
+- [x] Image Blur
+- [x] Image Sharpen
+- [x] Many more
 
 ### Installation
 
@@ -97,7 +99,84 @@ Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN13.png
 Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN7.png
 ```
 
+#### Converting images
 
+```powershell
+ConvertTo-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotec.jpg
+```
+
+#### Resizing images
+
+```powershell
+Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotecResize.png -Width 100 -Height 100
+
+Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotecResizeMaintainAspectRatio.png -Width 300
+
+Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotecResizePercent.png -Percentage 200
+```
+
+#### Manipulating images
+
+```powershell
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png
+$Image.BlackWhite()
+$Image.BackgroundColor("Red")
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\LogoEvotecChanged.png
+
+# Save Pixalate
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
+$Image.Pixelate(30)
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrPixelate.jpg
+
+# Save as Polaroid
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
+$Image.Polaroid()
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrPolaroid.jpg
+
+# Add watermark
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.Image+WatermarkPlacement]::Middle, 0.5, 0.5)
+# Add watermark with rotation 90 degrees
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.Image+WatermarkPlacement]::TopLeft, 1, 18, 90)
+
+# Resize 200% in the same image
+$Image.Resize(200)
+# Rotate 30 degrees in the same image
+$Image.Rotate(30)
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermark.jpg
+```
+
+#### Adding watermarks
+
+```powershell
+# Add watermark
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
+# void WatermarkImage(string filePath, ImagePlayground.Image+WatermarkPlacement placement, float opacity = 1, float padding = 18, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.Image+WatermarkPlacement]::Middle, 0.5, 0.5)
+# Add watermark with rotation 90 degrees
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.Image+WatermarkPlacement]::TopLeft, 1, 18, 90)
+# Add watermark with text
+# There are 2 methods to add watermark with text
+#void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
+#void Watermark(string text, ImagePlayground.Image+WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
+$Image.Watermark("Evotec", [ImagePlayground.Image+WatermarkPlacement]::TopRight, [SixLabors.ImageSharp.Color]::Blue, 50, "Calibri")
+
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg
+```
+
+
+#### Get EXIF data
+
+```powershell
+$Image = Get-Image -FilePath "C:\Users\przemyslaw.klys\Downloads\IMG_4644.jpeg"
+$Image.Width
+$Image.Height
+$Image.Metadata
+$Image.Metadata.ExifProfile | Format-List
+$Image.Metadata.ExifProfile.Values | Format-Table
+$Image.Metadata.IccProfile.Header | Format-Table
+$Image.Metadata.IccProfile.Entries | Format-Table
+```
 
 
 ### Libraries
@@ -115,13 +194,3 @@ If any of the libraries above prove insufficient, we can add more libraries to t
 - [OxyPlot](https://github.com/oxyplot/oxyplot) - licensed MIT
 - [Microcharts](https://github.com/microcharts-dotnet/Microcharts) - licensed MIT
 
-#### DLL Dependencies and the horror story
-
-This module is tricky to get right DLLs to load properly in both PowerShell 5.1 and PowerShell 7.
-To make sure I remember why things are this way I have a few notes here.
-
-- ScottPlot.dll needs to be .NET Standard DLL for PowerShell 7
-- ScottPlot.dll needs to be .NET Framework DLL for PowerShell 5.1
-- System.Memory.DLL and System.Numerics.Vectors.dll needs to be extracted from VSCode (`[System.AppDomain]::CurrentDomain.GetAssemblies()`) - actual path: `C:\Users\przemyslaw.klys\.vscode\extensions\ms-vscode.powershell-preview-2022.7.0\modules\PowerShellEditorServices\bin\Common`. The ones that come when I build the project are not working correctly.
-- Rest of DLLs are coming from `Sources\ImagePlayground.PowerShell\bin` and are .NET Standard
-- This ImagePlayground.PowerShell uses special entry `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` in `.csproj` to make sure DLLS are copied
