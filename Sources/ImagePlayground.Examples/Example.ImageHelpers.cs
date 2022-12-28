@@ -40,5 +40,15 @@ namespace ImagePlayground.Examples {
             ImageHelper.ConvertTo(filePath, filePathOut);
         }
 
+        public static void Combine(string folderPath) {
+            Console.WriteLine("[*] Converting JPG to PNG");
+            string filePath = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.jpg");
+            string filePath2 = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
+            string filePathOut = System.IO.Path.Combine(folderPath, "KulekWSluchawkachMerged.jpg");
+
+            ImageHelper.Combine(filePath, filePath2, filePathOut, true);
+
+        }
+
     }
 }
