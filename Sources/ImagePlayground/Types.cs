@@ -13,4 +13,11 @@ namespace ImagePlayground {
         Tiff,
         WebP
     }
+
+    public enum ImagePlacement {
+        Bottom,
+        Right,
+        Top,
+        Left
+    }
 }
