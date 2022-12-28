@@ -1,4 +1,5 @@
 ﻿using System;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
@@ -58,6 +59,13 @@ namespace ImagePlayground.Examples {
             targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_BoxBlur.png");
             using (var image = Image.Load(filePath)) {
                 image.BoxBlur();
+                image.Save(targetPath);
+            }
+
+            targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_Watermark.png");
+            using (var image = Image.Load(filePath)) {
+                // image.Watermark("Evotec Example", Color.Red, 10, 0, 15, 30);
+                //image.Watermark();
                 image.Save(targetPath);
             }
 

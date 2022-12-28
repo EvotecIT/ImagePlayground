@@ -23,10 +23,12 @@ namespace ImagePlayground.Examples {
             //Example.ConvertTo(folderPath);
 
             //Example.ImageModifications1(folderPath);
-            Example.ImageModifications2(folderPath);
+            //Example.ImageModifications2(folderPath);
+            Example.ImageTextWatermark(folderPath);
+            Example.ImageBGInfo(folderPath);
             // lets open up the folder with the images
-            Console.WriteLine("\npress any key to exit the process...");
-            Console.ReadKey();
+            //Console.WriteLine("\npress any key to exit the process...");
+            //Console.ReadKey();
             System.Diagnostics.Process.Start("explorer.exe", folderPath);
         }
     }
