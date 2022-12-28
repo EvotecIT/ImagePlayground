@@ -8,7 +8,6 @@ namespace ImagePlayground {
     public partial class Image : IDisposable {
         private SixLabors.ImageSharp.Image _image;
         private string _filePath;
-
         public int Width => _image.Width;
         public int Height => _image.Height;
         public string FilePath => _filePath;
@@ -50,6 +49,10 @@ namespace ImagePlayground {
 
         public void Crop(Rectangle rectangle) {
             _image.Mutate(x => x.Crop(rectangle));
+        }
+
+        public void Filter(ColorMatrix colorMatrix) {
+            _image.Mutate(x => x.Filter(colorMatrix));
         }
 
         public void Flip(FlipMode flipMode) {
@@ -112,8 +115,29 @@ namespace ImagePlayground {
             _image.Mutate(x => x.RotateFlip(rotateMode, flipMode));
         }
 
-        public void Resize(int width, int height) {
-            _image.Mutate(x => x.Resize(width, height));
+        public void Resize(int? width, int? height, bool keepAspectRatio = true) {
+            if (keepAspectRatio == true) {
+                if (width != null && height != null) {
+                    _image.Mutate(x => x.Resize(width.Value, height.Value));
+                } else if (width != null) {
+                    var newWidth = width.Value;
+                    var newHeight = (_image.Height / _image.Width) * newWidth;
+                    _image.Mutate(x => x.Resize(newWidth, newHeight));
+                } else if (height != null) {
+                    var newHeight = height.Value;
+                    var newWidth = (_image.Width / _image.Height) * newHeight;
+                    _image.Mutate(x => x.Resize(newWidth, newHeight));
+                }
+            } else {
+                if (width != null && height != null) {
+                    _image.Mutate(x => x.Resize(width.Value, height.Value));
+                } else if (width != null) {
+
+                    _image.Mutate(x => x.Resize(width.Value, _image.Height));
+                } else if (height != null) {
+                    _image.Mutate(x => x.Resize(_image.Width, height.Value));
+                }
+            }
         }
 
         public void Resize(int percentage) {
