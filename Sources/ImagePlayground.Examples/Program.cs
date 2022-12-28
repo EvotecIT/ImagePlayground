@@ -24,8 +24,10 @@ namespace ImagePlayground.Examples {
 
             //Example.ImageModifications1(folderPath);
             //Example.ImageModifications2(folderPath);
-            Example.ImageTextWatermark(folderPath);
-            Example.ImageBGInfo(folderPath);
+            //Example.ImageTextWatermark(folderPath);
+            //Example.ImageBGInfo(folderPath);
+            Example.Combine(folderPath);
+
             // lets open up the folder with the images
             //Console.WriteLine("\npress any key to exit the process...");
             //Console.ReadKey();
