@@ -174,7 +174,7 @@ $Configuration = @{
                 ProjectName = 'ImagePlayground.PowerShell'
             }
         }
-        BuildDocumentation = $false
+        BuildDocumentation = $true
         ImportModules      = @{
             Self            = $false
             RequiredModules = $false
