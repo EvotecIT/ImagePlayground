@@ -1,11 +1,20 @@
 ﻿using System;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Metadata;
 using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground {
-    public class Image : IDisposable {
+    public partial class Image : IDisposable {
         private SixLabors.ImageSharp.Image _image;
         private string _filePath;
+
+        public int Width => _image.Width;
+        public int Height => _image.Height;
+        public string FilePath => _filePath;
+        public ImageMetadata Metadata => _image.Metadata;
+        public PixelTypeInfo PixelType => _image.PixelType;
+        public ImageFrameCollection Frames => _image.Frames;
 
         public void AdaptiveThreshold() {
             _image.Mutate(x => x.AdaptiveThreshold());
@@ -69,6 +78,26 @@ namespace ImagePlayground {
 
         public void Grayscale(GrayscaleMode grayscaleMode = GrayscaleMode.Bt709) {
             _image.Mutate(x => x.Grayscale(grayscaleMode));
+        }
+
+        public void Polaroid() {
+            _image.Mutate(x => x.Polaroid());
+        }
+
+        public void Pixelate() {
+            _image.Mutate(x => x.Pixelate());
+        }
+
+        public void Pixelate(int size) {
+            _image.Mutate(x => x.Pixelate(size));
+        }
+
+        public void OilPaint() {
+            _image.Mutate(x => x.OilPaint());
+        }
+
+        public void OilPaint(int levels, int brushSize) {
+            _image.Mutate(x => x.OilPaint(levels, brushSize));
         }
 
         public void Rotate(RotateMode rotateMode) {
