@@ -1,4 +1,4 @@
-﻿### 0.0.2 - 2022.08.28
+﻿### 0.0.2 - 2022.12.29
 - Works correctly now on Windows PowerShell 5.1 (thank you @jborean93)
 - Added line charts, bar charts, and pie charts
 - Added image manipulation capabilities
