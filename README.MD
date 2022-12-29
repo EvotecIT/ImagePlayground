@@ -104,6 +104,8 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Output\ChartsPie1.png -Width 500 -Height 500
 ```
 
+[![ChartsPie1.png](Samples/../Examples/Output/ChartsPie.png)](Samples/../Examples/Output/ChartsPie.png)
+
 ##### Line charts
 
 ```powershell
