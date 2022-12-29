@@ -40,11 +40,12 @@ $Configuration = @{
 
             IconUri              = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
 
-            #LicenseUri           = 'https://github.com/EvotecIT/PSWriteWord/blob/master/License'
+            LicenseUri           = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
 
             RequiredModules      = @(
                 #@{ ModuleName = 'PSSharedGoods'; ModuleVersion = "Latest"; Guid = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe' }
             )
+            DotNetFrameworkVersion = '4.7.2'
         }
     }
     Options     = @{
@@ -181,10 +182,10 @@ $Configuration = @{
             Verbose         = $false
         }
         PublishModule      = @{  # requires Enable to be on to process all of that
-            Enabled      = $false
+            Enabled      = $true
             Prerelease   = ''
             RequireForce = $false
-            GitHub       = $false
+            GitHub       = $true
         }
     }
 }
