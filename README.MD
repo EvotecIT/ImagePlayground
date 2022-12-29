@@ -31,23 +31,23 @@ It works only on Windows as far as I know. Requires testing.
 
 ## Features
 
-- [x] QR Codes
-  - [x] QR Code Standard
-  - [x] QR Code WiFi
-  - [x] QR Code Contact
-  - [ ] Others to be added
-- [x] Barcode
-  - [x] EAN
-  - [x] Code.39
-- [x] Barcode Reader - library can read barcodes
-- [x] QR Code Reader - library can read QR codes
-- [x] Image Resize
-- [x] Image Crop
-- [x] Image Rotate
-- [x] Image Grayscale
-- [x] Image Blur
-- [x] Image Sharpen
-- [x] Many more
+- ☑️ QR Codes
+  - ☑️ QR Code Standard
+  - ☑️ QR Code WiFi
+  - ☑️ QR Code Contact
+  - 📥 Others to be added
+- ☑️ Barcode
+  - ☑️ EAN
+  - ☑️ Code.39
+- ☑️ Barcode Reader - library can read barcodes
+- ☑️ QR Code Reader - library can read QR codes
+- ☑️ Image Resize
+- ☑️ Image Crop
+- ☑️ Image Rotate
+- ☑️ Image Grayscale
+- ☑️ Image Blur
+- ☑️ Image Sharpen
+- ☑️ Many more
 
 ## Installation
 
