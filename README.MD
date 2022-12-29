@@ -67,7 +67,7 @@ Creating basic QR Code
 New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\QRCode.png"
 ```
 
-![QRCode.png](Examples/Samples/QRCode.png)
+![QRCode.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/QRCode.png)
 
 Creating QR codes and reading them back is as easy as:
 
@@ -100,7 +100,7 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Samples\ChartsBar1.png
 ```
 
-![ChartsBar.png](Examples/Samples/ChartsBar.png)
+![ChartsBar.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsBar.png)
 
 #### Pie charts
 
@@ -112,7 +112,7 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Output\ChartsPie1.png -Width 500 -Height 500
 ```
 
-![ChartsPie.png](Examples/Samples/ChartsPie.png)
+![ChartsPie.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsPie.png)
 
 #### Line charts
 
@@ -124,7 +124,7 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Output\ChartsLine1.png
 ```
 
-![ChartsLine.png](Examples/Samples/ChartsLine.png)
+![ChartsLine.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsLine.png)
 
 ### Reading bar codes
 
@@ -239,7 +239,7 @@ $Image.Watermark("Evotec", [ImagePlayground.Image+WatermarkPlacement]::TopRight,
 Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg
 ```
 
-![ChartsLine.png](Examples/Samples/PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg)
+![PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg)
 
 #### Get EXIF data
 
@@ -254,7 +254,7 @@ $Image.Metadata.IccProfile.Header | Format-Table
 $Image.Metadata.IccProfile.Entries | Format-Table
 ```
 
-![Exif.png](Examples/Samples/Exif.png)
+![Exif.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/Exif.png)
 
 
 ### Libraries
