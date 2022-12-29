@@ -27,7 +27,7 @@
 This library will work fine for PowerShell 5.1 and PowerShell 7+.
 It works only on Windows as far as I know. Requires testing.
 
-### Features
+## Features
 
 - [x] QR Codes
   - [x] QR Code Standard
@@ -47,21 +47,23 @@ It works only on Windows as far as I know. Requires testing.
 - [x] Image Sharpen
 - [x] Many more
 
-### Installation
+## Installation
 
 ```powershell
 Install-Module ImagePlayGround -Force -Verbose
 ```
 
-### Usage
+## Usage
 
-#### Creating and reading QR Codes
+### Creating and reading QR Codes
 
 Creating basic QR Code
 
 ```powershell
 New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\QRCode.png"
 ```
+
+![QRCode.png](Examples/Samples/QRCode.png)
 
 Creating QR codes and reading them back is as easy as:
 
@@ -82,9 +84,9 @@ $Message = Get-ImageQRCode -FilePath "$PSScriptRoot\Samples\QRCode.png"
 $Message | Format-List *
 ```
 
-#### Creating charts
+### Creating charts
 
-##### Bar charts
+#### Bar charts
 
 ```powershell
 New-ImageChart {
@@ -94,7 +96,9 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Samples\ChartsBar1.png
 ```
 
-##### Pie charts
+![ChartsBar.png](Examples/Samples/ChartsBar.png)
+
+#### Pie charts
 
 ```powershell
 New-ImageChart {
@@ -104,9 +108,9 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Output\ChartsPie1.png -Width 500 -Height 500
 ```
 
-[![ChartsPie1.png](Samples/../Examples/Output/ChartsPie.png)](Samples/../Examples/Output/ChartsPie.png)
+![ChartsPie.png](Examples/Samples/ChartsPie.png)
 
-##### Line charts
+#### Line charts
 
 ```powershell
 New-ImageChart {
@@ -116,11 +120,54 @@ New-ImageChart {
 } -Show -FilePath $PSScriptRoot\Output\ChartsLine1.png
 ```
 
-#### Reading bar codes
+![ChartsLine.png](Examples/Samples/ChartsLine.png)
+
+### Reading bar codes
 
 ```powershell
 Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN13.png
 Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN7.png
+```
+
+### Image processing
+
+Image processing exposes several methods. It allows to resize, crop, rotate, grayscale, blur, sharpen and more.
+You can use all available methods as shown below:
+
+```powershell
+AdaptiveThreshold Method     void AdaptiveThreshold()
+AddImage          Method     void AddImage(string filePath, int x, int y, float opacity), void AddImage(SixLabors.ImageSharp.Image image, int x, int y, float opacity), void AddImage(SixLabors.ImageSharp.Image image, SixLabors.ImageSharp.Point location, float opacity)
+AddText           Method     void AddText(float x, float y, string text, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial")
+AutoOrient        Method     void AutoOrient()
+BackgroundColor   Method     void BackgroundColor(SixLabors.ImageSharp.Color color)
+BlackWhite        Method     void BlackWhite()
+BokehBlur         Method     void BokehBlur()
+BoxBlur           Method     void BoxBlur()
+Brightness        Method     void Brightness(float amount)
+Contrast          Method     void Contrast(float amount)
+Crop              Method     void Crop(SixLabors.ImageSharp.Rectangle rectangle)
+Dispose           Method     void Dispose(), void IDisposable.Dispose()
+Equals            Method     bool Equals(System.Object obj)
+Filter            Method     void Filter(SixLabors.ImageSharp.ColorMatrix colorMatrix)
+Flip              Method     void Flip(SixLabors.ImageSharp.Processing.FlipMode flipMode)
+GaussianBlur      Method     void GaussianBlur(System.Nullable[float] sigma)
+GaussianSharpen   Method     void GaussianSharpen(System.Nullable[float] sigma)
+GetHashCode       Method     int GetHashCode()
+GetTextSize       Method     SixLabors.Fonts.FontRectangle GetTextSize(string text, float fontSize, string fontFamilyName)
+GetType           Method     type GetType()
+Grayscale         Method     void Grayscale(SixLabors.ImageSharp.Processing.GrayscaleMode grayscaleMode = SixLabors.ImageSharp.Processing.GrayscaleMode.Bt709)
+Hue               Method     void Hue(float degrees)
+OilPaint          Method     void OilPaint(), void OilPaint(int levels, int brushSize)
+Pixelate          Method     void Pixelate(), void Pixelate(int size)
+Polaroid          Method     void Polaroid()
+Resize            Method     void Resize(System.Nullable[int] width, System.Nullable[int] height, bool keepAspectRatio = True), void Resize(int percentage)
+Rotate            Method     void Rotate(SixLabors.ImageSharp.Processing.RotateMode rotateMode), void Rotate(float degrees)
+RotateFlip        Method     void RotateFlip(SixLabors.ImageSharp.Processing.RotateMode rotateMode, SixLabors.ImageSharp.Processing.FlipMode flipMode)
+Saturate          Method     void Saturate(float amount)
+Save              Method     void Save(string filePath = "", bool openImage = False), void Save(bool openImage)
+ToString          Method     string ToString()
+Watermark         Method     void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18), void Watermark(string text, ImagePlayground.Image+WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", fl…
+WatermarkImage    Method     void WatermarkImage(string filePath, ImagePlayground.Image+WatermarkPlacement placement, float opacity = 1, float padding = 18, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
 ```
 
 #### Converting images
@@ -188,6 +235,7 @@ $Image.Watermark("Evotec", [ImagePlayground.Image+WatermarkPlacement]::TopRight,
 Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg
 ```
 
+![ChartsLine.png](Examples/Samples/PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg)
 
 #### Get EXIF data
 
@@ -201,6 +249,8 @@ $Image.Metadata.ExifProfile.Values | Format-Table
 $Image.Metadata.IccProfile.Header | Format-Table
 $Image.Metadata.IccProfile.Entries | Format-Table
 ```
+
+![Exif.png](Examples/Samples/Exif.png)
 
 
 ### Libraries
