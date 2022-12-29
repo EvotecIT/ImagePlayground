@@ -20,7 +20,11 @@
   <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square"></a>
 </p>
 
-`ImagePlayground` is a PowerShell module that allows you to play with images. It allows to create QR codes, BAR codes or create Charts and do other cool stuff.
+`ImagePlayground` is a C# library and a PowerShell module that allows you to play with images in different ways.
+It allows to create QR codes, BAR codes, Charts and do image manipulation.
+It provides ability to read QR codes and BAR codes.
+It provides ability to manipulate imagates by adding text, resizing, cropping, rotating, blurring, sharpening, etc.
+It provides way to add watermark to images - either by text or by image.
 
 ## Known Issues
 
