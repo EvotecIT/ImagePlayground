@@ -23,6 +23,9 @@ Locale: en-US
 ### [Get-ImageQRCode](Get-ImageQRCode.md)
 {{ Fill in the Synopsis }}
 
+### [Merge-Image](Merge-Image.md)
+{{ Fill in the Synopsis }}
+
 ### [New-ChartLegend](New-ChartLegend.md)
 {{ Fill in the Synopsis }}
 

@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# New-ImageBarCode
+# Merge-Image
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-New-ImageBarCode [-Type] <BarcodeTypes> [-Value] <String> [-FilePath] <String> [<CommonParameters>]
+Merge-Image [[-FilePath] <String>] [[-FilePathToMerge] <String>] [[-FilePathOutput] <String>] [-ResizeToFit]
+ [[-Placement] <ImagePlacement>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,39 +39,69 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Type
-{{ Fill Type Description }}
-
-```yaml
-Type: BarcodeTypes
-Parameter Sets: (All)
-Aliases:
-Accepted values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN
-
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Value
-{{ Fill Value Description }}
+### -FilePathOutput
+{{ Fill FilePathOutput Description }}
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FilePathToMerge
+{{ Fill FilePathToMerge Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Placement
+{{ Fill Placement Description }}
+
+```yaml
+Type: ImagePlacement
+Parameter Sets: (All)
+Aliases:
+Accepted values: Bottom, Right, Top, Left
+
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResizeToFit
+{{ Fill ResizeToFit Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
