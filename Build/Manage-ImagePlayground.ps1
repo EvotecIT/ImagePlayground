@@ -1,12 +1,12 @@
 ﻿Clear-Host
 
-Import-Module "C:\Support\GitHub\PSPublishModule\PSPublishModule.psd1" -Force
+Import-Module "PSPublishModule" -Force
 
 $Configuration = @{
     Information = @{
         ModuleName        = 'ImagePlayground'
 
-        DirectoryProjects = 'C:\Support\GitHub'
+        #DirectoryProjects = 'C:\Support\GitHub'
         #DirectoryModulesCore = "$Env:USERPROFILE\Documents\PowerShell\Modules"
         #DirectoryModules     = "$Env:USERPROFILE\Documents\WindowsPowerShell\Modules"
 
