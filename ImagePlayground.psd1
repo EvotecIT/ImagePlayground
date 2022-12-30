@@ -7,9 +7,9 @@
     Copyright              = '(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description            = 'ImagePlayground is a PowerShell module that provides a set of functions for image processing. Among other things it can create QRCodes, BarCodes, Charts, and do image processing that can help with daily tasks.'
     DotNetFrameworkVersion = '4.7.2'
-    FunctionsToExport      = @('ConvertTo-Image', 'Get-Image', 'Get-ImageBarCode', 'Get-ImageQRCode', 'New-ImageBarCode', 'New-ImageChart', 'New-ImageChartBar', 'New-ImageChartBarOptions', 'New-ChartLegend', 'New-ImageChartLine', 'New-ImageChartPie', 'New-ImageQRCode', 'New-ImageQRCodeWiFi', 'New-ImageQRContact', 'Resize-Image', 'Save-Image')
+    FunctionsToExport      = @('ConvertTo-Image', 'Get-Image', 'Get-ImageBarCode', 'Get-ImageQRCode', 'Merge-Image', 'New-ImageBarCode', 'New-ImageChart', 'New-ImageChartBar', 'New-ImageChartBarOptions', 'New-ChartLegend', 'New-ImageChartLine', 'New-ImageChartPie', 'New-ImageQRCode', 'New-ImageQRCodeWiFi', 'New-ImageQRContact', 'Resize-Image', 'Save-Image')
     GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
-    ModuleVersion          = '0.0.2'
+    ModuleVersion          = '0.0.3'
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
