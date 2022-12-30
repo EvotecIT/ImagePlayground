@@ -41,6 +41,7 @@ It works only on Windows as far as I know. Requires testing.
   - ☑️ Code.39
 - ☑️ Barcode Reader - library can read barcodes
 - ☑️ QR Code Reader - library can read QR codes
+- ☑️ Image Combine
 - ☑️ Image Resize
 - ☑️ Image Crop
 - ☑️ Image Rotate
