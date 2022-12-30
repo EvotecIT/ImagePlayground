@@ -12,3 +12,6 @@ Sources/*/bin
 Sources/*/*/obj
 Sources/*/*/bin
 Sources/packages/*
+Lib/Default/*
+Lib/Standard/*
+Lib/Core/*
