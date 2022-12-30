@@ -1,4 +1,9 @@
-﻿### 0.0.2 - 2022.12.29
+﻿### 0.0.3 - 2022.12.30
+- Added `Merge-Image` that merges multiple images into one
+- Added `New-ImageBarCode` that creates a barcode image
+- Removed Libraries from GIT, you will have to build them using PSPublishModule in the builds folder if you want to play with GIT version
+
+### 0.0.2 - 2022.12.29
 - Works correctly now on Windows PowerShell 5.1 (thank you @jborean93)
 - Added line charts, bar charts, and pie charts
 - Added image manipulation capabilities
