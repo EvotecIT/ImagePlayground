@@ -17,8 +17,17 @@
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string] $FilePath
+        [Parameter(Mandatory)][string] $FilePath,
+        [switch] $Translate
     )
     $Image = Get-Image -FilePath $FilePath
-    $Image.Metadata.ExifProfile.Values
+    if ($Translate) {
+        $SingleExif = [ordered] @{}
+        $Image.Metadata.ExifProfile.Values | ForEach-Object {
+            $SingleExif[$_.Tag.ToString()] = $_.Value
+        }
+        [PSCustomObject] $SingleExif
+    } else {
+        $Image.Metadata.ExifProfile.Values
+    }
 }
