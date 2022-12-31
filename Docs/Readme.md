@@ -20,6 +20,9 @@ Locale: en-US
 ### [Get-ImageBarCode](Get-ImageBarCode.md)
 {{ Fill in the Synopsis }}
 
+### [Get-ImageExif](Get-ImageExif.md)
+Gets EXIF data from image
+
 ### [Get-ImageQRCode](Get-ImageQRCode.md)
 {{ Fill in the Synopsis }}
 
@@ -56,9 +59,15 @@ Locale: en-US
 ### [New-ImageQRContact](New-ImageQRContact.md)
 {{ Fill in the Synopsis }}
 
+### [Remove-ImageExif](Remove-ImageExif.md)
+{{ Fill in the Synopsis }}
+
 ### [Resize-Image](Resize-Image.md)
 {{ Fill in the Synopsis }}
 
 ### [Save-Image](Save-Image.md)
 {{ Fill in the Synopsis }}
+
+### [Set-ImageExif](Set-ImageExif.md)
+Sets EXIF tag to specific value
 
