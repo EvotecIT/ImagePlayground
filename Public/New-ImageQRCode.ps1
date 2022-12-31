@@ -1,4 +1,23 @@
 ﻿function New-ImageQRCode {
+    <#
+    .SYNOPSIS
+    Creates QR code
+
+    .DESCRIPTION
+    Creates QR code
+
+    .PARAMETER Content
+    Content to be encoded in QR code
+
+    .PARAMETER FilePath
+    File path to where the image with QR code should be saved.
+
+    .EXAMPLE
+    New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\QRCode.png" -Verbose
+
+    .NOTES
+    General notes
+    #>
     [Alias('New-QRCode')]
     [cmdletBinding()]
     param(
