@@ -36,12 +36,27 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -All
-{{ Fill All Description }}
+### -FilePath
+{{ Fill FilePath Description }}
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: All
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FilePathOutput
+{{ Fill FilePathOutput Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -66,27 +81,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FilePath
-{{ Fill FilePath Description }}
+### -All
+{{ Fill All Description }}
 
 ```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePathOutput
-{{ Fill FilePathOutput Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
+Type: SwitchParameter
+Parameter Sets: All
 Aliases:
 
 Required: True
