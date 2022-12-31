@@ -13,7 +13,7 @@ Sets EXIF tag to specific value
 ## SYNTAX
 
 ```
-Set-ImageExif [-FilePath] <String> [[-FilePathOutput] <String>] [-ExifTag] <ExifTag> [-Value] <String>
+Set-ImageExif [-FilePath] <String> [[-FilePathOutput] <String>] [-ExifTag] <ExifTag> [-Value] <Object>
  [<CommonParameters>]
 ```
 
@@ -80,7 +80,7 @@ Accept wildcard characters: False
 Value to be set
 
 ```yaml
-Type: String
+Type: Object
 Parameter Sets: (All)
 Aliases:
 

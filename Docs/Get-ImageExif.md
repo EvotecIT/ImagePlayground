@@ -13,7 +13,7 @@ Gets EXIF data from image
 ## SYNTAX
 
 ```
-Get-ImageExif [-FilePath] <String> [<CommonParameters>]
+Get-ImageExif [-FilePath] <String> [-Translate] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,6 +39,21 @@ Aliases:
 Required: True
 Position: 1
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Translate
+{{ Fill Translate Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
