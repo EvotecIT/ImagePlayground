@@ -1,4 +1,20 @@
 ﻿function Get-ImageBarCode {
+    <#
+    .SYNOPSIS
+    Gets bar code from image
+
+    .DESCRIPTION
+    Gets bar code from image
+
+    .PARAMETER FilePath
+    File path to image to be processed for bar code reading
+
+    .EXAMPLE
+    Get-ImageBarCode -FilePath "C:\Users\przemyslaw.klys\Downloads\IMG_4644.jpeg"
+
+    .NOTES
+    General notes
+    #>
     [cmdletBinding()]
     param(
         [string] $FilePath
