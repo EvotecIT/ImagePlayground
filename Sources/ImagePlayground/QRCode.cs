@@ -8,8 +8,9 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace ImagePlayground {
     public class QrCode {
         public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
 
-            FileInfo fileInfo = new FileInfo(filePath);
+            FileInfo fileInfo = new FileInfo(fullPath);
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
                 using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
@@ -33,11 +34,11 @@ namespace ImagePlayground {
 
                             //this uses QRCoder.ImageSharp
                             if (fileInfo.Extension == ".png") {
-                                qrCodeImage.SaveAsPng(filePath);
+                                qrCodeImage.SaveAsPng(fullPath);
                             } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                                qrCodeImage.SaveAsJpeg(filePath);
+                                qrCodeImage.SaveAsJpeg(fullPath);
                             } else if (fileInfo.Extension == ".ico") {
-                                qrCodeImage.SaveAsWebp(filePath);
+                                qrCodeImage.SaveAsWebp(fullPath);
                             } else {
                                 throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
                             }
@@ -75,7 +76,9 @@ namespace ImagePlayground {
         }
 
         public static BarcodeResult<Rgba32> Read(string filePath) {
-            Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+
+            Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
             var response = reader.Decode(barcodeImage);
             return response;
