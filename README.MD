@@ -311,6 +311,7 @@ Get-ImageExif -FilePath $PSScriptRoot\Output\IMG_46442.jpeg | Format-Table
 - [Barcoder](https://github.com/huysentruitw/barcoder) - licensed MIT
 - [BarcodeReader.ImageSharp](https://github.com/baltermia/barcodereader-imagesharp) - licensed MIT
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) - licensed Apache 2.0
+- [Codeuctivity.ImageSharpCompare](https://github.com/Codeuctivity/ImageSharp.Compare) - licensed Apache 2.0
 
 #### Future Considerations / Alternatives
 If any of the libraries above prove insufficient, we can add more libraries to the list or replace with those

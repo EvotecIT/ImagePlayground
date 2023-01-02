@@ -1,4 +1,5 @@
 ﻿### 0.0.5
+- Added new library: Codeuctivity.ImageSharpCompare 2.0.76
 - Added new methods:
   - Dither
   - DrawLines
@@ -15,6 +16,7 @@
   - Vignette
 - Added ability to create new empty image
 - Added `New-ImageChartRadial` that allows you to create a radial chart
+- Added Image Compare feature
 
 ```powershell
 New-ImageChart {
