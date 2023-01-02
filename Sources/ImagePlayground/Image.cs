@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Numerics;
+using Codeuctivity.ImageSharpCompare;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -50,6 +52,36 @@ namespace ImagePlayground {
 
         public void Contrast(float amount) {
             _image.Mutate(x => x.Contrast(amount));
+        }
+
+        public ICompareResult Compare(Image imageToCompare) {
+            bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare._image);
+            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare._image);
+            return calcDiff;
+        }
+
+        public ICompareResult Compare(string filePathToCompare) {
+            var imageToCompare = GetImage(filePathToCompare);
+            bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare);
+            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare);
+            return calcDiff;
+        }
+
+        public void Compare(Image imageToCompare, string filePathToSave) {
+            using (var fileStreamDifferenceMask = File.Create(filePathToSave)) {
+                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare._image)) {
+                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
+                }
+            }
+        }
+
+        public void Compare(string filePathToCompare, string filePathToSave) {
+            using (var fileStreamDifferenceMask = File.Create(filePathToSave)) {
+                var imageToCompare = GetImage(filePathToCompare);
+                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare)) {
+                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
+                }
+            }
         }
 
         public void Crop(Rectangle rectangle) {

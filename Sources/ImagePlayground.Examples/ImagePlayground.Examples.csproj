@@ -20,6 +20,12 @@
     <None Update="Images\BarcodeEAN7.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Images\CalculatorAfter.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\CalculatorBefore.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\KulekWSluchawkach.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
