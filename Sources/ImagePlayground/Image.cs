@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Numerics;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Metadata;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Extensions.Transforms;
 
 namespace ImagePlayground {
     public partial class Image : IDisposable {
@@ -50,9 +55,28 @@ namespace ImagePlayground {
         public void Crop(Rectangle rectangle) {
             _image.Mutate(x => x.Crop(rectangle));
         }
+        public void Dither() {
+            _image.Mutate(x => x.Dither());
+        }
+
+        public void DrawLines(Color color, float thickness, PointF pointF) {
+            _image.Mutate(x => x.DrawLines(color, thickness, pointF));
+        }
+
+        public void DrawPolygon(Color color, float thickness, PointF pointF) {
+            _image.Mutate(x => x.DrawPolygon(color, thickness, pointF));
+        }
 
         public void Filter(ColorMatrix colorMatrix) {
             _image.Mutate(x => x.Filter(colorMatrix));
+        }
+
+        public void Fill(Color color) {
+            _image.Mutate(x => x.Fill(color));
+        }
+
+        public void Fill(Color color, Rectangle rectangle) {
+            _image.Mutate(x => x.Fill(color, rectangle));
         }
 
         public void Flip(FlipMode flipMode) {
@@ -74,6 +98,9 @@ namespace ImagePlayground {
                 _image.Mutate(x => x.GaussianSharpen());
             }
         }
+        public void HistogramEqualization() {
+            _image.Mutate(x => x.HistogramEqualization());
+        }
 
         public void Hue(float degrees) {
             _image.Mutate(x => x.Hue(degrees));
@@ -81,6 +108,25 @@ namespace ImagePlayground {
 
         public void Grayscale(GrayscaleMode grayscaleMode = GrayscaleMode.Bt709) {
             _image.Mutate(x => x.Grayscale(grayscaleMode));
+        }
+
+        public void Kodachrome() {
+            _image.Mutate(x => x.Kodachrome());
+        }
+
+        public void Lightness(float amount) {
+            _image.Mutate(x => x.Lightness(amount));
+        }
+        public void Lomograph() {
+            _image.Mutate(x => x.Lomograph());
+        }
+
+        public void Invert() {
+            _image.Mutate(x => x.Invert());
+        }
+
+        public void Opacity(float amount) {
+            _image.Mutate(x => x.Opacity(amount));
         }
 
         public void Polaroid() {
@@ -148,11 +194,36 @@ namespace ImagePlayground {
             _image.Mutate(x => x.Saturate(amount));
         }
 
+        public void Sepia() {
+            _image.Mutate(x => x.Sepia());
+        }
+
+        public void Sepia(float amount) {
+            _image.Mutate(x => x.Sepia(amount));
+        }
+
+        public void Skew(float degreesX, float degreesY) {
+            _image.Mutate(x => x.Skew(degreesX, degreesY));
+        }
+
+        public void Vignette() {
+            _image.Mutate(x => x.Vignette());
+        }
+
+        public void Vignette(Color color) {
+            _image.Mutate(x => x.Vignette(color));
+        }
+
         public static SixLabors.ImageSharp.Image GetImage(string filePath) {
             var inStream = System.IO.File.OpenRead(filePath);
             using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
                 return image;
             }
+        }
+
+        public void Create(string filePath, int width, int height) {
+            _filePath = filePath;
+            _image = new Image<Rgba32>(width, height);
         }
 
         public static Image Load(string filePath) {
