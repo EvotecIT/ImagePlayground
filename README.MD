@@ -125,6 +125,20 @@ New-ImageChart {
 
 ![ChartsLine.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsLine.png)
 
+#### Radar charts
+
+```powershell
+New-ImageChart {
+    New-ImageChartRadial -Name "C#" -Value 5
+    New-ImageChartRadial -Name "AutoIt v3" -Value 50
+    New-ImageChartRadial -Name "PowerShell" -Value 10
+    New-ImageChartRadial -Name "C++" -Value 18
+    New-ImageChartRadial -Name "F#" -Value 100
+} -Show -FilePath $PSScriptRoot\Samples\ChartsRadial.png -Width 500 -Height 500
+```
+
+![ChartsRadial.png](https://raw.githubusercontent.com/EvotecIT/ImagePlayground/master/Examples/Samples/ChartsRadial.png)
+
 ### Reading bar codes
 
 ```powershell
