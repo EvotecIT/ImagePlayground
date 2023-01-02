@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using Path = SixLabors.ImageSharp.Drawing.Path;
 
 namespace ImagePlayground {
-    public class ImageHelper {
+    public partial class ImageHelper {
         /// <summary>
         /// Converts an image from one format to another.
         /// Following image formats are supported: bmp, gif, jpeg, pbm, png, tga, tiff, webp
@@ -14,7 +17,9 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <exception cref="UnknownImageFormatException"></exception>
         public static void ConvertTo(string filePath, string outFilePath) {
-            using (var inStream = System.IO.File.OpenRead(filePath)) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            using (var inStream = System.IO.File.OpenRead(fullPath)) {
                 using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
                     FileInfo fileInfo = new FileInfo(outFilePath);
                     if (fileInfo.Extension == ".png") {
@@ -35,7 +40,7 @@ namespace ImagePlayground {
                         image.SaveAsWebp(outFilePath);
                     } else if (fileInfo.Extension == ".ico") {
                         // maybe it will work?
-                        System.IO.File.Copy(filePath, outFilePath, true);
+                        System.IO.File.Copy(fullPath, outFullPath, true);
                     } else {
                         throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
                     }
@@ -53,7 +58,10 @@ namespace ImagePlayground {
         /// <param name="height"></param>
         /// <param name="keepAspectRatio"></param>
         public static void Resize(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true) {
-            using (var inStream = System.IO.File.OpenRead(filePath)) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+
+            using (var inStream = System.IO.File.OpenRead(fullPath)) {
                 using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
 
                     if (keepAspectRatio == true) {
@@ -78,7 +86,7 @@ namespace ImagePlayground {
                             image.Mutate(x => x.Resize(image.Width, height.Value));
                         }
                     }
-                    image.Save(outFilePath);
+                    image.Save(outFullPath);
                 }
             }
         }
@@ -125,23 +133,30 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <param name="percentage"></param>
         public static void Resize(string filePath, string outFilePath, int percentage) {
-            using (var inStream = System.IO.File.OpenRead(filePath)) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+
+            using (var inStream = System.IO.File.OpenRead(fullPath)) {
                 using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
                     int width = image.Width * percentage / 100;
                     int height = image.Height * percentage / 100;
                     if (image.Width == width && image.Height == height) {
-                        System.IO.File.Copy(filePath, outFilePath, true);
+                        System.IO.File.Copy(fullPath, outFullPath, true);
                     } else {
                         image.Mutate(x => x.Resize(width, height));
-                        image.Save(outFilePath);
+                        image.Save(outFullPath);
                     }
                 }
             }
         }
 
         public static void Combine(string filePath, string filePath2, string outFilePath, bool resizeToFit = false, ImagePlacement imagePlacement = ImagePlacement.Bottom) {
-            using (var inStream = System.IO.File.OpenRead(filePath))
-            using (var inStream2 = System.IO.File.OpenRead(filePath2))
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath2 = System.IO.Path.GetFullPath(filePath2);
+            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+
+            using (var inStream = System.IO.File.OpenRead(fullPath))
+            using (var inStream2 = System.IO.File.OpenRead(fullPath2))
             using (SixLabors.ImageSharp.Image imageIn1 = SixLabors.ImageSharp.Image.Load(inStream)) {
                 using (SixLabors.ImageSharp.Image imageIn2 = SixLabors.ImageSharp.Image.Load(inStream2)) {
                     var image = imageIn1;
@@ -203,11 +218,48 @@ namespace ImagePlayground {
                                 .DrawImage(image2, new Point(image.Width, 0), 1f)
                             );
                         }
-                        outputImage.Save(outFilePath);
+                        outputImage.Save(outFullPath);
                     }
                 }
             }
 
+        }
+
+        public static void Create(string filePath, int width, int height, Color color, bool open = false) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+
+            using (Image<Rgba32> outputImage = new Image<Rgba32>(width, height)) {
+                //outputImage.Mutate(x => x.Fill(color));
+                //outputImage.Mutate(x => x.BackgroundColor(color));
+
+                int sizeRow = 20;
+                int sizeColumn = 20;
+                int rowCount = height / sizeRow;
+                int columnCount = width / sizeColumn;
+                int imageRadius = 20;
+
+                outputImage.Mutate(ic => {
+                    ic.Fill(color);
+
+                    var rotation = GeometryUtilities.DegreeToRadian(45);
+
+
+                    for (var row = 1; row < rowCount; row++) {
+                        for (var col = 1; col < columnCount; col++) {
+                            var rand = new Random();
+                            var r = (byte)rand.Next(0, 255);
+                            var g = (byte)rand.Next(0, 255);
+                            var b = (byte)rand.Next(0, 255);
+                            var squareColor = new Color(new Rgba32(r, g, b, 255));
+
+                            var polygon = new RegularPolygon(sizeColumn * col, sizeRow * row, 4, imageRadius, rotation);
+                            ic.Fill(squareColor, polygon);
+                        }
+                    }
+                });
+                outputImage.Save(fullPath);
+            }
+            Helpers.Open(fullPath, open);
         }
     }
 }
