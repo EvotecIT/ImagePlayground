@@ -38,6 +38,10 @@
                 $Type = 'Pie'
                 $Values.Add($Definition.Value)
                 $Labels.Add($Definition.Name)
+            } elseif ($Definition.ObjectType -eq 'Radial') {
+                $Type = 'Radial'
+                $Values.Add($Definition.Value)
+                $Labels.Add($Definition.Name)
             }
             $Positions.Add($Position)
             $Position++
@@ -70,6 +74,10 @@
         $PieChart = $Plot.AddPie($Values)
         $PieChart.SliceLabels = $Labels
         $PieChart.ShowLabels = $true
+    } elseif ($Type -eq 'Radial') {
+        $RadialChart = $Plot.AddRadialGauge($Values)
+        $RadialChart.Labels = $Labels
+        $null = $Plot.Legend($true, 7)
     }
 
 
