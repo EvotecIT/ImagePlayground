@@ -8,8 +8,10 @@ using SixLabors.ImageSharp.Processing;
 namespace ImagePlayground {
     public partial class Image : IDisposable {
         public void AddImage(string filePath, int x, int y, float opacity) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+
             var location = new Point(x, y);
-            using (var image = SixLabors.ImageSharp.Image.Load(filePath)) {
+            using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
                 _image.Mutate(mx => mx.DrawImage(image, location, opacity));
             }
         }

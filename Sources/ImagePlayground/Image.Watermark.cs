@@ -50,8 +50,10 @@ namespace ImagePlayground {
         }
 
         public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+
             var location = new Point(0, 0);
-            using (var image = SixLabors.ImageSharp.Image.Load(filePath)) {
+            using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
                 var watermarkWidth = _image.Width * watermarkPercentage / 100;
                 var watermarkHeight = watermarkWidth * image.Height / image.Width;
 

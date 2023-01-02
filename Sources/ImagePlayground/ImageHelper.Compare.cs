@@ -5,14 +5,21 @@ namespace ImagePlayground {
     public partial class ImageHelper {
 
         public static ICompareResult Compare(string filePath, string filePathToCompare) {
-            bool isEqual = ImageSharpCompare.ImagesAreEqual(filePath, filePathToCompare);
-            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(filePath, filePathToCompare);
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPathToCompare = System.IO.Path.GetFullPath(filePathToCompare);
+
+            bool isEqual = ImageSharpCompare.ImagesAreEqual(fullPath, fullPathToCompare);
+            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(fullPath, fullPathToCompare);
             return calcDiff;
         }
 
         public static void Compare(string filePath, string filePathToCompare, string filePathToSave) {
-            using (var fileStreamDifferenceMask = File.Create(filePathToSave)) {
-                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(filePath, filePathToCompare)) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPathToCompare = System.IO.Path.GetFullPath(filePathToCompare);
+            string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
+
+            using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
+                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(fullPath, fullPathToCompare)) {
                     SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
                 }
             }
