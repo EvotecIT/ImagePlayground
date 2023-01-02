@@ -1,4 +1,32 @@
-﻿### 0.0.4 - 2022.12.31
+﻿### 0.0.5
+- Added new methods:
+  - Dither
+  - DrawLines
+  - DrawPolygon
+  - Fill
+  - HistogramEqualization
+  - Kodachrome
+  - Lightness
+  - Lomograph
+  - Invert
+  - Opacity
+  - Sepia
+  - Skew
+  - Vignette
+- Added ability to create new empty image
+- Added `New-ImageChartRadial` that allows you to create a radial chart
+
+```powershell
+New-ImageChart {
+    New-ImageChartRadial -Name "C#" -Value 5
+    New-ImageChartRadial -Name "AutoIt v3" -Value 50
+    New-ImageChartRadial -Name "PowerShell" -Value 10
+    New-ImageChartRadial -Name "C++" -Value 18
+    New-ImageChartRadial -Name "F#" -Value 100
+} -Show -FilePath $PSScriptRoot\Samples\ChartsPie.png -Width 500 -Height 500
+```
+
+### 0.0.4 - 2022.12.31
 - Added `Set-ImageExif` that sets exif data on an image.
 - Added `Get-ImageExif` that gets exif data from an image.
 - Added `Remove-ImageExif` that removes exif data from an image.
