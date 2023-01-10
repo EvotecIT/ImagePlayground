@@ -26,8 +26,10 @@ It provides way to add watermark to images - either by text or by image.
 
 ## Known Issues
 
-This library will work fine for PowerShell 5.1 and PowerShell 7+.
-It works on Windows, Linux and macOS, with an exception to support of charts on Linux and macOS. There is a plan to add support for charts on Linux and macOS in the future.
+This module will work fine for PowerShell 5.1 and PowerShell 7+. It works on Windows, Linux and macOS, with an exception to support of charts on Linux and macOS. There is a plan to add support for charts on Linux and macOS in the future.
+
+**Currently the module has a problem when running in VSCode PowerShell extension when on PowerShell 5.1 (other versions work fine!)**
+It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 
 ## Features
 
