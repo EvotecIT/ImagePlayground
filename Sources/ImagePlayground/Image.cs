@@ -2,6 +2,8 @@
 using System.IO;
 using System.Numerics;
 using Codeuctivity.ImageSharpCompare;
+using HeyRed.ImageSharp.Heif.Formats.Avif;
+using HeyRed.ImageSharp.Heif.Formats.Heif;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -272,7 +274,17 @@ namespace ImagePlayground {
             image._filePath = fullPath;
 
             var inStream = System.IO.File.OpenRead(fullPath);
-            image._image = SixLabors.ImageSharp.Image.Load(inStream);
+
+            if (System.IO.Path.GetExtension(fullPath).ToLower() == ".heic") {
+                var configuration = new Configuration(
+                    new AvifConfigurationModule(),
+                    new HeifConfigurationModule()
+
+                );
+                image._image = SixLabors.ImageSharp.Image.Load(configuration, stream: inStream);
+            } else {
+                image._image = SixLabors.ImageSharp.Image.Load(inStream);
+            }
             inStream.Close();
             inStream.Dispose();
 

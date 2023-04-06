@@ -21,12 +21,14 @@ namespace ImagePlayground.Examples {
             //Example.Charts1(folderPath);
             //Example.ResizeImage(folderPath);
             //Example.ConvertTo(folderPath);
-
             //Example.ImageModifications1(folderPath);
             //Example.ImageModifications2(folderPath);
             //Example.ImageTextWatermark(folderPath);
             //Example.ImageBGInfo(folderPath);
-            Example.Combine(folderPath);
+            Example.ImageEXIF(folderPath);
+            //Example.Combine(folderPath);
+            //Example.CreateNewImage(folderPath);
+            //Example.Compare(folderPath);
 
             // lets open up the folder with the images
             //Console.WriteLine("\npress any key to exit the process...");

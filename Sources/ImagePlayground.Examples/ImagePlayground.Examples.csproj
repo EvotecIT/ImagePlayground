@@ -26,6 +26,12 @@
     <None Update="Images\CalculatorBefore.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Images\IMG_4539.HEIC">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\IMG_4539.jpeg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\KulekWSluchawkach.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
