@@ -75,6 +75,16 @@ namespace ImagePlayground {
             Generate(generator.ToString(), filePath, transparent);
         }
 
+        public static void GenerateEmail(string filePath, string email, string subject = null, string message = null, PayloadGenerator.Mail.MailEncoding encoding = PayloadGenerator.Mail.MailEncoding.MAILTO, bool transparent = false) {
+            PayloadGenerator.Mail generator = new PayloadGenerator.Mail(email, subject, message, encoding);
+            Generate(generator.ToString(), filePath, transparent);
+        }
+
+        public static void GenerateMMS(string filePath, string phoneNumber, string subject = "", PayloadGenerator.MMS.MMSEncoding encoding = PayloadGenerator.MMS.MMSEncoding.MMSTO, bool transparent = false) {
+            var generator = subject == "" ? new PayloadGenerator.MMS(phoneNumber, encoding) : new PayloadGenerator.MMS(phoneNumber, subject, encoding);
+            Generate(generator.ToString(), filePath, transparent);
+        }
+
         public static BarcodeResult<Rgba32> Read(string filePath) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
 
