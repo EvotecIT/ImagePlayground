@@ -13,7 +13,13 @@ $Image.Metadata.ExifProfile.SetValue([SixLabors.ImageSharp.Metadata.Profiles.Exi
 
 # lets get latitudes and longitudes
 $Lat = $Image.Metadata.ExifProfile.Values | Where-Object { $_.Tag -like 'GPSLatitude' }
-$Lat.Value | Format-Table
+#$Lat.Value | Format-Table
+$Lat.Value[0]
+$Lat.Value[1]
+$Lat.Value[2]
+
+
+return
 
 $Lon = $Image.Metadata.ExifProfile.Values | Where-Object { $_.Tag -like 'GPSLongitude' }
 $Lon.Value | Format-Table
