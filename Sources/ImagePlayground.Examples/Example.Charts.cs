@@ -8,7 +8,8 @@ namespace ImagePlayground.Examples {
     internal partial class Example {
 
         public static void Charts1(string folderPath) {
-            var plt = new ScottPlot.Plot(600, 400);
+            //var plt = new ScottPlot.Plot(600, 400);
+            // plt.
 
             //// create sample data
             //double[] values = { 26, 20, 23, 7, 16 };

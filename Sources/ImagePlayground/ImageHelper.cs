@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ScottPlot.Plottable;
+using ScottPlot;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -8,6 +8,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using static ImagePlayground.Image;
+using Color = SixLabors.ImageSharp.Color;
 using Path = SixLabors.ImageSharp.Drawing.Path;
 
 namespace ImagePlayground {

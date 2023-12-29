@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ScottPlot.Plottable;
+using ScottPlot;
 using Xunit;
 
 namespace ImagePlayground.Tests {

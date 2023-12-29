@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
-using Codeuctivity.ImageSharpCompare;
+//using Codeuctivity.ImageSharpCompare;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -71,41 +71,41 @@ namespace ImagePlayground {
             _image.Mutate(x => x.Contrast(amount));
         }
 
-        public ICompareResult Compare(Image imageToCompare) {
-            bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare._image);
-            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare._image);
-            return calcDiff;
-        }
+        //public ICompareResult Compare(Image imageToCompare) {
+        //    bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare._image);
+        //    ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare._image);
+        //    return calcDiff;
+        //}
 
-        public ICompareResult Compare(string filePathToCompare) {
-            string fullPath = System.IO.Path.GetFullPath(filePathToCompare);
+        //public ICompareResult Compare(string filePathToCompare) {
+        //    string fullPath = System.IO.Path.GetFullPath(filePathToCompare);
 
-            var imageToCompare = GetImage(fullPath);
-            bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare);
-            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare);
-            return calcDiff;
-        }
+        //    var imageToCompare = GetImage(fullPath);
+        //    bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare);
+        //    ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare);
+        //    return calcDiff;
+        //}
 
-        public void Compare(Image imageToCompare, string filePathToSave) {
-            string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
-            using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
-                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare._image)) {
-                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
-                }
-            }
-        }
+        //public void Compare(Image imageToCompare, string filePathToSave) {
+        //    string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
+        //    using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
+        //        using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare._image)) {
+        //            SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
+        //        }
+        //    }
+        //}
 
-        public void Compare(string filePathToCompare, string filePathToSave) {
-            string fullPath = System.IO.Path.GetFullPath(filePathToCompare);
-            string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
+        //public void Compare(string filePathToCompare, string filePathToSave) {
+        //    string fullPath = System.IO.Path.GetFullPath(filePathToCompare);
+        //    string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
 
-            using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
-                var imageToCompare = GetImage(fullPath);
-                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare)) {
-                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
-                }
-            }
-        }
+        //    using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
+        //        var imageToCompare = GetImage(fullPath);
+        //        using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare)) {
+        //            SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
+        //        }
+        //    }
+        //}
 
         public void Crop(Rectangle rectangle) {
             _image.Mutate(x => x.Crop(rectangle));
@@ -115,7 +115,7 @@ namespace ImagePlayground {
         }
 
         public void DrawLines(Color color, float thickness, PointF pointF) {
-            _image.Mutate(x => x.DrawLine(color, thickness, pointF));
+            _image.Mutate(x => x.DrawLines(color, thickness, pointF));
         }
 
         public void DrawPolygon(Color color, float thickness, PointF pointF) {

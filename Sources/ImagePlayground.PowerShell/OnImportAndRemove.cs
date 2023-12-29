@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using System.Reflection;
@@ -37,12 +38,32 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
             string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.ValueTuple.dll");
             return Assembly.LoadFile(binPath);
         } else if (args.Name.StartsWith("System.Text.Encoding.CodePages,")) {
-            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Text.Encoding.CodePages.dll");
-            return Assembly.LoadFile(binPath);
-        } else if (args.Name.StartsWith("SixLabors.ImageSharp.Drawing,")) {
-            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "SixLabors.ImageSharp.Drawing.dll");
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.Text.Encoding.CodePagesdll");
             return Assembly.LoadFile(binPath);
         }
+
+        //var assemblyList = new List<(string, string)>
+        //{
+        //    ("System.Memory,", "System.Memory.dll"),
+        //    ("System.Runtime.CompilerServices.Unsafe,", "System.Runtime.CompilerServices.Unsafe.dll"),
+        //    ("System.Text.Encoding.CodePages,", "System.Text.Encoding.CodePages.dll"),
+        //    ("System.Buffers,", "System.Buffers.dll"),
+        //    ("Microsoft.Bcl.AsyncInterfaces,", "Microsoft.Bcl.AsyncInterfaces.dll"),
+        //    ("System.Numerics.Vectors,", "System.Numerics.Vectors.dll"),
+        //    ("System.Drawing.Common,", "System.Drawing.Common.dll"),
+        //    ("System.ValueTuple,", "System.ValueTuple.dll"),
+        //    ("SixLabors.ImageSharp.Drawing,", "SixLabors.ImageSharp.Drawing.dll"),
+        //    ("SixLabors.ImageSharp,", "SixLabors.ImageSharp.dll"),
+        //    ("SixLabors.Fonts,", "SixLabors.Fonts.dll")
+        //};
+
+        //foreach (var assembly in assemblyList) {
+        //    if (args.Name.StartsWith(assembly.Item1)) {
+        //        var binaryPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), assembly.Item2);
+        //        return Assembly.LoadFile(binaryPath);
+        //    }
+        //}
+
         return null;
     }
 }

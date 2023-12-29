@@ -12,7 +12,7 @@ namespace ImagePlayground {
             }
             var font = fontFamily.CreateFont(fontSize, FontStyle.Regular);
             var options = new TextOptions(font) { Dpi = 72, KerningMode = KerningMode.Auto };
-            var textSize = TextMeasurer.MeasureSize(text, options);
+            var textSize = TextMeasurer.Measure(text, options);
             return textSize;
         }
 

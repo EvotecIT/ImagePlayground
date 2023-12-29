@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ScottPlot" Version="4.1.70" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
   </ItemGroup>
 
