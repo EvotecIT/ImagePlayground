@@ -22,6 +22,23 @@ namespace ImagePlayground {
         public PixelTypeInfo PixelType => _image.PixelType;
         public ImageFrameCollection Frames => _image.Frames;
 
+        public enum Sampler {
+            NearestNeighbor,
+            Box,
+            Triangle,
+            Hermite,
+            Lanczos2,
+            Lanczos3,
+            Lanczos5,
+            Lanczos8,
+            MitchellNetravali,
+            CatmullRom,
+            Robidoux,
+            RobidouxSharp,
+            Spline,
+            Welch,
+        }
+
         public void AdaptiveThreshold() {
             _image.Mutate(x => x.AdaptiveThreshold());
         }
@@ -98,7 +115,7 @@ namespace ImagePlayground {
         }
 
         public void DrawLines(Color color, float thickness, PointF pointF) {
-            _image.Mutate(x => x.DrawLines(color, thickness, pointF));
+            _image.Mutate(x => x.DrawLine(color, thickness, pointF));
         }
 
         public void DrawPolygon(Color color, float thickness, PointF pointF) {
