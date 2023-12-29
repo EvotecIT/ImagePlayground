@@ -20,6 +20,10 @@
         [Parameter(Mandatory)][string] $FilePath,
         [switch] $Translate
     )
+    if (-not (Test-Path $FilePath)) {
+        Write-Warning -Message "Get-ImageExif - File not found: $FilePath"
+        return
+    }
     $Image = Get-Image -FilePath $FilePath
     if ($Translate) {
         $SingleExif = [ordered] @{}
