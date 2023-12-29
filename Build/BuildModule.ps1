@@ -91,51 +91,52 @@
         CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
         #DotSourceLibraries                = $false
         #DotSourceClasses                  = $false
-        SeparateFileLibraries             = $true
+        #SeparateFileLibraries             = $true
         #DeleteTargetModuleBeforeBuild     = $true
 
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'ImagePlayground.PowerShell'
         NETProjectName                    = 'ImagePlayground.PowerShell'
         NETConfiguration                  = 'Release'
-        NETFramework                      = 'netstandard2.0' #, 'net472'
+        NETFramework                      = 'netstandard2.0', 'net472'
         #NETExcludeMainLibrary             = $true
         NETExcludeLibraryFilter           = @(
-            'System.Management.*.dll'
+            #'System.Management.*.dll'
         )
         DotSourceLibraries                = $true
         DotSourceClasses                  = $true
         #SeparateFileLibraries             = $true
         DeleteTargetModuleBeforeBuild     = $true
+        MergeLibraryDebugging             = $false
     }
 
-    New-ConfigurationBuild @newConfigurationBuildSplat  #-DotSourceLibraries -DotSourceClasses -MergeModuleOnBuild -Enable -SignModule -DeleteTargetModuleBeforeBuild -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703' -MergeFunctionsFromApprovedModules
+    New-ConfigurationBuild @newConfigurationBuildSplat #-DotSourceLibraries -DotSourceClasses -MergeModuleOnBuild -Enable -SignModule -DeleteTargetModuleBeforeBuild -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703' -MergeFunctionsFromApprovedModules
 
-    $newConfigurationArtefactSplat = @{
-        Type                = 'Unpacked'
-        Enable              = $true
-        Path                = "$PSScriptRoot\..\Artefacts\Unpacked"
-        ModulesPath         = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
-        RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
-        AddRequiredModules  = $true
-        CopyFiles           = @{
-            #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
-        }
-    }
-    New-ConfigurationArtefact @newConfigurationArtefactSplat -CopyFilesRelative
-    $newConfigurationArtefactSplat = @{
-        Type                = 'Packed'
-        Enable              = $true
-        Path                = "$PSScriptRoot\..\Artefacts\Packed"
-        ModulesPath         = "$PSScriptRoot\..\Artefacts\Packed\Modules"
-        RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Packed\Modules"
-        AddRequiredModules  = $true
-        CopyFiles           = @{
-            #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
-        }
-        ArtefactName        = '<ModuleName>.v<ModuleVersion>.zip'
-    }
-    New-ConfigurationArtefact @newConfigurationArtefactSplat
+    # $newConfigurationArtefactSplat = @{
+    #     Type                = 'Unpacked'
+    #     Enable              = $true
+    #     Path                = "$PSScriptRoot\..\Artefacts\Unpacked"
+    #     ModulesPath         = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
+    #     RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
+    #     AddRequiredModules  = $true
+    #     CopyFiles           = @{
+    #         #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
+    #     }
+    # }
+    # New-ConfigurationArtefact @newConfigurationArtefactSplat -CopyFilesRelative
+    # $newConfigurationArtefactSplat = @{
+    #     Type                = 'Packed'
+    #     Enable              = $true
+    #     Path                = "$PSScriptRoot\..\Artefacts\Packed"
+    #     ModulesPath         = "$PSScriptRoot\..\Artefacts\Packed\Modules"
+    #     RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Packed\Modules"
+    #     AddRequiredModules  = $true
+    #     CopyFiles           = @{
+    #         #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
+    #     }
+    #     ArtefactName        = '<ModuleName>.v<ModuleVersion>.zip'
+    # }
+    # New-ConfigurationArtefact @newConfigurationArtefactSplat
 
     #New-ConfigurationTest -TestsPath "$PSScriptRoot\..\Tests" -Enable
 
