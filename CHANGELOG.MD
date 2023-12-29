@@ -1,5 +1,13 @@
-﻿### 0.0.5
+﻿### 0.0.6
 - Added new library: Codeuctivity.ImageSharpCompare 2.0.76
+- Added Image Compare feature
+
+### 0.0.5 - 2023.12.29
+
+## What's new
+- Fixes issue with resizing when providing only one dimension
+- Added ability to create new empty image
+- Added `New-ImageChartRadial` that allows you to create a radial chart
 - Added new methods:
   - Dither
   - DrawLines
@@ -14,9 +22,8 @@
   - Sepia
   - Skew
   - Vignette
-- Added ability to create new empty image
-- Added `New-ImageChartRadial` that allows you to create a radial chart
-- Added Image Compare feature
+
+**Full Changelog**: https://github.com/EvotecIT/ImagePlayground/compare/v0.0.4...v0.0.5
 
 ```powershell
 New-ImageChart {
