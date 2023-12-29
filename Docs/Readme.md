@@ -50,6 +50,9 @@ Gets EXIF data from image
 ### [New-ImageChartPie](New-ImageChartPie.md)
 {{ Fill in the Synopsis }}
 
+### [New-ImageChartRadial](New-ImageChartRadial.md)
+{{ Fill in the Synopsis }}
+
 ### [New-ImageQRCode](New-ImageQRCode.md)
 {{ Fill in the Synopsis }}
 
