@@ -20,12 +20,12 @@
     <PackageReference Include="Barcoder" Version="2.0.0" />
     <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
     <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
-    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.76" />
+    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
     <PackageReference Include="QRCoder-ImageSharp" Version="0.9.0" />
-    <PackageReference Include="ScottPlot" Version="4.1.60" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta19" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+    <PackageReference Include="ScottPlot" Version="4.1.70" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.6" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 </Project>
