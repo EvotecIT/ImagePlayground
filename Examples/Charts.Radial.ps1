@@ -6,4 +6,4 @@ New-ImageChart {
     New-ImageChartRadial -Name "PowerShell" -Value 10
     New-ImageChartRadial -Name "C++" -Value 18
     New-ImageChartRadial -Name "F#" -Value 100
-} -Show -FilePath $PSScriptRoot\Samples\ChartsRadial.png -Width 500 -Height 500
+} -Show -FilePath $PSScriptRoot\Output\ChartsRadial.png -Width 500 -Height 500
