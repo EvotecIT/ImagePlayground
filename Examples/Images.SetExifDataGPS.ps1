@@ -3,7 +3,7 @@
 # details on rational numbers
 # https://github.com/SixLabors/ImageSharp/discussions/1295
 
-$Image = Get-Image -FilePath "C:\Users\przemyslaw.klys\Downloads\IMG_4644.jpeg"
+$Image = Get-Image -FilePath "$PSScriptRoot\Samples\Snow.jpeg"
 $Image.Metadata.ExifProfile.Values | Format-Table
 
 # lets set some dates
