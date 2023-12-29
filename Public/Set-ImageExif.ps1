@@ -38,7 +38,11 @@
         [Parameter(Mandatory)][SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag] $ExifTag,
         [Parameter(Mandatory)] $Value
     )
-    $Image = Get-Image -FilePath "C:\Users\przemyslaw.klys\Downloads\IMG_4644.jpeg"
+    if (-not (Test-Path $FilePath)) {
+        Write-Warning -Message "Set-ImageExif - File not found: $FilePath"
+        return
+    }
+    $Image = Get-Image -FilePath $FilePath
     # void SetValue[TValueType](SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag[TValueType] tag, TValueType value)
     $Image.Metadata.ExifProfile.SetValue($ExifTag, $Value)
     if ($FilePathOutput) {
