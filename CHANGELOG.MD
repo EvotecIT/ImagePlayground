@@ -1,6 +1,8 @@
-﻿### 0.0.6 - WIP
-- Added new library: Codeuctivity.ImageSharpCompare 2.0.76
+﻿### 0.0.6 - 2023.12.30
+- Added new library: Codeuctivity.ImageSharpCompare
 - Added Image Compare feature
+- Bump dependencies
+- Improved some code
 
 ### 0.0.5 - 2023.12.29
 
