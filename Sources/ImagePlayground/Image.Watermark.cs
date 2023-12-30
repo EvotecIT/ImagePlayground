@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using FontStyle = SixLabors.Fonts.FontStyle;
 using PointF = SixLabors.ImageSharp.PointF;

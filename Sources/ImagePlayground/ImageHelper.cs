@@ -7,9 +7,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
-using static ImagePlayground.Image;
 using Color = SixLabors.ImageSharp.Color;
-using Path = SixLabors.ImageSharp.Drawing.Path;
 
 namespace ImagePlayground {
     public partial class ImageHelper {
