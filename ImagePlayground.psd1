@@ -9,7 +9,7 @@
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @('ConvertTo-Image', 'Get-Image', 'Get-ImageBarCode', 'Get-ImageExif', 'Get-ImageQRCode', 'Merge-Image', 'New-ImageBarCode', 'New-ImageChart', 'New-ImageChartBar', 'New-ImageChartBarOptions', 'New-ImageChartLine', 'New-ImageChartPie', 'New-ImageChartRadial', 'New-ImageQRCode', 'New-ImageQRCodeWiFi', 'New-ImageQRContact', 'Remove-ImageExif', 'Resize-Image', 'Save-Image', 'Set-ImageExif')
     GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
-    ModuleVersion          = '0.0.7'
+    ModuleVersion          = '0.0.8'
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
