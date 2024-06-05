@@ -115,7 +115,7 @@ namespace ImagePlayground {
         }
 
         public void DrawLines(Color color, float thickness, PointF pointF) {
-            _image.Mutate(x => x.DrawLines(color, thickness, pointF));
+            _image.Mutate(x => x.DrawLine(color, thickness, pointF));
         }
 
         public void DrawPolygon(Color color, float thickness, PointF pointF) {

@@ -77,7 +77,7 @@ namespace ImagePlayground {
             }
         }
 
-        public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
 
             var location = new Point(x, y);
