@@ -1,4 +1,4 @@
-﻿Import-Module .\ImagePlayground.psd1 -Force
+﻿#Import-Module .\ImagePlayground.psd1 -Force
 
 $mergeImageSplat = @{
     FilePath        = "$PSScriptRoot\Samples\BarcodeEAN13.png"

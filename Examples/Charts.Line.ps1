@@ -1,4 +1,4 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+﻿#Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
 New-ImageChart {
     New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#"
