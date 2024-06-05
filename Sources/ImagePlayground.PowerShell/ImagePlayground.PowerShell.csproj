@@ -1,36 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Company>Evotec</Company>
-    <Authors>Przemyslaw Klys</Authors>
-    <VersionPrefix>1.1.0</VersionPrefix>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net48;net6.0;net7.0</TargetFrameworks>
-    <AssemblyName>ImagePlayground.PowerShell</AssemblyName>
+	<PropertyGroup>
+		<Company>Evotec</Company>
+		<Authors>Przemyslaw Klys</Authors>
+		<VersionPrefix>1.1.0</VersionPrefix>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net472;net48;net6.0;net7.0</TargetFrameworks>
+		<AssemblyName>ImagePlayground.PowerShell</AssemblyName>
 
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 
-    <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
-    <LangVersion>10.0</LangVersion>
-  </PropertyGroup>
+		<Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
+		<LangVersion>10.0</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Barcoder" Version="2.0.0" />
-    <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
-    <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
-    <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
-    <PackageReference Include="QRCoder-ImageSharp" Version="0.9.0" />
-    <PackageReference Include="ScottPlot" Version="4.1.60" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta19" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Barcoder" Version="2.0.0" />
+		<PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
+		<PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
+		<PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
+		<PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
+		<PackageReference Include="ScottPlot" Version="4.1.60" />
+		<PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
+		<DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
+	</PropertyGroup>
 
 </Project>
