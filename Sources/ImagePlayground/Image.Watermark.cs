@@ -76,5 +76,23 @@ namespace ImagePlayground {
                 AddImage(image, location, opacity);
             }
         }
+
+        public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+            string fullPath = System.IO.Path.GetFullPath(filePath);
+
+            var location = new Point(x, y);
+            using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
+                var watermarkWidth = _image.Width * watermarkPercentage / 100;
+                var watermarkHeight = watermarkWidth * image.Height / image.Width;
+
+                // rotate watermark
+                if (rotate == 0) {
+                    image.Mutate(mx => mx.Resize(watermarkWidth, watermarkHeight).Flip(flipMode));
+                } else {
+                    image.Mutate(mx => mx.Resize(watermarkWidth, watermarkHeight).Flip(flipMode).Rotate(rotate));
+                }
+                AddImage(image, location, opacity);
+            }
+        }
     }
 }

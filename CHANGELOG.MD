@@ -1,4 +1,8 @@
-﻿### 0.0.6 - 2023.12.30
+﻿### 0.0.7 - 2024.06.05
+
+- Add another method `$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",50,100, 0.5, 0.5)`
+
+### 0.0.6 - 2023.12.30
 - Added new library: Codeuctivity.ImageSharpCompare
 - Added Image Compare feature
 - Bump dependencies
