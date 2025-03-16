@@ -1,3 +1,3 @@
-﻿Import-Module .\ImagePlayground.psd1 -Force
+﻿# Import-Module .\ImagePlayground.psd1 -Force
 
-New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\QRCode.png" -Verbose
+New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Output\QRCode.png" -Verbose

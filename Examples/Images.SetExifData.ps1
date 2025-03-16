@@ -1,4 +1,4 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+﻿# Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
 Get-ImageExif -FilePath "$PSScriptRoot\Samples\Snow.jpeg" -Translate | Format-List Datetime*, GPS*
 

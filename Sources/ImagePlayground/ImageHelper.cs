@@ -8,6 +8,8 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using Color = SixLabors.ImageSharp.Color;
+using Path = System.IO.Path;
+using SLImage = SixLabors.ImageSharp.Image;
 
 namespace ImagePlayground {
     public partial class ImageHelper {
@@ -19,34 +21,44 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <exception cref="UnknownImageFormatException"></exception>
         public static void ConvertTo(string filePath, string outFilePath) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
-            using (var inStream = System.IO.File.OpenRead(fullPath)) {
-                using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    FileInfo fileInfo = new FileInfo(outFilePath);
-                    if (fileInfo.Extension == ".png") {
-                        image.SaveAsPng(outFilePath);
-                    } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                        image.SaveAsJpeg(outFilePath);
-                    } else if (fileInfo.Extension == ".bmp") {
-                        image.SaveAsBmp(outFilePath);
-                    } else if (fileInfo.Extension == ".gif") {
-                        image.SaveAsGif(outFilePath);
-                    } else if (fileInfo.Extension == ".pbm") {
-                        image.SaveAsPbm(outFilePath);
-                    } else if (fileInfo.Extension == ".tga") {
-                        image.SaveAsTga(outFilePath);
-                    } else if (fileInfo.Extension == ".tiff") {
-                        image.SaveAsTiff(outFilePath);
-                    } else if (fileInfo.Extension == ".webp") {
-                        image.SaveAsWebp(outFilePath);
-                    } else if (fileInfo.Extension == ".ico") {
-                        // maybe it will work?
-                        System.IO.File.Copy(fullPath, outFullPath, true);
-                    } else {
-                        throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-                    }
-                }
+            string fullPath = Path.GetFullPath(filePath);
+            string outFullPath = Path.GetFullPath(outFilePath);
+            using var inStream = File.OpenRead(fullPath);
+            using SLImage image = SLImage.Load(inStream);
+            FileInfo fileInfo = new FileInfo(outFilePath);
+            switch (fileInfo.Extension)
+            {
+                case ".png":
+                    image.SaveAsPng(outFullPath);
+                    break;
+                case ".jpg":
+                case ".jpeg":
+                    image.SaveAsJpeg(outFullPath);
+                    break;
+                case ".bmp":
+                    image.SaveAsBmp(outFullPath);
+                    break;
+                case ".gif":
+                    image.SaveAsGif(outFullPath);
+                    break;
+                case ".pbm":
+                    image.SaveAsPbm(outFullPath);
+                    break;
+                case ".tga":
+                    image.SaveAsTga(outFullPath);
+                    break;
+                case ".tiff":
+                    image.SaveAsTiff(outFullPath);
+                    break;
+                case ".webp":
+                    image.SaveAsWebp(outFullPath);
+                    break;
+                case ".ico":
+                    // maybe it will work?
+                    File.Copy(fullPath, outFullPath, true);
+                    break;
+                default:
+                    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
             }
         }
 
@@ -64,90 +76,102 @@ namespace ImagePlayground {
             string fullPath = System.IO.Path.GetFullPath(filePath);
             string outFullPath = System.IO.Path.GetFullPath(outFilePath);
 
-            using (var inStream = System.IO.File.OpenRead(fullPath)) {
-                using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    if (sampler == null) {
-                        if (keepAspectRatio == true) {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value));
-                            } else if (width != null) {
-                                var newWidth = width.Value;
-                                var newHeight = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-                            } else if (height != null) {
-                                var newHeight = height.Value;
-                                var newWidth = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-                            }
-                        } else {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value));
-                            } else if (width != null) {
-                                image.Mutate(x => x.Resize(width.Value, image.Height));
-                            } else if (height != null) {
-                                image.Mutate(x => x.Resize(image.Width, height.Value));
-                            }
-                        }
-                    } else {
-                        IResampler mySampler = null;
-                        if (sampler == Image.Sampler.NearestNeighbor) {
-                            mySampler = KnownResamplers.NearestNeighbor;
-                        } else if (sampler == Image.Sampler.Box) {
-                            mySampler = KnownResamplers.Box;
-                        } else if (sampler == Image.Sampler.Triangle) {
-                            mySampler = KnownResamplers.Triangle;
-                        } else if (sampler == Image.Sampler.Hermite) {
-                            mySampler = KnownResamplers.Hermite;
-                        } else if (sampler == Image.Sampler.Lanczos2) {
-                            mySampler = KnownResamplers.Lanczos2;
-                        } else if (sampler == Image.Sampler.Lanczos3) {
-                            mySampler = KnownResamplers.Lanczos3;
-                        } else if (sampler == Image.Sampler.Lanczos5) {
-                            mySampler = KnownResamplers.Lanczos5;
-                        } else if (sampler == Image.Sampler.Lanczos8) {
-                            mySampler = KnownResamplers.Lanczos8;
-                        } else if (sampler == Image.Sampler.MitchellNetravali) {
-                            mySampler = KnownResamplers.MitchellNetravali;
-                        } else if (sampler == Image.Sampler.CatmullRom) {
-                            mySampler = KnownResamplers.CatmullRom;
-                        } else if (sampler == Image.Sampler.Robidoux) {
-                            mySampler = KnownResamplers.Robidoux;
-                        } else if (sampler == Image.Sampler.RobidouxSharp) {
-                            mySampler = KnownResamplers.RobidouxSharp;
-                        } else if (sampler == Image.Sampler.Spline) {
-                            mySampler = KnownResamplers.Spline;
-                        } else if (sampler == Image.Sampler.Triangle) {
-                            mySampler = KnownResamplers.Triangle;
-                        } else if (sampler == Image.Sampler.Welch) {
-                            mySampler = KnownResamplers.Welch;
-                        }
-
-                        if (keepAspectRatio == true) {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
-                            } else if (width != null) {
-                                var newWidth = width.Value;
-                                var newHeight = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
-                            } else if (height != null) {
-                                var newHeight = height.Value;
-                                var newWidth = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
-                            }
-                        } else {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
-                            } else if (width != null) {
-                                image.Mutate(x => x.Resize(width.Value, image.Height, mySampler));
-                            } else if (height != null) {
-                                image.Mutate(x => x.Resize(image.Width, height.Value, mySampler));
-                            }
-                        }
+            using var inStream = System.IO.File.OpenRead(fullPath);
+            using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
+            if (sampler == null)
+            {
+                if (keepAspectRatio == true)
+                {
+                    if (width != null && height != null)
+                    {
+                        image.Mutate(x => x.Resize(width.Value, height.Value));
                     }
-
-                    image.Save(outFullPath);
+                    else if (width != null)
+                    {
+                        var newWidth = width.Value;
+                        var newHeight = 0;
+                        image.Mutate(x => x.Resize(newWidth, newHeight));
+                    }
+                    else if (height != null)
+                    {
+                        var newHeight = height.Value;
+                        var newWidth = 0;
+                        image.Mutate(x => x.Resize(newWidth, newHeight));
+                    }
+                }
+                else
+                {
+                    if (width != null && height != null)
+                    {
+                        image.Mutate(x => x.Resize(width.Value, height.Value));
+                    }
+                    else if (width != null)
+                    {
+                        image.Mutate(x => x.Resize(width.Value, image.Height));
+                    }
+                    else if (height != null)
+                    {
+                        image.Mutate(x => x.Resize(image.Width, height.Value));
+                    }
                 }
             }
+            else
+            {
+                IResampler mySampler = null;
+                mySampler = sampler switch {
+                    Image.Sampler.NearestNeighbor => KnownResamplers.NearestNeighbor,
+                    Image.Sampler.Box => KnownResamplers.Box,
+                    Image.Sampler.Triangle => KnownResamplers.Triangle,
+                    Image.Sampler.Hermite => KnownResamplers.Hermite,
+                    Image.Sampler.Lanczos2 => KnownResamplers.Lanczos2,
+                    Image.Sampler.Lanczos3 => KnownResamplers.Lanczos3,
+                    Image.Sampler.Lanczos5 => KnownResamplers.Lanczos5,
+                    Image.Sampler.Lanczos8 => KnownResamplers.Lanczos8,
+                    Image.Sampler.MitchellNetravali => KnownResamplers.MitchellNetravali,
+                    Image.Sampler.CatmullRom => KnownResamplers.CatmullRom,
+                    Image.Sampler.Robidoux => KnownResamplers.Robidoux,
+                    Image.Sampler.RobidouxSharp => KnownResamplers.RobidouxSharp,
+                    Image.Sampler.Spline => KnownResamplers.Spline,
+                    Image.Sampler.Welch => KnownResamplers.Welch,
+                    _ => throw new ArgumentException("Invalid sampler type"),
+                };
+                if (keepAspectRatio == true)
+                {
+                    if (width != null && height != null)
+                    {
+                        image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
+                    }
+                    else if (width != null)
+                    {
+                        var newWidth = width.Value;
+                        var newHeight = 0;
+                        image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
+                    }
+                    else if (height != null)
+                    {
+                        var newHeight = height.Value;
+                        var newWidth = 0;
+                        image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
+                    }
+                }
+                else
+                {
+                    if (width != null && height != null)
+                    {
+                        image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
+                    }
+                    else if (width != null)
+                    {
+                        image.Mutate(x => x.Resize(width.Value, image.Height, mySampler));
+                    }
+                    else if (height != null)
+                    {
+                        image.Mutate(x => x.Resize(image.Width, height.Value, mySampler));
+                    }
+                }
+            }
+
+            image.Save(outFullPath);
         }
 
         public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
@@ -184,41 +208,25 @@ namespace ImagePlayground {
                 }
             } else {
                 IResampler mySampler = null;
-                if (sampler == Image.Sampler.NearestNeighbor) {
-                    mySampler = KnownResamplers.NearestNeighbor;
-                } else if (sampler == Image.Sampler.Box) {
-                    mySampler = KnownResamplers.Box;
-                } else if (sampler == Image.Sampler.Triangle) {
-                    mySampler = KnownResamplers.Triangle;
-                } else if (sampler == Image.Sampler.Hermite) {
-                    mySampler = KnownResamplers.Hermite;
-                } else if (sampler == Image.Sampler.Lanczos2) {
-                    mySampler = KnownResamplers.Lanczos2;
-                } else if (sampler == Image.Sampler.Lanczos3) {
-                    mySampler = KnownResamplers.Lanczos3;
-                } else if (sampler == Image.Sampler.Lanczos5) {
-                    mySampler = KnownResamplers.Lanczos5;
-                } else if (sampler == Image.Sampler.Lanczos8) {
-                    mySampler = KnownResamplers.Lanczos8;
-                } else if (sampler == Image.Sampler.MitchellNetravali) {
-                    mySampler = KnownResamplers.MitchellNetravali;
-                } else if (sampler == Image.Sampler.CatmullRom) {
-                    mySampler = KnownResamplers.CatmullRom;
-                } else if (sampler == Image.Sampler.Robidoux) {
-                    mySampler = KnownResamplers.Robidoux;
-                } else if (sampler == Image.Sampler.RobidouxSharp) {
-                    mySampler = KnownResamplers.RobidouxSharp;
-                } else if (sampler == Image.Sampler.Spline) {
-                    mySampler = KnownResamplers.Spline;
-                } else if (sampler == Image.Sampler.Triangle) {
-                    mySampler = KnownResamplers.Triangle;
-                } else if (sampler == Image.Sampler.Welch) {
-                    mySampler = KnownResamplers.Welch;
-                }
-                if (keepAspectRatio == true) {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
+                mySampler = sampler switch {
+                    Image.Sampler.NearestNeighbor => KnownResamplers.NearestNeighbor,
+                    Image.Sampler.Box => KnownResamplers.Box,
+                    Image.Sampler.Triangle => KnownResamplers.Triangle,
+                    Image.Sampler.Hermite => KnownResamplers.Hermite,
+                    Image.Sampler.Lanczos2 => KnownResamplers.Lanczos2,
+                    Image.Sampler.Lanczos3 => KnownResamplers.Lanczos3,
+                    Image.Sampler.Lanczos5 => KnownResamplers.Lanczos5,
+                    Image.Sampler.Lanczos8 => KnownResamplers.Lanczos8,
+                    Image.Sampler.MitchellNetravali => KnownResamplers.MitchellNetravali,
+                    Image.Sampler.CatmullRom => KnownResamplers.CatmullRom,
+                    Image.Sampler.Robidoux => KnownResamplers.Robidoux,
+                    Image.Sampler.RobidouxSharp => KnownResamplers.RobidouxSharp,
+                    Image.Sampler.Spline => KnownResamplers.Spline,
+                    Image.Sampler.Welch => KnownResamplers.Welch,
+                    _ => throw new ArgumentException("Invalid sampler type"),
+                };
+                image.Mutate(x => x.Resize(width.Value, height.Value));
+                if (width != null) {
                         var newWidth = width.Value;
                         var newHeight = 0;
                         image.Mutate(x => x.Resize(newWidth, newHeight));
@@ -227,7 +235,7 @@ namespace ImagePlayground {
                         var newWidth = 0;
                         image.Mutate(x => x.Resize(newWidth, newHeight));
                     }
-                } else {
+                else {
                     if (width != null && height != null) {
                         image.Mutate(x => x.Resize(width.Value, height.Value));
                     } else if (width != null) {
@@ -248,98 +256,100 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <param name="percentage"></param>
         public static void Resize(string filePath, string outFilePath, int percentage) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            string fullPath = Path.GetFullPath(filePath);
+            string outFullPath = Path.GetFullPath(outFilePath);
 
-            using (var inStream = System.IO.File.OpenRead(fullPath)) {
-                using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    int width = image.Width * percentage / 100;
-                    int height = image.Height * percentage / 100;
-                    if (image.Width == width && image.Height == height) {
-                        System.IO.File.Copy(fullPath, outFullPath, true);
-                    } else {
-                        image.Mutate(x => x.Resize(width, height));
-                        image.Save(outFullPath);
-                    }
-                }
+            using var inStream = File.OpenRead(fullPath);
+            using SLImage image = SLImage.Load(inStream);
+            int width = image.Width * percentage / 100;
+            int height = image.Height * percentage / 100;
+            if (image.Width == width && image.Height == height)
+            {
+                System.IO.File.Copy(fullPath, outFullPath, true);
+            }
+            else
+            {
+                image.Mutate(x => x.Resize(width, height));
+                image.Save(outFullPath);
             }
         }
 
         public static void Combine(string filePath, string filePath2, string outFilePath, bool resizeToFit = false, ImagePlacement imagePlacement = ImagePlacement.Bottom) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string fullPath2 = System.IO.Path.GetFullPath(filePath2);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            string fullPath = Path.GetFullPath(filePath);
+            string fullPath2 = Path.GetFullPath(filePath2);
+            string outFullPath = Path.GetFullPath(outFilePath);
 
-            using (var inStream = System.IO.File.OpenRead(fullPath))
-            using (var inStream2 = System.IO.File.OpenRead(fullPath2))
-            using (SixLabors.ImageSharp.Image imageIn1 = SixLabors.ImageSharp.Image.Load(inStream)) {
-                using (SixLabors.ImageSharp.Image imageIn2 = SixLabors.ImageSharp.Image.Load(inStream2)) {
-                    var image = imageIn1;
-                    var image2 = imageIn2;
+            using var inStream = File.OpenRead(fullPath);
+            using var inStream2 = File.OpenRead(fullPath2);
+            using SLImage imageIn1 = SLImage.Load(inStream);
+            using SLImage imageIn2 = SLImage.Load(inStream2);
+            var image = imageIn1;
+            var image2 = imageIn2;
 
-                    int outputWidth = 0;
-                    int outputHeight = 0;
-                    if (imagePlacement == ImagePlacement.Bottom) {
-                        outputWidth = image.Width > image2.Width ? image.Width : image2.Width;
-                        outputHeight = image.Height + image2.Height;
-                        if (resizeToFit) {
-                            image = Resize(image, outputWidth, null);
-                            image2 = Resize(image2, outputWidth, null);
-                        }
-                    } else if (imagePlacement == ImagePlacement.Top) {
-                        outputWidth = image.Width > image2.Width ? image.Width : image2.Width;
-                        outputHeight = image.Height + image2.Height;
-                        if (resizeToFit) {
-                            image = Resize(image, outputWidth, null);
-                            image2 = Resize(image2, outputWidth, null);
-                        }
-                    } else if (imagePlacement == ImagePlacement.Left) {
-                        outputWidth = image.Width + image2.Width;
-                        outputHeight = image.Height > image2.Height ? image.Height : image2.Height;
-                        if (resizeToFit) {
-                            image = Resize(image, null, outputHeight);
-                            image2 = Resize(image2, null, outputHeight);
-                        }
-                    } else if (imagePlacement == ImagePlacement.Right) {
-                        outputWidth = image.Width + image2.Width;
-                        outputHeight = image.Height > image2.Height ? image.Height : image2.Height;
-                        if (resizeToFit) {
-                            image = Resize(image, null, outputHeight);
-                            image2 = Resize(image2, null, outputHeight);
-                        }
-                    } else {
-                        // this is not going to happen
-                        throw new ArgumentException("Invalid ImagePlacement");
-                    }
+            int outputWidth = 0;
+            int outputHeight = 0;
 
-                    using (Image<Rgba32> outputImage = new Image<Rgba32>(outputWidth, outputHeight)) {
-                        if (imagePlacement == ImagePlacement.Bottom) {
-                            outputImage.Mutate(x => x
-                                .DrawImage(image, new Point(0, 0), 1f)
-                                .DrawImage(image2, new Point(0, image.Height), 1f)
-                            );
-                        } else if (imagePlacement == ImagePlacement.Top) {
-                            outputImage.Mutate(x => x
-                                .DrawImage(image2, new Point(0, 0), 1f)
-                                .DrawImage(image, new Point(0, image2.Height), 1f)
-                            );
-                        } else if (imagePlacement == ImagePlacement.Left) {
-                            outputImage.Mutate(x => x
-                                .DrawImage(image2, new Point(0, 0), 1f)
-                                .DrawImage(image, new Point(image2.Width, 0), 1f)
-                            );
-                        } else if (imagePlacement == ImagePlacement.Right) {
-                            outputImage.Mutate(x => x
-                                .DrawImage(image, new Point(0, 0), 1f)
-                                .DrawImage(image2, new Point(image.Width, 0), 1f)
-                            );
-                        }
-
-                        outputImage.Save(outFullPath);
-                    }
+            switch (imagePlacement)
+            {
+                case ImagePlacement.Bottom:
+                    outputWidth = image.Width > image2.Width ? image.Width : image2.Width;
+                    outputHeight = image.Height + image2.Height;
+                    break;
+                case ImagePlacement.Top:
+                    outputWidth = image.Width > image2.Width ? image.Width : image2.Width;
+                    outputHeight = image.Height + image2.Height;
+                    break;
+                case ImagePlacement.Left:
+                    outputWidth = image.Width + image2.Width;
+                    outputHeight = image.Height > image2.Height ? image.Height : image2.Height;
+                    break;
+                case ImagePlacement.Right:
+                    outputWidth = image.Width + image2.Width;
+                    outputHeight = image.Height > image2.Height ? image.Height : image2.Height;
+                    break;
+            }
+            if (resizeToFit)
+            {
+                if (imagePlacement == ImagePlacement.Bottom || imagePlacement == ImagePlacement.Top)
+                {
+                    image = Resize(image, outputWidth, null);
+                    image2 = Resize(image2, outputWidth, null);
+                }
+                else
+                {
+                    image = Resize(image, null, outputHeight);
+                    image2 = Resize(image2, null, outputHeight);
                 }
             }
-
+            using Image<Rgba32> outputImage = new Image<Rgba32>(outputWidth, outputHeight);
+            switch (imagePlacement)
+            {
+                case ImagePlacement.Bottom:
+                    outputImage.Mutate(x => x
+                        .DrawImage(image, new Point(0, 0), 1f)
+                        .DrawImage(image2, new Point(0, image.Height), 1f)
+                    );
+                    break;
+                case ImagePlacement.Top:
+                    outputImage.Mutate(x => x
+                        .DrawImage(image2, new Point(0, 0), 1f)
+                        .DrawImage(image, new Point(0, image2.Height), 1f)
+                    );
+                    break;
+                case ImagePlacement.Left:
+                    outputImage.Mutate(x => x
+                        .DrawImage(image2, new Point(0, 0), 1f)
+                        .DrawImage(image, new Point(image2.Width, 0), 1f)
+                    );
+                    break;
+                case ImagePlacement.Right:
+                    outputImage.Mutate(x => x
+                        .DrawImage(image, new Point(0, 0), 1f)
+                        .DrawImage(image2, new Point(image.Width, 0), 1f)
+                    );
+                    break;
+            }
+            outputImage.Save(outFullPath);
         }
 
         public static void Create(string filePath, int width, int height, Color color, bool open = false) {

@@ -29,17 +29,26 @@
     #>
     [CmdletBinding()]
     param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $FilePath,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $FilePathToMerge,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $FilePathOutput,
         [switch] $ResizeToFit,
         [ImagePlayground.ImagePlacement] $Placement = [ImagePlayground.ImagePlacement]::Bottom
     )
-    if (-not (Test-Path -LiteralPath $FilePath)) {
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    $FilePathToMerge = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePathToMerge)
+    $FilePathOutput = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePathOutput)
+    if (-not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
         Write-Warning -Message "Merge-Image - File $FilePath not found. Please check the path."
         return
     }
-    if (-not (Test-Path -LiteralPath $FilePathToMerge)) {
+    if (-not (Test-Path -LiteralPath $FilePathToMerge -PathType Leaf)) {
         Write-Warning -Message "Merge-Image - File $FilePathToMerge not found. Please check the path."
         return
     }

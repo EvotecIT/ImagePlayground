@@ -1,7 +1,8 @@
 ﻿function New-ImageChartLine {
     [CmdletBinding()]
     param(
-        [alias('Label')][string] $Name,
+        [alias('Label')]
+        [string] $Name,
         [Array] $Value
     )
     [PSCustomObject] @{

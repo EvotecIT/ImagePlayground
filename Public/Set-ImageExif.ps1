@@ -33,12 +33,15 @@
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string] $FilePath,
+        [Parameter(Mandatory)]
+        [string] $FilePath,
         [string] $FilePathOutput,
-        [Parameter(Mandatory)][SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag] $ExifTag,
+        [Parameter(Mandatory)]
+        [SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag] $ExifTag,
         [Parameter(Mandatory)] $Value
     )
-    if (-not (Test-Path $FilePath)) {
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    if (-not (Test-Path $FilePath -PathType Leaf)) {
         Write-Warning -Message "Set-ImageExif - File not found: $FilePath"
         return
     }
@@ -46,6 +49,7 @@
     # void SetValue[TValueType](SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag[TValueType] tag, TValueType value)
     $Image.Metadata.ExifProfile.SetValue($ExifTag, $Value)
     if ($FilePathOutput) {
+        $FilePathOutput = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePathOutput)
         Save-Image -Image $Image -FilePath $FilePathOutput
     } else {
         Save-Image -Image $Image -FilePath $FilePath

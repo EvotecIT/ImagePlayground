@@ -26,11 +26,14 @@
     #>
     [cmdletBinding()]
     param(
-        [parameter(Mandatory)][ImagePlayground.Image] $Image,
+        [parameter(Mandatory)]
+        [ImagePlayground.Image] $Image,
+        [ValidateNotNullOrEmpty()]
         [string] $FilePath,
         [switch] $Open
     )
     if ($FilePath) {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
         $Image.Save($FilePath, $Open.IsPresent)
     } else {
         $Image.Save($Open.IsPresent)

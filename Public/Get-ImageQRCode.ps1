@@ -17,12 +17,15 @@
     #>
     [cmdletBinding()]
     param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $FilePath
     )
-    if ($FilePath -and (Test-Path -LiteralPath $FilePath)) {
-        $QRCode = [ImagePlayground.QRCode]::Read($FilePath)
-        $QRCode
-    } else {
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+
+    if (-Not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
         Write-Warning -Message "Get-ImageQRCode - File $FilePath not found. Please check the path."
+        return
     }
+    [ImagePlayground.QRCode]::Read($FilePath)
 }

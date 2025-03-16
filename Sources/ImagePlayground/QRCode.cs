@@ -4,47 +4,53 @@ using BarcodeReader.ImageSharp;
 using QRCoder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using Path = System.IO.Path;
+using SLImage = SixLabors.ImageSharp.Image;
 
 namespace ImagePlayground {
     public class QrCode {
         public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
 
+            string fullPath = Path.GetFullPath(filePath);
             FileInfo fileInfo = new FileInfo(fullPath);
+            using QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            using QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel);
+            using QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData);
+            using var qrCodeImage = qrCode.GetGraphic(20);
+            if (transparent)
+            {
+                //qrCodeImage.MakeTransparent();
+            }
+            // this uses QRCoder
+            //ImageFormat imageFormatDetected;
+            //if (fileInfo.Extension == ".png") {
+            //    imageFormatDetected = ImageFormat.Png;
+            //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+            //    imageFormatDetected = ImageFormat.Jpeg;
+            //} else if (fileInfo.Extension == ".ico") {
+            //    imageFormatDetected = ImageFormat.Icon;
+            //} else {
+            //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+            //}
+            //qrCodeImage.Save(filePath, imageFormatDetected);
 
-            using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
-                using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
-                    using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
-                        using (var qrCodeImage = qrCode.GetGraphic(20)) {
-                            if (transparent) {
-                                //qrCodeImage.MakeTransparent();
-                            }
-                            // this uses QRCoder
-                            //ImageFormat imageFormatDetected;
-                            //if (fileInfo.Extension == ".png") {
-                            //    imageFormatDetected = ImageFormat.Png;
-                            //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                            //    imageFormatDetected = ImageFormat.Jpeg;
-                            //} else if (fileInfo.Extension == ".ico") {
-                            //    imageFormatDetected = ImageFormat.Icon;
-                            //} else {
-                            //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-                            //}
-                            //qrCodeImage.Save(filePath, imageFormatDetected);
+            //this uses QRCoder.ImageSharp
+            if (fileInfo.Extension == ".png")
+            {
+                qrCodeImage.SaveAsPng(fullPath);
+            }
+            else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg")
+            {
+                qrCodeImage.SaveAsJpeg(fullPath);
+            }
+            else if (fileInfo.Extension == ".ico")
+            {
+                qrCodeImage.SaveAsWebp(fullPath);
+            }
+            else
+            {
+                throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
 
-                            //this uses QRCoder.ImageSharp
-                            if (fileInfo.Extension == ".png") {
-                                qrCodeImage.SaveAsPng(fullPath);
-                            } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                                qrCodeImage.SaveAsJpeg(fullPath);
-                            } else if (fileInfo.Extension == ".ico") {
-                                qrCodeImage.SaveAsWebp(fullPath);
-                            } else {
-                                throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-                            }
-                        }
-                    }
-                }
             }
         }
         public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false) {
@@ -87,11 +93,9 @@ namespace ImagePlayground {
 
         public static BarcodeResult<Rgba32> Read(string filePath) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
-
-            Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
+            Image<Rgba32> barcodeImage = SLImage.Load<Rgba32>(fullPath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
-            var response = reader.Decode(barcodeImage);
-            return response;
+            return reader.Decode(barcodeImage);
         }
     }
 }

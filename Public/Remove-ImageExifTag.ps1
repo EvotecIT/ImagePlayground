@@ -37,8 +37,14 @@
         [string] $FilePathOutput,
         [Parameter(Mandatory, ParameterSetName = 'RemoveExifTag')]
         [SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag[]] $ExifTag,
-        [Parameter(Mandatory, ParameterSetName = 'All')][switch] $All
+        [Parameter(Mandatory, ParameterSetName = 'All')]
+        [switch] $All
     )
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    if (-not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
+        Write-Warning -Message "Remove-ImageExif - File $FilePath not found. Please check the path."
+        return
+    }
     $Image = Get-Image -FilePath $FilePath
     if ($All) {
         Write-Verbose "Remove-ImageExif: Removing all Exif tags"

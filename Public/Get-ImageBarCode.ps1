@@ -17,12 +17,19 @@
     #>
     [cmdletBinding()]
     param(
+        [Parameter(Mandatory)]
+        [Alias('FullName', 'Path')]
+        [ValidateNotNullOrEmpty()]
         [string] $FilePath
     )
-    if ($FilePath -and (Test-Path -LiteralPath $FilePath)) {
-        $BarCode = [ImagePlayground.BarCode]::Read($FilePath)
-        $BarCode
-    } else {
-        Write-Warning -Message "Get-ImageBarCode - File $FilePath not found. Please check the path."
+    try {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+        if (-Not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
+            Write-Warning -Message "Get-ImageBarCode - File $FilePath not found. Please check the path."
+        }
+        [ImagePlayground.BarCode]::Read($FilePath)
+    }
+    catch {
+        Write-Error $_
     }
 }

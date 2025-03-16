@@ -1,4 +1,4 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+﻿# Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
 # Add watermark
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg

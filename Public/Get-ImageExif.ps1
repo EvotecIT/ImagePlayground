@@ -17,10 +17,13 @@
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string] $FilePath,
+        [Parameter(Mandatory)]
+        [string] $FilePath,
         [switch] $Translate
     )
-    if (-not (Test-Path $FilePath)) {
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+
+    if (-not (Test-Path $FilePath -PathType Leaf)) {
         Write-Warning -Message "Get-ImageExif - File not found: $FilePath"
         return
     }
