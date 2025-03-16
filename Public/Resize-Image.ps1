@@ -41,46 +41,43 @@
     #>
     [cmdletBinding(DefaultParameterSetName = 'HeightWidth')]
     param(
-        [parameter(ParameterSetName = 'Percentage')]
-        [parameter(ParameterSetName = 'HeightWidth')]
-        [parameter(Mandatory)][string] $FilePath,
-
-        [parameter(ParameterSetName = 'Percentage')]
-        [parameter(ParameterSetName = 'HeightWidth')]
-        [parameter(Mandatory)][string] $OutputPath,
-
-        [parameter(ParameterSetName = 'HeightWidth')][int] $Width,
-        [parameter(ParameterSetName = 'HeightWidth')][int] $Height,
-        [parameter(ParameterSetName = 'Percentage')][int] $Percentage,
-        [parameter(ParameterSetName = 'HeightWidth')][switch] $DontRespectAspectRatio
+        [Parameter(ParameterSetName = 'Percentage')]
+        [Parameter(ParameterSetName = 'HeightWidth')]
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $FilePath,
+        [Parameter(ParameterSetName = 'Percentage')]
+        [Parameter(ParameterSetName = 'HeightWidth')]
+        [Parameter(Mandatory)]
+        [string] $OutputPath,
+        [Parameter(ParameterSetName = 'HeightWidth')]
+        [int] $Width,
+        [Parameter(ParameterSetName = 'HeightWidth')]
+        [int] $Height,
+        [Parameter(ParameterSetName = 'Percentage')]
+        [int] $Percentage,
+        [Parameter(ParameterSetName = 'HeightWidth')]
+        [switch] $DontRespectAspectRatio
     )
-    if ($FilePath -and (Test-Path -LiteralPath $FilePath)) {
-        if ($Percentage) {
-            [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $Percentage)
-        } else {
-            if ($DontRespectAspectRatio) {
-                if ($PSBoundParameters.ContainsKey('Width') -and $PSBoundParameters.ContainsKey('Height')) {
-                    [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $Width, $Height)
-                } elseif ($PSBoundParameters.ContainsKey('Width')) {
-                    [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $Width, $null, $false)
-                } elseif ($PSBoundParameters.ContainsKey('Height')) {
-                    [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $null, $Height, $false)
-                } else {
-                    Write-Warning -Message "Resize-Image - Please specify Width or Height or Percentage."
-                }
-            } else {
-                if ($PSBoundParameters.ContainsKey('Width') -and $PSBoundParameters.ContainsKey('Height')) {
-                    [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $Width, $Height)
-                } elseif ($PSBoundParameters.ContainsKey('Width')) {
-                    [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $Width, $null)
-                } elseif ($PSBoundParameters.ContainsKey('Height')) {
-                    [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $null, $Height)
-                } else {
-                    Write-Warning -Message "Resize-Image - Please specify Width or Height or Percentage."
-                }
-            }
-        }
-    } else {
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    $OutputPath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($OutputPath)
+    if (-Not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
         Write-Warning -Message "Resize-Image - File $FilePath not found. Please check the path."
+        return
+    }
+    if ($PSCmdlet.ParameterSetName -eq 'Percentage') {
+        [ImagePlayground.ImageHelper]::Resize($FilePath, $OutputPath, $Percentage)
+    }
+    elseif ($PSBoundParameters.ContainsKey('Width') -or $PSBoundParameters.ContainsKey('Height')) {
+        [ImagePlayground.ImageHelper]::Resize(
+            $FilePath,
+            $OutputPath,
+            $PSBoundParameters['Width'],
+            $PSBoundParameters['Height'],
+            $DontRespectAspectRatio.IsPresent
+        )
+    }
+    else {
+        Write-Warning -Message 'Resize-Image - Please specify Width or Height or Percentage.'
     }
 }

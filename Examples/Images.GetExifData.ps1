@@ -1,4 +1,4 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+﻿# Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
 $Image = Get-Image -FilePath "$PSScriptRoot\Samples\Snow.jpeg"
 $Image.Width

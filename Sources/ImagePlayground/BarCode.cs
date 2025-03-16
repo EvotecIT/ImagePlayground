@@ -26,7 +26,7 @@ namespace ImagePlayground {
             EAN
         }
         private static void SaveToFile(IBarcode barcode, string filePath) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Path.GetFullPath(filePath);
 
             ImageFormat imageFormatDetected;
             FileInfo fileInfo = new FileInfo(fullPath);
@@ -46,9 +46,8 @@ namespace ImagePlayground {
             var renderer = new ImageRenderer(options);
             //var renderer = new ImageRenderer(imageFormat: imageFormatDetected);
 
-            using (var stream = new FileStream(fullPath, FileMode.Create)) {
-                renderer.Render(barcode, stream);
-            }
+            using var stream = new FileStream(fullPath, FileMode.Create);
+            renderer.Render(barcode, stream);
         }
 
         public static void GenerateQr(string content, string filePath, ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.H, Encoding encoding = Encoding.Auto) {
@@ -92,30 +91,36 @@ namespace ImagePlayground {
         }
 
         public static void Generate(BarcodeTypes barcodeType, string content, string filePath) {
-            if (barcodeType == BarcodeTypes.Code128) {
-                GenerateCode128(content, filePath);
-            } else if (barcodeType == BarcodeTypes.Code93) {
-                GenerateCode93(content, filePath);
-            } else if (barcodeType == BarcodeTypes.Code39) {
-                GenerateCode39(content, filePath);
-            } else if (barcodeType == BarcodeTypes.KixCode) {
-                GenerateKix(content, filePath);
-            } else if (barcodeType == BarcodeTypes.UPCA) {
-                GenerateUpcA(content, filePath);
-            } else if (barcodeType == BarcodeTypes.UPCE) {
-                GenerateUpcE(content, filePath);
-            } else if (barcodeType == BarcodeTypes.EAN) {
-                GenerateEan(content, filePath);
+            switch (barcodeType)
+            {
+                case BarcodeTypes.Code128:
+                    GenerateCode128(content, filePath);
+                    break;
+                case BarcodeTypes.Code93:
+                    GenerateCode93(content, filePath);
+                    break;
+                case BarcodeTypes.Code39:
+                    GenerateCode39(content, filePath);
+                    break;
+                case BarcodeTypes.KixCode:
+                    GenerateKix(content, filePath);
+                    break;
+                case BarcodeTypes.UPCA:
+                    GenerateUpcA(content, filePath);
+                    break;
+                case BarcodeTypes.UPCE:
+                    GenerateUpcE(content, filePath);
+                    break;
+                case BarcodeTypes.EAN:
+                    GenerateEan(content, filePath);
+                    break;
             }
         }
-
         public static BarcodeResult<Rgba32> Read(string filePath) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-
+            string fullPath = Path.GetFullPath(filePath);
             Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>();
-            var response = reader.Decode(barcodeImage);
-            return response;
+            return reader.Decode(barcodeImage);
         }
     }
 }

@@ -7,6 +7,10 @@
         [string] $FilePath,
         [switch] $Show
     )
+    if ($FilePath) {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    }
+
     $ValueHash = [ordered] @{}
     $Values = [System.Collections.Generic.List[double]]::new()
     $Labels = [System.Collections.Generic.List[string]]::new()

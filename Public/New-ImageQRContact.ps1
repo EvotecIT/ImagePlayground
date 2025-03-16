@@ -1,8 +1,9 @@
 ﻿function New-ImageQRContact {
     [cmdletBinding()]
     param(
-        [Parameter(Mandatory)][string] $FilePath,
-        [QRCoder.PayloadGenerator+ContactData+ContactOutputType] $outputType = [QRCoder.PayloadGenerator+ContactData+ContactOutputType]::VCard4,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $FilePath,
         [string] $Firstname,
         [string] $Lastname,
         [string] $Nickname ,
@@ -19,19 +20,23 @@
         [string] $Country ,
         [string] $Note ,
         [string] $StateRegion ,
-        [ValidateSet('Default', 'Reversed')][string] $AddressOrder = 'Default',
+        [ValidateSet('Default', 'Reversed')]
+        [string] $AddressOrder = 'Default',
         [string] $Org ,
         [string] $OrgTitle,
-        [switch] $Show
+        [switch] $Show,
+        [QRCoder.PayloadGenerator+ContactData+ContactOutputType] $OutputType = [QRCoder.PayloadGenerator+ContactData+ContactOutputType]::VCard4
     )
-
-    if (-not $FilePath) {
-        $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).png")
-        Write-Warning -Message "New-ImageQRContact - No file path specified, saving to $FilePath"
+    if ($FilePath) {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+        if (Test-Path -LiteralPath $FilePath -PathType Leaf) {
+            Write-Warning -Message "New-ImageQRContact - File $FilePath found. Please check the path."
+            return
+        }
     }
     try {
         [ImagePlayground.QrCode]::GenerateContact(
-            $filePath, $outputType, $firstname,
+            $FilePath, $OutputType, $firstname,
             $lastname, $nickname, $phone,
             $mobilePhone, $workPhone, $email,
             $birthday, $website, $street, $houseNumber,

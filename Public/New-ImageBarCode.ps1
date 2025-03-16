@@ -1,9 +1,18 @@
 ﻿function New-ImageBarCode {
     [cmdletBinding()]
     param(
-        [parameter(Mandatory)][ImagePlayground.BarCode+BarcodeTypes] $Type,
-        [parameter(Mandatory)][string] $Value,
-        [parameter(Mandatory)][string] $FilePath
+        [Parameter(Mandatory)]
+        [ImagePlayground.BarCode+BarcodeTypes] $Type,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $Value,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $FilePath
     )
+    if ($FilePath) {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    }
+
     [ImagePlayground.BarCode]::Generate($Type, $Value, $filePath)
 }

@@ -21,16 +21,18 @@
     [Alias('New-QRCode')]
     [cmdletBinding()]
     param(
-        [Parameter(Mandatory)][string] $Content,
-        [Parameter(Mandatory)][string] $FilePath
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $Content,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $FilePath
     )
-    if (-not $FilePath) {
-        $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).png")
-        Write-Warning -Message "New-ImageQRCode - No file path specified, saving to $FilePath"
+    if ($FilePath) {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
     }
     try {
         [ImagePlayground.QrCode]::Generate($Content, $FilePath, $false)
-
         if ($Show) {
             Invoke-Item -LiteralPath $FilePath
         }

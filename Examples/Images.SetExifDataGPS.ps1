@@ -1,4 +1,4 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+﻿# Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
 # details on rational numbers
 # https://github.com/SixLabors/ImageSharp/discussions/1295

@@ -27,18 +27,25 @@
     [alias('New-QRCodeWiFi')]
     [cmdletBinding()]
     param(
-        [Parameter(Mandatory)][string] $SSID,
-        [Parameter(Mandatory)][string] $Password,
-        [Parameter(Mandatory)][string] $FilePath,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $SSID,
+        [Parameter(Mandatory)]
+        [string] $Password,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $FilePath,
         [switch] $Show
     )
-    if (-not $FilePath) {
-        $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).png")
-        Write-Warning -Message "New-ImageQRCodeWiFi - No file path specified, saving to $FilePath"
+    if ($FilePath) {
+        $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+        if (Test-Path -LiteralPath $FilePath -PathType Leaf) {
+            Write-Warning -Message "New-ImageQRCodeWiFi - File $FilePath found. Please check the path."
+            return
+        }
     }
     try {
-        [ImagePlayground.QrCode]::GenerateWiFi($ssid, $password, $FilePath, $false)
-
+        [ImagePlayground.QrCode]::GenerateWiFi($SSID, $Password, $FilePath, $false)
         if ($Show) {
             Invoke-Item -LiteralPath $FilePath
         }

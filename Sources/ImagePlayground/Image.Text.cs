@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Processing;
 namespace ImagePlayground {
     public partial class Image : IDisposable {
         public FontRectangle GetTextSize(string text, float fontSize, string fontFamilyName) {
-            if (!SixLabors.Fonts.SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
+            if (!SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
                 throw new Exception($"Couldn't find font {fontFamilyName}");
             }
             var font = fontFamily.CreateFont(fontSize, FontStyle.Regular);
@@ -16,8 +16,8 @@ namespace ImagePlayground {
             return textSize;
         }
 
-        public void AddText(float x, float y, string text, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial") {
-            if (!SixLabors.Fonts.SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
+        public void AddText(float x, float y, string text, Color color, float fontSize = 16f, string fontFamilyName = "Arial") {
+            if (!SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
                 throw new Exception($"Couldn't find font {fontFamilyName}");
             }
             var font = fontFamily.CreateFont(fontSize, FontStyle.Regular);

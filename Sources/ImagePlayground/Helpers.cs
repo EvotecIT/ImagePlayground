@@ -46,9 +46,8 @@ namespace ImagePlayground {
         public static bool IsFileLocked(this string fileName) {
             try {
                 var file = new FileInfo(fileName);
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)) {
-                    stream.Close();
-                }
+                using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+                stream.Close();
             } catch (IOException) {
                 //the file is unavailable because it is:
                 //still being written to

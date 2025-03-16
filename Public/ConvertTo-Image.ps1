@@ -20,12 +20,19 @@
     #>
     [cmdletBinding()]
     param(
-        [parameter(Mandatory)][string] $FilePath,
-        [parameter(Mandatory)][string] $OutputPath
+        [Parameter(Mandatory)]
+        [Alias('FullName', 'Path')]
+        [ValidateNotNullOrEmpty()]
+        [string] $FilePath,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string] $OutputPath
     )
-    if ($FilePath -and (Test-Path -LiteralPath $FilePath)) {
+    $FilePath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($FilePath)
+    if (Test-Path -LiteralPath $FilePath -PathType Leaf) {
         [ImagePlayground.ImageHelper]::ConvertTo($FilePath, $OutputPath)
-    } else {
+    }
+    else {
         Write-Warning -Message "Resize-Image - File $FilePath not found. Please check the path."
     }
 }

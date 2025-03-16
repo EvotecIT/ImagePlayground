@@ -1,4 +1,5 @@
-﻿Build-Module -ModuleName 'ImagePlayground' {
+﻿#Requires -Modules PSPublishModule
+Invoke-ModuleBuild -ModuleName 'ImagePlayground' {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -106,7 +107,7 @@
         DotSourceLibraries                = $true
         DotSourceClasses                  = $true
         #SeparateFileLibraries             = $true
-        DeleteTargetModuleBeforeBuild     = $true
+        DeleteTargetModuleBeforeBuild     = $false
         MergeLibraryDebugging             = $false
     }
 
