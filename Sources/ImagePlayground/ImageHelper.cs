@@ -89,38 +89,7 @@ namespace ImagePlayground {
                             }
                         }
                     } else {
-                        IResampler mySampler = null;
-                        if (sampler == Image.Sampler.NearestNeighbor) {
-                            mySampler = KnownResamplers.NearestNeighbor;
-                        } else if (sampler == Image.Sampler.Box) {
-                            mySampler = KnownResamplers.Box;
-                        } else if (sampler == Image.Sampler.Triangle) {
-                            mySampler = KnownResamplers.Triangle;
-                        } else if (sampler == Image.Sampler.Hermite) {
-                            mySampler = KnownResamplers.Hermite;
-                        } else if (sampler == Image.Sampler.Lanczos2) {
-                            mySampler = KnownResamplers.Lanczos2;
-                        } else if (sampler == Image.Sampler.Lanczos3) {
-                            mySampler = KnownResamplers.Lanczos3;
-                        } else if (sampler == Image.Sampler.Lanczos5) {
-                            mySampler = KnownResamplers.Lanczos5;
-                        } else if (sampler == Image.Sampler.Lanczos8) {
-                            mySampler = KnownResamplers.Lanczos8;
-                        } else if (sampler == Image.Sampler.MitchellNetravali) {
-                            mySampler = KnownResamplers.MitchellNetravali;
-                        } else if (sampler == Image.Sampler.CatmullRom) {
-                            mySampler = KnownResamplers.CatmullRom;
-                        } else if (sampler == Image.Sampler.Robidoux) {
-                            mySampler = KnownResamplers.Robidoux;
-                        } else if (sampler == Image.Sampler.RobidouxSharp) {
-                            mySampler = KnownResamplers.RobidouxSharp;
-                        } else if (sampler == Image.Sampler.Spline) {
-                            mySampler = KnownResamplers.Spline;
-                        } else if (sampler == Image.Sampler.Triangle) {
-                            mySampler = KnownResamplers.Triangle;
-                        } else if (sampler == Image.Sampler.Welch) {
-                            mySampler = KnownResamplers.Welch;
-                        }
+                        IResampler mySampler = GetResampler(sampler.Value);
 
                         if (keepAspectRatio == true) {
                             if (width != null && height != null) {
@@ -183,38 +152,7 @@ namespace ImagePlayground {
                     }
                 }
             } else {
-                IResampler mySampler = null;
-                if (sampler == Image.Sampler.NearestNeighbor) {
-                    mySampler = KnownResamplers.NearestNeighbor;
-                } else if (sampler == Image.Sampler.Box) {
-                    mySampler = KnownResamplers.Box;
-                } else if (sampler == Image.Sampler.Triangle) {
-                    mySampler = KnownResamplers.Triangle;
-                } else if (sampler == Image.Sampler.Hermite) {
-                    mySampler = KnownResamplers.Hermite;
-                } else if (sampler == Image.Sampler.Lanczos2) {
-                    mySampler = KnownResamplers.Lanczos2;
-                } else if (sampler == Image.Sampler.Lanczos3) {
-                    mySampler = KnownResamplers.Lanczos3;
-                } else if (sampler == Image.Sampler.Lanczos5) {
-                    mySampler = KnownResamplers.Lanczos5;
-                } else if (sampler == Image.Sampler.Lanczos8) {
-                    mySampler = KnownResamplers.Lanczos8;
-                } else if (sampler == Image.Sampler.MitchellNetravali) {
-                    mySampler = KnownResamplers.MitchellNetravali;
-                } else if (sampler == Image.Sampler.CatmullRom) {
-                    mySampler = KnownResamplers.CatmullRom;
-                } else if (sampler == Image.Sampler.Robidoux) {
-                    mySampler = KnownResamplers.Robidoux;
-                } else if (sampler == Image.Sampler.RobidouxSharp) {
-                    mySampler = KnownResamplers.RobidouxSharp;
-                } else if (sampler == Image.Sampler.Spline) {
-                    mySampler = KnownResamplers.Spline;
-                } else if (sampler == Image.Sampler.Triangle) {
-                    mySampler = KnownResamplers.Triangle;
-                } else if (sampler == Image.Sampler.Welch) {
-                    mySampler = KnownResamplers.Welch;
-                }
+                IResampler mySampler = GetResampler(sampler.Value);
                 if (keepAspectRatio == true) {
                     if (width != null && height != null) {
                         image.Mutate(x => x.Resize(width.Value, height.Value));
@@ -379,5 +317,24 @@ namespace ImagePlayground {
 
             Helpers.Open(fullPath, open);
         }
+
+        private static IResampler GetResampler(Image.Sampler sampler) =>
+            sampler switch {
+                Image.Sampler.NearestNeighbor => KnownResamplers.NearestNeighbor,
+                Image.Sampler.Box => KnownResamplers.Box,
+                Image.Sampler.Triangle => KnownResamplers.Triangle,
+                Image.Sampler.Hermite => KnownResamplers.Hermite,
+                Image.Sampler.Lanczos2 => KnownResamplers.Lanczos2,
+                Image.Sampler.Lanczos3 => KnownResamplers.Lanczos3,
+                Image.Sampler.Lanczos5 => KnownResamplers.Lanczos5,
+                Image.Sampler.Lanczos8 => KnownResamplers.Lanczos8,
+                Image.Sampler.MitchellNetravali => KnownResamplers.MitchellNetravali,
+                Image.Sampler.CatmullRom => KnownResamplers.CatmullRom,
+                Image.Sampler.Robidoux => KnownResamplers.Robidoux,
+                Image.Sampler.RobidouxSharp => KnownResamplers.RobidouxSharp,
+                Image.Sampler.Spline => KnownResamplers.Spline,
+                Image.Sampler.Welch => KnownResamplers.Welch,
+                _ => KnownResamplers.Bicubic,
+            };
     }
 }
