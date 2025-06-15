@@ -50,6 +50,41 @@ namespace ImagePlayground {
             }
         }
 
+        private static IResampler GetResampler(Image.Sampler? sampler) {
+            switch (sampler) {
+                case Image.Sampler.NearestNeighbor:
+                    return KnownResamplers.NearestNeighbor;
+                case Image.Sampler.Box:
+                    return KnownResamplers.Box;
+                case Image.Sampler.Triangle:
+                    return KnownResamplers.Triangle;
+                case Image.Sampler.Hermite:
+                    return KnownResamplers.Hermite;
+                case Image.Sampler.Lanczos2:
+                    return KnownResamplers.Lanczos2;
+                case Image.Sampler.Lanczos3:
+                    return KnownResamplers.Lanczos3;
+                case Image.Sampler.Lanczos5:
+                    return KnownResamplers.Lanczos5;
+                case Image.Sampler.Lanczos8:
+                    return KnownResamplers.Lanczos8;
+                case Image.Sampler.MitchellNetravali:
+                    return KnownResamplers.MitchellNetravali;
+                case Image.Sampler.CatmullRom:
+                    return KnownResamplers.CatmullRom;
+                case Image.Sampler.Robidoux:
+                    return KnownResamplers.Robidoux;
+                case Image.Sampler.RobidouxSharp:
+                    return KnownResamplers.RobidouxSharp;
+                case Image.Sampler.Spline:
+                    return KnownResamplers.Spline;
+                case Image.Sampler.Welch:
+                    return KnownResamplers.Welch;
+                default:
+                    return null;
+            }
+        }
+
         /// <summary>
         /// Resizes an image to the specified width and height.
         /// Following image formats are supported: GIF, JPEG, PNG, JFIF, GIF
@@ -66,84 +101,13 @@ namespace ImagePlayground {
 
             using (var inStream = System.IO.File.OpenRead(fullPath)) {
                 using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    if (sampler == null) {
-                        if (keepAspectRatio == true) {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value));
-                            } else if (width != null) {
-                                var newWidth = width.Value;
-                                var newHeight = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-                            } else if (height != null) {
-                                var newHeight = height.Value;
-                                var newWidth = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-                            }
-                        } else {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value));
-                            } else if (width != null) {
-                                image.Mutate(x => x.Resize(width.Value, image.Height));
-                            } else if (height != null) {
-                                image.Mutate(x => x.Resize(image.Width, height.Value));
-                            }
-                        }
-                    } else {
-                        IResampler mySampler = null;
-                        if (sampler == Image.Sampler.NearestNeighbor) {
-                            mySampler = KnownResamplers.NearestNeighbor;
-                        } else if (sampler == Image.Sampler.Box) {
-                            mySampler = KnownResamplers.Box;
-                        } else if (sampler == Image.Sampler.Triangle) {
-                            mySampler = KnownResamplers.Triangle;
-                        } else if (sampler == Image.Sampler.Hermite) {
-                            mySampler = KnownResamplers.Hermite;
-                        } else if (sampler == Image.Sampler.Lanczos2) {
-                            mySampler = KnownResamplers.Lanczos2;
-                        } else if (sampler == Image.Sampler.Lanczos3) {
-                            mySampler = KnownResamplers.Lanczos3;
-                        } else if (sampler == Image.Sampler.Lanczos5) {
-                            mySampler = KnownResamplers.Lanczos5;
-                        } else if (sampler == Image.Sampler.Lanczos8) {
-                            mySampler = KnownResamplers.Lanczos8;
-                        } else if (sampler == Image.Sampler.MitchellNetravali) {
-                            mySampler = KnownResamplers.MitchellNetravali;
-                        } else if (sampler == Image.Sampler.CatmullRom) {
-                            mySampler = KnownResamplers.CatmullRom;
-                        } else if (sampler == Image.Sampler.Robidoux) {
-                            mySampler = KnownResamplers.Robidoux;
-                        } else if (sampler == Image.Sampler.RobidouxSharp) {
-                            mySampler = KnownResamplers.RobidouxSharp;
-                        } else if (sampler == Image.Sampler.Spline) {
-                            mySampler = KnownResamplers.Spline;
-                        } else if (sampler == Image.Sampler.Triangle) {
-                            mySampler = KnownResamplers.Triangle;
-                        } else if (sampler == Image.Sampler.Welch) {
-                            mySampler = KnownResamplers.Welch;
-                        }
-
-                        if (keepAspectRatio == true) {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
-                            } else if (width != null) {
-                                var newWidth = width.Value;
-                                var newHeight = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
-                            } else if (height != null) {
-                                var newHeight = height.Value;
-                                var newWidth = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
-                            }
-                        } else {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
-                            } else if (width != null) {
-                                image.Mutate(x => x.Resize(width.Value, image.Height, mySampler));
-                            } else if (height != null) {
-                                image.Mutate(x => x.Resize(image.Width, height.Value, mySampler));
-                            }
-                        }
-                    }
+                    var mySampler = GetResampler(sampler);
+                    var options = new ResizeOptions {
+                        Size = new Size(width ?? image.Width, height ?? image.Height),
+                        Mode = keepAspectRatio ? ResizeMode.Max : ResizeMode.Stretch
+                    };
+                    if (mySampler != null) options.Sampler = mySampler;
+                    image.Mutate(x => x.Resize(options));
 
                     image.Save(outFullPath);
                 }
@@ -151,93 +115,13 @@ namespace ImagePlayground {
         }
 
         public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
-            // lets try to keep the original image if possible
-            if (width != null && height != null && image.Width == width && image.Height == height) {
-                return image;
-            } else if (width != null && image.Width == width) {
-                return image;
-            } else if (height != null && image.Height == height) {
-                return image;
-            }
-
-            if (sampler == null) {
-                if (keepAspectRatio == true) {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        var newWidth = width.Value;
-                        var newHeight = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    } else if (height != null) {
-                        var newHeight = height.Value;
-                        var newWidth = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    }
-                } else {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        image.Mutate(x => x.Resize(width.Value, image.Height));
-                    } else if (height != null) {
-                        image.Mutate(x => x.Resize(image.Width, height.Value));
-                    }
-                }
-            } else {
-                IResampler mySampler = null;
-                if (sampler == Image.Sampler.NearestNeighbor) {
-                    mySampler = KnownResamplers.NearestNeighbor;
-                } else if (sampler == Image.Sampler.Box) {
-                    mySampler = KnownResamplers.Box;
-                } else if (sampler == Image.Sampler.Triangle) {
-                    mySampler = KnownResamplers.Triangle;
-                } else if (sampler == Image.Sampler.Hermite) {
-                    mySampler = KnownResamplers.Hermite;
-                } else if (sampler == Image.Sampler.Lanczos2) {
-                    mySampler = KnownResamplers.Lanczos2;
-                } else if (sampler == Image.Sampler.Lanczos3) {
-                    mySampler = KnownResamplers.Lanczos3;
-                } else if (sampler == Image.Sampler.Lanczos5) {
-                    mySampler = KnownResamplers.Lanczos5;
-                } else if (sampler == Image.Sampler.Lanczos8) {
-                    mySampler = KnownResamplers.Lanczos8;
-                } else if (sampler == Image.Sampler.MitchellNetravali) {
-                    mySampler = KnownResamplers.MitchellNetravali;
-                } else if (sampler == Image.Sampler.CatmullRom) {
-                    mySampler = KnownResamplers.CatmullRom;
-                } else if (sampler == Image.Sampler.Robidoux) {
-                    mySampler = KnownResamplers.Robidoux;
-                } else if (sampler == Image.Sampler.RobidouxSharp) {
-                    mySampler = KnownResamplers.RobidouxSharp;
-                } else if (sampler == Image.Sampler.Spline) {
-                    mySampler = KnownResamplers.Spline;
-                } else if (sampler == Image.Sampler.Triangle) {
-                    mySampler = KnownResamplers.Triangle;
-                } else if (sampler == Image.Sampler.Welch) {
-                    mySampler = KnownResamplers.Welch;
-                }
-                if (keepAspectRatio == true) {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        var newWidth = width.Value;
-                        var newHeight = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    } else if (height != null) {
-                        var newHeight = height.Value;
-                        var newWidth = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    }
-                } else {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        image.Mutate(x => x.Resize(width.Value, image.Height));
-                    } else if (height != null) {
-                        image.Mutate(x => x.Resize(image.Width, height.Value));
-                    }
-                }
-            }
-
+            var mySampler = GetResampler(sampler);
+            var options = new ResizeOptions {
+                Size = new Size(width ?? image.Width, height ?? image.Height),
+                Mode = keepAspectRatio ? ResizeMode.Max : ResizeMode.Stretch
+            };
+            if (mySampler != null) options.Sampler = mySampler;
+            image.Mutate(x => x.Resize(options));
             return image;
         }
 
