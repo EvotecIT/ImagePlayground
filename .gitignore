@@ -15,3 +15,5 @@ Sources/packages/*
 Lib/Default/*
 Lib/Standard/*
 Lib/Core/*
+Tests/Artifacts/*
+testResults.xml

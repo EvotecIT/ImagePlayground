@@ -1,67 +1,32 @@
-﻿$ModuleName = (Get-ChildItem $PSScriptRoot\*.psd1).BaseName
-$PrimaryModule = Get-ChildItem -Path $PSScriptRoot -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
-if (-not $PrimaryModule) {
-    throw "Path $PSScriptRoot doesn't contain PSD1 files. Failing tests."
-}
-if ($PrimaryModule.Count -ne 1) {
-    throw 'More than one PSD1 files detected. Failing tests.'
-}
-$PSDInformation = Import-PowerShellDataFile -Path $PrimaryModule.FullName
-$RequiredModules = @(
-    'Pester'
-    'PSWriteColor'
-    'ImagePlayground'
-    if ($PSDInformation.RequiredModules) {
-        $PSDInformation.RequiredModules
-    }
-)
-foreach ($Module in $RequiredModules) {
-    if ($Module -eq 'ImagePlayground') {
-        continue
-    }
-    if ($Module -is [System.Collections.IDictionary]) {
-        $Exists = Get-Module -ListAvailable -Name $Module.ModuleName
-        if (-not $Exists) {
-            Write-Warning "$ModuleName - Downloading $($Module.ModuleName) from PSGallery"
-            Install-Module -Name $Module.ModuleName -Force -SkipPublisherCheck
-        }
-    } else {
-        $Exists = Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue
-        if (-not $Exists) {
-            Install-Module -Name $Module -Force -SkipPublisherCheck
-        }
-    }
-}
+Import-Module "$PSScriptRoot/../ImagePlayground.psd1" -Force
 
-Write-Color 'ModuleName: ', $ModuleName, ' Version: ', $PSDInformation.ModuleVersion -Color Yellow, Green, Yellow, Green -LinesBefore 2
-Write-Color 'PowerShell Version: ', $PSVersionTable.PSVersion -Color Yellow, Green
-Write-Color 'PowerShell Edition: ', $PSVersionTable.PSEdition -Color Yellow, Green
-Write-Color 'Required modules: ' -Color Yellow
-foreach ($Module in $PSDInformation.RequiredModules) {
-    if ($Module -is [System.Collections.IDictionary]) {
-        Write-Color '   [>] ', $Module.ModuleName, ' Version: ', $Module.ModuleVersion -Color Yellow, Green, Yellow, Green
-    } else {
-        Write-Color '   [>] ', $Module -Color Yellow, Green
+$TestDir = Join-Path $PSScriptRoot 'Artifacts'
+if (-not (Test-Path $TestDir)) { New-Item -Path $TestDir -ItemType Directory | Out-Null }
+
+Describe 'ImagePlayground module' {
+    It 'creates and reads QR code' {
+        $file = Join-Path $TestDir 'qr.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file
+        Test-Path $file | Should -BeTrue
+        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'https://evotec.xyz'
     }
-}
-Write-Color
 
-Import-Module $PSScriptRoot\*.psd1 -Force
-Import-Module Pester -Force
-$Configuration = [PesterConfiguration]::Default
-$Configuration.Run.Path = "$PSScriptRoot\Tests"
-$TestFiles = Get-ChildItem -Path $Configuration.Run.Path.Value -Filter '*.Tests.ps1' -Recurse -ErrorAction SilentlyContinue | Where-Object { -not $_.PSIsContainer }
-if (-not $TestFiles) {
-    Write-Warning 'No Pester tests found. Skipping.'
-    return
-}
-$Configuration.Run.Exit = $true
-$Configuration.Should.ErrorAction = 'Continue'
-$Configuration.CodeCoverage.Enabled = $false
-$Configuration.Output.Verbosity = 'Detailed'
-$Result = Invoke-Pester -Configuration $Configuration
-#$result = Invoke-Pester -Script $PSScriptRoot\Tests -Verbose -Output Detailed #-EnableExit
+    It 'resizes an image' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dest = Join-Path $TestDir 'logo-small.png'
+        Resize-Image -FilePath $src -OutputPath $dest -Width 50 -Height 50
+        $img = [ImagePlayground.Image]::Load($dest)
+        $img.Width | Should -Be 50
+        $img.Height | Should -Be 50
+        $img.Dispose()
+    }
 
-if ($Result.FailedCount -gt 0) {
-    throw "$($Result.FailedCount) tests failed."
+    It 'converts image format' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = Join-Path $TestDir 'qr.jpg'
+        if (Test-Path $dest) { Remove-Item $dest }
+        ConvertTo-Image -FilePath $src -OutputPath $dest
+        Test-Path $dest | Should -BeTrue
+    }
 }
