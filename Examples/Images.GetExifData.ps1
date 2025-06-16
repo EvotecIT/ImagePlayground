@@ -1,6 +1,6 @@
 ﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
-$Image = Get-Image -FilePath "$PSScriptRoot\Samples\Snow.jpeg"
+$Image = Get-Image -FilePath "C:\Support\GitHub\ImagePlayground\Examples\Samples\Snow.jpeg"
 $Image.Width
 $Image.Height
 $Image.Metadata

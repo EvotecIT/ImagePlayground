@@ -286,13 +286,10 @@ namespace ImagePlayground {
         public static Image Load(string filePath) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
 
-            Image image = new Image();
-            image._filePath = fullPath;
-
-            var inStream = System.IO.File.OpenRead(fullPath);
-            image._image = SixLabors.ImageSharp.Image.Load(inStream);
-            inStream.Close();
-            inStream.Dispose();
+            Image image = new Image {
+                _filePath = fullPath,
+                _image = SixLabors.ImageSharp.Image.Load(fullPath)
+            };
 
             return image;
         }

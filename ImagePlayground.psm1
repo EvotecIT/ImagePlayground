@@ -1,10 +1,19 @@
 ﻿# Get public and private function definition files.
-$Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue -Recurse )
-$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue -Recurse )
-$Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue -Recurse )
-$Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse )
+$Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
+$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
+$Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
+$Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
 # Get all assemblies
-$AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue
+$AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue -File
+
+# to speed up development adding direct path to binaries, instead of the the Lib folder
+$Development = $true
+$DevelopmentPath = "$PSScriptRoot\Sources\ImagePlayground.PowerShell\bin\Debug"
+$DevelopmentFolderCore = "net8.0"
+$DevelopmentFolderDefault = "net472"
+$BinaryModules = @(
+    "ImagePlayground.PowerShell.dll"
+)
 
 # Lets find which libraries we need to load
 $Default = $false
@@ -41,58 +50,68 @@ if ($Standard -and $Core -and $Default) {
     $Framework = ''
     $FrameworkNet = 'Default'
 } else {
-    Write-Error -Message 'No assemblies found'
-}
-if ($PSEdition -eq 'Core') {
-    $LibFolder = $Framework
-} else {
-    $LibFolder = $FrameworkNet
+    #Write-Error -Message 'No assemblies found'
 }
 
 $Assembly = @(
-    if ($Framework -and $PSEdition -eq 'Core') {
-        Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue -Recurse
+    if ($Development) {
+        if ($PSEdition -eq 'Core') {
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore\*.dll -ErrorAction SilentlyContinue -Recurse
+        } else {
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault\*.dll -ErrorAction SilentlyContinue -Recurse
+        }
+    } else {
+        if ($Framework -and $PSEdition -eq 'Core') {
+            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue -Recurse
+        }
+        if ($FrameworkNet -and $PSEdition -ne 'Core') {
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue -Recurse
+        }
     }
-    if ($FrameworkNet -and $PSEdition -ne 'Core') {
-        Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue -Recurse
-    }
-    # if ($AssemblyFolders.BaseName -contains 'Standard') {
-    #     @( Get-ChildItem -Path $PSScriptRoot\Lib\Standard\*.dll -ErrorAction SilentlyContinue -Recurse)
-    # }
-    # if ($PSEdition -eq 'Core') {
-    #     @( Get-ChildItem -Path $PSScriptRoot\Lib\Core\*.dll -ErrorAction SilentlyContinue -Recurse )
-    # } else {
-    #     @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue -Recurse )
-    # }
 )
 
-# This is special way of importing DLL if multiple frameworks are in use
-$FoundErrors = @(
-    # We load the DLL that does OnImportRemove if we have special module that requires special treatment for binary modules
-
-    # Get library name, from the PSM1 file name
-    $LibraryName = 'ImagePlayground.PowerShell' # $myInvocation.MyCommand.Name.Replace(".psm1", "")
-    $Library = "$LibraryName.dll"
-    $Class = "$LibraryName.Initialize"
-
-    try {
-        $ImportModule = Get-Command -Name Import-Module -Module Microsoft.PowerShell.Core
-
-        if (-not ($Class -as [type])) {
-            & $ImportModule ([IO.Path]::Combine($PSScriptRoot, 'Lib', $LibFolder, $Library)) -ErrorAction Stop
+$BinaryDev = @(
+    foreach ($BinaryModule in $BinaryModules) {
+        if ($PSEdition -eq 'Core') {
+            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
         } else {
-            $Type = "$Class" -as [Type]
-            & $importModule -Force -Assembly ($Type.Assembly)
+            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
         }
-    } catch {
-        Write-Warning -Message "Importing module $Library failed. Fix errors before continuing. Error: $($_.Exception.Message)"
-        $true
+        $Variable
+        Write-Warning "Development mode: Using binaries from $Variable"
     }
+)
 
+$FoundErrors = @(
+    if ($Development) {
+        foreach ($BinaryModule in $BinaryDev) {
+            try {
+                Import-Module -Name $BinaryModule -Force -ErrorAction Stop
+            } catch {
+                Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
+                $true
+            }
+        }
+    } else {
+        foreach ($BinaryModule in $BinaryModules) {
+            try {
+                if ($Framework -and $PSEdition -eq 'Core') {
+                    Import-Module -Name "$PSScriptRoot\Lib\$Framework\$BinaryModule" -Force -ErrorAction Stop
+                }
+                if ($FrameworkNet -and $PSEdition -ne 'Core') {
+                    Import-Module -Name "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule" -Force -ErrorAction Stop
+                }
+            } catch {
+                Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
+                $true
+            }
+        }
+    }
     Foreach ($Import in @($Assembly)) {
         try {
-            #Write-Warning "Processing $($Import.FullName)"
+            Write-Verbose -Message $Import.FullName
             Add-Type -Path $Import.Fullname -ErrorAction Stop
+            #  }
         } catch [System.Reflection.ReflectionTypeLoadException] {
             Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
             $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
@@ -100,6 +119,7 @@ $FoundErrors = @(
                 Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
             }
             $true
+            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         } catch {
             Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
             $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
@@ -107,15 +127,15 @@ $FoundErrors = @(
                 Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
             }
             $true
+            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         }
     }
-
     #Dot source the files
-    Foreach ($Import in @($Private + $Classes + $Enums + $Public)) {
+    Foreach ($Import in @($Classes + $Enums + $Private + $Public)) {
         Try {
             . $Import.Fullname
         } Catch {
-            Write-Warning -Message "Failed to import functions from $($import.Fullname).Error: $($_.Exception.Message)"
+            Write-Error -Message "Failed to import functions from $($import.Fullname): $_"
             $true
         }
     }
