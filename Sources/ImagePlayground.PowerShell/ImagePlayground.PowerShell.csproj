@@ -10,7 +10,8 @@
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 
         <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

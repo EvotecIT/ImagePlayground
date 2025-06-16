@@ -13,6 +13,8 @@
         <DelaySign>False</DelaySign>
         <IsPublishable>True</IsPublishable>
         <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +25,7 @@
         <PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
         <PackageReference Include="ScottPlot" Version="4.1.60" />
         <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
         <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
