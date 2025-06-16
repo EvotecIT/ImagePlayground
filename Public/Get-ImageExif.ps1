@@ -25,13 +25,18 @@
         return
     }
     $Image = Get-Image -FilePath $FilePath
-    if ($Translate) {
-        $SingleExif = [ordered] @{}
-        $Image.Metadata.ExifProfile.Values | ForEach-Object {
-            $SingleExif[$_.Tag.ToString()] = $_.Value
+    try {
+        if ($Translate) {
+            $SingleExif = [ordered] @{}
+            $Image.Metadata.ExifProfile.Values | ForEach-Object {
+                $SingleExif[$_.Tag.ToString()] = $_.Value
+            }
+            [PSCustomObject] $SingleExif
+        } else {
+            $Image.Metadata.ExifProfile.Values
         }
-        [PSCustomObject] $SingleExif
-    } else {
-        $Image.Metadata.ExifProfile.Values
+    }
+    finally {
+        $Image.Dispose()
     }
 }

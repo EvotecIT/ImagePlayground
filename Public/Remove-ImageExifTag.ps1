@@ -40,18 +40,23 @@
         [Parameter(Mandatory, ParameterSetName = 'All')][switch] $All
     )
     $Image = Get-Image -FilePath $FilePath
-    if ($All) {
-        Write-Verbose "Remove-ImageExif: Removing all Exif tags"
-        $Image.Metadata.ExifProfile.Values.Clear()
-    } else {
-        foreach ($Tag in $ExifTag) {
-            Write-Verbose "Remove-ImageExif: Removing $Tag"
-            $Image.Metadata.ExifProfile.RemoveValue($Tag)
+    try {
+        if ($All) {
+            Write-Verbose "Remove-ImageExif: Removing all Exif tags"
+            $Image.Metadata.ExifProfile.Values.Clear()
+        } else {
+            foreach ($Tag in $ExifTag) {
+                Write-Verbose "Remove-ImageExif: Removing $Tag"
+                $Image.Metadata.ExifProfile.RemoveValue($Tag)
+            }
+        }
+        if ($FilePathOutput) {
+            Save-Image -Image $Image -FilePath $FilePathOutput
+        } else {
+            Save-Image -Image $Image -FilePath $FilePath
         }
     }
-    if ($FilePathOutput) {
-        Save-Image -Image $Image -FilePath $FilePathOutput
-    } else {
-        Save-Image -Image $Image -FilePath $FilePath
+    finally {
+        $Image.Dispose()
     }
 }
