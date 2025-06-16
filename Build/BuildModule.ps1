@@ -98,7 +98,7 @@
         ResolveBinaryConflictsName        = 'ImagePlayground.PowerShell'
         NETProjectName                    = 'ImagePlayground.PowerShell'
         NETConfiguration                  = 'Release'
-        NETFramework                      = 'netstandard2.0', 'net472'
+        NETFramework                      = 'net8.0', 'net472'
         #NETExcludeMainLibrary             = $true
         NETExcludeLibraryFilter           = @(
             #'System.Management.*.dll'
