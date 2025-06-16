@@ -1,5 +1,3 @@
-Import-Module "$PSScriptRoot/../ImagePlayground.psd1" -Force
-
 $TestDir = Join-Path $PSScriptRoot 'Artifacts'
 if (-not (Test-Path $TestDir)) { New-Item -Path $TestDir -ItemType Directory | Out-Null }
 
