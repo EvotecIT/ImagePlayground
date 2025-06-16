@@ -10,7 +10,7 @@ Describe 'Get-ImageQRCode' {
 
         $file = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
 
-        (Get-ImageQRCode -FilePath $file).Message | Should -NotBeNullOrEmpty
+        (Get-ImageQRCode -FilePath $file).Message | Should -Not -BeNullOrEmpty
 
     }
 
