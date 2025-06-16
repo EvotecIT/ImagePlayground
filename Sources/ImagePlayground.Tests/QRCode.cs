@@ -49,5 +49,21 @@ namespace ImagePlayground.Tests {
             var read2 = BarCode.Read(filePath);
             Assert.True(read2.Message == "96385074");
         }
+
+        [Theory]
+        [InlineData("12345678")]
+        [InlineData("pass123")]
+        public void Test_QRCodeWiFi_Passwords(string password) {
+            string filePath = System.IO.Path.Combine(_directoryWithImages, $"WiFi_{password}.png");
+            File.Delete(filePath);
+            Assert.True(File.Exists(filePath) == false);
+
+            QrCode.GenerateWiFi("TestSSID", password, filePath, true);
+
+            Assert.True(File.Exists(filePath) == true);
+
+            var read = QrCode.Read(filePath);
+            Assert.True(read.Message == $"WIFI:T:WPA;S:TestSSID;P:{password};;");
+        }
     }
 }
