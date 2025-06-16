@@ -56,5 +56,21 @@ Describe 'ImagePlayground module' {
         $img.Height | Should -Be $expectedHeight
         $img.Dispose()
     }
+    It 'loads an image from disk' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $img = Get-Image -FilePath $src
+        $img.Width | Should -Be 660
+        $img.Height | Should -Be 660
+        $img.Dispose()
+    }
+    It 'saves an image to a new location' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = Join-Path $TestDir 'saved.png'
+        if (Test-Path $dest) { Remove-Item $dest }
+        $img = Get-Image -FilePath $src
+        Save-Image -Image $img -FilePath $dest
+        $img.Dispose()
+        Test-Path $dest | Should -BeTrue
+    }
 }
 
