@@ -80,10 +80,11 @@ namespace ImagePlayground {
         public ICompareResult Compare(string filePathToCompare) {
             string fullPath = System.IO.Path.GetFullPath(filePathToCompare);
 
-            var imageToCompare = GetImage(fullPath);
-            bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare);
-            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare);
-            return calcDiff;
+            using (var imageToCompare = GetImage(fullPath)) {
+                bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare);
+                ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare);
+                return calcDiff;
+            }
         }
 
         public void Compare(Image imageToCompare, string filePathToSave) {
@@ -100,9 +101,10 @@ namespace ImagePlayground {
             string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
 
             using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
-                var imageToCompare = GetImage(fullPath);
-                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare)) {
-                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
+                using (var imageToCompare = GetImage(fullPath)) {
+                    using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare)) {
+                        SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
+                    }
                 }
             }
         }
@@ -271,7 +273,9 @@ namespace ImagePlayground {
 
         public static SixLabors.ImageSharp.Image GetImage(string filePath) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
-            return SixLabors.ImageSharp.Image.Load(fullPath);
+            using (var inStream = System.IO.File.OpenRead(fullPath)) {
+                return SixLabors.ImageSharp.Image.Load(inStream);
+            }
         }
 
         public void Create(string filePath, int width, int height) {

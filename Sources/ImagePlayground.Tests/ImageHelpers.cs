@@ -22,6 +22,7 @@ namespace ImagePlayground.Tests {
             var image = Image.GetImage(filePath);
             Assert.True(image.Width == 660);
             Assert.True(image.Height == 660);
+            image.Dispose();
 
             var newImage = System.IO.Path.Combine(_directoryWithImages, "QRCodeUrlResized.jpg");
             ImageHelper.Resize(filePath, newImage, 100, 100);
