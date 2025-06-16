@@ -12,6 +12,21 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <Using Include="System.Collections" />
+        <Using Include="System.Management.Automation" />
+        <Using Include="System.Threading.Tasks" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="System.Threading" />
+        <Using Include="System" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+        <Using Include="System.Text" />
+        <Using Include="System.IO" />
+        <Using Include="System.Net" />
+        <Using Include="System.Net.Http" />
+    </ItemGroup>
+
     <PropertyGroup>
         <!-- Make sure the output DLL's from library are included in the output -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>

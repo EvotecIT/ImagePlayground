@@ -1,5 +1,6 @@
 using System.IO;
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 

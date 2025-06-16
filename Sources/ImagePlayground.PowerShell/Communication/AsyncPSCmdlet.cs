@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Concurrent;
+using System.Management.Automation;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace ImagePlayground.PowerShell;
 
 /// <summary>

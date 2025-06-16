@@ -1,9 +1,13 @@
-﻿namespace ImagePlayground.PowerShell;
+﻿using System;
+using System.Management.Automation;
+
+namespace ImagePlayground.PowerShell;
 /// <summary>
 /// This class allow connecting to the InternalLogger class of ADPlayground and act on events from it in different streams
 /// </summary>
 public class InternalLoggerPowerShell {
-    private readonly InternalLogger _logger;
+    // TODO: InternalLogger and LogEventArgs classes need to be implemented or referenced properly
+    // private readonly InternalLogger _logger;
     private readonly Action<string>? _writeVerboseAction;
     private readonly Action<string>? _writeDebugAction;
     private readonly Action<InformationRecord>? _writeInformationAction;
@@ -14,47 +18,47 @@ public class InternalLoggerPowerShell {
     /// <summary>
     /// Initialize the InternalLoggerPowerShell class
     /// </summary>
-    /// <param name="logger"></param>
     /// <param name="writeVerboseAction"></param>
     /// <param name="writeWarningAction"></param>
     /// <param name="writeDebugAction"></param>
     /// <param name="writeErrorAction"></param>
     /// <param name="writeProgressAction"></param>
     /// <param name="writeInformationAction"></param>
-    public InternalLoggerPowerShell(InternalLogger logger, Action<string>? writeVerboseAction = null, Action<string>? writeWarningAction = null, Action<string>? writeDebugAction = null, Action<ErrorRecord>? writeErrorAction = null, Action<ProgressRecord>? writeProgressAction = null, Action<InformationRecord>? writeInformationAction = null) {
-        _logger = logger;
+    public InternalLoggerPowerShell(Action<string>? writeVerboseAction = null, Action<string>? writeWarningAction = null, Action<string>? writeDebugAction = null, Action<ErrorRecord>? writeErrorAction = null, Action<ProgressRecord>? writeProgressAction = null, Action<InformationRecord>? writeInformationAction = null) {
+        // _logger = logger;
 
         if (writeVerboseAction != null) {
             _writeVerboseAction = writeVerboseAction;
-            _logger.OnVerboseMessage += Logger_OnVerboseMessage;
+            // _logger.OnVerboseMessage += Logger_OnVerboseMessage;
         }
 
         if (writeWarningAction != null) {
             _writeWarningAction = writeWarningAction;
-            _logger.OnWarningMessage += Logger_OnWarningMessage;
+            // _logger.OnWarningMessage += Logger_OnWarningMessage;
         }
 
         if (writeDebugAction != null) {
             _writeDebugAction = writeDebugAction;
-            _logger.OnDebugMessage += Logger_OnDebugMessage;
+            // _logger.OnDebugMessage += Logger_OnDebugMessage;
         }
 
         if (writeErrorAction != null) {
             _writeErrorAction = writeErrorAction;
-            _logger.OnErrorMessage += Logger_OnErrorMessage;
+            // _logger.OnErrorMessage += Logger_OnErrorMessage;
         }
 
         if (writeProgressAction != null) {
             _writeProgressAction = writeProgressAction;
-            _logger.OnProgressMessage += Logger_OnProgressMessage;
+            // _logger.OnProgressMessage += Logger_OnProgressMessage;
         }
 
         if (writeInformationAction != null) {
             _writeInformationAction = writeInformationAction;
-            _logger.OnInformationMessage += Logger_OnInformationMessage;
+            // _logger.OnInformationMessage += Logger_OnInformationMessage;
         }
     }
 
+    /*
     /// <summary>
     /// Message event handler
     /// </summary>
@@ -110,6 +114,7 @@ public class InternalLoggerPowerShell {
     private void Logger_OnInformationMessage(object? sender, LogEventArgs e) {
         WriteInformation(e.Message ?? string.Empty);
     }
+    */
 
     private void WriteVerbose(string message) {
         _writeVerboseAction?.Invoke(message);
@@ -132,7 +137,7 @@ public class InternalLoggerPowerShell {
     }
 
     private void WriteInformation(string message) {
-        InformationRecord informationRecord = new InformationRecord(message, "Mailozaurr");
+        InformationRecord informationRecord = new InformationRecord(message, "ImagePlayground");
         // Write to PowerShell information stream
         _writeInformationAction?.Invoke(informationRecord);
     }

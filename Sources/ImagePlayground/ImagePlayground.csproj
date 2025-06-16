@@ -28,4 +28,18 @@
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
         <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="System.Collections" />
+        <Using Include="System.Threading.Tasks" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="System.Threading" />
+        <Using Include="System" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+        <Using Include="System.Text" />
+        <Using Include="System.IO" />
+        <Using Include="System.Net" />
+        <Using Include="System.Net.Http" />
+    </ItemGroup>
 </Project>
