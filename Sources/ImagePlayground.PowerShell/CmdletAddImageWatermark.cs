@@ -42,7 +42,7 @@ namespace ImagePlayground.PowerShell {
         public int WatermarkPercentage { get; set; } = 20;
 
         [Parameter]
-        public SwitchParameter KeepOriginalSize { get; set; }
+        public bool KeepOriginalSize { get; set; } = true;
 
         protected override void ProcessRecord() {
             if (!File.Exists(FilePath)) {
@@ -55,9 +55,9 @@ namespace ImagePlayground.PowerShell {
             }
 
             if (ParameterSetName == ParameterSetCoordinates) {
-                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage, KeepOriginalSize.IsPresent);
+                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage, KeepOriginalSize);
             } else {
-                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage, KeepOriginalSize.IsPresent);
+                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage, KeepOriginalSize);
             }
         }
     }
