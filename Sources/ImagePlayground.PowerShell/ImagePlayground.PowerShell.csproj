@@ -6,24 +6,25 @@
         <VersionPrefix>1.1.0</VersionPrefix>
         <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
         <AssemblyName>ImagePlayground.PowerShell</AssemblyName>
-
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-
         <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Barcoder" Version="2.0.0" />
-        <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
-        <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
-        <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
-        <PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
-        <PackageReference Include="ScottPlot" Version="4.1.60" />
-        <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
-        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
-        <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+        <Using Include="System.Collections" />
+        <Using Include="System.Management.Automation" />
+        <Using Include="System.Threading.Tasks" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="System.Threading" />
+        <Using Include="System" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+        <Using Include="System.Text" />
+        <Using Include="System.IO" />
+        <Using Include="System.Net" />
+        <Using Include="System.Net.Http" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -62,4 +63,7 @@
         <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(PublishDir)" />
     </Target>
 
+    <ItemGroup>
+        <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+    </ItemGroup>
 </Project>
