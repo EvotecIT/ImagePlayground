@@ -5,7 +5,7 @@ Describe 'New-ImageChart' {
         if (-not (Test-Path $TestDir)) { New-Item -Path $TestDir -ItemType Directory | Out-Null }
     }
 
-    It 'creates a bar chart' {
+    It 'creates a bar chart' -Skip:(-not $IsWindows) {
         $file = Join-Path $TestDir 'chart.png'
         if (Test-Path $file) { Remove-Item $file }
 

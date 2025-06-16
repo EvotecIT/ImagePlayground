@@ -36,11 +36,11 @@ public sealed class GetImageExifCmdlet : PSCmdlet {
         IReadOnlyList<IExifValue> values = img.GetExifValues();
 
         if (Translate.IsPresent) {
-            var dict = new Dictionary<string, object?>();
+            var obj = new PSObject();
             foreach (IExifValue v in values) {
-                dict[v.Tag.ToString()] = v.GetValue();
+                obj.Properties.Add(new PSNoteProperty(v.Tag.ToString(), v.GetValue()));
             }
-            WriteObject(dict);
+            WriteObject(obj);
         } else {
             WriteObject(values, true);
         }
