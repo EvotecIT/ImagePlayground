@@ -76,7 +76,7 @@ jobs:
 
       - name: Run PowerShell tests
         shell: powershell
-        run: ./Tests/ImagePlayground.Tests.ps1
+        run: ./ImagePlayground.Tests.ps1
 
   test-windows-ps7:
     needs: refresh-psd1
@@ -111,7 +111,7 @@ jobs:
 
       - name: Run PowerShell tests
         shell: pwsh
-        run: ./Tests/ImagePlayground.Tests.ps1
+        run: ./ImagePlayground.Tests.ps1
 
   test-ubuntu:
     needs: refresh-psd1
@@ -153,7 +153,7 @@ jobs:
 
       - name: Run PowerShell tests
         shell: pwsh
-        run: ./Tests/ImagePlayground.Tests.ps1
+        run: ./ImagePlayground.Tests.ps1
 
   test-macos:
     needs: refresh-psd1
@@ -191,4 +191,4 @@ jobs:
 
       - name: Run PowerShell tests
         shell: pwsh
-        run: ./Tests/ImagePlayground.Tests.ps1
+        run: ./ImagePlayground.Tests.ps1
