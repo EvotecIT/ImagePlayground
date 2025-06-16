@@ -121,7 +121,8 @@ public static class Charts {
                 break;
             case ChartDefinitionType.Line:
                 foreach (var line in list.Cast<ChartLine>()) {
-                    plot.Add.Signal(line.Value.ToArray(), label: line.Name);
+                    var sig = plot.Add.Signal(line.Value.ToArray());
+                    sig.LegendText = line.Name;
                 }
                 plot.ShowLegend();
                 break;
@@ -129,8 +130,9 @@ public static class Charts {
                 var pieValues = list.Cast<ChartPie>().Select(p => p.Value).ToArray();
                 var pieLabels = list.Cast<ChartPie>().Select(p => p.Name).ToArray();
                 var pie = plot.Add.Pie(pieValues);
-                pie.SliceLabels = pieLabels;
-                pie.ShowLabels = true;
+                for (int i = 0; i < pie.Slices.Count && i < pieLabels.Length; i++) {
+                    pie.Slices[i].Label = pieLabels[i];
+                }
                 break;
             case ChartDefinitionType.Radial:
                 var rValues = list.Cast<ChartRadial>().Select(r => r.Value).ToArray();
