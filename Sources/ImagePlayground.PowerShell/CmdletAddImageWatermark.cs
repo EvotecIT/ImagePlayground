@@ -39,7 +39,7 @@ namespace ImagePlayground.PowerShell {
         public FlipMode FlipMode { get; set; } = FlipMode.None;
 
         [Parameter]
-        public int WatermarkPercentage { get; set; } = 100;
+        public int WatermarkPercentage { get; set; } = 20;
 
         protected override void ProcessRecord() {
             if (!File.Exists(FilePath)) {

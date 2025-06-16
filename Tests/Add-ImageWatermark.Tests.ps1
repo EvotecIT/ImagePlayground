@@ -12,7 +12,7 @@ Describe 'Add-ImageWatermark' {
         $wmk = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
         if (Test-Path $dest) { Remove-Item $dest }
 
-        Add-ImageWatermark -FilePath $src -OutputPath $dest -WatermarkPath $wmk
+        Add-ImageWatermark -FilePath $src -OutputPath $dest -WatermarkPath $wmk -WatermarkPercentage 100
         Test-Path $dest | Should -BeTrue
         $out = [ImagePlayground.Image]::Load($dest)
         $orig = [ImagePlayground.Image]::Load($src)

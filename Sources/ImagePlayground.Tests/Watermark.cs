@@ -13,7 +13,7 @@ namespace ImagePlayground.Tests {
             string dest = Path.Combine(_directoryWithTests, "watermarked.png");
             if (File.Exists(dest)) File.Delete(dest);
 
-            ImageHelper.WatermarkImage(src, dest, watermark, Image.WatermarkPlacement.Middle);
+            ImageHelper.WatermarkImage(src, dest, watermark, Image.WatermarkPlacement.Middle, watermarkPercentage: 100);
             Assert.True(File.Exists(dest));
 
             using var result = Image.Load(dest);
