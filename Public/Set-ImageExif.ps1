@@ -43,11 +43,16 @@
         return
     }
     $Image = Get-Image -FilePath $FilePath
-    # void SetValue[TValueType](SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag[TValueType] tag, TValueType value)
-    $Image.Metadata.ExifProfile.SetValue($ExifTag, $Value)
-    if ($FilePathOutput) {
-        Save-Image -Image $Image -FilePath $FilePathOutput
-    } else {
-        Save-Image -Image $Image -FilePath $FilePath
+    try {
+        # void SetValue[TValueType](SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag[TValueType] tag, TValueType value)
+        $Image.Metadata.ExifProfile.SetValue($ExifTag, $Value)
+        if ($FilePathOutput) {
+            Save-Image -Image $Image -FilePath $FilePathOutput
+        } else {
+            Save-Image -Image $Image -FilePath $FilePath
+        }
+    }
+    finally {
+        $Image.Dispose()
     }
 }
