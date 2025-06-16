@@ -7,7 +7,7 @@ namespace ImagePlayground.PowerShell;
 /// Cmdlet that resizes an image by width/height or percentage.
 /// </summary>
 [Cmdlet(VerbsCommon.Resize, "Image", DefaultParameterSetName = ParameterSetHeightWidth)]
-public sealed class ResizeImageCmdlet : Cmdlet {
+public sealed class ResizeImageCmdlet : PSCmdlet {
     private const string ParameterSetHeightWidth = "HeightWidth";
     private const string ParameterSetPercentage = "Percentage";
 

@@ -7,7 +7,7 @@ namespace ImagePlayground.PowerShell;
 /// Cmdlet that converts an image to another format.
 /// </summary>
 [Cmdlet(VerbsData.ConvertTo, "Image")]
-public sealed class ConvertToImageCmdlet : Cmdlet {
+public sealed class ConvertToImageCmdlet : PSCmdlet {
     /// <summary>Path to the source image.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
