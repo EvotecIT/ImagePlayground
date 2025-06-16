@@ -55,11 +55,20 @@ namespace ImagePlayground {
                 var watermarkWidth = _image.Width * watermarkPercentage / 100;
                 var watermarkHeight = watermarkWidth * image.Height / image.Width;
 
-                // rotate watermark
-                if (rotate == 0) {
-                    image.Mutate(mx => mx.Resize(watermarkWidth, watermarkHeight).Flip(flipMode));
-                } else {
-                    image.Mutate(mx => mx.Resize(watermarkWidth, watermarkHeight).Flip(flipMode).Rotate(rotate));
+                if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
+                    image.Mutate(mx => {
+                        if (watermarkPercentage != 100) {
+                            mx.Resize(watermarkWidth, watermarkHeight);
+                        }
+
+                        if (flipMode != FlipMode.None) {
+                            mx.Flip(flipMode);
+                        }
+
+                        if (rotate != 0) {
+                            mx.Rotate(rotate);
+                        }
+                    });
                 }
 
                 if (placement == WatermarkPlacement.TopLeft) {
@@ -85,11 +94,21 @@ namespace ImagePlayground {
                 var watermarkWidth = _image.Width * watermarkPercentage / 100;
                 var watermarkHeight = watermarkWidth * image.Height / image.Width;
 
-                // rotate watermark
-                if (rotate == 0) {
-                    image.Mutate(mx => mx.Resize(watermarkWidth, watermarkHeight).Flip(flipMode));
-                } else {
-                    image.Mutate(mx => mx.Resize(watermarkWidth, watermarkHeight).Flip(flipMode).Rotate(rotate));
+                // apply changes
+                if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
+                    image.Mutate(mx => {
+                        if (watermarkPercentage != 100) {
+                            mx.Resize(watermarkWidth, watermarkHeight);
+                        }
+
+                        if (flipMode != FlipMode.None) {
+                            mx.Flip(flipMode);
+                        }
+
+                        if (rotate != 0) {
+                            mx.Rotate(rotate);
+                        }
+                    });
                 }
                 AddImage(image, location, opacity);
             }
