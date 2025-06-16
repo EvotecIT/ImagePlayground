@@ -73,6 +73,32 @@ Describe 'ImagePlayground module' {
         Test-Path $dest | Should -BeTrue
     }
 
+    It 'reads exif data' {
+        $dest = Join-Path $TestDir 'exif-read.jpg'
+        if (Test-Path $dest) { Remove-Item $dest }
+        $img = [ImagePlayground.Image]::new()
+        $img.Create($dest, 10, 10)
+        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.Save()
+        $img.Dispose()
+        $result = Get-ImageExif -FilePath $dest -Translate
+        $result.Software | Should -Be 'ImagePlayground'
+    }
+
+    It 'sets and removes exif data' {
+        $dest = Join-Path $TestDir 'exif-edit.jpg'
+        if (Test-Path $dest) { Remove-Item $dest }
+        $img = [ImagePlayground.Image]::new()
+        $img.Create($dest, 10, 10)
+        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.Save()
+        $img.Dispose()
+        Set-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Value 'Modified'
+        (Get-ImageExif -FilePath $dest -Translate).Software | Should -Be 'Modified'
+        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software)
+        (Get-ImageExif -FilePath $dest).Count | Should -Be 0
+    }
+    
     It 'compares two images and returns result' {
         $img1 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
         $img2 = Join-Path $TestDir 'qr_comp.png'
