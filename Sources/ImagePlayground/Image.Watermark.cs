@@ -47,17 +47,17 @@ namespace ImagePlayground {
             }
         }
 
-        public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, bool keepOriginalSize = false) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
 
             var location = new Point(0, 0);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-                var watermarkWidth = _image.Width * watermarkPercentage / 100;
-                var watermarkHeight = watermarkWidth * image.Height / image.Width;
+                var watermarkWidth = keepOriginalSize ? image.Width : _image.Width * watermarkPercentage / 100;
+                var watermarkHeight = keepOriginalSize ? image.Height : watermarkWidth * image.Height / image.Width;
 
-                if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
+                if ((!keepOriginalSize && watermarkPercentage != 100) || rotate != 0 || flipMode != FlipMode.None) {
                     image.Mutate(mx => {
-                        if (watermarkPercentage != 100) {
+                        if (!keepOriginalSize && watermarkPercentage != 100) {
                             mx.Resize(watermarkWidth, watermarkHeight);
                         }
 
@@ -86,18 +86,18 @@ namespace ImagePlayground {
             }
         }
 
-        public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, bool keepOriginalSize = false) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
 
             var location = new Point(x, y);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-                var watermarkWidth = _image.Width * watermarkPercentage / 100;
-                var watermarkHeight = watermarkWidth * image.Height / image.Width;
+                var watermarkWidth = keepOriginalSize ? image.Width : _image.Width * watermarkPercentage / 100;
+                var watermarkHeight = keepOriginalSize ? image.Height : watermarkWidth * image.Height / image.Width;
 
                 // apply changes
-                if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
+                if ((!keepOriginalSize && watermarkPercentage != 100) || rotate != 0 || flipMode != FlipMode.None) {
                     image.Mutate(mx => {
-                        if (watermarkPercentage != 100) {
+                        if (!keepOriginalSize && watermarkPercentage != 100) {
                             mx.Resize(watermarkWidth, watermarkHeight);
                         }
 
