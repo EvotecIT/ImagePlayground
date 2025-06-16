@@ -1,7 +1,10 @@
-$TestDir = Join-Path $PSScriptRoot 'Artifacts'
-if (-not (Test-Path $TestDir)) { New-Item -Path $TestDir -ItemType Directory | Out-Null }
-
 Describe 'ImagePlayground module' {
+    BeforeAll {
+        Import-Module "$PSScriptRoot/../ImagePlayground.psd1" -Force
+
+        $TestDir = Join-Path $PSScriptRoot 'Artifacts'
+        if (-not (Test-Path $TestDir)) { New-Item -Path $TestDir -ItemType Directory | Out-Null }
+    }
     It 'creates and reads QR code' {
         $file = Join-Path $TestDir 'qr.png'
         if (Test-Path $file) { Remove-Item $file }
