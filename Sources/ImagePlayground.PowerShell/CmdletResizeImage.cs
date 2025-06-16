@@ -1,41 +1,51 @@
-using System.IO;
-using System.Management.Automation;
-
 namespace ImagePlayground.PowerShell;
 
-/// <summary>
-/// Cmdlet that resizes an image by width/height or percentage.
-/// </summary>
+/// <summary>Resizes an image.</summary>
+/// <para>Use width/height parameters or <see cref="Percentage"/>.</para>
+/// <example>
+///   <summary>Resize to 100x100</summary>
+///   <code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100</code>
+/// </example>
+/// <example>
+///   <summary>Double the size</summary>
+///   <code>Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200</code>
+/// </example>
 [Cmdlet(VerbsCommon.Resize, "Image", DefaultParameterSetName = ParameterSetHeightWidth)]
 public sealed class ResizeImageCmdlet : PSCmdlet {
-    private const string ParameterSetHeightWidth = "HeightWidth";
-    private const string ParameterSetPercentage = "Percentage";
+        private const string ParameterSetHeightWidth = "HeightWidth";
+        private const string ParameterSetPercentage = "Percentage";
 
-    /// <summary>Path to the source image.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetHeightWidth)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPercentage)]
-    public string FilePath { get; set; } = string.Empty;
+        /// <summary>Path to the source image.</summary>
+        /// <para>The image must exist.</para>
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetHeightWidth)]
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPercentage)]
+        public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>Destination file path.</summary>
-    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetHeightWidth)]
-    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetPercentage)]
-    public string OutputPath { get; set; } = string.Empty;
+        /// <summary>Destination file path.</summary>
+        /// <para>Supported formats depend on the file extension.</para>
+        [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetHeightWidth)]
+        [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetPercentage)]
+        public string OutputPath { get; set; } = string.Empty;
 
-    /// <summary>New width of the image.</summary>
-    [Parameter(ParameterSetName = ParameterSetHeightWidth)]
-    public int Width { get; set; }
+        /// <summary>New width of the image.</summary>
+        /// <para>Used with <see cref="Height"/> when not using <see cref="Percentage"/>.</para>
+        [Parameter(ParameterSetName = ParameterSetHeightWidth)]
+        public int Width { get; set; }
 
-    /// <summary>New height of the image.</summary>
-    [Parameter(ParameterSetName = ParameterSetHeightWidth)]
-    public int Height { get; set; }
+        /// <summary>New height of the image.</summary>
+        /// <para>Used with <see cref="Width"/> when not using <see cref="Percentage"/>.</para>
+        [Parameter(ParameterSetName = ParameterSetHeightWidth)]
+        public int Height { get; set; }
 
-    /// <summary>Percentage based resize.</summary>
-    [Parameter(ParameterSetName = ParameterSetPercentage)]
-    public int Percentage { get; set; }
+        /// <summary>Percentage based resize.</summary>
+        /// <para>Applies uniform scaling relative to the original size.</para>
+        [Parameter(ParameterSetName = ParameterSetPercentage)]
+        public int Percentage { get; set; }
 
-    /// <summary>Ignore aspect ratio.</summary>
-    [Parameter(ParameterSetName = ParameterSetHeightWidth)]
-    public SwitchParameter DontRespectAspectRatio { get; set; }
+        /// <summary>Ignore aspect ratio.</summary>
+        /// <para>Only valid when resizing by width or height.</para>
+        [Parameter(ParameterSetName = ParameterSetHeightWidth)]
+        public SwitchParameter DontRespectAspectRatio { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {

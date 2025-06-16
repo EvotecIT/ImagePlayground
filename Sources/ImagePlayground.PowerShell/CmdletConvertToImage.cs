@@ -1,19 +1,23 @@
 using System.IO;
 using System.Management.Automation;
-using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>
-/// Cmdlet that converts an image to another format.
-/// </summary>
+/// <summary>Converts an image to a different format.</summary>
+/// <para>Outputs a new file using the extension from <see cref="OutputPath"/>.</para>
+/// <example>
+///   <summary>Convert PNG to JPEG</summary>
+///   <code>ConvertTo-Image -FilePath image.png -OutputPath image.jpg</code>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "Image")]
 public sealed class ConvertToImageCmdlet : PSCmdlet {
     /// <summary>Path to the source image.</summary>
+    /// <para>The file must exist.</para>
     [Parameter(Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Destination file path including extension.</summary>
+    /// <para>The extension determines the output format.</para>
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
