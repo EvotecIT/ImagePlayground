@@ -64,118 +64,40 @@ namespace ImagePlayground {
             string fullPath = System.IO.Path.GetFullPath(filePath);
             string outFullPath = System.IO.Path.GetFullPath(outFilePath);
 
-            using (var inStream = System.IO.File.OpenRead(fullPath)) {
-                using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    if (sampler == null) {
-                        if (keepAspectRatio == true) {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value));
-                            } else if (width != null) {
-                                var newWidth = width.Value;
-                                var newHeight = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-                            } else if (height != null) {
-                                var newHeight = height.Value;
-                                var newWidth = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-                            }
-                        } else {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value));
-                            } else if (width != null) {
-                                image.Mutate(x => x.Resize(width.Value, image.Height));
-                            } else if (height != null) {
-                                image.Mutate(x => x.Resize(image.Width, height.Value));
-                            }
-                        }
-                    } else {
-                        IResampler mySampler = GetResampler(sampler.Value);
-
-                        if (keepAspectRatio == true) {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
-                            } else if (width != null) {
-                                var newWidth = width.Value;
-                                var newHeight = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
-                            } else if (height != null) {
-                                var newHeight = height.Value;
-                                var newWidth = 0;
-                                image.Mutate(x => x.Resize(newWidth, newHeight, mySampler));
-                            }
-                        } else {
-                            if (width != null && height != null) {
-                                image.Mutate(x => x.Resize(width.Value, height.Value, mySampler));
-                            } else if (width != null) {
-                                image.Mutate(x => x.Resize(width.Value, image.Height, mySampler));
-                            } else if (height != null) {
-                                image.Mutate(x => x.Resize(image.Width, height.Value, mySampler));
-                            }
-                        }
-                    }
-
-                    image.Save(outFullPath);
-                }
+            using (var inStream = System.IO.File.OpenRead(fullPath))
+            using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
+                Resize(image, width, height, keepAspectRatio, sampler);
+                image.Save(outFullPath);
             }
         }
 
         public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
-            // lets try to keep the original image if possible
+            if (width == null && height == null) {
+                return image;
+            }
+
             if (width != null && height != null && image.Width == width && image.Height == height) {
                 return image;
-            } else if (width != null && image.Width == width) {
+            } else if (width != null && height == null && image.Width == width) {
                 return image;
-            } else if (height != null && image.Height == height) {
+            } else if (height != null && width == null && image.Height == height) {
                 return image;
             }
 
-            if (sampler == null) {
-                if (keepAspectRatio == true) {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        var newWidth = width.Value;
-                        var newHeight = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    } else if (height != null) {
-                        var newHeight = height.Value;
-                        var newWidth = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    }
-                } else {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        image.Mutate(x => x.Resize(width.Value, image.Height));
-                    } else if (height != null) {
-                        image.Mutate(x => x.Resize(image.Width, height.Value));
-                    }
-                }
+            var options = new ResizeOptions();
+            if (keepAspectRatio && (width == null || height == null)) {
+                options.Mode = ResizeMode.Max;
+                options.Size = new Size(width ?? 0, height ?? 0);
             } else {
-                IResampler mySampler = GetResampler(sampler.Value);
-                if (keepAspectRatio == true) {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        var newWidth = width.Value;
-                        var newHeight = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    } else if (height != null) {
-                        var newHeight = height.Value;
-                        var newWidth = 0;
-                        image.Mutate(x => x.Resize(newWidth, newHeight));
-                    }
-                } else {
-                    if (width != null && height != null) {
-                        image.Mutate(x => x.Resize(width.Value, height.Value));
-                    } else if (width != null) {
-                        image.Mutate(x => x.Resize(width.Value, image.Height));
-                    } else if (height != null) {
-                        image.Mutate(x => x.Resize(image.Width, height.Value));
-                    }
-                }
+                options.Mode = ResizeMode.Stretch;
+                options.Size = new Size(width ?? image.Width, height ?? image.Height);
             }
 
+            if (sampler != null) {
+                options.Sampler = Helpers.GetResampler(sampler.Value);
+            }
+
+            image.Mutate(x => x.Resize(options));
             return image;
         }
 
@@ -189,17 +111,12 @@ namespace ImagePlayground {
             string fullPath = System.IO.Path.GetFullPath(filePath);
             string outFullPath = System.IO.Path.GetFullPath(outFilePath);
 
-            using (var inStream = System.IO.File.OpenRead(fullPath)) {
-                using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    int width = image.Width * percentage / 100;
-                    int height = image.Height * percentage / 100;
-                    if (image.Width == width && image.Height == height) {
-                        System.IO.File.Copy(fullPath, outFullPath, true);
-                    } else {
-                        image.Mutate(x => x.Resize(width, height));
-                        image.Save(outFullPath);
-                    }
-                }
+            using (var inStream = System.IO.File.OpenRead(fullPath))
+            using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
+                int width = image.Width * percentage / 100;
+                int height = image.Height * percentage / 100;
+                Resize(image, width, height, false);
+                image.Save(outFullPath);
             }
         }
 
@@ -318,23 +235,5 @@ namespace ImagePlayground {
             Helpers.Open(fullPath, open);
         }
 
-        private static IResampler GetResampler(Image.Sampler sampler) =>
-            sampler switch {
-                Image.Sampler.NearestNeighbor => KnownResamplers.NearestNeighbor,
-                Image.Sampler.Box => KnownResamplers.Box,
-                Image.Sampler.Triangle => KnownResamplers.Triangle,
-                Image.Sampler.Hermite => KnownResamplers.Hermite,
-                Image.Sampler.Lanczos2 => KnownResamplers.Lanczos2,
-                Image.Sampler.Lanczos3 => KnownResamplers.Lanczos3,
-                Image.Sampler.Lanczos5 => KnownResamplers.Lanczos5,
-                Image.Sampler.Lanczos8 => KnownResamplers.Lanczos8,
-                Image.Sampler.MitchellNetravali => KnownResamplers.MitchellNetravali,
-                Image.Sampler.CatmullRom => KnownResamplers.CatmullRom,
-                Image.Sampler.Robidoux => KnownResamplers.Robidoux,
-                Image.Sampler.RobidouxSharp => KnownResamplers.RobidouxSharp,
-                Image.Sampler.Spline => KnownResamplers.Spline,
-                Image.Sampler.Welch => KnownResamplers.Welch,
-                _ => KnownResamplers.Bicubic,
-            };
     }
 }
