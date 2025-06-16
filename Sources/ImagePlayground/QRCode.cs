@@ -48,7 +48,7 @@ namespace ImagePlayground {
             }
         }
         public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false) {
-            PayloadGenerator.WiFi generator = new PayloadGenerator.WiFi(ssid, password, PayloadGenerator.WiFi.Authentication.WPA);
+            PayloadGenerator.WiFi generator = new PayloadGenerator.WiFi(ssid, password, PayloadGenerator.WiFi.Authentication.WPA, false, false);
             Generate(generator.ToString(), filePath, transparent);
         }
 
