@@ -1,4 +1,6 @@
-﻿Build-Module -ModuleName 'ImagePlayground' {
+﻿Import-Module PSPublishModule -Force -ErrorAction Stop
+
+Build-Module -ModuleName 'ImagePlayground' {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -85,7 +87,7 @@
     $newConfigurationBuildSplat = @{
         Enable                            = $true
         # lets sign module only on my machine for now
-        SignModule                        = if ($Env:COMPUTERNAME -eq 'EVODEV') { $true } else { $false }
+        SignModule                        = if ($Env:COMPUTERNAME -eq 'EVOMONSTER') { $true } else { $false }
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
         CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
@@ -108,6 +110,7 @@
         #SeparateFileLibraries             = $true
         DeleteTargetModuleBeforeBuild     = $true
         MergeLibraryDebugging             = $false
+        RefreshPSD1Only                   = $true
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat #-DotSourceLibraries -DotSourceClasses -MergeModuleOnBuild -Enable -SignModule -DeleteTargetModuleBeforeBuild -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703' -MergeFunctionsFromApprovedModules
