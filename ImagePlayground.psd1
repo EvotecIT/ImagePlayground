@@ -2,7 +2,7 @@
     AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
     Author                 = 'Przemyslaw Klys'
     CmdletsToExport        = @(
-        'Add-ImageText','Compare-Image','ConvertTo-Image','Get-Image','Get-ImageBarCode',
+        'Add-ImageText','Add-ImageWatermark','Compare-Image','ConvertTo-Image','Get-Image','Get-ImageBarCode',
         'Get-ImageExif','Get-ImageQRCode','Merge-Image','New-ImageBarCode','New-ImageChart',
         'New-ImageChartBar','New-ImageChartBarOptions','New-ImageChartLine','New-ImageChartPie',
         'New-ImageChartRadial','New-ImageGrid','New-ImageQRCode','New-ImageQRCodeWiFi',
