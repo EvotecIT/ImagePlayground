@@ -1,31 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <AssemblyName>ImagePlayground</AssemblyName>
+        <AssemblyTitle>ImagePlayground</AssemblyTitle>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <Company>Evotec</Company>
+        <Authors>Przemyslaw Klys</Authors>
+        <VersionPrefix>0.0.2</VersionPrefix>
+        <TargetFrameworks>netstandard2.0;;net472;net8.0</TargetFrameworks>
 
-  <PropertyGroup>
-    <AssemblyName>ImagePlayground</AssemblyName>
-    <AssemblyTitle>ImagePlayground</AssemblyTitle>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Company>Evotec</Company>
-    <Authors>Przemyslaw Klys</Authors>
-    <VersionPrefix>0.0.2</VersionPrefix>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net48;net6.0;net7.0</TargetFrameworks>
+        <PackageId>ImagePlayground</PackageId>
+        <PackageTags>net472;netstandard;netstandard2.0,net8.0</PackageTags>
+        <DelaySign>False</DelaySign>
+        <IsPublishable>True</IsPublishable>
+        <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
+    </PropertyGroup>
 
-    <PackageId>ImagePlayground</PackageId>
-    <PackageTags>net472;net48;net50;netstandard;netstandard2.0,netstandard2.1</PackageTags>
-    <DelaySign>False</DelaySign>
-    <IsPublishable>True</IsPublishable>
-    <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Barcoder" Version="2.0.0" />
-    <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
-    <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
-    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
-    <PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
-    <PackageReference Include="ScottPlot" Version="4.1.60" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Barcoder" Version="2.0.0" />
+        <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
+        <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
+        <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
+        <PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
+        <PackageReference Include="ScottPlot" Version="4.1.60" />
+        <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
+        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
+    </ItemGroup>
 </Project>
