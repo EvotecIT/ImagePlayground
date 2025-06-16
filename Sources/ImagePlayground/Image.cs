@@ -219,32 +219,33 @@ namespace ImagePlayground {
         }
 
         public void Resize(int? width, int? height, bool keepAspectRatio = true) {
-            if (keepAspectRatio == true) {
-                if (width != null && height != null) {
-                    _image.Mutate(x => x.Resize(width.Value, height.Value));
-                } else if (width != null) {
-                    var newWidth = width.Value;
-                    var newHeight = (_image.Height / _image.Width) * newWidth;
-                    _image.Mutate(x => x.Resize(newWidth, newHeight));
-                } else if (height != null) {
-                    var newHeight = height.Value;
-                    var newWidth = (_image.Width / _image.Height) * newHeight;
-                    _image.Mutate(x => x.Resize(newWidth, newHeight));
-                }
-            } else {
-                if (width != null && height != null) {
-                    _image.Mutate(x => x.Resize(width.Value, height.Value));
-                } else if (width != null) {
-
-                    _image.Mutate(x => x.Resize(width.Value, _image.Height));
-                } else if (height != null) {
-                    _image.Mutate(x => x.Resize(_image.Width, height.Value));
-                }
+            if (width == null && height == null) {
+                return;
             }
+
+            var options = new ResizeOptions();
+            if (keepAspectRatio && (width == null || height == null)) {
+                options.Mode = ResizeMode.Max;
+                options.Size = new Size(width ?? 0, height ?? 0);
+            } else if (keepAspectRatio) {
+                options.Mode = ResizeMode.Max;
+                options.Size = new Size(width ?? _image.Width, height ?? _image.Height);
+            } else {
+                options.Mode = ResizeMode.Stretch;
+                options.Size = new Size(width ?? _image.Width, height ?? _image.Height);
+            }
+
+            _image.Mutate(x => x.Resize(options));
         }
 
         public void Resize(int percentage) {
-            _image.Mutate(x => x.Resize(_image.Width * percentage / 100, _image.Height * percentage / 100));
+            int width = _image.Width * percentage / 100;
+            int height = _image.Height * percentage / 100;
+            var options = new ResizeOptions {
+                Mode = ResizeMode.Stretch,
+                Size = new Size(width, height)
+            };
+            _image.Mutate(x => x.Resize(options));
         }
 
         public void Saturate(float amount) {
