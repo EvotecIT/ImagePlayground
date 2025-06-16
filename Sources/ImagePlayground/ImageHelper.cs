@@ -115,6 +115,11 @@ namespace ImagePlayground {
         }
 
         public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
+            // Skip processing if target dimensions match
+            if ((width == null || width == image.Width) && (height == null || height == image.Height)) {
+                return image;
+            }
+
             var mySampler = GetResampler(sampler);
             var options = new ResizeOptions {
                 Size = new Size(width ?? image.Width, height ?? image.Height),
