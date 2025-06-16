@@ -6,8 +6,7 @@
         <Company>Evotec</Company>
         <Authors>Przemyslaw Klys</Authors>
         <VersionPrefix>0.0.2</VersionPrefix>
-        <TargetFrameworks>netstandard2.0;;net472;net8.0</TargetFrameworks>
-
+        <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
         <PackageId>ImagePlayground</PackageId>
         <PackageTags>net472;netstandard;netstandard2.0,net8.0</PackageTags>
         <DelaySign>False</DelaySign>
