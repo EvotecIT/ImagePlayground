@@ -71,6 +71,15 @@ Gets EXIF data from image
 ### [Save-Image](Save-Image.md)
 {{ Fill in the Synopsis }}
 
+### [Compare-Image](Compare-Image.md)
+{{ Fill in the Synopsis }}
+
+### [New-ImageGrid](New-ImageGrid.md)
+{{ Fill in the Synopsis }}
+
+### [Add-ImageText](Add-ImageText.md)
+{{ Fill in the Synopsis }}
+
 ### [Set-ImageExif](Set-ImageExif.md)
 Sets EXIF tag to specific value
 
