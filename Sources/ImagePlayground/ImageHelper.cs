@@ -201,11 +201,10 @@ namespace ImagePlayground {
                     ic.Fill(color);
 
                     var rotation = GeometryUtilities.DegreeToRadian(45);
-
+                    var rand = new Random();
 
                     for (var row = 1; row < rowCount; row++) {
                         for (var col = 1; col < columnCount; col++) {
-                            var rand = new Random();
                             var r = (byte)rand.Next(0, 255);
                             var g = (byte)rand.Next(0, 255);
                             var b = (byte)rand.Next(0, 255);
