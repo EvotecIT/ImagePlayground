@@ -14,8 +14,12 @@ public sealed class NewImageChartRadialCmdlet : PSCmdlet {
     [Parameter(Mandatory = true, Position = 1)]
     public double Value { get; set; }
 
+    /// <summary>Gauge color.</summary>
+    [Parameter]
+    public SixLabors.ImageSharp.Color? Color { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartRadial(Name, Value));
+        WriteObject(new ImagePlayground.Charts.ChartRadial(Name, Value, Color));
     }
 }
