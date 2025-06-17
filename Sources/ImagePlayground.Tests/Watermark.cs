@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using ImagePlayground;
 using SixLabors.ImageSharp;
@@ -20,6 +21,16 @@ namespace ImagePlayground.Tests {
             using var original = Image.Load(src);
             Assert.Equal(original.Width, result.Width);
             Assert.Equal(original.Height, result.Height);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(101)]
+        public void Test_WatermarkImage_InvalidPercentage(int percentage) {
+            string src = Path.Combine(_directoryWithImages, "QRCode1.png");
+            string watermark = Path.Combine(_directoryWithImages, "LogoEvotec.png");
+            string dest = Path.Combine(_directoryWithTests, $"invalid_{percentage}.png");
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageHelper.WatermarkImage(src, dest, watermark, Image.WatermarkPlacement.Middle, watermarkPercentage: percentage));
         }
     }
 }
