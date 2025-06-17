@@ -90,7 +90,7 @@ public static partial class Helpers {
         var asciiContent = System.Text.Encoding.ASCII.GetString(bytes);
         var metaMatch = System.Text.RegularExpressions.Regex.Match(
             asciiContent,
-            @"<meta[^>]+charset\s*=\s*[\"']?([^\"'>\s]+)",
+            @"<meta[^>]+charset\s*=\s*[""']?([^""'>\s]+)",
             System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         if (metaMatch.Success) {

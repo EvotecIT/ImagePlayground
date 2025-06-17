@@ -38,8 +38,8 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             list.AddRange(Definition);
         }
         if (ChartsDefinition != null) {
-            var output = ChartsDefinition.Invoke();
-            foreach (var o in output) {
+            var results = ChartsDefinition.Invoke();
+            foreach (var o in results) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
                 if (obj is Charts.ChartDefinition def) {
                     list.Add(def);
