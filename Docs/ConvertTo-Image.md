@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-ConvertTo-Image [-FilePath] <String> [-OutputPath] <String> [<CommonParameters>]
+ConvertTo-Image [-FilePath] <String> [-OutputPath] <String> [-Quality <Int32>] [-CompressionLevel <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

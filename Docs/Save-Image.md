@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Save-Image [-Image] <Image> [[-FilePath] <String>] [-Open] [<CommonParameters>]
+Save-Image [-Image] <Image> [[-FilePath] <String>] [-Quality <Int32>] [-CompressionLevel <Int32>] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
