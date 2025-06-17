@@ -22,7 +22,7 @@ Describe 'Save-Image' {
 
         $img = Get-Image -FilePath $src
 
-        Save-Image -Image $img -FilePath $dest
+        Save-Image -Image $img -FilePath $dest -CompressionLevel 6 -Quality 80
 
         $img.Dispose()
 

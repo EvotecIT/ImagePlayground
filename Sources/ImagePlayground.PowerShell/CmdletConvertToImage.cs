@@ -21,6 +21,14 @@ public sealed class ConvertToImageCmdlet : PSCmdlet {
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Quality for JPEG or WEBP images.</summary>
+    [Parameter]
+    public int? Quality { get; set; }
+
+    /// <summary>Compression level for PNG images.</summary>
+    [Parameter]
+    public int? CompressionLevel { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (!File.Exists(FilePath)) {
@@ -28,6 +36,6 @@ public sealed class ConvertToImageCmdlet : PSCmdlet {
             return;
         }
 
-        ImagePlayground.ImageHelper.ConvertTo(FilePath, OutputPath);
+        ImagePlayground.ImageHelper.ConvertTo(FilePath, OutputPath, Quality, CompressionLevel);
     }
 }

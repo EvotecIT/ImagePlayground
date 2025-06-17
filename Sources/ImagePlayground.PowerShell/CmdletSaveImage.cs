@@ -17,6 +17,14 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     [Parameter(Position = 1)]
     public string? FilePath { get; set; }
 
+    /// <summary>Quality for JPEG or WEBP images.</summary>
+    [Parameter]
+    public int? Quality { get; set; }
+
+    /// <summary>Compression level for PNG images.</summary>
+    [Parameter]
+    public int? CompressionLevel { get; set; }
+
     /// <summary>Open file after saving.</summary>
     [Parameter]
     public SwitchParameter Open { get; set; }
@@ -24,9 +32,9 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (!string.IsNullOrWhiteSpace(FilePath)) {
-            Image.Save(FilePath, Open.IsPresent);
+            Image.Save(FilePath, Open.IsPresent, Quality, CompressionLevel);
         } else {
-            Image.Save(Open.IsPresent);
+            Image.Save("", Open.IsPresent, Quality, CompressionLevel);
         }
     }
 }

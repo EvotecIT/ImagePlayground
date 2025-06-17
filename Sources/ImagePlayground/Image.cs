@@ -295,18 +295,19 @@ namespace ImagePlayground {
             return image;
         }
 
-        public void Save(string filePath = "", bool openImage = false) {
+        public void Save(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null) {
             if (filePath == "") {
                 filePath = _filePath;
             } else {
                 filePath = System.IO.Path.GetFullPath(filePath);
             }
-            _image.Save(filePath);
+            var encoder = Helpers.GetEncoder(System.IO.Path.GetExtension(filePath), quality, compressionLevel);
+            _image.Save(filePath, encoder);
             Helpers.Open(filePath, openImage);
         }
 
         public void Save(bool openImage) {
-            Save("", openImage);
+            Save("", openImage, null, null);
         }
 
         public void Dispose() {

@@ -18,34 +18,17 @@ namespace ImagePlayground {
         /// <param name="filePath"></param>
         /// <param name="outFilePath"></param>
         /// <exception cref="UnknownImageFormatException"></exception>
-        public static void ConvertTo(string filePath, string outFilePath) {
+        public static void ConvertTo(string filePath, string outFilePath, int? quality = null, int? compressionLevel = null) {
             string fullPath = System.IO.Path.GetFullPath(filePath);
             string outFullPath = System.IO.Path.GetFullPath(outFilePath);
-            using (var inStream = System.IO.File.OpenRead(fullPath)) {
-                using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-                    FileInfo fileInfo = new FileInfo(outFilePath);
-                    if (fileInfo.Extension == ".png") {
-                        image.SaveAsPng(outFilePath);
-                    } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                        image.SaveAsJpeg(outFilePath);
-                    } else if (fileInfo.Extension == ".bmp") {
-                        image.SaveAsBmp(outFilePath);
-                    } else if (fileInfo.Extension == ".gif") {
-                        image.SaveAsGif(outFilePath);
-                    } else if (fileInfo.Extension == ".pbm") {
-                        image.SaveAsPbm(outFilePath);
-                    } else if (fileInfo.Extension == ".tga") {
-                        image.SaveAsTga(outFilePath);
-                    } else if (fileInfo.Extension == ".tiff") {
-                        image.SaveAsTiff(outFilePath);
-                    } else if (fileInfo.Extension == ".webp") {
-                        image.SaveAsWebp(outFilePath);
-                    } else if (fileInfo.Extension == ".ico") {
-                        // maybe it will work?
-                        System.IO.File.Copy(fullPath, outFullPath, true);
-                    } else {
-                        throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-                    }
+            using (var inStream = System.IO.File.OpenRead(fullPath))
+            using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
+                FileInfo fileInfo = new FileInfo(outFilePath);
+                if (fileInfo.Extension == ".ico") {
+                    System.IO.File.Copy(fullPath, outFullPath, true);
+                } else {
+                    var encoder = Helpers.GetEncoder(fileInfo.Extension, quality, compressionLevel);
+                    image.Save(outFullPath, encoder);
                 }
             }
         }

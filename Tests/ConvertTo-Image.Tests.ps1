@@ -20,7 +20,7 @@ Describe 'ConvertTo-Image' {
 
         if (Test-Path $dest) { Remove-Item $dest }
 
-        ConvertTo-Image -FilePath $src -OutputPath $dest
+        ConvertTo-Image -FilePath $src -OutputPath $dest -Quality 80
 
         Test-Path $dest | Should -BeTrue
 

@@ -205,17 +205,17 @@ Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScrip
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png
 $Image.BlackWhite()
 $Image.BackgroundColor("Red")
-Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\LogoEvotecChanged.png
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\LogoEvotecChanged.png -Quality 80
 
 # Save Pixalate
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
 $Image.Pixelate(30)
-Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrPixelate.jpg
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrPixelate.jpg -Quality 80
 
 # Save as Polaroid
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
 $Image.Polaroid()
-Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrPolaroid.jpg
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrPolaroid.jpg -Quality 80
 
 # Add watermark
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
@@ -247,7 +247,7 @@ $Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.I
 #void Watermark(string text, ImagePlayground.Image+WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
 $Image.Watermark("Evotec", [ImagePlayground.Image+WatermarkPlacement]::TopRight, [SixLabors.ImageSharp.Color]::Blue, 50, "Calibri")
 
-Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg
+Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg -Quality 80
 ```
 
 ![PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg)
