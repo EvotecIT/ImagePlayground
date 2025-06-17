@@ -309,6 +309,34 @@ namespace ImagePlayground {
             Save("", openImage);
         }
 
+        public void Save(Stream stream) {
+            string extension = System.IO.Path.GetExtension(_filePath)?.ToLowerInvariant();
+            if (extension == ".jpg" || extension == ".jpeg") {
+                _image.SaveAsJpeg(stream);
+            } else if (extension == ".bmp") {
+                _image.SaveAsBmp(stream);
+            } else if (extension == ".gif") {
+                _image.SaveAsGif(stream);
+            } else if (extension == ".pbm") {
+                _image.SaveAsPbm(stream);
+            } else if (extension == ".tga") {
+                _image.SaveAsTga(stream);
+            } else if (extension == ".tiff") {
+                _image.SaveAsTiff(stream);
+            } else if (extension == ".webp") {
+                _image.SaveAsWebp(stream);
+            } else {
+                _image.SaveAsPng(stream);
+            }
+            stream.Seek(0, SeekOrigin.Begin);
+        }
+
+        public MemoryStream ToStream() {
+            var ms = new MemoryStream();
+            Save(ms);
+            return ms;
+        }
+
         public void Dispose() {
             if (_image != null) {
                 _image.Dispose();

@@ -1,7 +1,7 @@
 ﻿@{
     AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
     Author                 = 'Przemyslaw Klys'
-    CmdletsToExport        = @('Add-ImageText', 'Compare-Image', 'ConvertTo-Image', 'Get-Image', 'Get-ImageBarCode', 'Get-ImageExif', 'Get-ImageQRCode', 'Merge-Image', 'New-ImageBarCode', 'New-ImageChart', 'New-ImageChartBar', 'New-ImageChartBarOptions', 'New-ImageChartLine', 'New-ImageChartPie', 'New-ImageChartRadial', 'New-ImageGrid', 'New-ImageIcon', 'New-ImageQRCode', 'New-ImageQRCodeWiFi', 'New-ImageQRContact', 'Remove-ImageExif', 'Resize-Image', 'Save-Image', 'Set-ImageExif')
+    CmdletsToExport        = @('Add-ImageText', 'Add-ImageWatermark', 'Compare-Image', 'ConvertTo-Image', 'Get-Image', 'Get-ImageBarCode', 'Get-ImageExif', 'Get-ImageQRCode', 'Merge-Image', 'New-ImageBarCode', 'New-ImageChart', 'New-ImageChartBar', 'New-ImageChartBarOptions', 'New-ImageChartLine', 'New-ImageChartPie', 'New-ImageChartRadial', 'New-ImageGrid', 'New-ImageIcon', 'New-ImageQRCode', 'New-ImageQRCodeWiFi', 'New-ImageQRContact', 'Remove-ImageExif', 'Resize-Image', 'Save-Image', 'Set-ImageExif')
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
     Copyright              = '(c) 2011 - 2025 Przemyslaw Klys @ Evotec. All rights reserved.'
