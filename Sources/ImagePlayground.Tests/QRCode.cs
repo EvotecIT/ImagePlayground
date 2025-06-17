@@ -65,5 +65,16 @@ namespace ImagePlayground.Tests {
             var read = QrCode.Read(filePath);
             Assert.True(read.Message == $"WIFI:T:WPA;S:TestSSID;P:{password};;");
         }
+
+        [Fact]
+        public void Test_QRCodeIcon() {
+            string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeUrl.ico");
+            File.Delete(filePath);
+            Assert.True(File.Exists(filePath) == false);
+
+            QrCode.Generate("https://evotec.xyz", filePath);
+
+            Assert.True(File.Exists(filePath) == true);
+        }
     }
 }
