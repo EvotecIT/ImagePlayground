@@ -108,7 +108,8 @@ public static class Charts {
         int height = 400,
         ChartBarOptions? barOptions = null,
         string? xTitle = null,
-        string? yTitle = null) {
+        string? yTitle = null,
+        bool showGrid = false) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
@@ -203,6 +204,8 @@ public static class Charts {
         if (!string.IsNullOrEmpty(yTitle)) {
             plot.Axes.Left.Label.Text = yTitle;
         }
+
+        plot.ShowGrid(showGrid);
 
         filePath = Helpers.ResolvePath(filePath);
         plot.SavePng(filePath, width, height);
