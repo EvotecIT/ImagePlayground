@@ -222,6 +222,8 @@ $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.j
 $Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.Image+WatermarkPlacement]::Middle, 0.5, 0.5)
 # Add watermark with rotation 90 degrees
 $Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.Image+WatermarkPlacement]::TopLeft, 1, 18, 90)
+# Use cmdlet for a quick overlay
+Add-ImageWatermark -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg -OutputPath $PSScriptRoot\Output\Watermark.png -WatermarkPath $PSScriptRoot\Samples\LogoEvotec.png
 
 # Resize 200% in the same image
 $Image.Resize(200)

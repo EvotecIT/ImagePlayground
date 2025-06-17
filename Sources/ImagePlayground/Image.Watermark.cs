@@ -52,8 +52,8 @@ namespace ImagePlayground {
 
             var location = new Point(0, 0);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-                var watermarkWidth = _image.Width * watermarkPercentage / 100;
-                var watermarkHeight = watermarkWidth * image.Height / image.Width;
+                var watermarkWidth = image.Width * watermarkPercentage / 100;
+                var watermarkHeight = image.Height * watermarkPercentage / 100;
 
                 if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
                     image.Mutate(mx => {
@@ -91,8 +91,8 @@ namespace ImagePlayground {
 
             var location = new Point(x, y);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-                var watermarkWidth = _image.Width * watermarkPercentage / 100;
-                var watermarkHeight = watermarkWidth * image.Height / image.Width;
+                var watermarkWidth = image.Width * watermarkPercentage / 100;
+                var watermarkHeight = image.Height * watermarkPercentage / 100;
 
                 // apply changes
                 if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
