@@ -101,7 +101,14 @@ public static class Charts {
     }
 
     /// <summary>Generate a chart based on provided definitions.</summary>
-    public static void Generate(IEnumerable<ChartDefinition> definitions, string filePath, int width = 600, int height = 400, ChartBarOptions? barOptions = null) {
+    public static void Generate(
+        IEnumerable<ChartDefinition> definitions,
+        string filePath,
+        int width = 600,
+        int height = 400,
+        ChartBarOptions? barOptions = null,
+        string? xTitle = null,
+        string? yTitle = null) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
@@ -185,6 +192,14 @@ public static class Charts {
                 }
                 plot.ShowLegend();
                 break;
+        }
+
+        if (!string.IsNullOrEmpty(xTitle)) {
+            plot.Axes.Bottom.Label.Text = xTitle;
+        }
+
+        if (!string.IsNullOrEmpty(yTitle)) {
+            plot.Axes.Left.Label.Text = yTitle;
         }
 
         filePath = Helpers.ResolvePath(filePath);
