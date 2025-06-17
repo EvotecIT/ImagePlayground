@@ -31,10 +31,10 @@ namespace ImagePlayground {
         }
 
         private static IImageProcessingContext ConvertToAvatar(IImageProcessingContext context, Size size, float cornerRadius) {
-            return context.Resize(new ResizeOptions {
+            return ApplyRoundedCorners(context.Resize(new ResizeOptions {
                 Size = size,
                 Mode = ResizeMode.Crop
-            }).ApplyRoundedCorners(cornerRadius);
+            }), cornerRadius);
         }
 
         private static IImageProcessingContext ApplyRoundedCorners(IImageProcessingContext context, float cornerRadius) {
