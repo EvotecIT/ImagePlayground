@@ -3,13 +3,20 @@ using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
 
-[Cmdlet(VerbsCommon.New, "ImageAvatar")]
+[Cmdlet(VerbsCommon.New, "ImageAvatar", DefaultParameterSetName = ParameterSetPath)]
 public sealed class NewImageAvatarCmdlet : PSCmdlet {
-    [Parameter(Mandatory = true, Position = 0)]
+    private const string ParameterSetPath = "Path";
+    private const string ParameterSetStream = "Stream";
+
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetStream)]
     public string FilePath { get; set; } = string.Empty;
 
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetPath)]
     public string OutputPath { get; set; } = string.Empty;
+
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetStream)]
+    public Stream OutputStream { get; set; } = Stream.Null;
 
     [Parameter]
     public int Width { get; set; } = 200;
@@ -29,10 +36,14 @@ public sealed class NewImageAvatarCmdlet : PSCmdlet {
             return;
         }
 
-        ImagePlayground.ImageHelper.Avatar(FilePath, OutputPath, Width, Height, CornerRadius);
-
-        if (Open.IsPresent) {
-            ImagePlayground.Helpers.Open(OutputPath, true);
+        if (ParameterSetName == ParameterSetStream) {
+            ImagePlayground.ImageHelper.Avatar(FilePath, OutputStream, Width, Height, CornerRadius);
+            OutputStream.Position = 0;
+        } else {
+            ImagePlayground.ImageHelper.Avatar(FilePath, OutputPath, Width, Height, CornerRadius);
+            if (Open.IsPresent) {
+                ImagePlayground.Helpers.Open(OutputPath, true);
+            }
         }
     }
 }

@@ -17,6 +17,19 @@ namespace ImagePlayground {
             clone.Save(fullPath);
         }
 
+        public void SaveAsAvatar(Stream stream, int width, int height, float cornerRadius) {
+            using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
+            clone.SaveAsPng(stream);
+        }
+
+        public void SaveAsCircularAvatar(string filePath, int size) {
+            SaveAsAvatar(filePath, size, size, size / 2f);
+        }
+
+        public void SaveAsCircularAvatar(Stream stream, int size) {
+            SaveAsAvatar(stream, size, size, size / 2f);
+        }
+
         private static IImageProcessingContext ConvertToAvatar(IImageProcessingContext context, Size size, float cornerRadius) {
             return context.Resize(new ResizeOptions {
                 Size = size,
