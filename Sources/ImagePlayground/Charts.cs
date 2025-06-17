@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ScottPlot;
+using SixLabors.ImageSharp.PixelFormats;
+using ImageColor = SixLabors.ImageSharp.Color;
 
 namespace ImagePlayground;
 
@@ -37,8 +39,12 @@ public static class Charts {
         /// <summary>Bar values.</summary>
         public IList<double> Value { get; }
 
-        public ChartBar(string name, IList<double> value) : base(ChartDefinitionType.Bar, name) {
+        /// <summary>Bar color.</summary>
+        public ImageColor? Color { get; }
+
+        public ChartBar(string name, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Bar, name) {
             Value = value;
+            Color = color;
         }
     }
 
@@ -47,8 +53,12 @@ public static class Charts {
         /// <summary>Line values.</summary>
         public IList<double> Value { get; }
 
-        public ChartLine(string name, IList<double> value) : base(ChartDefinitionType.Line, name) {
+        /// <summary>Line color.</summary>
+        public ImageColor? Color { get; }
+
+        public ChartLine(string name, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Line, name) {
             Value = value;
+            Color = color;
         }
     }
 
@@ -57,8 +67,12 @@ public static class Charts {
         /// <summary>Slice value.</summary>
         public double Value { get; }
 
-        public ChartPie(string name, double value) : base(ChartDefinitionType.Pie, name) {
+        /// <summary>Slice color.</summary>
+        public ImageColor? Color { get; }
+
+        public ChartPie(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Pie, name) {
             Value = value;
+            Color = color;
         }
     }
 
@@ -67,8 +81,12 @@ public static class Charts {
         /// <summary>Gauge value.</summary>
         public double Value { get; }
 
-        public ChartRadial(string name, double value) : base(ChartDefinitionType.Radial, name) {
+        /// <summary>Gauge color.</summary>
+        public ImageColor? Color { get; }
+
+        public ChartRadial(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Radial, name) {
             Value = value;
+            Color = color;
         }
     }
 
@@ -116,6 +134,13 @@ public static class Charts {
                             plottable.Bars[i].ValueLabel = plottable.Bars[i].Value.ToString();
                         }
                     }
+                    for (int i = 0; i < plottable.Bars.Count && i < list.Count; i++) {
+                        var c = ((ChartBar)list[i]).Color;
+                        if (c.HasValue) {
+                            var px = c.Value.ToPixel<Rgba32>();
+                            plottable.Bars[i].FillColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                        }
+                    }
                 }
                 plot.Axes.Bottom.SetTicks(positions.Select(x => (double)x).ToArray(), labels.ToArray());
                 break;
@@ -123,6 +148,10 @@ public static class Charts {
                 foreach (var line in list.Cast<ChartLine>()) {
                     var sig = plot.Add.Signal(line.Value.ToArray());
                     sig.LegendText = line.Name;
+                    if (line.Color.HasValue) {
+                        var px = line.Color.Value.ToPixel<Rgba32>();
+                        sig.LineColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                    }
                 }
                 plot.ShowLegend();
                 break;
@@ -132,6 +161,11 @@ public static class Charts {
                 var pie = plot.Add.Pie(pieValues);
                 for (int i = 0; i < pie.Slices.Count && i < pieLabels.Length; i++) {
                     pie.Slices[i].Label = pieLabels[i];
+                    var c = ((ChartPie)list[i]).Color;
+                    if (c.HasValue) {
+                        var px = c.Value.ToPixel<Rgba32>();
+                        pie.Slices[i].FillColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                    }
                 }
                 break;
             case ChartDefinitionType.Radial:
@@ -139,6 +173,16 @@ public static class Charts {
                 var rLabels = list.Cast<ChartRadial>().Select(r => r.Name).ToArray();
                 var radial = plot.Add.RadialGaugePlot(rValues);
                 radial.Labels = rLabels;
+                var rColors = list.Cast<ChartRadial>().Select(r => r.Color).ToArray();
+                if (rColors.Any(c => c.HasValue)) {
+                    radial.Colors = rColors.Select(c => {
+                        if (c.HasValue) {
+                            var px = c.Value.ToPixel<Rgba32>();
+                            return new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                        }
+                        return new ScottPlot.Color();
+                    }).ToArray();
+                }
                 plot.ShowLegend();
                 break;
         }
