@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
@@ -31,6 +32,7 @@ public sealed class NewImageGridCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        ImagePlayground.ImageHelper.Create(FilePath, Width, Height, Color, Open.IsPresent);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.ImageHelper.Create(output, Width, Height, Color, Open.IsPresent);
     }
 }

@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 using SixLabors.ImageSharp.Processing;
@@ -42,19 +43,22 @@ namespace ImagePlayground.PowerShell {
         public int WatermarkPercentage { get; set; } = 20;
 
         protected override void ProcessRecord() {
-            if (!File.Exists(FilePath)) {
+            var filePath = Helpers.ResolvePath(FilePath);
+            if (!File.Exists(filePath)) {
                 WriteWarning($"Add-ImageWatermark - File {FilePath} not found. Please check the path.");
                 return;
             }
-            if (!File.Exists(WatermarkPath)) {
+            var watermark = Helpers.ResolvePath(WatermarkPath);
+            if (!File.Exists(watermark)) {
                 WriteWarning($"Add-ImageWatermark - Watermark file {WatermarkPath} not found. Please check the path.");
                 return;
             }
+            var output = Helpers.ResolvePath(OutputPath);
 
             if (ParameterSetName == ParameterSetCoordinates) {
-                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
+                ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
             } else {
-                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
+                ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
             }
         }
     }

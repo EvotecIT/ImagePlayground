@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
@@ -36,7 +37,8 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (!string.IsNullOrWhiteSpace(FilePath)) {
-            Image.Save(FilePath, Open.IsPresent, Quality, CompressionLevel);
+            var output = Helpers.ResolvePath(FilePath);
+            Image.Save(output, Open.IsPresent, Quality, CompressionLevel);
         } else if (AsStream.IsPresent) {
             WriteObject(Image.ToStream(Quality, CompressionLevel));
         } else {

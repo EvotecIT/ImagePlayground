@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -34,10 +35,11 @@ public sealed class NewImageQrCodeWiFiCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeWiFi - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateWiFi(SSID, Password, FilePath, false);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.QrCode.GenerateWiFi(SSID, Password, output, false);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(FilePath, true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

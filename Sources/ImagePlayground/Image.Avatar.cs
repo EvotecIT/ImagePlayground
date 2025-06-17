@@ -12,7 +12,7 @@ namespace ImagePlayground {
         }
 
         public void SaveAsAvatar(string filePath, int width, int height, float cornerRadius) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
             using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
             clone.Save(fullPath);
         }

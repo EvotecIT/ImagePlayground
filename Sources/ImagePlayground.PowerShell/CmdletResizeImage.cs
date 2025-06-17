@@ -1,3 +1,4 @@
+using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Resizes an image.</summary>
@@ -49,13 +50,15 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Resize-Image - File {FilePath} not found. Please check the path.");
             return;
         }
+        var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetPercentage) {
-            ImagePlayground.ImageHelper.Resize(FilePath, OutputPath, Percentage);
+            ImagePlayground.ImageHelper.Resize(filePath, output, Percentage);
             return;
         }
 
@@ -71,6 +74,6 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         int? height = heightBound ? Height : (int?)null;
         bool keepAspect = !DontRespectAspectRatio.IsPresent;
 
-        ImagePlayground.ImageHelper.Resize(FilePath, OutputPath, width, height, keepAspect);
+        ImagePlayground.ImageHelper.Resize(filePath, output, width, height, keepAspect);
     }
 }

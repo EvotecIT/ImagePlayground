@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.Processing;
 namespace ImagePlayground {
     public partial class Image {
         public void SaveAsIcon(string filePath, params int[] sizes) {
-            string fullPath = Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
             if (sizes == null || sizes.Length == 0) {
                 sizes = new[] { 16, 32, 48, 64, 128, 256 };
             }

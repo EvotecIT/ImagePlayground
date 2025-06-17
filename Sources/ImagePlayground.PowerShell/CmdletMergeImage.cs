@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -34,15 +35,18 @@ public sealed class MergeImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Merge-Image - File {FilePath} not found. Please check the path.");
             return;
         }
-        if (!File.Exists(FilePathToMerge)) {
+        var merge = Helpers.ResolvePath(FilePathToMerge);
+        if (!File.Exists(merge)) {
             WriteWarning($"Merge-Image - File {FilePathToMerge} not found. Please check the path.");
             return;
         }
+        var output = Helpers.ResolvePath(FilePathOutput);
 
-        ImagePlayground.ImageHelper.Combine(FilePath, FilePathToMerge, FilePathOutput, ResizeToFit.IsPresent, Placement);
+        ImagePlayground.ImageHelper.Combine(filePath, merge, output, ResizeToFit.IsPresent, Placement);
     }
 }

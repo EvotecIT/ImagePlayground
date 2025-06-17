@@ -5,8 +5,8 @@ namespace ImagePlayground {
     public partial class ImageHelper {
 
         public static ICompareResult Compare(string filePath, string filePathToCompare) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string fullPathToCompare = System.IO.Path.GetFullPath(filePathToCompare);
+            string fullPath = Helpers.ResolvePath(filePath);
+            string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
 
             bool isEqual = ImageSharpCompare.ImagesAreEqual(fullPath, fullPathToCompare);
             ICompareResult calcDiff = ImageSharpCompare.CalcDiff(fullPath, fullPathToCompare);
@@ -14,9 +14,9 @@ namespace ImagePlayground {
         }
 
         public static void Compare(string filePath, string filePathToCompare, string filePathToSave) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string fullPathToCompare = System.IO.Path.GetFullPath(filePathToCompare);
-            string outFullPath = System.IO.Path.GetFullPath(filePathToSave);
+            string fullPath = Helpers.ResolvePath(filePath);
+            string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
+            string outFullPath = Helpers.ResolvePath(filePathToSave);
 
             using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
                 using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(fullPath, fullPathToCompare)) {

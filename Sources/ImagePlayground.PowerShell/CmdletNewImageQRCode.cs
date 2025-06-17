@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -30,10 +31,11 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCode - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.Generate(Content, FilePath, false);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.QrCode.Generate(Content, output, false);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(FilePath, true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -24,19 +25,22 @@ public sealed class CompareImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Compare-Image - File {FilePath} not found. Please check the path.");
             return;
         }
-        if (!File.Exists(FilePathToCompare)) {
+        var compare = Helpers.ResolvePath(FilePathToCompare);
+        if (!File.Exists(compare)) {
             WriteWarning($"Compare-Image - File {FilePathToCompare} not found. Please check the path.");
             return;
         }
 
         if (!string.IsNullOrWhiteSpace(OutputPath)) {
-            ImagePlayground.ImageHelper.Compare(FilePath, FilePathToCompare, OutputPath);
+            var output = Helpers.ResolvePath(OutputPath);
+            ImagePlayground.ImageHelper.Compare(filePath, compare, output);
         } else {
-            var result = ImagePlayground.ImageHelper.Compare(FilePath, FilePathToCompare);
+            var result = ImagePlayground.ImageHelper.Compare(filePath, compare);
             WriteObject(result);
         }
     }

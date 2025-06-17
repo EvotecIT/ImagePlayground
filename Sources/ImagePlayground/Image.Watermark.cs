@@ -48,7 +48,7 @@ namespace ImagePlayground {
         }
 
         public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
 
             var location = new Point(0, 0);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
@@ -87,7 +87,7 @@ namespace ImagePlayground {
         }
 
         public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
 
             var location = new Point(x, y);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {

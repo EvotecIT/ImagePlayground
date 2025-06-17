@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -37,8 +38,8 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             list.AddRange(Definition);
         }
         if (ChartsDefinition != null) {
-            var output = ChartsDefinition.Invoke();
-            foreach (var o in output) {
+            var results = ChartsDefinition.Invoke();
+            foreach (var o in results) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
                 if (obj is Charts.ChartDefinition def) {
                     list.Add(def);
@@ -50,10 +51,11 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             return;
         }
 
-        ImagePlayground.Charts.Generate(list, FilePath, Width, Height);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.Charts.Generate(list, output, Width, Height);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(FilePath, true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }
