@@ -8,9 +8,7 @@ namespace ImagePlayground {
             string fullPath = Helpers.ResolvePath(filePath);
             string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
 
-            bool isEqual = ImageSharpCompare.ImagesAreEqual(fullPath, fullPathToCompare);
-            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(fullPath, fullPathToCompare);
-            return calcDiff;
+            return ImageSharpCompare.CalcDiff(fullPath, fullPathToCompare);
         }
 
         public static void Compare(string filePath, string filePathToCompare, string filePathToSave) {
