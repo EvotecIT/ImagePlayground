@@ -19,11 +19,21 @@ $BinaryModules = @(
 if ($IsWindows) {
     $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
     $archFolder = switch ($arch) {
-        'X64' { 'win-x64' }
-        'X86' { 'win-x86' }
-        'Arm64' { 'win-arm64' }
-        'Arm' { 'win-arm' }
-        Default { 'win-x64' }
+        'X64' {
+            'win-x64'
+        }
+        'X86' {
+            'win-x86'
+        }
+        'Arm64' {
+            'win-arm64'
+        }
+        'Arm' {
+            'win-arm'
+        }
+        default {
+            'win-x64'
+        }
     }
 
     if ($Development) {
@@ -45,6 +55,7 @@ if ($IsWindows) {
     if ($baseDir) {
         $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
         if (Test-Path $runtimePath) {
+            Write-Warning -Message "Adding $runtimePath to PATH"
             $env:PATH = "$runtimePath;" + $env:PATH
         }
     }
@@ -91,20 +102,16 @@ if ($Standard -and $Core -and $Default) {
 $Assembly = @(
     if ($Development) {
         if ($PSEdition -eq 'Core') {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse |
-                Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         } else {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse |
-                Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         }
     } else {
         if ($Framework -and $PSEdition -eq 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse |
-                Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         }
         if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse |
-                Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtime(s[\\/]' }
         }
     }
 )
