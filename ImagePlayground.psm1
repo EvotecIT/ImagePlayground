@@ -15,6 +15,52 @@ $BinaryModules = @(
     "ImagePlayground.PowerShell.dll"
 )
 
+# Ensure native runtime libraries are discoverable on Windows
+if ($IsWindows) {
+    $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+    $archFolder = switch ($arch) {
+        'X64' {
+            'win-x64'
+        }
+        'X86' {
+            'win-x86'
+        }
+        'Arm64' {
+            'win-arm64'
+        }
+        'Arm' {
+            'win-arm'
+        }
+        default {
+            'win-x64'
+        }
+    }
+
+    if ($Development) {
+        $baseDir = if ($PSEdition -eq 'Core') {
+            Join-Path $DevelopmentPath $DevelopmentFolderCore
+        } else {
+            Join-Path $DevelopmentPath $DevelopmentFolderDefault
+        }
+    } else {
+        $baseDir = if ($PSEdition -eq 'Core') {
+            Join-Path $PSScriptRoot "Lib/$Framework"
+        } elseif ($FrameworkNet) {
+            Join-Path $PSScriptRoot "Lib/$FrameworkNet"
+        } else {
+            $null
+        }
+    }
+
+    if ($baseDir) {
+        $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
+        if (Test-Path $runtimePath) {
+            Write-Warning -Message "Adding $runtimePath to PATH"
+            $env:PATH = "$runtimePath;" + $env:PATH
+        }
+    }
+}
+
 # Lets find which libraries we need to load
 $Default = $false
 $Core = $false
@@ -56,16 +102,16 @@ if ($Standard -and $Core -and $Default) {
 $Assembly = @(
     if ($Development) {
         if ($PSEdition -eq 'Core') {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         } else {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         }
     } else {
         if ($Framework -and $PSEdition -eq 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         }
         if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtime(s[\\/]' }
         }
     }
 )
@@ -144,7 +190,8 @@ $FoundErrors = @(
 if ($FoundErrors.Count -gt 0) {
     $ModuleName = (Get-ChildItem $PSScriptRoot\*.psd1).BaseName
     Write-Warning "Importing module $ModuleName failed. Fix errors before continuing."
-    break
+    throw "Importing module $ModuleName failed. Fix errors before continuing."
+    #break
 }
 
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'

@@ -88,7 +88,7 @@ public static class Charts {
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
 
-        var plot = new Plot(width, height);
+        var plot = new Plot();
         var type = list[0].Type;
 
         switch (type) {
@@ -109,34 +109,41 @@ public static class Charts {
                     positions.Add(pos++);
                 }
                 foreach (var kv in dict.OrderBy(k => k.Key)) {
-                    var plottable = plot.AddBar(kv.Value.ToArray());
-                    if (barOptions != null) plottable.ShowValuesAboveBars = barOptions.ShowValuesAboveBars;
+                    var plottable = plot.Add.Bars(kv.Value.ToArray());
+                    plottable.ValueLabelStyle.IsVisible = barOptions?.ShowValuesAboveBars == true;
+                    if (barOptions?.ShowValuesAboveBars == true) {
+                        for (int i = 0; i < plottable.Bars.Count; i++) {
+                            plottable.Bars[i].ValueLabel = plottable.Bars[i].Value.ToString();
+                        }
+                    }
                 }
-                plot.XTicks(positions.Select(x => (double)x).ToArray(), labels.ToArray());
+                plot.Axes.Bottom.SetTicks(positions.Select(x => (double)x).ToArray(), labels.ToArray());
                 break;
             case ChartDefinitionType.Line:
                 foreach (var line in list.Cast<ChartLine>()) {
-                    plot.AddSignal(line.Value.ToArray(), label: line.Name);
+                    var sig = plot.Add.Signal(line.Value.ToArray());
+                    sig.LegendText = line.Name;
                 }
-                plot.Legend(true);
+                plot.ShowLegend();
                 break;
             case ChartDefinitionType.Pie:
                 var pieValues = list.Cast<ChartPie>().Select(p => p.Value).ToArray();
                 var pieLabels = list.Cast<ChartPie>().Select(p => p.Name).ToArray();
-                var pie = plot.AddPie(pieValues);
-                pie.SliceLabels = pieLabels;
-                pie.ShowLabels = true;
+                var pie = plot.Add.Pie(pieValues);
+                for (int i = 0; i < pie.Slices.Count && i < pieLabels.Length; i++) {
+                    pie.Slices[i].Label = pieLabels[i];
+                }
                 break;
             case ChartDefinitionType.Radial:
                 var rValues = list.Cast<ChartRadial>().Select(r => r.Value).ToArray();
                 var rLabels = list.Cast<ChartRadial>().Select(r => r.Name).ToArray();
-                var radial = plot.AddRadialGauge(rValues);
+                var radial = plot.Add.RadialGaugePlot(rValues);
                 radial.Labels = rLabels;
-                plot.Legend(true);
+                plot.ShowLegend();
                 break;
         }
 
         filePath = System.IO.Path.GetFullPath(filePath);
-        plot.SaveFig(filePath);
+        plot.SavePng(filePath, width, height);
     }
 }
