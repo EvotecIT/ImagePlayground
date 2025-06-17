@@ -42,19 +42,22 @@ namespace ImagePlayground.PowerShell {
         public int WatermarkPercentage { get; set; } = 20;
 
         protected override void ProcessRecord() {
-            if (!File.Exists(FilePath)) {
+            string src = ImagePlayground.Helpers.ResolvePath(FilePath);
+            string dest = ImagePlayground.Helpers.ResolvePath(OutputPath);
+            string watermark = ImagePlayground.Helpers.ResolvePath(WatermarkPath);
+            if (!File.Exists(src)) {
                 WriteWarning($"Add-ImageWatermark - File {FilePath} not found. Please check the path.");
                 return;
             }
-            if (!File.Exists(WatermarkPath)) {
+            if (!File.Exists(watermark)) {
                 WriteWarning($"Add-ImageWatermark - Watermark file {WatermarkPath} not found. Please check the path.");
                 return;
             }
 
             if (ParameterSetName == ParameterSetCoordinates) {
-                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
+                ImagePlayground.ImageHelper.WatermarkImage(src, dest, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
             } else {
-                ImagePlayground.ImageHelper.WatermarkImage(FilePath, OutputPath, WatermarkPath, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
+                ImagePlayground.ImageHelper.WatermarkImage(src, dest, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
             }
         }
     }

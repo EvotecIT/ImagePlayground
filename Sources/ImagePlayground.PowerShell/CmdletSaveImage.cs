@@ -27,7 +27,8 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (!string.IsNullOrWhiteSpace(FilePath)) {
-            Image.Save(FilePath, Open.IsPresent);
+            string outPath = ImagePlayground.Helpers.ResolvePath(FilePath);
+            Image.Save(outPath, Open.IsPresent);
         } else if (AsStream.IsPresent) {
             WriteObject(Image.ToStream());
         } else {

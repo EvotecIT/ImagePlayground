@@ -49,13 +49,15 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string dest = ImagePlayground.Helpers.ResolvePath(OutputPath);
+        if (!File.Exists(src)) {
             WriteWarning($"Resize-Image - File {FilePath} not found. Please check the path.");
             return;
         }
 
         if (ParameterSetName == ParameterSetPercentage) {
-            ImagePlayground.ImageHelper.Resize(FilePath, OutputPath, Percentage);
+            ImagePlayground.ImageHelper.Resize(src, dest, Percentage);
             return;
         }
 
@@ -71,6 +73,6 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         int? height = heightBound ? Height : (int?)null;
         bool keepAspect = !DontRespectAspectRatio.IsPresent;
 
-        ImagePlayground.ImageHelper.Resize(FilePath, OutputPath, width, height, keepAspect);
+        ImagePlayground.ImageHelper.Resize(src, dest, width, height, keepAspect);
     }
 }

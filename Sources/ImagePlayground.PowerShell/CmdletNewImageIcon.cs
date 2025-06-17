@@ -31,15 +31,17 @@ public sealed class NewImageIconCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string dest = ImagePlayground.Helpers.ResolvePath(OutputPath);
+        if (!File.Exists(src)) {
             WriteWarning($"New-ImageIcon - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
-        img.SaveAsIcon(OutputPath, Size);
+        using var img = ImagePlayground.Image.Load(src);
+        img.SaveAsIcon(dest, Size);
         if (Open.IsPresent) {
-            ImagePlayground.Helpers.Open(OutputPath, true);
+            ImagePlayground.Helpers.Open(dest, true);
         }
     }
 }

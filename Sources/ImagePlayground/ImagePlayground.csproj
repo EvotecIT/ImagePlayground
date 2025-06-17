@@ -43,4 +43,7 @@
         <Using Include="System.Net" />
         <Using Include="System.Net.Http" />
     </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
 </Project>

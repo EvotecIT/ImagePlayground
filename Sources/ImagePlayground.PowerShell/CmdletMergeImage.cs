@@ -34,15 +34,18 @@ public sealed class MergeImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src1 = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string src2 = ImagePlayground.Helpers.ResolvePath(FilePathToMerge);
+        string dest = ImagePlayground.Helpers.ResolvePath(FilePathOutput);
+        if (!File.Exists(src1)) {
             WriteWarning($"Merge-Image - File {FilePath} not found. Please check the path.");
             return;
         }
-        if (!File.Exists(FilePathToMerge)) {
+        if (!File.Exists(src2)) {
             WriteWarning($"Merge-Image - File {FilePathToMerge} not found. Please check the path.");
             return;
         }
 
-        ImagePlayground.ImageHelper.Combine(FilePath, FilePathToMerge, FilePathOutput, ResizeToFit.IsPresent, Placement);
+        ImagePlayground.ImageHelper.Combine(src1, src2, dest, ResizeToFit.IsPresent, Placement);
     }
 }

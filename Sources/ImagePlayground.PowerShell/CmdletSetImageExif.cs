@@ -29,16 +29,17 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string dest = string.IsNullOrWhiteSpace(FilePathOutput) ? src : ImagePlayground.Helpers.ResolvePath(FilePathOutput!);
+        if (!File.Exists(src)) {
             WriteWarning($"Set-ImageExif - File not found: {FilePath}");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
+        using var img = ImagePlayground.Image.Load(src);
         img.SetExifValue(ExifTag, Value);
 
-        string output = string.IsNullOrWhiteSpace(FilePathOutput) ? FilePath : FilePathOutput!;
-        img.Save(output);
+        img.Save(dest);
     }
 }
 

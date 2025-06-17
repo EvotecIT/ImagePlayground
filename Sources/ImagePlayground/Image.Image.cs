@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.Processing;
 namespace ImagePlayground {
     public partial class Image : IDisposable {
         public void AddImage(string filePath, int x, int y, float opacity) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
 
             var location = new Point(x, y);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {

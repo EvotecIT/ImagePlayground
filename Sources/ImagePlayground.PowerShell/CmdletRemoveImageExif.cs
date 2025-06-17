@@ -38,20 +38,21 @@ public sealed class RemoveImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string dest = string.IsNullOrWhiteSpace(FilePathOutput) ? src : ImagePlayground.Helpers.ResolvePath(FilePathOutput!);
+        if (!File.Exists(src)) {
             WriteWarning($"Remove-ImageExif - File not found: {FilePath}");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
+        using var img = ImagePlayground.Image.Load(src);
         if (ParameterSetName == ParameterSetAll) {
             img.ClearExifValues();
         } else {
             img.RemoveExifValues(ExifTag);
         }
 
-        string output = string.IsNullOrWhiteSpace(FilePathOutput) ? FilePath : FilePathOutput!;
-        img.Save(output);
+        img.Save(dest);
     }
 }
 

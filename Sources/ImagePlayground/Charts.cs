@@ -143,7 +143,7 @@ public static class Charts {
                 break;
         }
 
-        filePath = System.IO.Path.GetFullPath(filePath);
+        filePath = Helpers.ResolvePath(filePath);
         plot.SavePng(filePath, width, height);
     }
 }

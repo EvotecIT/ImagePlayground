@@ -24,19 +24,22 @@ public sealed class CompareImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src1 = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string src2 = ImagePlayground.Helpers.ResolvePath(FilePathToCompare);
+        if (!File.Exists(src1)) {
             WriteWarning($"Compare-Image - File {FilePath} not found. Please check the path.");
             return;
         }
-        if (!File.Exists(FilePathToCompare)) {
+        if (!File.Exists(src2)) {
             WriteWarning($"Compare-Image - File {FilePathToCompare} not found. Please check the path.");
             return;
         }
 
         if (!string.IsNullOrWhiteSpace(OutputPath)) {
-            ImagePlayground.ImageHelper.Compare(FilePath, FilePathToCompare, OutputPath);
+            string dest = ImagePlayground.Helpers.ResolvePath(OutputPath);
+            ImagePlayground.ImageHelper.Compare(src1, src2, dest);
         } else {
-            var result = ImagePlayground.ImageHelper.Compare(FilePath, FilePathToCompare);
+            var result = ImagePlayground.ImageHelper.Compare(src1, src2);
             WriteObject(result);
         }
     }

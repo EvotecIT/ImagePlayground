@@ -17,12 +17,13 @@ public sealed class GetImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string fullPath = ImagePlayground.Helpers.ResolvePath(FilePath);
+        if (!File.Exists(fullPath)) {
             WriteWarning($"Get-Image - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        var img = ImagePlayground.Image.Load(FilePath);
+        var img = ImagePlayground.Image.Load(fullPath);
         WriteObject(img);
     }
 }

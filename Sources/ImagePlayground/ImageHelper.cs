@@ -19,8 +19,8 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <exception cref="UnknownImageFormatException"></exception>
         public static void ConvertTo(string filePath, string outFilePath) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            string fullPath = Helpers.ResolvePath(filePath);
+            string outFullPath = Helpers.ResolvePath(outFilePath);
             using (var inStream = System.IO.File.OpenRead(fullPath)) {
                 using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
                     FileInfo fileInfo = new FileInfo(outFilePath);
@@ -61,8 +61,8 @@ namespace ImagePlayground {
         /// <param name="keepAspectRatio"></param>
         /// <param name="sampler"></param>
         public static void Resize(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            string fullPath = Helpers.ResolvePath(filePath);
+            string outFullPath = Helpers.ResolvePath(outFilePath);
 
             using (var inStream = System.IO.File.OpenRead(fullPath))
             using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
@@ -108,8 +108,8 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <param name="percentage"></param>
         public static void Resize(string filePath, string outFilePath, int percentage) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            string fullPath = Helpers.ResolvePath(filePath);
+            string outFullPath = Helpers.ResolvePath(outFilePath);
 
             using (var inStream = System.IO.File.OpenRead(fullPath))
             using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
@@ -121,9 +121,9 @@ namespace ImagePlayground {
         }
 
         public static void Combine(string filePath, string filePath2, string outFilePath, bool resizeToFit = false, ImagePlacement imagePlacement = ImagePlacement.Bottom) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
-            string fullPath2 = System.IO.Path.GetFullPath(filePath2);
-            string outFullPath = System.IO.Path.GetFullPath(outFilePath);
+            string fullPath = Helpers.ResolvePath(filePath);
+            string fullPath2 = Helpers.ResolvePath(filePath2);
+            string outFullPath = Helpers.ResolvePath(outFilePath);
 
             using (var inStream = System.IO.File.OpenRead(fullPath))
             using (var inStream2 = System.IO.File.OpenRead(fullPath2))
@@ -198,7 +198,7 @@ namespace ImagePlayground {
         }
 
         public static void Create(string filePath, int width, int height, Color color, bool open = false) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
 
             using (Image<Rgba32> outputImage = new Image<Rgba32>(width, height)) {
                 //outputImage.Mutate(x => x.Fill(color));

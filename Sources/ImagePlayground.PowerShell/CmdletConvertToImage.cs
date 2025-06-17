@@ -23,11 +23,13 @@ public sealed class ConvertToImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        string src = ImagePlayground.Helpers.ResolvePath(FilePath);
+        string dest = ImagePlayground.Helpers.ResolvePath(OutputPath);
+        if (!File.Exists(src)) {
             WriteWarning($"ConvertTo-Image - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        ImagePlayground.ImageHelper.ConvertTo(FilePath, OutputPath);
+        ImagePlayground.ImageHelper.ConvertTo(src, dest);
     }
 }
