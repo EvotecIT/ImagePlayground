@@ -14,8 +14,12 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
     [Parameter(Mandatory = true, Position = 1)]
     public double[] Value { get; set; } = System.Array.Empty<double>();
 
+    /// <summary>Line color.</summary>
+    [Parameter]
+    public SixLabors.ImageSharp.Color? Color { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value));
+        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value, Color));
     }
 }
