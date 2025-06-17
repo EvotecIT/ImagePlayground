@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using BarcodeReader.ImageSharp;
 using QRCoder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground {
     public class QrCode {
@@ -38,7 +41,7 @@ namespace ImagePlayground {
                             } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
                                 qrCodeImage.SaveAsJpeg(fullPath);
                             } else if (fileInfo.Extension == ".ico") {
-                                qrCodeImage.SaveAsWebp(fullPath);
+                                SaveImageAsIcon(qrCodeImage, fullPath);
                             } else {
                                 throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
                             }
@@ -92,6 +95,53 @@ namespace ImagePlayground {
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
             var response = reader.Decode(barcodeImage);
             return response;
+        }
+
+        private static void SaveImageAsIcon(SixLabors.ImageSharp.Image image, string filePath, params int[] sizes) {
+            if (sizes == null || sizes.Length == 0) {
+                sizes = new[] { 16, 32, 48, 64, 128, 256 };
+            }
+
+            List<byte[]> frames = new();
+            List<(int Width, int Height)> dims = new();
+
+            foreach (int size in sizes.Distinct().OrderBy(s => s)) {
+                using Image<Rgba32> clone = image.CloneAs<Rgba32>();
+                clone.Mutate(ctx => ctx.Resize(new ResizeOptions {
+                    Mode = ResizeMode.Stretch,
+                    Size = new Size(size, size)
+                }));
+                using MemoryStream ms = new();
+                clone.SaveAsPng(ms);
+                frames.Add(ms.ToArray());
+                dims.Add((size, size));
+            }
+
+            using FileStream fs = File.Create(filePath);
+            using BinaryWriter bw = new(fs);
+            bw.Write((ushort)0);
+            bw.Write((ushort)1);
+            bw.Write((ushort)frames.Count);
+
+            int offset = 6 + 16 * frames.Count;
+            for (int i = 0; i < frames.Count; i++) {
+                var (w, h) = dims[i];
+                bw.Write((byte)(w >= 256 ? 0 : w));
+                bw.Write((byte)(h >= 256 ? 0 : h));
+                bw.Write((byte)0);
+                bw.Write((byte)0);
+                bw.Write((ushort)1);
+                bw.Write((ushort)32);
+                bw.Write(frames[i].Length);
+                bw.Write(offset);
+                offset += frames[i].Length;
+            }
+
+            foreach (byte[] data in frames) {
+                bw.Write(data);
+            }
+
+            bw.Flush();
         }
     }
 }
