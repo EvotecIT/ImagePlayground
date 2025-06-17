@@ -310,31 +310,16 @@ namespace ImagePlayground {
             Save("", openImage, null, null);
         }
 
-        public void Save(Stream stream) {
+        public void Save(Stream stream, int? quality = null, int? compressionLevel = null) {
             string extension = System.IO.Path.GetExtension(_filePath)?.ToLowerInvariant();
-            if (extension == ".jpg" || extension == ".jpeg") {
-                _image.SaveAsJpeg(stream);
-            } else if (extension == ".bmp") {
-                _image.SaveAsBmp(stream);
-            } else if (extension == ".gif") {
-                _image.SaveAsGif(stream);
-            } else if (extension == ".pbm") {
-                _image.SaveAsPbm(stream);
-            } else if (extension == ".tga") {
-                _image.SaveAsTga(stream);
-            } else if (extension == ".tiff") {
-                _image.SaveAsTiff(stream);
-            } else if (extension == ".webp") {
-                _image.SaveAsWebp(stream);
-            } else {
-                _image.SaveAsPng(stream);
-            }
+            var encoder = Helpers.GetEncoder(extension, quality, compressionLevel);
+            _image.Save(stream, encoder);
             stream.Seek(0, SeekOrigin.Begin);
         }
 
-        public MemoryStream ToStream() {
+        public MemoryStream ToStream(int? quality = null, int? compressionLevel = null) {
             var ms = new MemoryStream();
-            Save(ms);
+            Save(ms, quality, compressionLevel);
             return ms;
         }
 
