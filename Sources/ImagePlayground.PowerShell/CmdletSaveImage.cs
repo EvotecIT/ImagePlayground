@@ -17,6 +17,9 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     [Parameter(Position = 1)]
     public string? FilePath { get; set; }
 
+    [Parameter]
+    public SwitchParameter AsStream { get; set; }
+
     /// <summary>Open file after saving.</summary>
     [Parameter]
     public SwitchParameter Open { get; set; }
@@ -25,6 +28,8 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     protected override void ProcessRecord() {
         if (!string.IsNullOrWhiteSpace(FilePath)) {
             Image.Save(FilePath, Open.IsPresent);
+        } else if (AsStream.IsPresent) {
+            WriteObject(Image.ToStream());
         } else {
             Image.Save(Open.IsPresent);
         }

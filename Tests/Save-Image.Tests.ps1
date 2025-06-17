@@ -30,5 +30,20 @@ Describe 'Save-Image' {
 
     }
 
-}
+    It 'returns a MemoryStream when AsStream is used' {
 
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+
+        $img = Get-Image -FilePath $src
+
+        $stream = Save-Image -Image $img -AsStream
+
+        $img.Dispose()
+
+        $stream | Should -BeOfType ([System.IO.MemoryStream])
+
+        $stream.Length | Should -BeGreaterThan 0
+
+    }
+
+}
