@@ -61,6 +61,24 @@ namespace ImagePlayground.Tests {
             Assert.Equal(330, img.Height);
         }
 
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-10)]
+        public void Test_Resize_Percentage_Invalid(int percentage) {
+            string src = Path.Combine(_directoryWithImages, "QRCode1.png");
+            using var img = Image.Load(src);
+            Assert.Throws<ArgumentOutOfRangeException>(() => img.Resize(percentage));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-20)]
+        public void Test_ImageHelper_Resize_Percentage_Invalid(int percentage) {
+            string src = Path.Combine(_directoryWithImages, "QRCode1.png");
+            string dest = Path.Combine(_directoryWithTests, $"percent_invalid_{percentage}.png");
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageHelper.Resize(src, dest, percentage));
+        }
+
         [Fact]
         public void Test_Combine_LeftResize() {
             string file1 = Path.Combine(_directoryWithImages, "LogoEvotec.png");

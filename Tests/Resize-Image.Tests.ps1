@@ -55,6 +55,13 @@ Describe 'Resize-Image' {
         $original.Dispose()
 
     }
+    It 'throws for invalid percentage' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dest = Join-Path $TestDir 'logo-invalid.png'
+        { Resize-Image -FilePath $src -OutputPath $dest -Percentage 0 } | Should -Throw
+        { Resize-Image -FilePath $src -OutputPath $dest -Percentage -5 } | Should -Throw
+    }
+
 
 }
 
