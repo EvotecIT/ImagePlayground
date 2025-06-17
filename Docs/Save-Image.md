@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Save-Image [-Image] <Image> [[-FilePath] <String>] [-Quality <Int32>] [-CompressionLevel <Int32>] [-Open] [<CommonParameters>]
+Save-Image [-Image] <Image> [[-FilePath] <String>] [-Quality <Int32>] [-CompressionLevel <Int32>] [-AsStream] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,6 +55,48 @@ Aliases:
 
 Required: False
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Quality
+{{ Fill Quality Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CompressionLevel
+{{ Fill CompressionLevel Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AsStream
+{{ Fill AsStream Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

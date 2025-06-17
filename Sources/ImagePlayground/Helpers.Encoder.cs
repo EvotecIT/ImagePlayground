@@ -20,14 +20,26 @@ namespace ImagePlayground {
                         ? (PngCompressionLevel)Math.Max(0, Math.Min(9, compressionLevel.Value))
                         : PngCompressionLevel.DefaultCompression
                 },
-                ".jpg" => new JpegEncoder { Quality = Math.Clamp(quality ?? 75, 0, 100) },
-                ".jpeg" => new JpegEncoder { Quality = Math.Clamp(quality ?? 75, 0, 100) },
+                ".jpg" => new JpegEncoder {
+                    Quality = quality.HasValue
+                        ? Math.Max(0, Math.Min(100, quality.Value))
+                        : 75
+                },
+                ".jpeg" => new JpegEncoder {
+                    Quality = quality.HasValue
+                        ? Math.Max(0, Math.Min(100, quality.Value))
+                        : 75
+                },
                 ".bmp" => new BmpEncoder(),
                 ".gif" => new GifEncoder(),
                 ".pbm" => new PbmEncoder(),
                 ".tga" => new TgaEncoder(),
                 ".tiff" => new TiffEncoder(),
-                ".webp" => new WebpEncoder { Quality = Math.Clamp(quality ?? 75, 0, 100) },
+                ".webp" => new WebpEncoder {
+                    Quality = quality.HasValue
+                        ? Math.Max(0, Math.Min(100, quality.Value))
+                        : 75
+                },
                 _ => throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it."),
             };
         }
