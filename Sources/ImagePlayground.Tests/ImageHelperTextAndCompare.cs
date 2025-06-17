@@ -1,4 +1,6 @@
 using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using Xunit;
 
 namespace ImagePlayground.Tests {
@@ -35,6 +37,19 @@ namespace ImagePlayground.Tests {
             using var img = Image.Load(dest);
             Assert.Equal(50, img.Width);
             Assert.Equal(50, img.Height);
+        }
+
+        [Fact]
+        public void Test_CreateGridImageRandomColors() {
+            string dest = Path.Combine(_directoryWithTests, "grid_random.png");
+            if (File.Exists(dest)) File.Delete(dest);
+            ImageHelper.Create(dest, 80, 80, SixLabors.ImageSharp.Color.White);
+            Assert.True(File.Exists(dest));
+
+            using Image<Rgba32> img = Image.Load<Rgba32>(dest);
+            Rgba32 first = img[20, 20];
+            Rgba32 second = img[60, 60];
+            Assert.NotEqual(first, second);
         }
     }
 }
