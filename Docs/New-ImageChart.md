@@ -13,8 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-New-ImageChart [[-ChartsDefinition] <ScriptBlock>] [[-Width] <Int32>] [[-Height] <Int32>]
- [[-FilePath] <String>] [-Show] [<CommonParameters>]
+New-ImageChart [[-ChartsDefinition] <ScriptBlock>] [[-Width] <Int32>] [[-Height] <Int32>] [[-XTitle] <String>] [[-YTitle] <String>] [[-FilePath] <String>] [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,6 +70,36 @@ Aliases:
 
 Required: False
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -XTitle
+{{ Fill XTitle Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -YTitle
+{{ Fill YTitle Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
