@@ -108,6 +108,8 @@ public static class Charts {
 
         var plot = new Plot();
         var type = list[0].Type;
+        if (list.Any(d => d.Type != type))
+            throw new ArgumentException("Mixed chart definition types provided. All chart definitions must have the same ChartDefinitionType.", nameof(definitions));
 
         switch (type) {
             case ChartDefinitionType.Bar:

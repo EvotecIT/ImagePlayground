@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
@@ -30,6 +31,26 @@ namespace ImagePlayground.Tests {
             Assert.True(File.Exists(file));
             var read = QrCode.Read(file);
             Assert.Contains("BEGIN", read.Message);
+        }
+
+        [Fact]
+        public void Test_GenerateMixedChartsThrows() {
+            var defs = new List<Charts.ChartDefinition> {
+                new Charts.ChartBar("A", new List<double> { 1 }),
+                new Charts.ChartLine("B", new List<double> { 2 })
+            };
+
+            Assert.Throws<ArgumentException>(() => Charts.Generate(defs, Path.Combine(_directoryWithTests, "mixed.png")));
+        }
+
+        [Fact]
+        public void Test_GenerateNullDefinitionsThrows() {
+            Assert.Throws<ArgumentNullException>(() => Charts.Generate(null!, Path.Combine(_directoryWithTests, "null.png")));
+        }
+
+        [Fact]
+        public void Test_GenerateEmptyDefinitionsThrows() {
+            Assert.Throws<ArgumentException>(() => Charts.Generate(new List<Charts.ChartDefinition>(), Path.Combine(_directoryWithTests, "empty.png")));
         }
     }
 }
