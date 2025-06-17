@@ -46,8 +46,13 @@ foreach ($Module in $PSDInformation.RequiredModules) {
 }
 Write-Color
 
-Import-Module $PSScriptRoot\*.psd1 -Force
-Import-Module Pester -Force
+try {
+    Import-Module $PSScriptRoot\*.psd1 -Force -ErrorAction Stop
+    Import-Module Pester -Force -ErrorAction Stop
+} catch {
+    throw "Failed to import module $ModuleName"
+}
+
 $Configuration = [PesterConfiguration]::Default
 $Configuration.Run.Path = "$PSScriptRoot\Tests"
 $Configuration.Run.Exit = $true
