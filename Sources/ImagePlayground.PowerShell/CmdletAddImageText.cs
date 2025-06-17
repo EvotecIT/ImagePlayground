@@ -43,6 +43,26 @@ public sealed class AddImageTextCmdlet : PSCmdlet {
     [Parameter]
     public string FontFamily { get; set; } = "Arial";
 
+    /// <summary>Color of shadow.</summary>
+    [Parameter]
+    public SixLabors.ImageSharp.Color? ShadowColor { get; set; }
+
+    /// <summary>X offset for shadow.</summary>
+    [Parameter]
+    public float ShadowOffsetX { get; set; } = 0f;
+
+    /// <summary>Y offset for shadow.</summary>
+    [Parameter]
+    public float ShadowOffsetY { get; set; } = 0f;
+
+    /// <summary>Outline color.</summary>
+    [Parameter]
+    public SixLabors.ImageSharp.Color? OutlineColor { get; set; }
+
+    /// <summary>Outline width.</summary>
+    [Parameter]
+    public float OutlineWidth { get; set; } = 0f;
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = Helpers.ResolvePath(FilePath);
@@ -52,6 +72,19 @@ public sealed class AddImageTextCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(OutputPath);
-        ImagePlayground.ImageHelper.AddText(filePath, output, X, Y, Text, Color, FontSize, FontFamily);
+        ImagePlayground.ImageHelper.AddText(
+            filePath,
+            output,
+            X,
+            Y,
+            Text,
+            Color,
+            FontSize,
+            FontFamily,
+            ShadowColor,
+            ShadowOffsetX,
+            ShadowOffsetY,
+            OutlineColor,
+            OutlineWidth);
     }
 }

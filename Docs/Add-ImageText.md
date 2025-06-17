@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Add-ImageText [-FilePath] <String> [-OutputPath] <String> [-Text] <String> [-X] <Single> [-Y] <Single> [-Color <Color>] [-FontSize <Single>] [-FontFamily <String>] [<CommonParameters>]
+Add-ImageText [-FilePath] <String> [-OutputPath] <String> [-Text] <String> [-X] <Single> [-Y] <Single> [-Color <Color>] [-FontSize <Single>] [-FontFamily <String>] [-ShadowColor <Color>] [-ShadowOffsetX <Single>] [-ShadowOffsetY <Single>] [-OutlineColor <Color>] [-OutlineWidth <Single>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -146,6 +146,81 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShadowColor
+{{ Fill ShadowColor Description }}
+
+```yaml
+Type: Color
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShadowOffsetX
+{{ Fill ShadowOffsetX Description }}
+
+```yaml
+Type: Single
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShadowOffsetY
+{{ Fill ShadowOffsetY Description }}
+
+```yaml
+Type: Single
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -OutlineColor
+{{ Fill OutlineColor Description }}
+
+```yaml
+Type: Color
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -OutlineWidth
+{{ Fill OutlineWidth Description }}
+
+```yaml
+Type: Single
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -29,6 +29,31 @@ namespace ImagePlayground.Tests {
         }
 
         [Fact]
+        public void Test_AddTextWithShadowAndOutline() {
+            string src = Path.Combine(_directoryWithImages, "QRCode1.png");
+            string dest = Path.Combine(_directoryWithTests, "text_shadow_outline.png");
+            if (File.Exists(dest)) File.Delete(dest);
+            ImageHelper.AddText(
+                src,
+                dest,
+                1,
+                1,
+                "Test",
+                SixLabors.ImageSharp.Color.Red,
+                16f,
+                "Arial",
+                SixLabors.ImageSharp.Color.Black,
+                1,
+                1,
+                SixLabors.ImageSharp.Color.Yellow,
+                1);
+            Assert.True(File.Exists(dest));
+            using var img = Image.Load(dest);
+            Assert.Equal(660, img.Width);
+            Assert.Equal(660, img.Height);
+        }
+
+        [Fact]
         public void Test_CreateGridImage() {
             string dest = Path.Combine(_directoryWithTests, "grid.png");
             if (File.Exists(dest)) File.Delete(dest);
