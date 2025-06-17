@@ -239,6 +239,10 @@ namespace ImagePlayground {
         }
 
         public void Resize(int percentage) {
+            if (percentage <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(percentage));
+            }
+
             int width = _image.Width * percentage / 100;
             int height = _image.Height * percentage / 100;
             var options = new ResizeOptions {

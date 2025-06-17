@@ -91,6 +91,10 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <param name="percentage"></param>
         public static void Resize(string filePath, string outFilePath, int percentage) {
+            if (percentage <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(percentage));
+            }
+
             string fullPath = Helpers.ResolvePath(filePath);
             string outFullPath = Helpers.ResolvePath(outFilePath);
 
