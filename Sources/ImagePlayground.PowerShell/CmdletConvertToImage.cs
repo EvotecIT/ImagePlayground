@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -31,11 +32,13 @@ public sealed class ConvertToImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"ConvertTo-Image - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        ImagePlayground.ImageHelper.ConvertTo(FilePath, OutputPath, Quality, CompressionLevel);
+        var output = Helpers.ResolvePath(OutputPath);
+        ImagePlayground.ImageHelper.ConvertTo(filePath, output, Quality, CompressionLevel);
     }
 }

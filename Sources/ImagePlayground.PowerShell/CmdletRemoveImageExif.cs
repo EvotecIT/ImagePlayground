@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 using SixLabors.ImageSharp.Metadata.Profiles.Exif;
@@ -38,19 +39,20 @@ public sealed class RemoveImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Remove-ImageExif - File not found: {FilePath}");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
+        using var img = ImagePlayground.Image.Load(filePath);
         if (ParameterSetName == ParameterSetAll) {
             img.ClearExifValues();
         } else {
             img.RemoveExifValues(ExifTag);
         }
 
-        string output = string.IsNullOrWhiteSpace(FilePathOutput) ? FilePath : FilePathOutput!;
+        var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
         img.Save(output);
     }
 }

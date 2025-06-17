@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 using SixLabors.ImageSharp.Metadata.Profiles.Exif;
@@ -29,15 +30,16 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Set-ImageExif - File not found: {FilePath}");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
+        using var img = ImagePlayground.Image.Load(filePath);
         img.SetExifValue(ExifTag, Value);
 
-        string output = string.IsNullOrWhiteSpace(FilePathOutput) ? FilePath : FilePathOutput!;
+        var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
         img.Save(output);
     }
 }

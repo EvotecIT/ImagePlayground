@@ -8,7 +8,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace ImagePlayground {
     public class QrCode {
         public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
 
             FileInfo fileInfo = new FileInfo(fullPath);
 
@@ -86,7 +86,7 @@ namespace ImagePlayground {
         }
 
         public static BarcodeResult<Rgba32> Read(string filePath) {
-            string fullPath = System.IO.Path.GetFullPath(filePath);
+            string fullPath = Helpers.ResolvePath(filePath);
 
             Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
             BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);

@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,12 +28,13 @@ public sealed class GetImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Get-ImageExif - File not found: {FilePath}");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
+        using var img = ImagePlayground.Image.Load(filePath);
         IReadOnlyList<IExifValue> values = img.GetExifValues();
 
         if (Translate.IsPresent) {

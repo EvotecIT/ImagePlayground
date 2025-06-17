@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System;
 using System.Management.Automation;
 
@@ -46,10 +47,11 @@ public sealed class NewImageQrContactCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRContact - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateContact(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.QrCode.GenerateContact(output, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(FilePath, true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -31,15 +32,17 @@ public sealed class NewImageIconCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"New-ImageIcon - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(FilePath);
-        img.SaveAsIcon(OutputPath, Size);
+        var output = Helpers.ResolvePath(OutputPath);
+        using var img = ImagePlayground.Image.Load(filePath);
+        img.SaveAsIcon(output, Size);
         if (Open.IsPresent) {
-            ImagePlayground.Helpers.Open(OutputPath, true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

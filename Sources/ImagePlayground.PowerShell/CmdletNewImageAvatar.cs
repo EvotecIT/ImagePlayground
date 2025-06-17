@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -31,18 +32,20 @@ public sealed class NewImageAvatarCmdlet : PSCmdlet {
     public SwitchParameter Open { get; set; }
 
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"New-ImageAvatar - File {FilePath} not found. Please check the path.");
             return;
         }
 
         if (ParameterSetName == ParameterSetStream) {
-            ImagePlayground.ImageHelper.Avatar(FilePath, OutputStream, Width, Height, CornerRadius);
+            ImagePlayground.ImageHelper.Avatar(filePath, OutputStream, Width, Height, CornerRadius);
             OutputStream.Position = 0;
         } else {
-            ImagePlayground.ImageHelper.Avatar(FilePath, OutputPath, Width, Height, CornerRadius);
+            var output = Helpers.ResolvePath(OutputPath);
+            ImagePlayground.ImageHelper.Avatar(filePath, output, Width, Height, CornerRadius);
             if (Open.IsPresent) {
-                ImagePlayground.Helpers.Open(OutputPath, true);
+                ImagePlayground.Helpers.Open(output, true);
             }
         }
     }

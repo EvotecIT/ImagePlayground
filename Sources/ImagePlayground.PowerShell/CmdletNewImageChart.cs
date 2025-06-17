@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -50,10 +51,11 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             return;
         }
 
-        ImagePlayground.Charts.Generate(list, FilePath, Width, Height);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.Charts.Generate(list, output, Width, Height);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(FilePath, true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

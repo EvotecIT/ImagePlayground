@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -17,12 +18,13 @@ public sealed class GetImageQrCodeCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Get-ImageQRCode - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        var result = ImagePlayground.QrCode.Read(FilePath);
+        var result = ImagePlayground.QrCode.Read(filePath);
         WriteObject(result);
     }
 }

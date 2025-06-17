@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
@@ -23,6 +24,7 @@ public sealed class NewImageBarCodeCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        ImagePlayground.BarCode.Generate(Type, Value, FilePath);
+        var output = Helpers.ResolvePath(FilePath);
+        ImagePlayground.BarCode.Generate(Type, Value, output);
     }
 }

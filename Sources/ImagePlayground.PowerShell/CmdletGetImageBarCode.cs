@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -17,12 +18,13 @@ public sealed class GetImageBarCodeCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Get-ImageBarCode - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        var result = ImagePlayground.BarCode.Read(FilePath);
+        var result = ImagePlayground.BarCode.Read(filePath);
         WriteObject(result);
     }
 }

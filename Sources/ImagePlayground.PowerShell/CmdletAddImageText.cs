@@ -1,3 +1,4 @@
+using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
 
@@ -44,11 +45,13 @@ public sealed class AddImageTextCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!File.Exists(FilePath)) {
+        var filePath = Helpers.ResolvePath(FilePath);
+        if (!File.Exists(filePath)) {
             WriteWarning($"Add-ImageText - File {FilePath} not found. Please check the path.");
             return;
         }
 
-        ImagePlayground.ImageHelper.AddText(FilePath, OutputPath, X, Y, Text, Color, FontSize, FontFamily);
+        var output = Helpers.ResolvePath(OutputPath);
+        ImagePlayground.ImageHelper.AddText(filePath, output, X, Y, Text, Color, FontSize, FontFamily);
     }
 }
