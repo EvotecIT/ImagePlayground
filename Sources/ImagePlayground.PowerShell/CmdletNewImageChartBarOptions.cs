@@ -3,6 +3,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates bar chart options.</summary>
+/// <example>
+///   <summary>Show values above bars</summary>
+///   <code>New-ImageChartBarOptions -ShowValuesAboveBars</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartBarOptions")]
 public sealed class NewImageChartBarOptionsCmdlet : PSCmdlet {
     /// <summary>Display values above bars.</summary>

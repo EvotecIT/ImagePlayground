@@ -3,6 +3,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates pie chart data item.</summary>
+/// <example>
+///   <summary>Create pie slice</summary>
+///   <code>New-ImageChartPie -Name 'Chrome' -Value 60 -Color Red</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartPie")]
 public sealed class NewImageChartPieCmdlet : PSCmdlet {
     /// <summary>Label for the slice.</summary>
