@@ -28,4 +28,16 @@ Describe 'New-ImageChart' {
 
         Test-Path $file | Should -BeTrue
     }
+
+    It 'creates a bar chart with grid lines' -Skip:(-not $IsWindows) {
+        $file = Join-Path $TestDir 'chart_grid.png'
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartBar -Name 'Jan' -Value @(1,2)
+            New-ImageChartBar -Name 'Feb' -Value @(3,4)
+        } -FilePath $file -Width 200 -Height 150 -ShowGrid
+
+        Test-Path $file | Should -BeTrue
+    }
 }

@@ -39,6 +39,10 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Display grid lines.</summary>
+    [Parameter]
+    public SwitchParameter ShowGrid { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var list = new List<Charts.ChartDefinition>();
@@ -60,7 +64,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle);
+        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
