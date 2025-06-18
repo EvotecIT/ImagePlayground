@@ -83,6 +83,9 @@ Gets EXIF data from image
 ### [Add-ImageText](Add-ImageText.md)
 {{ Fill in the Synopsis }}
 
+### [Add-ImageTextBox](Add-ImageTextBox.md)
+Wraps text to fit within a box on the image
+
 ### [New-ImageAvatar](New-ImageAvatar.md)
 Creates a rounded avatar from an image
 
