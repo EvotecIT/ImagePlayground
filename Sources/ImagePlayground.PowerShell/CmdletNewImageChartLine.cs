@@ -3,6 +3,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates line chart data item.</summary>
+/// <example>
+///   <summary>Create line data</summary>
+///   <code>New-ImageChartLine -Name 'Sales' -Value 10,20 -Color Green</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartLine")]
 public sealed class NewImageChartLineCmdlet : PSCmdlet {
     /// <summary>Label for the line.</summary>

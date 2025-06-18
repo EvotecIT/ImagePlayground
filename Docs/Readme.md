@@ -80,6 +80,9 @@ Gets EXIF data from image
 ### [Add-ImageText](Add-ImageText.md)
 {{ Fill in the Synopsis }}
 
+### [New-ImageAvatar](New-ImageAvatar.md)
+Creates a rounded avatar from an image
+
 ### [Set-ImageExif](Set-ImageExif.md)
 Sets EXIF tag to specific value
 

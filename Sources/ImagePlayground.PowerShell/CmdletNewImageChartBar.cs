@@ -3,6 +3,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates bar chart data item.</summary>
+/// <example>
+///   <summary>Create bar data</summary>
+///   <code>New-ImageChartBar -Name 'Jan' -Value 1,2 -Color Blue</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartBar")]
 public sealed class NewImageChartBarCmdlet : PSCmdlet {
     /// <summary>Label for the bar data.</summary>

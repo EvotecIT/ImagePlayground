@@ -5,36 +5,35 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-ImageExif
+# New-ImageGif
 
 ## SYNOPSIS
-Sets EXIF tag to specific value
+Creates an animated GIF from image frames.
 
 ## SYNTAX
-
 ```
-Set-ImageExif [-FilePath] <String> [[-FilePathOutput] <String>] [-ExifTag] <ExifTag> [-Value] <Object>
- [<CommonParameters>]
+New-ImageGif [-Frames] <String[]> [-FilePath] <String> [-FrameDelay <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Sets EXIF tag to specific value
+Generates a GIF animation using the provided image files. The frame delay determines how long each frame is displayed.
 
 ## EXAMPLES
 
 ### Example 1
+```powershell
+PS C:\> $frames = 'frame1.png','frame2.png'
+PS C:\> New-ImageGif -Frames $frames -FilePath .\anim.gif -FrameDelay 50
 ```
-An example
-```
+Creates a GIF from the specified frames.
 
 ## PARAMETERS
 
-### -FilePath
-File path to image to be processed for Exif Tag manipulation.
-If FilePathOutput is not specified, the image will be overwritten.
+### -Frames
+Paths to image files used as frames of the animation.
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
@@ -45,48 +44,32 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FilePathOutput
-File path to output image.
-If not specified, the image will be overwritten.
+### -FilePath
+Output path for the GIF file.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ExifTag
-Exif Tag to be set
+### -FrameDelay
+Time in milliseconds between frames.
 
 ```yaml
-Type: ExifTag
+Type: Int32
 Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: 3
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Value
-Value to be set
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 4
-Default value: None
+Required: False
+Position: Named
+Default value: 100
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -96,9 +79,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### None
+
 ## OUTPUTS
 
+### System.Object
+
 ## NOTES
-General notes
 
 ## RELATED LINKS

@@ -5,6 +5,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates an image chart from definitions.</summary>
+/// <example>
+///   <summary>Create a bar chart and save it</summary>
+///   <code>New-ImageChart -ChartsDefinition { New-ImageChartBar -Name 'Jan' -Value @(1,2) } -FilePath chart.png</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChart")]
 public sealed class NewImageChartCmdlet : PSCmdlet {
     /// <summary>ScriptBlock producing chart definitions.</summary>

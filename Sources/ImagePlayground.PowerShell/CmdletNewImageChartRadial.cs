@@ -3,6 +3,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates radial gauge chart data item.</summary>
+/// <example>
+///   <summary>Create radial gauge</summary>
+///   <code>New-ImageChartRadial -Name 'CPU' -Value 75 -Color Orange</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartRadial")]
 public sealed class NewImageChartRadialCmdlet : PSCmdlet {
     /// <summary>Label for the gauge.</summary>
