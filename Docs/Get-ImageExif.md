@@ -21,7 +21,7 @@ Gets EXIF data from image.
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### Example 1
 ```
 Get-ImageExif -FilePath "C:\Users\przemyslaw.klys\Downloads\IMG_4644.jpeg"
 ```
@@ -44,7 +44,7 @@ Accept wildcard characters: False
 ```
 
 ### -Translate
-{{ Fill Translate Description }}
+Returns an object with property names translated from known EXIF tags.
 
 ```yaml
 Type: SwitchParameter
