@@ -205,7 +205,11 @@ public static class Charts {
             plot.Axes.Left.Label.Text = yTitle;
         }
 
-        plot.ShowGrid(showGrid);
+        if (showGrid) {
+            plot.ShowGrid();
+        } else {
+            plot.HideGrid();
+        }
 
         filePath = Helpers.ResolvePath(filePath);
         plot.SavePng(filePath, width, height);

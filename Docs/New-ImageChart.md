@@ -121,7 +121,7 @@ Accept wildcard characters: False
 ```
 
 ### -ShowGrid
-{{ Fill ShowGrid Description }}
+If specified, grid lines are shown on the chart image.
 
 ```yaml
 Type: SwitchParameter
