@@ -91,6 +91,8 @@ $Message | Format-List *
 
 ### Creating charts
 
+Use `-XTitle` and `-YTitle` on `New-ImageChart` to specify axis titles.
+
 #### Bar charts
 
 ```powershell

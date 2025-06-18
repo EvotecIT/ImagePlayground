@@ -101,13 +101,23 @@ public static class Charts {
     }
 
     /// <summary>Generate a chart based on provided definitions.</summary>
-    public static void Generate(IEnumerable<ChartDefinition> definitions, string filePath, int width = 600, int height = 400, ChartBarOptions? barOptions = null) {
+    public static void Generate(
+        IEnumerable<ChartDefinition> definitions,
+        string filePath,
+        int width = 600,
+        int height = 400,
+        ChartBarOptions? barOptions = null,
+        string? xTitle = null,
+        string? yTitle = null,
+        bool showGrid = false) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
 
         var plot = new Plot();
         var type = list[0].Type;
+        if (list.Any(d => d.Type != type))
+            throw new ArgumentException("Mixed chart definition types provided. All chart definitions must have the same ChartDefinitionType.", nameof(definitions));
 
         switch (type) {
             case ChartDefinitionType.Bar:
@@ -185,6 +195,20 @@ public static class Charts {
                 }
                 plot.ShowLegend();
                 break;
+        }
+
+        if (!string.IsNullOrEmpty(xTitle)) {
+            plot.Axes.Bottom.Label.Text = xTitle;
+        }
+
+        if (!string.IsNullOrEmpty(yTitle)) {
+            plot.Axes.Left.Label.Text = yTitle;
+        }
+
+        if (showGrid) {
+            plot.ShowGrid();
+        } else {
+            plot.HideGrid();
         }
 
         filePath = Helpers.ResolvePath(filePath);

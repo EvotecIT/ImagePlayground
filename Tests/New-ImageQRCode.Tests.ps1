@@ -26,5 +26,17 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'creates QR code icon' {
+
+        $file = Join-Path $TestDir 'qr.ico'
+
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file
+
+        Test-Path $file | Should -BeTrue
+
+    }
+
 }
 

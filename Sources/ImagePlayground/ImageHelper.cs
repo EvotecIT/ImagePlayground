@@ -91,6 +91,10 @@ namespace ImagePlayground {
         /// <param name="outFilePath"></param>
         /// <param name="percentage"></param>
         public static void Resize(string filePath, string outFilePath, int percentage) {
+            if (percentage <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(percentage));
+            }
+
             string fullPath = Helpers.ResolvePath(filePath);
             string outFullPath = Helpers.ResolvePath(outFilePath);
 
@@ -197,11 +201,10 @@ namespace ImagePlayground {
                     ic.Fill(color);
 
                     var rotation = GeometryUtilities.DegreeToRadian(45);
-
+                    var rand = new Random();
 
                     for (var row = 1; row < rowCount; row++) {
                         for (var col = 1; col < columnCount; col++) {
-                            var rand = new Random();
                             var r = (byte)rand.Next(0, 255);
                             var g = (byte)rand.Next(0, 255);
                             var b = (byte)rand.Next(0, 255);

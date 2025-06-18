@@ -20,6 +20,7 @@ namespace ImagePlayground {
         public void SaveAsAvatar(Stream stream, int width, int height, float cornerRadius) {
             using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
             clone.SaveAsPng(stream);
+            stream.Seek(0, SeekOrigin.Begin);
         }
 
         public void SaveAsCircularAvatar(string filePath, int size) {

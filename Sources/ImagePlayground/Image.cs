@@ -72,18 +72,14 @@ namespace ImagePlayground {
         }
 
         public ICompareResult Compare(Image imageToCompare) {
-            bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare._image);
-            ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare._image);
-            return calcDiff;
+            return ImageSharpCompare.CalcDiff(_image, imageToCompare._image);
         }
 
         public ICompareResult Compare(string filePathToCompare) {
             string fullPath = Helpers.ResolvePath(filePathToCompare);
 
             using (var imageToCompare = GetImage(fullPath)) {
-                bool isEqual = ImageSharpCompare.ImagesAreEqual(_image, imageToCompare);
-                ICompareResult calcDiff = ImageSharpCompare.CalcDiff(_image, imageToCompare);
-                return calcDiff;
+                return ImageSharpCompare.CalcDiff(_image, imageToCompare);
             }
         }
 
@@ -239,6 +235,10 @@ namespace ImagePlayground {
         }
 
         public void Resize(int percentage) {
+            if (percentage <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(percentage));
+            }
+
             int width = _image.Width * percentage / 100;
             int height = _image.Height * percentage / 100;
             var options = new ResizeOptions {

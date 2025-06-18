@@ -47,8 +47,21 @@ namespace ImagePlayground {
             }
         }
 
+        /// <summary>
+        /// Adds an image watermark using a predefined placement.
+        /// </summary>
+        /// <param name="filePath">Path to the watermark image.</param>
+        /// <param name="placement">Placement for the watermark.</param>
+        /// <param name="opacity">Opacity of the watermark.</param>
+        /// <param name="padding">Padding around the watermark.</param>
+        /// <param name="rotate">Rotation angle.</param>
+        /// <param name="flipMode">Flip mode for the watermark.</param>
+        /// <param name="watermarkPercentage">Size of the watermark in percent (1-100).</param>
         public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
             string fullPath = Helpers.ResolvePath(filePath);
+            if (watermarkPercentage < 1 || watermarkPercentage > 100) {
+                throw new ArgumentOutOfRangeException(nameof(watermarkPercentage), "Watermark percentage must be between 1 and 100.");
+            }
 
             var location = new Point(0, 0);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
@@ -86,8 +99,21 @@ namespace ImagePlayground {
             }
         }
 
+        /// <summary>
+        /// Adds an image watermark at the specified coordinates.
+        /// </summary>
+        /// <param name="filePath">Path to the watermark image.</param>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="opacity">Opacity of the watermark.</param>
+        /// <param name="rotate">Rotation angle.</param>
+        /// <param name="flipMode">Flip mode for the watermark.</param>
+        /// <param name="watermarkPercentage">Size of the watermark in percent (1-100).</param>
         public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
             string fullPath = Helpers.ResolvePath(filePath);
+            if (watermarkPercentage < 1 || watermarkPercentage > 100) {
+                throw new ArgumentOutOfRangeException(nameof(watermarkPercentage), "Watermark percentage must be between 1 and 100.");
+            }
 
             var location = new Point(x, y);
             using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {

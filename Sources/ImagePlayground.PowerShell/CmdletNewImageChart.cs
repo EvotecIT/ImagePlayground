@@ -23,6 +23,14 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     [Parameter]
     public int Height { get; set; } = 400;
 
+    /// <summary>X axis title.</summary>
+    [Parameter]
+    public string? XTitle { get; set; }
+
+    /// <summary>Y axis title.</summary>
+    [Parameter]
+    public string? YTitle { get; set; }
+
     /// <summary>Output file path.</summary>
     [Parameter(Mandatory = true)]
     public string FilePath { get; set; } = string.Empty;
@@ -30,6 +38,10 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     /// <summary>Open the image after creation.</summary>
     [Parameter]
     public SwitchParameter Show { get; set; }
+
+    /// <summary>Display grid lines.</summary>
+    [Parameter]
+    public SwitchParameter ShowGrid { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
@@ -52,7 +64,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.Charts.Generate(list, output, Width, Height);
+        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
