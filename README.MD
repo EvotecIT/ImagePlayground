@@ -129,6 +129,15 @@ New-ImageChart {
 
 ![ChartsLine.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsLine.png)
 
+#### Scatter charts
+
+```powershell
+New-ImageChart {
+    New-ImageChartScatter -Name "First" -X 1,2,3 -Y 4,5,6
+    New-ImageChartScatter -Name "Second" -X 1,2,3 -Y 3,2,1
+} -Show -FilePath $PSScriptRoot\Output\ChartsScatter.png -Width 500 -Height 500
+```
+
 #### Radar charts
 
 ```powershell

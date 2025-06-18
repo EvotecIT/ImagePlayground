@@ -15,6 +15,8 @@ public static class Charts {
         Bar,
         /// <summary>Line chart.</summary>
         Line,
+        /// <summary>Scatter chart.</summary>
+        Scatter,
         /// <summary>Pie chart.</summary>
         Pie,
         /// <summary>Radial gauge chart.</summary>
@@ -58,6 +60,24 @@ public static class Charts {
 
         public ChartLine(string name, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Line, name) {
             Value = value;
+            Color = color;
+        }
+    }
+
+    /// <summary>Scatter chart definition.</summary>
+    public sealed class ChartScatter : ChartDefinition {
+        /// <summary>X values.</summary>
+        public IList<double> X { get; }
+
+        /// <summary>Y values.</summary>
+        public IList<double> Y { get; }
+
+        /// <summary>Point color.</summary>
+        public ImageColor? Color { get; }
+
+        public ChartScatter(string name, IList<double> x, IList<double> y, ImageColor? color = null) : base(ChartDefinitionType.Scatter, name) {
+            X = x;
+            Y = y;
             Color = color;
         }
     }
@@ -161,6 +181,17 @@ public static class Charts {
                     if (line.Color.HasValue) {
                         var px = line.Color.Value.ToPixel<Rgba32>();
                         sig.LineColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                    }
+                }
+                plot.ShowLegend();
+                break;
+            case ChartDefinitionType.Scatter:
+                foreach (var scatter in list.Cast<ChartScatter>()) {
+                    var sc = plot.Add.Scatter(scatter.X.ToArray(), scatter.Y.ToArray());
+                    sc.LegendText = scatter.Name;
+                    if (scatter.Color.HasValue) {
+                        var px = scatter.Color.Value.ToPixel<Rgba32>();
+                        sc.Color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
                     }
                 }
                 plot.ShowLegend();

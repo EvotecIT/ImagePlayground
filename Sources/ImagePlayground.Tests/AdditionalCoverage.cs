@@ -132,6 +132,18 @@ namespace ImagePlayground.Tests {
         }
 
         [Fact]
+        public void Test_ScatterChart() {
+            string file = Path.Combine(_directoryWithTests, "chart_scatter.png");
+            if (File.Exists(file)) File.Delete(file);
+            var defs = new List<Charts.ChartDefinition> {
+                new Charts.ChartScatter("First", new List<double>{1,2,3}, new List<double>{4,5,6}),
+                new Charts.ChartScatter("Second", new List<double>{1,2,3}, new List<double>{3,2,1})
+            };
+            Charts.Generate(defs, file, 300, 200);
+            Assert.True(File.Exists(file));
+        }
+
+        [Fact]
         public void Test_PieAndRadialCharts() {
             string pie = Path.Combine(_directoryWithTests, "chart_pie.png");
             if (File.Exists(pie)) File.Delete(pie);
