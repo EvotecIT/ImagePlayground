@@ -23,6 +23,7 @@
         'New-ImageQRCode',
         'New-ImageQRCodeWiFi',
         'New-ImageQRContact',
+        'New-ImageGif',
         'Remove-ImageExif',
         'Resize-Image',
         'Save-Image',
