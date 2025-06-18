@@ -53,6 +53,9 @@ Gets EXIF data from image
 ### [New-ImageChartRadial](New-ImageChartRadial.md)
 {{ Fill in the Synopsis }}
 
+### [New-ImageChartScatter](New-ImageChartScatter.md)
+{{ Fill in the Synopsis }}
+
 ### [New-ImageQRCode](New-ImageQRCode.md)
 {{ Fill in the Synopsis }}
 

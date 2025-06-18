@@ -16,6 +16,7 @@
         'New-ImageChartBar',
         'New-ImageChartBarOptions',
         'New-ImageChartLine',
+        'New-ImageChartScatter',
         'New-ImageChartPie',
         'New-ImageChartRadial',
         'New-ImageGrid',
