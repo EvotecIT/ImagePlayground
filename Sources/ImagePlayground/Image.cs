@@ -9,7 +9,10 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Metadata;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Extensions.Transforms;
+#if NET8_0_OR_GREATER
+using HeyRed.ImageSharp.Heif.Formats.Avif;
+using HeyRed.ImageSharp.Heif.Formats.Heif;
+#endif
 
 namespace ImagePlayground {
     public partial class Image : IDisposable {
@@ -21,6 +24,13 @@ namespace ImagePlayground {
         public ImageMetadata Metadata => _image.Metadata;
         public PixelTypeInfo PixelType => _image.PixelType;
         public ImageFrameCollection Frames => _image.Frames;
+
+        static Image() {
+#if NET8_0_OR_GREATER
+            new AvifConfigurationModule().Configure(Configuration.Default);
+            new HeifConfigurationModule().Configure(Configuration.Default);
+#endif
+        }
 
         public enum Sampler {
             NearestNeighbor,

@@ -11,7 +11,9 @@ namespace ImagePlayground {
         Png,
         Tga,
         Tiff,
-        WebP
+        WebP,
+        Heif,
+        Avif
     }
 
     public enum ImagePlacement {

@@ -56,16 +56,20 @@ if ($Standard -and $Core -and $Default) {
 $Assembly = @(
     if ($Development) {
         if ($PSEdition -eq 'Core') {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore\*.dll -ErrorAction SilentlyContinue -Recurse |
+                Where-Object { $_.FullName -notmatch 'runtimes[/\\].*[/\\]native' }
         } else {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault\*.dll -ErrorAction SilentlyContinue -Recurse |
+                Where-Object { $_.FullName -notmatch 'runtimes[/\\].*[/\\]native' }
         }
     } else {
         if ($Framework -and $PSEdition -eq 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue -Recurse |
+                Where-Object { $_.FullName -notmatch 'runtimes[/\\].*[/\\]native' }
         }
         if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue -Recurse
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue -Recurse |
+                Where-Object { $_.FullName -notmatch 'runtimes[/\\].*[/\\]native' }
         }
     }
 )

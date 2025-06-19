@@ -51,6 +51,14 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ Image Blur
 - ☑️ Image Sharpen
 - ☑️ Many more
+- ☑️ HEIF/AVIF decoding (Windows, Linux, macOS*)
+
+Windows and Linux include required native libraries. macOS requires the
+`libheif` package installed separately via Homebrew. On Linux the library
+may also need to be installed using your distribution package manager
+(for example `apt install libheif1`). If the native library is not found,
+extend `LD_LIBRARY_PATH` (Linux) or `DYLD_LIBRARY_PATH` (macOS) to point
+to the directory with `libheif`.
 
 ## Installation
 
