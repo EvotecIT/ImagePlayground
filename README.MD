@@ -317,6 +317,22 @@ Get-ImageExif -FilePath $PSScriptRoot\Output\IMG_46441.jpeg | Format-Table
 Get-ImageExif -FilePath $PSScriptRoot\Output\IMG_46442.jpeg | Format-Table
 ```
 
+#### Loading HEIF and AVIF images
+
+```powershell
+$image = Get-Image -FilePath 'C:\Images\photo.heic'
+Save-Image -Image $image -FilePath 'C:\Images\photo.png'
+$image.Dispose()
+```
+
+```csharp
+using SixLabors.ImageSharp;
+
+string src = @"C:\\Images\\photo.avif";
+using var image = Image.Load(src);
+image.Save("photo.png");
+```
+
 ### Libraries
 
 #### Current libraries and their licenses:
