@@ -8,7 +8,7 @@ schema: 2.0.0
 # Add-ImageText
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Adds plain text or wrapped text to an image.
 
 ## SYNTAX
 
@@ -17,16 +17,36 @@ Add-ImageText [-FilePath] <String> [-OutputPath] <String> [-Text] <String> [-X] 
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+`Add-ImageText` places text on an image at the given coordinates. Use `Add-ImageTextBox` to wrap the text inside a fixed width box.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Add-ImageText -FilePath .\input.png -OutputPath .\out.png -Text 'Sample' -X 10 -Y 10
 ```
+Adds simple text in the top-left corner.
 
-{{ Add example description here }}
+### Example 2
+```powershell
+PS C:\> Add-ImageTextBox -FilePath .\input.png -OutputPath .\out.png -Text 'Long text that will wrap' -X 10 -Y 10 -Width 150
+```
+Adds wrapped text constrained to a 150 pixel wide box.
+
+### Example 3
+```csharp
+using SixLabors.ImageSharp;
+
+ImageHelper.AddText(
+    "input.png",
+    "out.png",
+    10,
+    10,
+    "Sample",
+    Color.Black,
+    fontSize: 24f);
+```
+Adds plain text using C#.
 
 ## PARAMETERS
 

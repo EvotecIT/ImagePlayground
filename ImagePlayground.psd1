@@ -3,6 +3,7 @@
     Author                 = 'Przemyslaw Klys'
     CmdletsToExport        = @(
         'Add-ImageText',
+        'Add-ImageTextBox',
         'Add-ImageWatermark',
         'Compare-Image',
         'ConvertTo-Image',

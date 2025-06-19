@@ -55,6 +55,18 @@ namespace ImagePlayground.Tests {
         }
 
         [Fact]
+        public void Test_AddTextBox() {
+            string src = Path.Combine(_directoryWithImages, "QRCode1.png");
+            string dest = Path.Combine(_directoryWithTests, "textbox.png");
+            if (File.Exists(dest)) File.Delete(dest);
+            ImageHelper.AddTextBox(src, dest, 1, 1, "Wrapped Text", 100, SixLabors.ImageSharp.Color.Red);
+            Assert.True(File.Exists(dest));
+            using var img = SixLabors.ImageSharp.Image.Load<Rgba32>(dest);
+            Assert.Equal(660, img.Width);
+            Assert.Equal(660, img.Height);
+        }
+
+        [Fact]
         public void Test_GridImageContainsMultipleColors() {
             string dest = Path.Combine(_directoryWithTests, "gridcolors.png");
             if (File.Exists(dest)) File.Delete(dest);
