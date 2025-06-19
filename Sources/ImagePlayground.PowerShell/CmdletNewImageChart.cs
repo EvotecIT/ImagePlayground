@@ -47,6 +47,10 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter ShowGrid { get; set; }
 
+    /// <summary>Chart theme.</summary>
+    [Parameter]
+    public Charts.ChartTheme Theme { get; set; } = Charts.ChartTheme.Default;
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var list = new List<Charts.ChartDefinition>();
@@ -68,7 +72,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent);
+        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

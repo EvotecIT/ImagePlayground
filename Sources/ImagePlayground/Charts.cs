@@ -23,6 +23,16 @@ public static class Charts {
         Radial
     }
 
+    /// <summary>Available chart themes.</summary>
+    public enum ChartTheme {
+        /// <summary>Use the default ScottPlot style.</summary>
+        Default,
+        /// <summary>Apply the dark theme.</summary>
+        Dark,
+        /// <summary>Apply the light theme.</summary>
+        Light
+    }
+
     /// <summary>Base class for chart definitions.</summary>
     public abstract class ChartDefinition {
         /// <summary>Chart type.</summary>
@@ -129,12 +139,21 @@ public static class Charts {
         ChartBarOptions? barOptions = null,
         string? xTitle = null,
         string? yTitle = null,
-        bool showGrid = false) {
+        bool showGrid = false,
+        ChartTheme theme = ChartTheme.Default) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
 
         var plot = new Plot();
+        switch (theme) {
+            case ChartTheme.Dark:
+                new ScottPlot.PlotStyles.Dark().Apply(plot);
+                break;
+            case ChartTheme.Light:
+                new ScottPlot.PlotStyles.Light().Apply(plot);
+                break;
+        }
         var type = list[0].Type;
         if (list.Any(d => d.Type != type))
             throw new ArgumentException("Mixed chart definition types provided. All chart definitions must have the same ChartDefinitionType.", nameof(definitions));
