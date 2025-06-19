@@ -22,6 +22,7 @@
         'New-ImageChartScatter',
         'New-ImageChartPie',
         'New-ImageChartRadial',
+        'New-ImageChartHeatmap',
         'New-ImageGrid',
         'New-ImageIcon',
         'New-ImageQRCode',
