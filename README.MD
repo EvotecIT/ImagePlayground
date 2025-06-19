@@ -50,6 +50,7 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ Image Grayscale
 - ☑️ Image Blur
 - ☑️ Image Sharpen
+- ☑️ Image Base64 conversion
 - ☑️ Many more
 
 ## Installation
@@ -198,6 +199,11 @@ WatermarkImage    Method     void WatermarkImage(string filePath, ImagePlaygroun
 
 ```powershell
 ConvertTo-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotec.jpg
+```
+
+```powershell
+$b64 = ConvertTo-ImageBase64 -FilePath $PSScriptRoot\Samples\LogoEvotec.png
+ConvertFrom-ImageBase64 -Base64 $b64 -OutputPath $PSScriptRoot\Output\FromBase64.png
 ```
 
 #### Resizing images
