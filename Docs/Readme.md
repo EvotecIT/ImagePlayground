@@ -13,6 +13,10 @@ Locale: en-US
 ## ImagePlayground Cmdlets
 ### [ConvertTo-Image](ConvertTo-Image.md)
 {{ Fill in the Synopsis }}
+### [ConvertTo-ImageBase64](ConvertTo-ImageBase64.md)
+{{ Fill in the Synopsis }}
+### [ConvertFrom-ImageBase64](ConvertFrom-ImageBase64.md)
+{{ Fill in the Synopsis }}
 
 ### [Get-Image](Get-Image.md)
 {{ Fill in the Synopsis }}

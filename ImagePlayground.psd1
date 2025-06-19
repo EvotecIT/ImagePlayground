@@ -6,6 +6,8 @@
         'Add-ImageWatermark',
         'Compare-Image',
         'ConvertTo-Image',
+        'ConvertTo-ImageBase64',
+        'ConvertFrom-ImageBase64',
         'Get-Image',
         'Get-ImageBarCode',
         'Get-ImageExif',
