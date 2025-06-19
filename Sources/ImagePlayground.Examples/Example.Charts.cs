@@ -50,6 +50,13 @@ namespace ImagePlayground.Examples {
                 new Charts.ChartRadial("F#", 100)
             };
             Charts.Generate(radials, radial, 500, 500);
+
+            Console.WriteLine("[*] Creating Line chart with annotations");
+            string annotated = Path.Combine(folderPath, "ChartsAnnotated.png");
+            var anns = new List<Charts.ChartAnnotation> {
+                new Charts.ChartAnnotation(1, 12, "first", true)
+            };
+            Charts.Generate(lines, annotated, 500, 500, null, null, null, false, Charts.ChartTheme.Default, anns);
         }
     }
 }

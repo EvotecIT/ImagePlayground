@@ -19,6 +19,14 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     [Parameter(ValueFromPipeline = true)]
     public Charts.ChartDefinition[]? Definition { get; set; }
 
+    /// <summary>ScriptBlock producing annotations.</summary>
+    [Parameter]
+    public ScriptBlock? AnnotationsDefinition { get; set; }
+
+    /// <summary>Annotations for the chart.</summary>
+    [Parameter]
+    public Charts.ChartAnnotation[]? Annotation { get; set; }
+
     /// <summary>Width of the chart.</summary>
     [Parameter]
     public int Width { get; set; } = 600;
@@ -71,8 +79,22 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             return;
         }
 
+        var annotations = new List<Charts.ChartAnnotation>();
+        if (Annotation is not null) {
+            annotations.AddRange(Annotation);
+        }
+        if (AnnotationsDefinition != null) {
+            var ares = AnnotationsDefinition.Invoke();
+            foreach (var o in ares) {
+                var obj = o is PSObject ps ? ps.BaseObject : o;
+                if (obj is Charts.ChartAnnotation ann) {
+                    annotations.Add(ann);
+                }
+            }
+        }
+
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme);
+        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

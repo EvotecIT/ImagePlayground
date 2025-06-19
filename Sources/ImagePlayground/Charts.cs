@@ -130,6 +130,26 @@ public static class Charts {
         }
     }
 
+
+    /// <summary>Chart annotation definition.</summary>
+    public sealed class ChartAnnotation {
+        /// <summary>X coordinate of the annotation.</summary>
+        public double X { get; }
+        /// <summary>Y coordinate of the annotation.</summary>
+        public double Y { get; }
+        /// <summary>Annotation text.</summary>
+        public string Text { get; }
+        /// <summary>Display arrow.</summary>
+        public bool Arrow { get; }
+
+        public ChartAnnotation(double x, double y, string text, bool arrow = false) {
+            X = x;
+            Y = y;
+            Text = text;
+            Arrow = arrow;
+        }
+    }
+
     /// <summary>Generate a chart based on provided definitions.</summary>
     public static void Generate(
         IEnumerable<ChartDefinition> definitions,
@@ -140,7 +160,8 @@ public static class Charts {
         string? xTitle = null,
         string? yTitle = null,
         bool showGrid = false,
-        ChartTheme theme = ChartTheme.Default) {
+        ChartTheme theme = ChartTheme.Default,
+        IEnumerable<ChartAnnotation>? annotations = null) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
@@ -259,6 +280,15 @@ public static class Charts {
             plot.ShowGrid();
         } else {
             plot.HideGrid();
+        }
+
+        if (annotations is not null) {
+            foreach (var ann in annotations) {
+                var callout = plot.Add.Callout(ann.Text, new Coordinates(ann.X, ann.Y), new Coordinates(ann.X, ann.Y));
+                if (!ann.Arrow) {
+                    callout.ArrowLineWidth = 0;
+                }
+            }
         }
 
         filePath = Helpers.ResolvePath(filePath);

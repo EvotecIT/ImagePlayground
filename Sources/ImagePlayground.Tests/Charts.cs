@@ -82,5 +82,22 @@ namespace ImagePlayground.Tests {
         public void Test_GenerateEmptyDefinitionsThrows() {
             Assert.Throws<ArgumentException>(() => Charts.Generate(new List<Charts.ChartDefinition>(), Path.Combine(_directoryWithTests, "empty.png")));
         }
+
+        [Fact]
+        public void Test_GenerateWithAnnotations() {
+            string file = Path.Combine(_directoryWithTests, "chart_annotation.png");
+            if (File.Exists(file)) File.Delete(file);
+
+            var defs = new List<Charts.ChartDefinition> {
+                new Charts.ChartBar("A", new List<double> { 1 })
+            };
+            var anns = new List<Charts.ChartAnnotation> {
+                new Charts.ChartAnnotation(0, 1, "first", true)
+            };
+
+            Charts.Generate(defs, file, 300, 200, null, null, null, false, Charts.ChartTheme.Default, anns);
+
+            Assert.True(File.Exists(file));
+        }
     }
 }

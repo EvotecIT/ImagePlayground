@@ -152,6 +152,16 @@ New-ImageChart {
 
 ![ChartsRadial.png](https://raw.githubusercontent.com/EvotecIT/ImagePlayground/master/Examples/Samples/ChartsRadial.png)
 
+#### Charts with annotations
+
+```powershell
+New-ImageChart -ChartsDefinition {
+    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5
+} -AnnotationsDefinition {
+    New-ImageChartAnnotation -X 3 -Y 5 -Text 'Peak' -Arrow
+} -Show -FilePath $PSScriptRoot\Samples\ChartsAnnotated.png -Width 500 -Height 300
+```
+
 ### Reading bar codes
 
 ```powershell
