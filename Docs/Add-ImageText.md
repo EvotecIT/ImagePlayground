@@ -33,6 +33,21 @@ PS C:\> Add-ImageTextBox -FilePath .\input.png -OutputPath .\out.png -Text 'Long
 ```
 Adds wrapped text constrained to a 150 pixel wide box.
 
+### Example 3
+```csharp
+using SixLabors.ImageSharp;
+
+ImageHelper.AddText(
+    "input.png",
+    "out.png",
+    10,
+    10,
+    "Sample",
+    Color.Black,
+    fontSize: 24f);
+```
+Adds plain text using C#.
+
 ## PARAMETERS
 
 ### -FilePath

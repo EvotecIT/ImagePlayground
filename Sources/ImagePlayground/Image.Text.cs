@@ -40,7 +40,10 @@ namespace ImagePlayground {
             });
         }
 
-        public void AddTextBox(float x, float y, string text, float boxWidth, SixLabors.ImageSharp.Color color, float boxHeight = 0f, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, SixLabors.ImageSharp.Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, SixLabors.ImageSharp.Color? outlineColor = null, float outlineWidth = 0f) {
+        public void AddTextBox(float x, float y, string text, float boxWidth, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, SixLabors.ImageSharp.Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, SixLabors.ImageSharp.Color? outlineColor = null, float outlineWidth = 0f) =>
+            AddTextBox(x, y, text, boxWidth, 0f, color, fontSize, fontFamilyName, horizontalAlignment, verticalAlignment, shadowColor, shadowOffsetX, shadowOffsetY, outlineColor, outlineWidth);
+
+        public void AddTextBox(float x, float y, string text, float boxWidth, float boxHeight, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, SixLabors.ImageSharp.Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, SixLabors.ImageSharp.Color? outlineColor = null, float outlineWidth = 0f) {
             if (!SixLabors.Fonts.SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
                 if (!SixLabors.Fonts.SystemFonts.TryGet("DejaVu Sans", out fontFamily)) {
                     fontFamily = SixLabors.Fonts.SystemFonts.Collection.Families.First();

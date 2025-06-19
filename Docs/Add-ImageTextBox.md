@@ -25,5 +25,24 @@ PS C:\> Add-ImageTextBox -FilePath .\input.png -OutputPath .\out.png -Text 'Long
 ```
 Draws the text in a 150 pixel wide box starting at (10,10).
 
+### Example 2
+```csharp
+using SixLabors.ImageSharp;
+
+ImageHelper.AddTextBox(
+    "input.png",
+    "out.png",
+    10,
+    10,
+    "Long text that will wrap",
+    150,
+    0f,
+    Color.Blue,
+    fontSize: 20f,
+    horizontalAlignment: SixLabors.Fonts.HorizontalAlignment.Center,
+    verticalAlignment: SixLabors.Fonts.VerticalAlignment.Center);
+```
+Draws centered wrapped text using C#.
+
 ## PARAMETERS
 See `Add-ImageText` for details on shared parameters.
