@@ -20,7 +20,9 @@ public static class Charts {
         /// <summary>Pie chart.</summary>
         Pie,
         /// <summary>Radial gauge chart.</summary>
-        Radial
+        Radial,
+        /// <summary>Heatmap chart.</summary>
+        Heatmap
     }
 
     /// <summary>Available chart themes.</summary>
@@ -117,6 +119,16 @@ public static class Charts {
         public ChartRadial(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Radial, name) {
             Value = value;
             Color = color;
+        }
+    }
+
+    /// <summary>Heatmap chart definition.</summary>
+    public sealed class ChartHeatmap : ChartDefinition {
+        /// <summary>Values of the heatmap.</summary>
+        public double[,] Data { get; }
+
+        public ChartHeatmap(string name, double[,] data) : base(ChartDefinitionType.Heatmap, name) {
+            Data = data;
         }
     }
 
@@ -265,6 +277,11 @@ public static class Charts {
                     }).ToArray();
                 }
                 plot.ShowLegend();
+                break;
+            case ChartDefinitionType.Heatmap:
+                foreach (var map in list.Cast<ChartHeatmap>()) {
+                    plot.Add.Heatmap(map.Data);
+                }
                 break;
         }
 

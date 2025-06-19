@@ -164,5 +164,17 @@ namespace ImagePlayground.Tests {
             Charts.Generate(radials, radial, 300, 200);
             Assert.True(File.Exists(radial));
         }
+
+        [Fact]
+        public void Test_HeatmapChart() {
+            string file = Path.Combine(_directoryWithTests, "chart_heatmap.png");
+            if (File.Exists(file)) File.Delete(file);
+            var map = new double[,] { { 1, 2 }, { 3, 4 } };
+            var defs = new List<Charts.ChartDefinition> {
+                new Charts.ChartHeatmap("H", map)
+            };
+            Charts.Generate(defs, file, 100, 100);
+            Assert.True(File.Exists(file));
+        }
     }
 }
