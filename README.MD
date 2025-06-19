@@ -38,9 +38,15 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
   - ☑️ QR Code WiFi
   - ☑️ QR Code Contact
   - 📥 Others to be added
-- ☑️ Barcode
+ - ☑️ Barcode
   - ☑️ EAN
-  - ☑️ Code.39
+  - ☑️ UPC-A
+  - ☑️ UPC-E
+  - ☑️ Code 39
+  - ☑️ Code 93
+  - ☑️ Code 128
+  - ☑️ Kix Code
+  - ☑️ Data Matrix
 - ☑️ Barcode Reader - library can read barcodes
 - ☑️ QR Code Reader - library can read QR codes
 - ☑️ Image Combine
@@ -167,6 +173,22 @@ New-ImageChart -ChartsDefinition {
 ```powershell
 Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN13.png
 Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN7.png
+```
+
+### Creating bar codes
+
+Supported values: `Code128`, `Code93`, `Code39`, `KixCode`, `UPCE`, `UPCA`, `EAN`, `DataMatrix`
+
+```powershell
+New-ImageBarCode -Type DataMatrix -Value 'DataMatrixExample' -FilePath $PSScriptRoot\Samples\DataMatrix.png
+New-ImageBarCode -Type Code128 -Value '1234567890' -FilePath $PSScriptRoot\Samples\BarcodeCode128.png
+```
+
+```csharp
+BarCode.Generate(BarCode.BarcodeTypes.DataMatrix, "DataMatrixExample", "DataMatrix.png");
+BarCode.Generate(BarCode.BarcodeTypes.Code128, "1234567890", "BarcodeCode128.png");
+var result = BarCode.Read("DataMatrix.png");
+Console.WriteLine(result.Message);
 ```
 
 ### Image processing

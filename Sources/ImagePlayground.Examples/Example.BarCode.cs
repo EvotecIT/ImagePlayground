@@ -31,5 +31,15 @@ namespace ImagePlayground.Examples {
             var read = BarCode.Read(filePath);
             Console.Write(read.Message);
         }
+
+        public static void DataMatrixSample(string folderPath) {
+            Console.WriteLine("[*] Creating Data Matrix barcode - PNG");
+            string filePath = System.IO.Path.Combine(folderPath, "DataMatrix.png");
+            BarCode.Generate(BarCode.BarcodeTypes.DataMatrix, "DataMatrixExample", filePath);
+
+            Console.WriteLine("[*] Reading Data Matrix barcode:");
+            var read = BarCode.Read(filePath);
+            Console.WriteLine(read.Message);
+        }
     }
 }
