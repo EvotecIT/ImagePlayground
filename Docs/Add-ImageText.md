@@ -48,6 +48,17 @@ ImageHelper.AddText(
 ```
 Adds plain text using C#.
 
+### Example 4
+```csharp
+using SixLabors.ImageSharp;
+
+using var img = Image.Load("input.png");
+img.AddText(10, 10, "Demo", Color.Red, 24);
+img.AddTextBox(10, 40, "Wrapped demo text", 120, Color.Blue, 24);
+img.Save("out2.png");
+```
+Adds both text and a wrapped text box using C#.
+
 ## PARAMETERS
 
 ### -FilePath

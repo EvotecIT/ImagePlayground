@@ -39,5 +39,17 @@ Describe 'Add-ImageText' {
 
     }
 
+    It 'adds text and textbox on same image' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = Join-Path $TestDir 'text_and_box.png'
+        if (Test-Path $dest) { Remove-Item $dest }
+        $img = Get-Image -FilePath $src
+        $img.AddText(10,10,'Demo',[SixLabors.ImageSharp.Color]::Green,12)
+        $img.AddTextBox(10,30,'Long text for wrap',80,[SixLabors.ImageSharp.Color]::Blue,12)
+        Save-Image -Image $img -FilePath $dest
+        $img.Dispose()
+        Test-Path $dest | Should -BeTrue
+    }
+
 }
 

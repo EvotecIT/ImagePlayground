@@ -50,7 +50,6 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ Image Grayscale
 - ☑️ Image Blur
 - ☑️ Image Sharpen
-- ☑️ Image Base64 conversion
 - ☑️ Many more
 
 ## Installation
@@ -201,11 +200,6 @@ WatermarkImage    Method     void WatermarkImage(string filePath, ImagePlaygroun
 ConvertTo-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotec.jpg
 ```
 
-```powershell
-$b64 = ConvertTo-ImageBase64 -FilePath $PSScriptRoot\Samples\LogoEvotec.png
-ConvertFrom-ImageBase64 -Base64 $b64 -OutputPath $PSScriptRoot\Output\FromBase64.png
-```
-
 #### Resizing images
 
 ```powershell
@@ -268,6 +262,20 @@ Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndK
 ```
 
 ![PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg)
+
+#### Add text vs text box
+```powershell
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
+$Image.AddText(50,50,'Add-Text example',[SixLabors.ImageSharp.Color]::Red,32)
+$Image.AddTextBox(50,100,'Add-TextBox wraps this very long line of text inside a specified width to show the difference.',400,[SixLabors.ImageSharp.Color]::Blue,32)
+Save-Image -Image $Image -FilePath $PSScriptRoot\Output\TextAndTextBox.jpg
+```
+```powershell
+$Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
+$Image.AddText(10,10,'Top-left text',[SixLabors.ImageSharp.Color]::Green,24)
+$Image.AddTextBox(10,40,'Add-TextBox with narrow width wraps quickly for comparison.',150,[SixLabors.ImageSharp.Color]::Orange,24)
+Save-Image -Image $Image -FilePath $PSScriptRoot\Output\TextAndTextBox2.jpg
+```
 
 #### Get EXIF data
 
