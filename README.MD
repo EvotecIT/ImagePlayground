@@ -53,6 +53,10 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ Many more
 - ☑️ HEIF/AVIF decoding (Windows, Linux, macOS*)
 
+HEIF/AVIF support is available only when the library is built for .NET 8 or
+newer. PowerShell 5.1 (running on .NET Framework 4.7.2) does not include these
+formats.
+
 Windows and Linux include required native libraries. macOS requires the
 `libheif` package installed separately via Homebrew. On Linux the library
 may also need to be installed using your distribution package manager
