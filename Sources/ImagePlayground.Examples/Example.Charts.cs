@@ -57,6 +57,13 @@ namespace ImagePlayground.Examples {
                 new Charts.ChartAnnotation(1, 12, "first", true)
             };
             Charts.Generate(lines, annotated, 500, 500, null, null, null, false, Charts.ChartTheme.Default, anns);
+
+            Console.WriteLine("[*] Creating Heatmap chart");
+            string heatmap = Path.Combine(folderPath, "ChartsHeatmap.png");
+            var maps = new List<Charts.ChartDefinition> {
+                new Charts.ChartHeatmap("Heat", new double[,] { { 1, 2 }, { 3, 4 } })
+            };
+            Charts.Generate(maps, heatmap, 500, 500);
         }
     }
 }
