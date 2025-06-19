@@ -13,6 +13,10 @@ Locale: en-US
 ## ImagePlayground Cmdlets
 ### [ConvertTo-Image](ConvertTo-Image.md)
 {{ Fill in the Synopsis }}
+### [ConvertTo-ImageBase64](ConvertTo-ImageBase64.md)
+{{ Fill in the Synopsis }}
+### [ConvertFrom-ImageBase64](ConvertFrom-ImageBase64.md)
+{{ Fill in the Synopsis }}
 
 ### [Get-Image](Get-Image.md)
 {{ Fill in the Synopsis }}
@@ -81,10 +85,7 @@ Gets EXIF data from image
 {{ Fill in the Synopsis }}
 
 ### [Add-ImageText](Add-ImageText.md)
-Adds plain text to an image
-
-### [Add-ImageTextBox](Add-ImageTextBox.md)
-Adds wrapped text constrained by a box
+{{ Fill in the Synopsis }}
 
 ### [New-ImageAvatar](New-ImageAvatar.md)
 Creates a rounded avatar from an image
