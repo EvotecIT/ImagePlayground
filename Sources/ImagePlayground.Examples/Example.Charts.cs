@@ -26,9 +26,21 @@ namespace ImagePlayground.Examples {
             Console.WriteLine("[*] Creating Line chart");
             string line = Path.Combine(folderPath, "ChartsLine.png");
             var lines = new List<Charts.ChartDefinition> {
-                new Charts.ChartLine("C#", new List<double> { 5, 10, 12, 18, 10, 13 }),
-                new Charts.ChartLine("C++", new List<double> { 10, 15, 30, 40, 50, 60 }),
-                new Charts.ChartLine("PowerShell", new List<double> { 10, 5, 12, 18, 30, 60 })
+                new Charts.ChartLine(
+                    "C#",
+                    new List<double> { 5, 10, 12, 18, 10, 13 },
+                    markerShape: ScottPlot.MarkerShape.FilledCircle,
+                    markerSize: 7),
+                new Charts.ChartLine(
+                    "C++",
+                    new List<double> { 10, 15, 30, 40, 50, 60 },
+                    markerShape: ScottPlot.MarkerShape.FilledSquare,
+                    markerSize: 7),
+                new Charts.ChartLine(
+                    "PowerShell",
+                    new List<double> { 10, 5, 12, 18, 30, 60 },
+                    markerShape: ScottPlot.MarkerShape.OpenCircle,
+                    markerSize: 7)
             };
             Charts.Generate(lines, line, 500, 500);
 

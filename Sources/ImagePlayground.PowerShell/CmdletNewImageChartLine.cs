@@ -22,8 +22,12 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
     [Parameter]
     public SixLabors.ImageSharp.Color? Color { get; set; }
 
+    /// <summary>Shape of markers placed on data points.</summary>
+    [Parameter]
+    public ScottPlot.MarkerShape Marker { get; set; } = ScottPlot.MarkerShape.None;
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value, Color));
+        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value, Color, Marker));
     }
 }
