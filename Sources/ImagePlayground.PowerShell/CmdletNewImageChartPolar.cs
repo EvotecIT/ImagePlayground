@@ -7,6 +7,10 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Create polar data</summary>
 ///   <code>New-ImageChartPolar -Name 'Series1' -Angle 0,1.57 -Value 1,2 -Color Blue</code>
 /// </example>
+/// <example>
+///   <summary>Create advanced polar data</summary>
+///   <code>New-ImageChartPolar -Name 'Advanced' -Angle 0,1.57,3.14 -Value 1,2,1 -Color Red</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartPolar")]
 public sealed class NewImageChartPolarCmdlet : PSCmdlet {
     /// <summary>Label for the series.</summary>
