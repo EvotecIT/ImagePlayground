@@ -26,5 +26,19 @@ Describe 'New-ImageBarCode' {
 
     }
 
+    It 'creates and reads data matrix code' {
+
+        $file = Join-Path $TestDir 'datamatrix.png'
+
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageBarCode -Type DataMatrix -Value 'MatrixTest' -FilePath $file
+
+        Test-Path $file | Should -BeTrue
+
+        (Get-ImageBarCode -FilePath $file).Message | Should -Be 'MatrixTest'
+
+    }
+
 }
 

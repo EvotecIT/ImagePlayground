@@ -8,7 +8,7 @@ schema: 2.0.0
 # New-ImageBarCode
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Creates a barcode image.
 
 ## SYNTAX
 
@@ -17,21 +17,26 @@ New-ImageBarCode [-Type] <BarcodeTypes> [-Value] <String> [-FilePath] <String> [
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Generates a barcode in the specified format and saves it to a file.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> New-ImageBarCode -Type EAN -Value '9012341234571' -FilePath .\barcode.png
 ```
+Creates an EAN-13 barcode saved as barcode.png.
 
-{{ Add example description here }}
+### Example 2
+```powershell
+PS C:\> New-ImageBarCode -Type DataMatrix -Value 'demo' -FilePath .\matrix.png
+```
+Creates a Data Matrix barcode and saves it as matrix.png.
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path where the barcode image will be written.
 
 ```yaml
 Type: String
@@ -46,13 +51,13 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-{{ Fill Type Description }}
+Barcode format to create.
 
 ```yaml
 Type: BarcodeTypes
 Parameter Sets: (All)
 Aliases:
-Accepted values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN
+Accepted values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix
 
 Required: True
 Position: 0
@@ -62,7 +67,7 @@ Accept wildcard characters: False
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Text value encoded within the barcode.
 
 ```yaml
 Type: String

@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-ImageBarCode
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Reads barcode information from an image file.
 
 ## SYNTAX
 
@@ -17,21 +17,20 @@ Get-ImageBarCode [[-FilePath] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Decodes the barcode stored in an image and returns the read value together with the status.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Get-ImageBarCode -FilePath .\barcode.png
 ```
-
-{{ Add example description here }}
+Returns the value encoded in barcode.png.
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the barcode image to decode.
 
 ```yaml
 Type: String

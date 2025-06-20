@@ -17,3 +17,6 @@ Lib/Standard/*
 Lib/Core/*
 Tests/Artifacts/*
 testResults.xml
+
+dotnet-install.sh
+packages-microsoft-prod.deb
