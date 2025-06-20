@@ -40,4 +40,15 @@ Describe 'New-ImageChart' {
 
         Test-Path $file | Should -BeTrue
     }
+
+    It 'creates a polar chart' -Skip:(-not $IsWindows) {
+        $file = Join-Path $TestDir 'chart_polar.png'
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartPolar -Name 'S1' -Angle @(0,1) -Value @(1,2)
+        } -FilePath $file -Width 200 -Height 150
+
+        Test-Path $file | Should -BeTrue
+    }
 }

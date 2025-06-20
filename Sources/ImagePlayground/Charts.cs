@@ -17,6 +17,8 @@ public static class Charts {
         Line,
         /// <summary>Scatter chart.</summary>
         Scatter,
+        /// <summary>Polar plot.</summary>
+        Polar,
         /// <summary>Pie chart.</summary>
         Pie,
         /// <summary>Radial gauge chart.</summary>
@@ -92,6 +94,24 @@ public static class Charts {
         public ChartScatter(string name, IList<double> x, IList<double> y, ImageColor? color = null) : base(ChartDefinitionType.Scatter, name) {
             X = x;
             Y = y;
+            Color = color;
+        }
+    }
+
+    /// <summary>Polar plot definition.</summary>
+    public sealed class ChartPolar : ChartDefinition {
+        /// <summary>Angle values.</summary>
+        public IList<double> Angle { get; }
+
+        /// <summary>Radius values.</summary>
+        public IList<double> Value { get; }
+
+        /// <summary>Line color.</summary>
+        public ImageColor? Color { get; }
+
+        public ChartPolar(string name, IList<double> angle, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Polar, name) {
+            Angle = angle;
+            Value = value;
             Color = color;
         }
     }
@@ -260,6 +280,17 @@ public static class Charts {
                     if (scatter.Color.HasValue) {
                         var px = scatter.Color.Value.ToPixel<Rgba32>();
                         sc.Color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                    }
+                }
+                plot.ShowLegend();
+                break;
+            case ChartDefinitionType.Polar:
+                foreach (var polar in list.Cast<ChartPolar>()) {
+                    var pp = plot.Add.Polar(polar.Angle.ToArray(), polar.Value.ToArray());
+                    pp.LegendText = polar.Name;
+                    if (polar.Color.HasValue) {
+                        var px = polar.Color.Value.ToPixel<Rgba32>();
+                        pp.Color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
                     }
                 }
                 plot.ShowLegend();
