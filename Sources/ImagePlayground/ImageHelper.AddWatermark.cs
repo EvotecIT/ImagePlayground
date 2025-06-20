@@ -19,5 +19,13 @@ namespace ImagePlayground {
             img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
             img.Save(outFullPath);
         }
+
+        public static void WatermarkImageTiled(string filePath, string outFilePath, string watermarkFilePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+            string fullPath = Helpers.ResolvePath(filePath);
+            string outFullPath = Helpers.ResolvePath(outFilePath);
+            using var img = Image.Load(fullPath);
+            img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
+            img.Save(outFullPath);
+        }
     }
 }
