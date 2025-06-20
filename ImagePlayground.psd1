@@ -30,6 +30,7 @@
         'New-ImageQRCodeWiFi',
         'New-ImageQRContact',
         'New-ImageGif',
+        'New-ImageThumbnail',
         'Remove-ImageExif',
         'Resize-Image',
         'Save-Image',
