@@ -132,6 +132,22 @@ namespace ImagePlayground.Tests {
         }
 
         [Fact]
+        public void Test_LineChart_WithMarkers() {
+            string file = Path.Combine(_directoryWithTests, "chart_line_marker.png");
+            if (File.Exists(file)) File.Delete(file);
+            var defs = new List<Charts.ChartDefinition> {
+                new Charts.ChartLine(
+                    "First",
+                    new List<double>{1,2,3},
+                    null,
+                    ScottPlot.MarkerShape.FilledCircle,
+                    5)
+            };
+            Charts.Generate(defs, file, 300, 200);
+            Assert.True(File.Exists(file));
+        }
+
+        [Fact]
         public void Test_ScatterChart() {
             string file = Path.Combine(_directoryWithTests, "chart_scatter.png");
             if (File.Exists(file)) File.Delete(file);

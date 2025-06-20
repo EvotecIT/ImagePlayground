@@ -8,30 +8,31 @@ schema: 2.0.0
 # New-ImageChartLine
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Creates a line series definition for chart generation.
 
 ## SYNTAX
 
 ```
-New-ImageChartLine [[-Name] <String>] [[-Value] <Array>] [<CommonParameters>]
+New-ImageChartLine [[-Name] <String>] [[-Value] <Array>] [-Color <Color>] [-Marker <MarkerShape>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Creates an object describing a single line series that can be passed to `New-ImageChart`.
+The object includes optional color information and marker shape.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> New-ImageChartLine -Name 'Series' -Value 1,2,3 -Marker FilledCircle
 ```
 
-{{ Add example description here }}
+Creates a line series with circular markers.
 
 ## PARAMETERS
 
 ### -Name
-{{ Fill Name Description }}
+Name displayed in chart legend.
 
 ```yaml
 Type: String
@@ -46,7 +47,13 @@ Accept wildcard characters: False
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Array of Y values for the line.
+
+### -Color
+Optional line color.
+
+### -Marker
+Shape of markers used on data points.
 
 ```yaml
 Type: Array

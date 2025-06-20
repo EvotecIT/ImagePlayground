@@ -74,9 +74,22 @@ public static class Charts {
         /// <summary>Line color.</summary>
         public ImageColor? Color { get; }
 
-        public ChartLine(string name, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Line, name) {
+        /// <summary>Shape of markers used for data points.</summary>
+        public MarkerShape MarkerShape { get; }
+
+        /// <summary>Optional size of the markers.</summary>
+        public float? MarkerSize { get; }
+
+        public ChartLine(
+            string name,
+            IList<double> value,
+            ImageColor? color = null,
+            MarkerShape markerShape = MarkerShape.None,
+            float? markerSize = null) : base(ChartDefinitionType.Line, name) {
             Value = value;
             Color = color;
+            MarkerShape = markerShape;
+            MarkerSize = markerSize;
         }
     }
 
@@ -266,6 +279,9 @@ public static class Charts {
                 foreach (var line in list.Cast<ChartLine>()) {
                     var sig = plot.Add.Signal(line.Value.ToArray());
                     sig.LegendText = line.Name;
+                    sig.MarkerShape = line.MarkerShape;
+                    if (line.MarkerSize.HasValue)
+                        sig.MarkerSize = line.MarkerSize.Value;
                     if (line.Color.HasValue) {
                         var px = line.Color.Value.ToPixel<Rgba32>();
                         sig.LineColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
