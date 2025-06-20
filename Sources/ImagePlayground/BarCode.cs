@@ -13,6 +13,8 @@ using Barcoder.UpcE;
 using BarcodeReader.ImageSharp;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using ZXing;
+using ZXing.Common;
 using Encoding = Barcoder.Qr.Encoding;
 
 namespace ImagePlayground;
@@ -37,7 +39,9 @@ public class BarCode {
         /// <summary>EAN-8/EAN-13 barcode.</summary>
         EAN,
         /// <summary>Data Matrix 2D barcode.</summary>
-        DataMatrix
+        DataMatrix,
+        /// <summary>PDF417 2D barcode.</summary>
+        PDF417
     }
     /// <summary>
     /// Saves the generated barcode image to disk.
@@ -67,6 +71,21 @@ public class BarCode {
 
         using (var stream = new FileStream(fullPath, FileMode.Create)) {
             renderer.Render(barcode, stream);
+        }
+    }
+
+    private static void SaveToFile(Image<Rgba32> image, string filePath) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        FileInfo fileInfo = new FileInfo(fullPath);
+
+        if (fileInfo.Extension == ".png") {
+            image.SaveAsPng(fullPath);
+        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+            image.SaveAsJpeg(fullPath);
+        } else if (fileInfo.Extension == ".bmp") {
+            image.SaveAsBmp(fullPath);
+        } else {
+            throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
         }
     }
 
@@ -130,6 +149,20 @@ public class BarCode {
         SaveToFile(barcode, filePath);
     }
 
+    /// <summary>Generates a PDF417 barcode.</summary>
+    public static void GeneratePdf417(string content, string filePath) {
+        var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32> {
+            Format = BarcodeFormat.PDF_417,
+            Options = new EncodingOptions {
+                Width = 300,
+                Height = 150,
+                Margin = 1
+            }
+        };
+        using Image<Rgba32> image = writer.Write(content);
+        SaveToFile(image, filePath);
+    }
+
     /// <summary>
     /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
     /// </summary>
@@ -150,6 +183,8 @@ public class BarCode {
             GenerateEan(content, filePath);
         } else if (barcodeType == BarcodeTypes.DataMatrix) {
             GenerateDataMatrix(content, filePath);
+        } else if (barcodeType == BarcodeTypes.PDF417) {
+            GeneratePdf417(content, filePath);
         }
     }
 
@@ -162,7 +197,7 @@ public class BarCode {
         string fullPath = Helpers.ResolvePath(filePath);
 
         using (Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath)) {
-            BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX });
+            BarcodeReader.ImageSharp.BarcodeReader<Rgba32> reader = new(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX, ZXing.BarcodeFormat.PDF_417 });
             var response = reader.Decode(barcodeImage);
             return response;
         }
