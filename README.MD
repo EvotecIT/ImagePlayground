@@ -3,6 +3,7 @@
   <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/v/ImagePlayground.svg?style=flat-square"></a>
   <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square"></a>
   <a href="https://github.com/EvotecIT/ImagePlayground"><img src="https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg?style=flat-square"></a>
+  <a href="https://app.codecov.io/gh/EvotecIT/ImagePlayground"><img src="https://img.shields.io/codecov/c/github/EvotecIT/ImagePlayground?style=flat-square"></a>
 </p>
 
 <p align="center">
