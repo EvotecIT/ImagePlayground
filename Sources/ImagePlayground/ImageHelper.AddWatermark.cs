@@ -2,30 +2,29 @@ using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
-namespace ImagePlayground {
-    public partial class ImageHelper {
-        public static void WatermarkImage(string filePath, string outFilePath, string watermarkFilePath, Image.WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-            string fullPath = Helpers.ResolvePath(filePath);
-            string outFullPath = Helpers.ResolvePath(outFilePath);
-            using var img = Image.Load(fullPath);
-            img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage);
-            img.Save(outFullPath);
-        }
+namespace ImagePlayground;
+public partial class ImageHelper {
+    public static void WatermarkImage(string filePath, string outFilePath, string watermarkFilePath, Image.WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        using var img = Image.Load(fullPath);
+        img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage);
+        img.Save(outFullPath);
+    }
 
-        public static void WatermarkImage(string filePath, string outFilePath, string watermarkFilePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-            string fullPath = Helpers.ResolvePath(filePath);
-            string outFullPath = Helpers.ResolvePath(outFilePath);
-            using var img = Image.Load(fullPath);
-            img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
-            img.Save(outFullPath);
-        }
+    public static void WatermarkImage(string filePath, string outFilePath, string watermarkFilePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        using var img = Image.Load(fullPath);
+        img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
+        img.Save(outFullPath);
+    }
 
-        public static void WatermarkImageTiled(string filePath, string outFilePath, string watermarkFilePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-            string fullPath = Helpers.ResolvePath(filePath);
-            string outFullPath = Helpers.ResolvePath(outFilePath);
-            using var img = Image.Load(fullPath);
-            img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
-            img.Save(outFullPath);
-        }
+    public static void WatermarkImageTiled(string filePath, string outFilePath, string watermarkFilePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        using var img = Image.Load(fullPath);
+        img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
+        img.Save(outFullPath);
     }
 }
