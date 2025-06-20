@@ -20,6 +20,7 @@
         'New-ImageChartBarOptions',
         'New-ImageChartLine',
         'New-ImageChartScatter',
+        'New-ImageChartPolar',
         'New-ImageChartPie',
         'New-ImageChartRadial',
         'New-ImageChartHeatmap',
