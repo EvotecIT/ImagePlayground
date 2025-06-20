@@ -1,9 +1,9 @@
-using System.IO;
+using ImagePlayground;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using PointF = SixLabors.ImageSharp.PointF;
-using ImagePlayground;
+using System.IO;
 using Xunit;
+using PointF = SixLabors.ImageSharp.PointF;
 
 namespace ImagePlayground.Tests {
     public partial class ImagePlayground {
