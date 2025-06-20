@@ -57,7 +57,7 @@ Barcode format to create.
 Type: BarcodeTypes
 Parameter Sets: (All)
 Aliases:
-Accepted values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix
+Accepted values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, PDF417
 
 Required: True
 Position: 0
