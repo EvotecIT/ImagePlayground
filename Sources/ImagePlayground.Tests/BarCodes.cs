@@ -1,8 +1,9 @@
-using BarcodeReader.ImageSharp;
 using System.IO;
+using BarcodeReader.ImageSharp;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
 public partial class ImagePlayground {
     [Theory]
     [InlineData(BarCode.BarcodeTypes.Code128, "1234567890", "barcode_code128.png", "1234567890", Status.Found)]
@@ -13,6 +14,7 @@ public partial class ImagePlayground {
     [InlineData(BarCode.BarcodeTypes.UPCA, "123456789012", "barcode_upca.png", "123456789012", Status.Found)]
     [InlineData(BarCode.BarcodeTypes.EAN, "9012341234571", "barcode_ean.png", "9012341234571", Status.Found)]
     [InlineData(BarCode.BarcodeTypes.DataMatrix, "MatrixTest", "barcode_datamatrix.png", "MatrixTest", Status.Found)]
+    [InlineData(BarCode.BarcodeTypes.PDF417, "Pdf417Example", "barcode_pdf417.png", "Pdf417Example", Status.Found)]
     public void Test_AllBarCodes(BarCode.BarcodeTypes type, string value, string fileName, string expected, Status status) {
         string filePath = Path.Combine(_directoryWithTests, fileName);
         if (File.Exists(filePath)) File.Delete(filePath);

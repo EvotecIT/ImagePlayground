@@ -208,16 +208,18 @@ Get-ImageBarCode -FilePath $PSScriptRoot\Samples\BarcodeEAN7.png
 
 ### Creating bar codes
 
-Supported values: `Code128`, `Code93`, `Code39`, `KixCode`, `UPCE`, `UPCA`, `EAN`, `DataMatrix`
+Supported values: `Code128`, `Code93`, `Code39`, `KixCode`, `UPCE`, `UPCA`, `EAN`, `DataMatrix`, `PDF417`
 
 ```powershell
 New-ImageBarCode -Type DataMatrix -Value 'DataMatrixExample' -FilePath $PSScriptRoot\Samples\DataMatrix.png
 New-ImageBarCode -Type Code128 -Value '1234567890' -FilePath $PSScriptRoot\Samples\BarcodeCode128.png
+New-ImageBarCode -Type PDF417 -Value 'Pdf417Example' -FilePath $PSScriptRoot\Samples\Pdf417.png
 ```
 
 ```csharp
 BarCode.Generate(BarCode.BarcodeTypes.DataMatrix, "DataMatrixExample", "DataMatrix.png");
 BarCode.Generate(BarCode.BarcodeTypes.Code128, "1234567890", "BarcodeCode128.png");
+BarCode.Generate(BarCode.BarcodeTypes.PDF417, "Pdf417Example", "Pdf417.png");
 var result = BarCode.Read("DataMatrix.png");
 Console.WriteLine(result.Message);
 ```

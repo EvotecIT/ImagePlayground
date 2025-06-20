@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ImagePlayground.Examples;
+
 internal partial class Example {
     public static void BarCodes1(string folderPath) {
         //string filePath = System.IO.Path.Combine(folderPath, "QR.png");
@@ -41,4 +42,15 @@ internal partial class Example {
         var read = BarCode.Read(filePath);
         Console.WriteLine(read.Message);
     }
+
+    public static void Pdf417Sample(string folderPath) {
+        Console.WriteLine("[*] Creating PDF417 barcode - PNG");
+        string filePath = System.IO.Path.Combine(folderPath, "Pdf417.png");
+        BarCode.Generate(BarCode.BarcodeTypes.PDF417, "Pdf417Example", filePath);
+
+        Console.WriteLine("[*] Reading PDF417 barcode:");
+        var read = BarCode.Read(filePath);
+        Console.WriteLine(read.Message);
+    }
 }
+
