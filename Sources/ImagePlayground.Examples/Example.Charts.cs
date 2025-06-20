@@ -64,6 +64,13 @@ namespace ImagePlayground.Examples {
                 new Charts.ChartHeatmap("Heat", new double[,] { { 1, 2 }, { 3, 4 } })
             };
             Charts.Generate(maps, heatmap, 500, 500);
+
+            Console.WriteLine("[*] Creating Histogram chart");
+            string hist = Path.Combine(folderPath, "ChartsHistogram.png");
+            var hists = new List<Charts.ChartDefinition> {
+                new Charts.ChartHistogram("Data", new double[] { 1, 2, 3, 3, 4, 5 }, 2)
+            };
+            Charts.Generate(hists, hist, 500, 500);
         }
     }
 }
