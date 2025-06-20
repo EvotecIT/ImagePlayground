@@ -23,6 +23,7 @@
         'New-ImageChartPie',
         'New-ImageChartRadial',
         'New-ImageChartHeatmap',
+        'New-ImageChartHistogram',
         'New-ImageGrid',
         'New-ImageIcon',
         'New-ImageQRCode',

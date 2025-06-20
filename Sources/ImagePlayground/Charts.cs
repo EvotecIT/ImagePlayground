@@ -22,7 +22,9 @@ public static class Charts {
         /// <summary>Radial gauge chart.</summary>
         Radial,
         /// <summary>Heatmap chart.</summary>
-        Heatmap
+        Heatmap,
+        /// <summary>Histogram chart.</summary>
+        Histogram
     }
 
     /// <summary>Available chart themes.</summary>
@@ -129,6 +131,20 @@ public static class Charts {
 
         public ChartHeatmap(string name, double[,] data) : base(ChartDefinitionType.Heatmap, name) {
             Data = data;
+        }
+    }
+
+    /// <summary>Histogram chart definition.</summary>
+    public sealed class ChartHistogram : ChartDefinition {
+        /// <summary>Values for the histogram.</summary>
+        public double[] Values { get; }
+
+        /// <summary>Size of each bin.</summary>
+        public int? BinSize { get; }
+
+        public ChartHistogram(string name, double[] values, int? binSize = null) : base(ChartDefinitionType.Histogram, name) {
+            Values = values;
+            BinSize = binSize;
         }
     }
 
@@ -282,6 +298,19 @@ public static class Charts {
                 foreach (var map in list.Cast<ChartHeatmap>()) {
                     plot.Add.Heatmap(map.Data);
                 }
+                break;
+            case ChartDefinitionType.Histogram:
+                foreach (var hist in list.Cast<ChartHistogram>()) {
+                    var histogram = hist.BinSize.HasValue
+                        ? ScottPlot.Statistics.Histogram.WithBinSize(hist.BinSize.Value, hist.Values)
+                        : ScottPlot.Statistics.Histogram.WithBinCount(10, hist.Values);
+                    var bp = plot.Add.Bars(histogram.Bins, histogram.Counts);
+                    bp.LegendText = hist.Name;
+                    foreach (var bar in bp.Bars) {
+                        bar.Size = histogram.FirstBinSize * 0.8;
+                    }
+                }
+                plot.ShowLegend();
                 break;
         }
 
