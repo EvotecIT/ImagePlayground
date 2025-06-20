@@ -15,157 +15,156 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Encoding = Barcoder.Qr.Encoding;
 
-namespace ImagePlayground {
+namespace ImagePlayground;
+/// <summary>
+/// Helper methods for generating and reading barcodes.
+/// </summary>
+public class BarCode {
+    /// <summary>Supported barcode formats.</summary>
+    public enum BarcodeTypes {
+        /// <summary>Code 128 barcode.</summary>
+        Code128,
+        /// <summary>Code 93 barcode.</summary>
+        Code93,
+        /// <summary>Code 39 barcode.</summary>
+        Code39,
+        /// <summary>KIX code used by Dutch Post.</summary>
+        KixCode,
+        /// <summary>UPC-E barcode.</summary>
+        UPCE,
+        /// <summary>UPC-A barcode.</summary>
+        UPCA,
+        /// <summary>EAN-8/EAN-13 barcode.</summary>
+        EAN,
+        /// <summary>Data Matrix 2D barcode.</summary>
+        DataMatrix
+    }
     /// <summary>
-    /// Helper methods for generating and reading barcodes.
+    /// Saves the generated barcode image to disk.
     /// </summary>
-    public class BarCode {
-        /// <summary>Supported barcode formats.</summary>
-        public enum BarcodeTypes {
-            /// <summary>Code 128 barcode.</summary>
-            Code128,
-            /// <summary>Code 93 barcode.</summary>
-            Code93,
-            /// <summary>Code 39 barcode.</summary>
-            Code39,
-            /// <summary>KIX code used by Dutch Post.</summary>
-            KixCode,
-            /// <summary>UPC-E barcode.</summary>
-            UPCE,
-            /// <summary>UPC-A barcode.</summary>
-            UPCA,
-            /// <summary>EAN-8/EAN-13 barcode.</summary>
-            EAN,
-            /// <summary>Data Matrix 2D barcode.</summary>
-            DataMatrix
-        }
-        /// <summary>
-        /// Saves the generated barcode image to disk.
-        /// </summary>
-        /// <param name="barcode">Barcode to render.</param>
-        /// <param name="filePath">Destination file path.</param>
-        private static void SaveToFile(IBarcode barcode, string filePath) {
-            string fullPath = Helpers.ResolvePath(filePath);
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="filePath">Destination file path.</param>
+    private static void SaveToFile(IBarcode barcode, string filePath) {
+        string fullPath = Helpers.ResolvePath(filePath);
 
-            ImageFormat imageFormatDetected;
-            FileInfo fileInfo = new FileInfo(fullPath);
+        ImageFormat imageFormatDetected;
+        FileInfo fileInfo = new FileInfo(fullPath);
 
-            if (fileInfo.Extension == ".png") {
-                imageFormatDetected = ImageFormat.Png;
-            } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                imageFormatDetected = ImageFormat.Jpeg;
-            } else if (fileInfo.Extension == ".bmp") {
-                imageFormatDetected = ImageFormat.Bmp;
-            } else {
-                throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-            }
-
-            var options = new ImageRendererOptions();
-            options.ImageFormat = imageFormatDetected;
-            var renderer = new ImageRenderer(options);
-            //var renderer = new ImageRenderer(imageFormat: imageFormatDetected);
-
-            using (var stream = new FileStream(fullPath, FileMode.Create)) {
-                renderer.Render(barcode, stream);
-            }
+        if (fileInfo.Extension == ".png") {
+            imageFormatDetected = ImageFormat.Png;
+        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+            imageFormatDetected = ImageFormat.Jpeg;
+        } else if (fileInfo.Extension == ".bmp") {
+            imageFormatDetected = ImageFormat.Bmp;
+        } else {
+            throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
         }
 
-        /// <summary>Generates a QR code.</summary>
-        /// <param name="content">Value encoded in the QR code.</param>
-        /// <param name="filePath">Destination file path.</param>
-        /// <param name="errorCorrectionLevel">Error correction level.</param>
-        /// <param name="encoding">Text encoding.</param>
-        public static void GenerateQr(string content, string filePath, ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.H, Encoding encoding = Encoding.Auto) {
-            var barcode = QrEncoder.Encode(content, errorCorrectionLevel, encoding);
-            SaveToFile(barcode, filePath);
+        var options = new ImageRendererOptions();
+        options.ImageFormat = imageFormatDetected;
+        var renderer = new ImageRenderer(options);
+        //var renderer = new ImageRenderer(imageFormat: imageFormatDetected);
+
+        using (var stream = new FileStream(fullPath, FileMode.Create)) {
+            renderer.Render(barcode, stream);
         }
+    }
 
-        /// <summary>Generates an EAN barcode.</summary>
-        /// <param name="content">Value encoded in the barcode.</param>
-        /// <param name="filePath">Destination file path.</param>
-        public static void GenerateEan(string content, string filePath) {
-            var barcode = EanEncoder.Encode(content);
-            SaveToFile(barcode, filePath);
+    /// <summary>Generates a QR code.</summary>
+    /// <param name="content">Value encoded in the QR code.</param>
+    /// <param name="filePath">Destination file path.</param>
+    /// <param name="errorCorrectionLevel">Error correction level.</param>
+    /// <param name="encoding">Text encoding.</param>
+    public static void GenerateQr(string content, string filePath, ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.H, Encoding encoding = Encoding.Auto) {
+        var barcode = QrEncoder.Encode(content, errorCorrectionLevel, encoding);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates an EAN barcode.</summary>
+    /// <param name="content">Value encoded in the barcode.</param>
+    /// <param name="filePath">Destination file path.</param>
+    public static void GenerateEan(string content, string filePath) {
+        var barcode = EanEncoder.Encode(content);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a Code 128 barcode.</summary>
+    public static void GenerateCode128(string content, string filePath, bool includeChecksum = true) {
+        var barcode = Code128Encoder.Encode(content, includeChecksum);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a Code 93 barcode.</summary>
+    public static void GenerateCode93(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false) {
+        var barcode = Code93Encoder.Encode(content, includeChecksum, fullAsciiMode);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a Code 39 barcode.</summary>
+    public static void GenerateCode39(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false) {
+        var barcode = Code39Encoder.Encode(content, includeChecksum, fullAsciiMode);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a UPC-E barcode.</summary>
+    public static void GenerateUpcE(string content, string filePath, UpcENumberSystem upcNumberSystem = UpcENumberSystem.Zero) {
+        var barcode = UpcEEncoder.Encode(content, upcNumberSystem);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a UPC-A barcode.</summary>
+    public static void GenerateUpcA(string content, string filePath) {
+        var barcode = UpcAEncoder.Encode(content);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a KIX barcode.</summary>
+    public static void GenerateKix(string content, string filePath) {
+        var barcode = KixEncoder.Encode(content);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>Generates a Data Matrix barcode.</summary>
+    public static void GenerateDataMatrix(string content, string filePath) {
+        var barcode = DataMatrixEncoder.Encode(content);
+        SaveToFile(barcode, filePath);
+    }
+
+    /// <summary>
+    /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
+    /// </summary>
+    public static void Generate(BarcodeTypes barcodeType, string content, string filePath) {
+        if (barcodeType == BarcodeTypes.Code128) {
+            GenerateCode128(content, filePath);
+        } else if (barcodeType == BarcodeTypes.Code93) {
+            GenerateCode93(content, filePath);
+        } else if (barcodeType == BarcodeTypes.Code39) {
+            GenerateCode39(content, filePath);
+        } else if (barcodeType == BarcodeTypes.KixCode) {
+            GenerateKix(content, filePath);
+        } else if (barcodeType == BarcodeTypes.UPCA) {
+            GenerateUpcA(content, filePath);
+        } else if (barcodeType == BarcodeTypes.UPCE) {
+            GenerateUpcE(content, filePath);
+        } else if (barcodeType == BarcodeTypes.EAN) {
+            GenerateEan(content, filePath);
+        } else if (barcodeType == BarcodeTypes.DataMatrix) {
+            GenerateDataMatrix(content, filePath);
         }
+    }
 
-        /// <summary>Generates a Code 128 barcode.</summary>
-        public static void GenerateCode128(string content, string filePath, bool includeChecksum = true) {
-            var barcode = Code128Encoder.Encode(content, includeChecksum);
-            SaveToFile(barcode, filePath);
-        }
+    /// <summary>
+    /// Reads and decodes a barcode from an image.
+    /// </summary>
+    /// <param name="filePath">Path to the barcode image.</param>
+    /// <returns>Decoded barcode result.</returns>
+    public static BarcodeResult<Rgba32> Read(string filePath) {
+        string fullPath = Helpers.ResolvePath(filePath);
 
-        /// <summary>Generates a Code 93 barcode.</summary>
-        public static void GenerateCode93(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false) {
-            var barcode = Code93Encoder.Encode(content, includeChecksum, fullAsciiMode);
-            SaveToFile(barcode, filePath);
-        }
-
-        /// <summary>Generates a Code 39 barcode.</summary>
-        public static void GenerateCode39(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false) {
-            var barcode = Code39Encoder.Encode(content, includeChecksum, fullAsciiMode);
-            SaveToFile(barcode, filePath);
-        }
-
-        /// <summary>Generates a UPC-E barcode.</summary>
-        public static void GenerateUpcE(string content, string filePath, UpcENumberSystem upcNumberSystem = UpcENumberSystem.Zero) {
-            var barcode = UpcEEncoder.Encode(content, upcNumberSystem);
-            SaveToFile(barcode, filePath);
-        }
-
-        /// <summary>Generates a UPC-A barcode.</summary>
-        public static void GenerateUpcA(string content, string filePath) {
-            var barcode = UpcAEncoder.Encode(content);
-            SaveToFile(barcode, filePath);
-        }
-
-        /// <summary>Generates a KIX barcode.</summary>
-        public static void GenerateKix(string content, string filePath) {
-            var barcode = KixEncoder.Encode(content);
-            SaveToFile(barcode, filePath);
-        }
-
-        /// <summary>Generates a Data Matrix barcode.</summary>
-        public static void GenerateDataMatrix(string content, string filePath) {
-            var barcode = DataMatrixEncoder.Encode(content);
-            SaveToFile(barcode, filePath);
-        }
-
-        /// <summary>
-        /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
-        /// </summary>
-        public static void Generate(BarcodeTypes barcodeType, string content, string filePath) {
-            if (barcodeType == BarcodeTypes.Code128) {
-                GenerateCode128(content, filePath);
-            } else if (barcodeType == BarcodeTypes.Code93) {
-                GenerateCode93(content, filePath);
-            } else if (barcodeType == BarcodeTypes.Code39) {
-                GenerateCode39(content, filePath);
-            } else if (barcodeType == BarcodeTypes.KixCode) {
-                GenerateKix(content, filePath);
-            } else if (barcodeType == BarcodeTypes.UPCA) {
-                GenerateUpcA(content, filePath);
-            } else if (barcodeType == BarcodeTypes.UPCE) {
-                GenerateUpcE(content, filePath);
-            } else if (barcodeType == BarcodeTypes.EAN) {
-                GenerateEan(content, filePath);
-            } else if (barcodeType == BarcodeTypes.DataMatrix) {
-                GenerateDataMatrix(content, filePath);
-            }
-        }
-
-        /// <summary>
-        /// Reads and decodes a barcode from an image.
-        /// </summary>
-        /// <param name="filePath">Path to the barcode image.</param>
-        /// <returns>Decoded barcode result.</returns>
-        public static BarcodeResult<Rgba32> Read(string filePath) {
-            string fullPath = Helpers.ResolvePath(filePath);
-
-            using (Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath)) {
-                BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX });
-                var response = reader.Decode(barcodeImage);
-                return response;
-            }
+        using (Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath)) {
+            BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX });
+            var response = reader.Decode(barcodeImage);
+            return response;
         }
     }
 }
