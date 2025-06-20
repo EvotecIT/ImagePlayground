@@ -58,6 +58,10 @@ namespace ImagePlayground.PowerShell {
         [Parameter]
         public int WatermarkPercentage { get; set; } = 20;
 
+        /// <summary>Tile watermark across the image with given spacing.</summary>
+        [Parameter]
+        public int? Spacing { get; set; }
+
         /// <inheritdoc />
         protected override void ProcessRecord() {
             var filePath = Helpers.ResolvePath(FilePath);
@@ -72,7 +76,9 @@ namespace ImagePlayground.PowerShell {
             }
             var output = Helpers.ResolvePath(OutputPath);
 
-            if (ParameterSetName == ParameterSetCoordinates) {
+            if (Spacing != null) {
+                ImagePlayground.ImageHelper.WatermarkImageTiled(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage);
+            } else if (ParameterSetName == ParameterSetCoordinates) {
                 ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
             } else {
                 ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
