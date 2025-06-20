@@ -25,6 +25,7 @@
         'New-ImageChartRadial',
         'New-ImageChartHeatmap',
         'New-ImageChartHistogram',
+        'New-ImageCrop',
         'New-ImageGrid',
         'New-ImageIcon',
         'New-ImageQRCode',
