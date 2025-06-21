@@ -1,23 +1,23 @@
-﻿<p align="center">
-  <a href="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml"><img src="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml/badge.svg?branch=master"/></a>
-  <a href="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml"><img src="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master"/></a>
-  <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/v/ImagePlayground.svg?style=flat-square"></a>
-  <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square"></a>
-  <a href="https://github.com/EvotecIT/ImagePlayground"><img src="https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg?style=flat-square"></a>
-  <a href="https://app.codecov.io/gh/EvotecIT/ImagePlayground"><img src="https://img.shields.io/codecov/c/github/EvotecIT/ImagePlayground?style=flat-square"></a>
+<p align="center">
+  [![.NET tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml)
+  [![PowerShell tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml)
+  [![Gallery](https://img.shields.io/powershellgallery/v/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
+  [![Gallery Preview](https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
+  [![License](https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
+  [![Codecov](https://img.shields.io/codecov/c/github/EvotecIT/ImagePlayground?style=flat-square)](https://app.codecov.io/gh/EvotecIT/ImagePlayground)
 </p>
 
 <p align="center">
-  <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/p/ImagePlayground.svg?style=flat-square"></a>
-  <a href="https://github.com/EvotecIT/ImagePlayground"><img src="https://img.shields.io/github/languages/top/evotecit/ImagePlayground.svg?style=flat-square"></a>
-  <a href="https://github.com/EvotecIT/ImagePlayground"><img src="https://img.shields.io/github/languages/code-size/evotecit/ImagePlayground.svg?style=flat-square"></a>
-  <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/dt/ImagePlayground.svg?style=flat-square"></a>
+  [![PowerShell Gallery downloads](https://img.shields.io/powershellgallery/p/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
+  [![Top language](https://img.shields.io/github/languages/top/evotecit/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
+  [![Code size](https://img.shields.io/github/languages/code-size/evotecit/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
+  [![Downloads](https://img.shields.io/powershellgallery/dt/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
 </p>
 
 <p align="center">
-  <a href="https://twitter.com/PrzemyslawKlys"><img src="https://img.shields.io/twitter/follow/PrzemyslawKlys.svg?label=Twitter%20%40PrzemyslawKlys&style=flat-square&logo=twitter"></a>
-  <a href="https://evotec.xyz/hub"><img src="https://img.shields.io/badge/Blog-evotec.xyz-2A6496.svg?style=flat-square"></a>
-  <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square"></a>
+  [![Twitter](https://img.shields.io/twitter/follow/PrzemyslawKlys.svg?label=Twitter%20%40PrzemyslawKlys&style=flat-square&logo=twitter)](https://twitter.com/PrzemyslawKlys)
+  [![Blog](https://img.shields.io/badge/Blog-evotec.xyz-2A6496.svg?style=flat-square)](https://evotec.xyz/hub)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square)](https://www.linkedin.com/in/pklys)
 </p>
 
 `ImagePlayground` is a C# library and a PowerShell module that allows you to play with images in different ways.
@@ -28,7 +28,7 @@ It provides way to add watermark to images - either by text or by image.
 
 ## Known Issues
 
-This module will work fine for PowerShell 5.1 and PowerShell 7+. It works on Windows, Linux and macOS, with an exception to support of charts on Linux and macOS. There is a plan to add support for charts on Linux and macOS in the future.
+This module works on PowerShell 5.1 and PowerShell 7+. It runs on Windows, Linux and macOS with full chart support on every platform.
 
 **Currently the module has a problem when running in VSCode PowerShell extension when on PowerShell 5.1 (other versions work fine!)**
 It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
@@ -51,55 +51,55 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 
 ## Available Cmdlets
 
-`Add-ImageText` - Adds text to an image at the provided coordinates and writes the updated image to disk.
-`Add-ImageTextBox` - Adds wrapped text to an image within a box.
-`Add-ImageWatermark` - Adds a watermark image to another image.
-`Compare-Image` - Compares two images and optionally saves a difference mask.
-`ConvertFrom-ImageBase64` - Converts a Base64 encoded string into an image file.
-`ConvertTo-Image` - Converts an image to a different format.
-`ConvertTo-ImageBase64` - Converts an image file into a Base64 encoded string.
-`Get-Image` - Loads an image from disk.
-`Get-ImageBarCode` - Reads barcode information from an image file.
-`Get-ImageExif` - Gets EXIF metadata from an image.
-`Get-ImageQRCode` - Reads QR code information from an image file.
-`Merge-Image` - Merges two images and saves the result.
-`New-ImageAvatar` - Creates a rounded avatar image.
-`New-ImageBarCode` - Creates a barcode image.
-`New-ImageChart` - Creates an image chart from definitions.
-`New-ImageChartAnnotation` - Creates chart annotation data item.
-`New-ImageChartBar` - Creates bar chart data item.
-`New-ImageChartBarOptions` - Creates bar chart options.
-`New-ImageChartHeatmap` - Creates heatmap chart data item.
-`New-ImageChartHistogram` - Creates histogram chart data item.
-`New-ImageChartLine` - Creates line chart data item.
-`New-ImageChartPie` - Creates pie chart data item.
-`New-ImageChartPolar` - Creates polar chart data item.
-`New-ImageChartRadial` - Creates radial gauge chart data item.
-`New-ImageChartScatter` - Creates scatter chart data item.
-`New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
-`New-ImageGif` - Creates an animated GIF from existing images.
-`New-ImageGrid` - Creates a simple grid-based image.
-`New-ImageIcon` - Creates an icon file from an image.
-`New-ImageQRCode` - Generates a QR code image.
-`New-ImageQRCodeBezahlCode` - Generates a BezahlCode QR for German payments.
-`New-ImageQRCodeBitcoin` - Generates a QR code for Bitcoin-like payments.
-`New-ImageQRCodeGeoLocation` - Generates a QR code with geolocation data.
-`New-ImageQRCodeGirocode` - Generates a Girocode QR code.
-`New-ImageQRCodeMonero` - Generates a QR code for a Monero transaction.
-`New-ImageQRCodeOtp` - Generates a QR code for one-time-password configuration.
-`New-ImageQRCodePhoneNumber` - Generates a QR code for dialling a phone number.
-`New-ImageQRCodeShadowSocks` - Generates a QR code for a Shadowsocks configuration.
-`New-ImageQRCodeSkypeCall` - Generates a QR code initiating a Skype call.
-`New-ImageQRCodeSlovenianUpnQr` - Generates a Slovenian UPN QR payment code.
-`New-ImageQRCodeSms` - Generates a QR code containing an SMS message.
-`New-ImageQRCodeSwiss` - Generates a Swiss QR payment code.
-`New-ImageQRCodeWiFi` - Creates a WiFi QR code image.
-`New-ImageQRContact` - Generates a QR code image containing the provided contact details.
-`New-ImageThumbnail` - Creates thumbnails for all images in a directory.
-`Remove-ImageExif` - Removes EXIF metadata from an image.
-`Resize-Image` - Resizes an image.
-`Save-Image` - Saves an image to disk.
-`Set-ImageExif` - Sets an EXIF tag value in an image.
+- `Add-ImageText` - Adds text to an image at the provided coordinates and writes the updated image to disk.
+- `Add-ImageTextBox` - Adds wrapped text to an image within a box.
+- `Add-ImageWatermark` - Adds a watermark image to another image.
+- `Compare-Image` - Compares two images and optionally saves a difference mask.
+- `ConvertFrom-ImageBase64` - Converts a Base64 encoded string into an image file.
+- `ConvertTo-Image` - Converts an image to a different format.
+- `ConvertTo-ImageBase64` - Converts an image file into a Base64 encoded string.
+- `Get-Image` - Loads an image from disk.
+- `Get-ImageBarCode` - Reads barcode information from an image file.
+- `Get-ImageExif` - Gets EXIF metadata from an image.
+- `Get-ImageQRCode` - Reads QR code information from an image file.
+- `Merge-Image` - Merges two images and saves the result.
+- `New-ImageAvatar` - Creates a rounded avatar image.
+- `New-ImageBarCode` - Creates a barcode image.
+- `New-ImageChart` - Creates an image chart from definitions.
+- `New-ImageChartAnnotation` - Creates chart annotation data item.
+- `New-ImageChartBar` - Creates bar chart data item.
+- `New-ImageChartBarOptions` - Creates bar chart options.
+- `New-ImageChartHeatmap` - Creates heatmap chart data item.
+- `New-ImageChartHistogram` - Creates histogram chart data item.
+- `New-ImageChartLine` - Creates line chart data item.
+- `New-ImageChartPie` - Creates pie chart data item.
+- `New-ImageChartPolar` - Creates polar chart data item.
+- `New-ImageChartRadial` - Creates radial gauge chart data item.
+- `New-ImageChartScatter` - Creates scatter chart data item.
+- `New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
+- `New-ImageGif` - Creates an animated GIF from existing images.
+- `New-ImageGrid` - Creates a simple grid-based image.
+- `New-ImageIcon` - Creates an icon file from an image.
+- `New-ImageQRCode` - Generates a QR code image.
+- `New-ImageQRCodeBezahlCode` - Generates a BezahlCode QR for German payments.
+- `New-ImageQRCodeBitcoin` - Generates a QR code for Bitcoin-like payments.
+- `New-ImageQRCodeGeoLocation` - Generates a QR code with geolocation data.
+- `New-ImageQRCodeGirocode` - Generates a Girocode QR code.
+- `New-ImageQRCodeMonero` - Generates a QR code for a Monero transaction.
+- `New-ImageQRCodeOtp` - Generates a QR code for one-time-password configuration.
+- `New-ImageQRCodePhoneNumber` - Generates a QR code for dialling a phone number.
+- `New-ImageQRCodeShadowSocks` - Generates a QR code for a Shadowsocks configuration.
+- `New-ImageQRCodeSkypeCall` - Generates a QR code initiating a Skype call.
+- `New-ImageQRCodeSlovenianUpnQr` - Generates a Slovenian UPN QR payment code.
+- `New-ImageQRCodeSms` - Generates a QR code containing an SMS message.
+- `New-ImageQRCodeSwiss` - Generates a Swiss QR payment code.
+- `New-ImageQRCodeWiFi` - Creates a WiFi QR code image.
+- `New-ImageQRContact` - Generates a QR code image containing the provided contact details.
+- `New-ImageThumbnail` - Creates thumbnails for all images in a directory.
+- `Remove-ImageExif` - Removes EXIF metadata from an image.
+- `Resize-Image` - Resizes an image.
+- `Save-Image` - Saves an image to disk.
+- `Set-ImageExif` - Sets an EXIF tag value in an image.
 
 ## Installation
 
