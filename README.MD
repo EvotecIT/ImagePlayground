@@ -1,5 +1,5 @@
-  [![.NET tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml)
-  [![PowerShell tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml)
+  [![.NET tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml/badge.svg?branch=master&style=flat-square)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml)
+  [![PowerShell tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master&style=flat-square)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml)
   [![Gallery](https://img.shields.io/powershellgallery/v/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
   [![Gallery Preview](https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
   [![License](https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
