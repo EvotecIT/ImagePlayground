@@ -8,15 +8,17 @@ Locale: en-US
 
 # ImagePlayground Module
 ## Description
-{{ Fill in the Description }}
+ImagePlayground is a PowerShell module for creating and editing images. It can
+generate QR codes, barcodes and charts as well as perform basic processing such
+as resizing or adding text.
 
 ## ImagePlayground Cmdlets
 ### [ConvertTo-Image](ConvertTo-Image.md)
-{{ Fill in the Synopsis }}
+Converts an image to another format.
 ### [ConvertTo-ImageBase64](ConvertTo-ImageBase64.md)
-{{ Fill in the Synopsis }}
+Returns a Base64 encoded representation of an image file.
 ### [ConvertFrom-ImageBase64](ConvertFrom-ImageBase64.md)
-{{ Fill in the Synopsis }}
+Creates an image file from a Base64 string.
 
 ### [Get-Image](Get-Image.md)
 {{ Fill in the Synopsis }}
@@ -121,7 +123,7 @@ Creates a Swiss QR invoice code.
 {{ Fill in the Synopsis }}
 
 ### [Add-ImageText](Add-ImageText.md)
-{{ Fill in the Synopsis }}
+Places text onto an image at specified coordinates.
 
 ### [New-ImageAvatar](New-ImageAvatar.md)
 Creates a rounded avatar from an image

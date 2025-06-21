@@ -12,6 +12,16 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Add watermark text</summary>
 ///   <code>Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10</code>
 /// </example>
+/// <example>
+///   <summary>Draw text using ImageSharp</summary>
+///   <code>
+/// using SixLabors.ImageSharp;
+/// using SixLabors.ImageSharp.ColorSpaces;
+/// using var img = Image.Load("in.png");
+/// img.AddText(10, 10, "Sample", Color.Black, 24);
+/// img.Save("out.png");
+/// </code>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "ImageText")]
 public sealed class AddImageTextCmdlet : PSCmdlet {
     /// <summary>Source image path.</summary>

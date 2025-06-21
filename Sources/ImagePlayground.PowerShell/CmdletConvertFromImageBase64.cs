@@ -10,6 +10,10 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Save the Base64 content to a PNG file</summary>
 ///   <code>ConvertFrom-ImageBase64 -Base64 $content -OutputPath out.png</code>
 /// </example>
+/// <example>
+///   <summary>Decode and open the image</summary>
+///   <code>ConvertFrom-ImageBase64 -Base64 $content -OutputPath out.png -Open</code>
+/// </example>
 [Cmdlet(VerbsData.ConvertFrom, "ImageBase64")]
 public sealed class ConvertFromImageBase64Cmdlet : PSCmdlet {
     /// <summary>Base64 encoded image data.</summary>

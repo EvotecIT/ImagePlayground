@@ -8,7 +8,7 @@ schema: 2.0.0
 # ConvertTo-ImageBase64
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Converts an image file to a Base64 encoded string.
 
 ## SYNTAX
 ```powershell
@@ -16,18 +16,20 @@ ConvertTo-ImageBase64 [-FilePath] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+`ConvertTo-ImageBase64` reads the image located at `FilePath` and returns its
+contents as a Base64 string. This is useful when embedding the image in other
+files or sending it through text-only channels.
 
 ## EXAMPLES
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> ConvertTo-ImageBase64 -FilePath .\logo.png
 ```
-{{ Add example description here }}
+Returns a Base64 string representing `logo.png`.
 
 ## PARAMETERS
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the image file to convert.
 ```yaml
 Type: String
 Parameter Sets: (All)
