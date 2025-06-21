@@ -80,16 +80,21 @@ public static class Charts {
         /// <summary>Optional size of the markers.</summary>
         public float? MarkerSize { get; }
 
+        /// <summary>Render the line using a smooth curve.</summary>
+        public bool Smooth { get; }
+
         public ChartLine(
             string name,
             IList<double> value,
             ImageColor? color = null,
             MarkerShape markerShape = MarkerShape.None,
-            float? markerSize = null) : base(ChartDefinitionType.Line, name) {
+            float? markerSize = null,
+            bool smooth = false) : base(ChartDefinitionType.Line, name) {
             Value = value;
             Color = color;
             MarkerShape = markerShape;
             MarkerSize = markerSize;
+            Smooth = smooth;
         }
     }
 
@@ -278,6 +283,14 @@ public static class Charts {
             case ChartDefinitionType.Line:
                 foreach (var line in list.Cast<ChartLine>()) {
                     var sig = plot.Add.Signal(line.Value.ToArray());
+                    if (line.Smooth) {
+                        var prop = sig.GetType().GetProperty("SignalLineStyle");
+                        if (prop is not null) {
+                            var enumType = prop.PropertyType;
+                            var spline = Enum.Parse(enumType, "Spline");
+                            prop.SetValue(sig, spline);
+                        }
+                    }
                     sig.LegendText = line.Name;
                     sig.MarkerShape = line.MarkerShape;
                     if (line.MarkerSize.HasValue)

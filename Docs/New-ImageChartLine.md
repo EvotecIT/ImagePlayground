@@ -13,7 +13,7 @@ Creates a line series definition for chart generation.
 ## SYNTAX
 
 ```
-New-ImageChartLine [[-Name] <String>] [[-Value] <Array>] [-Color <Color>] [-Marker <MarkerShape>] [<CommonParameters>]
+New-ImageChartLine [[-Name] <String>] [[-Value] <Array>] [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -63,6 +63,21 @@ Aliases:
 Required: False
 Position: 1
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Smooth
+Render the line using smooth curves.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
