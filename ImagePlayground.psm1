@@ -104,14 +104,17 @@ $Assembly = @(
         if ($PSEdition -eq 'Core') {
             Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         } else {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            # Exclude native runtime libraries placed in architecture specific directories
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse |
+                Where-Object { $_.FullName -notmatch '[\\/](?:runtimes|x64|x86|arm64|arm)[\\/]' }
         }
     } else {
         if ($Framework -and $PSEdition -eq 'Core') {
             Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
         }
         if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtime(s[\\/]' }
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse |
+                Where-Object { $_.FullName -notmatch '[\\/](?:runtimes|x64|x86|arm64|arm)[\\/]' }
         }
     }
 )
