@@ -10,6 +10,10 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Create QR code</summary>
 ///   <code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr.png</code>
 /// </example>
+/// <example>
+///   <summary>Show QR code after generation</summary>
+///   <code>New-ImageQRCode -Content 'text' -FilePath qr.png -Show</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCode")]
 [Alias("New-QRCode")]
 public sealed class NewImageQrCodeCmdlet : PSCmdlet {

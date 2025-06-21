@@ -62,7 +62,7 @@ Adds both text and a wrapped text box using C#.
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the image that will receive the text.
 
 ```yaml
 Type: String
@@ -77,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination path where the modified image is saved.
 
 ```yaml
 Type: String
@@ -92,7 +92,7 @@ Accept wildcard characters: False
 ```
 
 ### -Text
-{{ Fill Text Description }}
+String to draw on the image.
 
 ```yaml
 Type: String
@@ -107,7 +107,7 @@ Accept wildcard characters: False
 ```
 
 ### -X
-{{ Fill X Description }}
+Horizontal position of the text in pixels.
 
 ```yaml
 Type: Single
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Vertical position of the text in pixels.
 
 ```yaml
 Type: Single
@@ -137,7 +137,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-{{ Fill Color Description }}
+Text color. Defaults to black.
 
 ```yaml
 Type: Color
@@ -152,7 +152,7 @@ Accept wildcard characters: False
 ```
 
 ### -FontSize
-{{ Fill FontSize Description }}
+Size of the text in points. Defaults to 16.
 
 ```yaml
 Type: Single
@@ -167,7 +167,7 @@ Accept wildcard characters: False
 ```
 
 ### -FontFamily
-{{ Fill FontFamily Description }}
+Name of the font family. Defaults to Arial.
 
 ```yaml
 Type: String
@@ -182,7 +182,7 @@ Accept wildcard characters: False
 ```
 
 ### -ShadowColor
-{{ Fill ShadowColor Description }}
+Color for the drop shadow if one is desired.
 
 ```yaml
 Type: Color
@@ -197,7 +197,7 @@ Accept wildcard characters: False
 ```
 
 ### -ShadowOffsetX
-{{ Fill ShadowOffsetX Description }}
+Horizontal offset of the shadow in pixels.
 
 ```yaml
 Type: Single
@@ -212,7 +212,7 @@ Accept wildcard characters: False
 ```
 
 ### -ShadowOffsetY
-{{ Fill ShadowOffsetY Description }}
+Vertical offset of the shadow in pixels.
 
 ```yaml
 Type: Single
@@ -227,7 +227,7 @@ Accept wildcard characters: False
 ```
 
 ### -OutlineColor
-{{ Fill OutlineColor Description }}
+Color used to outline the text.
 
 ```yaml
 Type: Color
@@ -242,7 +242,7 @@ Accept wildcard characters: False
 ```
 
 ### -OutlineWidth
-{{ Fill OutlineWidth Description }}
+Thickness of the text outline in pixels.
 
 ```yaml
 Type: Single

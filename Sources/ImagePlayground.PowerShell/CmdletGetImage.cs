@@ -5,9 +5,14 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Loads an image from disk.</summary>
+/// <para>Returns a SixLabors.ImageSharp.Image object for further processing.</para>
 /// <example>
 ///   <summary>Read an image</summary>
 ///   <code>$img = Get-Image -FilePath sample.png</code>
+/// </example>
+/// <example>
+///   <summary>Check dimensions</summary>
+///   <code>(Get-Image -FilePath sample.png).Width</code>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "Image")]
 public sealed class GetImageCmdlet : PSCmdlet {

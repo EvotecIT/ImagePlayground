@@ -11,6 +11,10 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Get a Base64 string from an image</summary>
 ///   <code>ConvertTo-ImageBase64 -FilePath in.png</code>
 /// </example>
+/// <example>
+///   <summary>Inline conversion and upload</summary>
+///   <code>$b64 = ConvertTo-ImageBase64 -FilePath photo.jpg; Invoke-RestMethod -Uri https://example/upload -Body $b64</code>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "ImageBase64")]
 [OutputType(typeof(string))]
 public sealed class ConvertToImageBase64Cmdlet : PSCmdlet {

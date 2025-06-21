@@ -8,6 +8,10 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Overwrite the source file</summary>
 ///   <code>Save-Image -Image $img</code>
 /// </example>
+/// <example>
+///   <summary>Save as JPEG with quality 80</summary>
+///   <code>Save-Image -Image $img -FilePath out.jpg -Quality 80</code>
+/// </example>
 [Cmdlet(VerbsData.Save, "Image")]
 public sealed class SaveImageCmdlet : PSCmdlet {
     /// <summary>Image object to save.</summary>

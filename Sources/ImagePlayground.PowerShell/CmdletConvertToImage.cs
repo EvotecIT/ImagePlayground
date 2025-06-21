@@ -8,7 +8,11 @@ namespace ImagePlayground.PowerShell;
 /// <para>Outputs a new file using the extension from <see cref="OutputPath"/>.</para>
 /// <example>
 ///   <summary>Convert PNG to JPEG</summary>
-///   <code>ConvertTo-Image -FilePath image.png -OutputPath image.jpg</code>
+///   <code>ConvertTo-Image -FilePath image.png -OutputPath image.jpg -Quality 85</code>
+/// </example>
+/// <example>
+///   <summary>Convert JPEG to PNG</summary>
+///   <code>ConvertTo-Image -FilePath photo.jpg -OutputPath photo.png -CompressionLevel 6</code>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "Image")]
 public sealed class ConvertToImageCmdlet : PSCmdlet {

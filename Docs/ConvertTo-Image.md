@@ -8,7 +8,7 @@ schema: 2.0.0
 # ConvertTo-Image
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Converts an existing image file to another format.
 
 ## SYNTAX
 
@@ -17,21 +17,30 @@ ConvertTo-Image [-FilePath] <String> [-OutputPath] <String> [-Quality <Int32>] [
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+`ConvertTo-Image` reads an image from `FilePath` and writes a new file using the
+extension specified in `OutputPath`. When saving JPEG or WEBP images you can
+set `Quality` to control compression. For PNG files you may specify a
+`CompressionLevel` from `0` (no compression) to `9` (maximum compression).
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> ConvertTo-Image -FilePath .\input.png -OutputPath .\output.jpg
 ```
+Converts the PNG file to JPEG format.
 
-{{ Add example description here }}
+### Example 2
+```powershell
+PS C:\> ConvertTo-Image -FilePath .\input.png -OutputPath .\output.webp -Quality 90
+```
+Creates a WEBP image with 90 percent quality.
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the source image file.
+The file must exist before running the cmdlet.
 
 ```yaml
 Type: String
@@ -46,7 +55,8 @@ Accept wildcard characters: False
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination path for the converted image.
+The extension of this path determines the output format.
 
 ```yaml
 Type: String
@@ -55,6 +65,34 @@ Aliases:
 
 Required: True
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Quality
+JPEG and WEBP quality level from 0 to 100.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CompressionLevel
+PNG compression level from 0 (no compression) to 9 (maximum).
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
