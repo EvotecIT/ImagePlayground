@@ -110,7 +110,7 @@ public partial class ImagePlayground {
     public void Test_QRCode_Girocode() {
         string file = Path.Combine(_directoryWithTests, "qr_giro.png");
         if (File.Exists(file)) File.Delete(file);
-        QrCode.GenerateGirocode("DE12500105170648489890", "COBADEFFXXX", "Test", 1m, "Invoice");
+        QrCode.GenerateGirocode("DE12500105170648489890", "COBADEFFXXX", "Test", 1m, file, "Invoice");
         Assert.True(File.Exists(file));
         var expected = new PayloadGenerator.Girocode("DE12500105170648489890", "COBADEFFXXX", "Test", 1m, "Invoice", PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, string.Empty, string.Empty, PayloadGenerator.Girocode.GirocodeVersion.Version1, PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1).ToString();
         var read = QrCode.Read(file);

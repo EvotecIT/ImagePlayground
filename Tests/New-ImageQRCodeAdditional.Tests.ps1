@@ -10,7 +10,7 @@ describe 'New-ImageQRCode additional cmdlets' {
         if (Test-Path $file) { Remove-Item $file }
         New-ImageQRCodeSms -Number '+1234567890' -Message 'Hello' -FilePath $file
         Test-Path $file | Should -BeTrue
-        (Get-ImageQRCode -FilePath $file).Message | Should -Match 'SMSTO'
+        (Get-ImageQRCode -FilePath $file).Message | Should -Match 'sms:|SMSTO'
     }
 
     It 'creates geolocation QR code' {

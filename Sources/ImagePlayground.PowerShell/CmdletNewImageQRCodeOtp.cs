@@ -14,7 +14,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageQrCodeOtpCmdlet : PSCmdlet {
     /// <summary>OTP payload object.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public PayloadGenerator.OneTimePassword Payload { get; set; } = new();
+    public PayloadGenerator.OneTimePassword Payload { get; set; } = null!;
 
     /// <summary>Path to save the QR code image.</summary>
     [Parameter(Mandatory = true, Position = 1)]
