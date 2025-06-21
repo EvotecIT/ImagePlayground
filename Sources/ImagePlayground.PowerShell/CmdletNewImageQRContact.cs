@@ -4,7 +4,13 @@ using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Generates a QR code with contact information.</summary>
+/// <summary>
+/// Generates a QR code image containing the provided contact details.
+/// </summary>
+/// <example>
+///   <summary>Create a vCard QR code</summary>
+///   <code>New-ImageQRContact -FilePath contact.png -Firstname John -Lastname Doe -Phone 123456789</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRContact")]
 public sealed class NewImageQrContactCmdlet : PSCmdlet {
     /// <summary>Output file path.</summary>
@@ -15,26 +21,80 @@ public sealed class NewImageQrContactCmdlet : PSCmdlet {
     [Parameter]
     public QRCoder.PayloadGenerator.ContactData.ContactOutputType OutputType { get; set; } = QRCoder.PayloadGenerator.ContactData.ContactOutputType.VCard4;
 
-    [Parameter] public string? Firstname { get; set; }
-    [Parameter] public string? Lastname { get; set; }
-    [Parameter] public string? Nickname { get; set; }
-    [Parameter] public string? Phone { get; set; }
-    [Parameter] public string? MobilePhone { get; set; }
-    [Parameter] public string? WorkPhone { get; set; }
-    [Parameter] public string? Email { get; set; }
-    [Parameter] public DateTime? Birthday { get; set; }
-    [Parameter] public string? Website { get; set; }
-    [Parameter] public string? Street { get; set; }
-    [Parameter] public string? HouseNumber { get; set; }
-    [Parameter] public string? City { get; set; }
-    [Parameter] public string? ZipCode { get; set; }
-    [Parameter] public string? Country { get; set; }
-    [Parameter] public string? Note { get; set; }
-    [Parameter] public string? StateRegion { get; set; }
+    /// <summary>Given name of the contact.</summary>
+    [Parameter]
+    public string? Firstname { get; set; }
+
+    /// <summary>Surname of the contact.</summary>
+    [Parameter]
+    public string? Lastname { get; set; }
+
+    /// <summary>Optional nickname.</summary>
+    [Parameter]
+    public string? Nickname { get; set; }
+
+    /// <summary>Primary phone number.</summary>
+    [Parameter]
+    public string? Phone { get; set; }
+
+    /// <summary>Mobile phone number.</summary>
+    [Parameter]
+    public string? MobilePhone { get; set; }
+
+    /// <summary>Work phone number.</summary>
+    [Parameter]
+    public string? WorkPhone { get; set; }
+
+    /// <summary>Email address.</summary>
+    [Parameter]
+    public string? Email { get; set; }
+
+    /// <summary>Birthday date.</summary>
+    [Parameter]
+    public DateTime? Birthday { get; set; }
+
+    /// <summary>Personal or company website.</summary>
+    [Parameter]
+    public string? Website { get; set; }
+
+    /// <summary>Street name of the address.</summary>
+    [Parameter]
+    public string? Street { get; set; }
+
+    /// <summary>House or building number.</summary>
+    [Parameter]
+    public string? HouseNumber { get; set; }
+
+    /// <summary>City name.</summary>
+    [Parameter]
+    public string? City { get; set; }
+
+    /// <summary>Postal code.</summary>
+    [Parameter]
+    public string? ZipCode { get; set; }
+
+    /// <summary>Country name.</summary>
+    [Parameter]
+    public string? Country { get; set; }
+
+    /// <summary>Additional notes.</summary>
+    [Parameter]
+    public string? Note { get; set; }
+
+    /// <summary>State or region.</summary>
+    [Parameter]
+    public string? StateRegion { get; set; }
+    /// <summary>Order of address fields in the QR code.</summary>
     [Parameter]
     public QRCoder.PayloadGenerator.ContactData.AddressOrder AddressOrder { get; set; } = QRCoder.PayloadGenerator.ContactData.AddressOrder.Default;
-    [Parameter] public string? Org { get; set; }
-    [Parameter] public string? OrgTitle { get; set; }
+
+    /// <summary>Organization name.</summary>
+    [Parameter]
+    public string? Org { get; set; }
+
+    /// <summary>Contact's title or role within the organization.</summary>
+    [Parameter]
+    public string? OrgTitle { get; set; }
 
     /// <summary>Open image after creation.</summary>
     [Parameter]
