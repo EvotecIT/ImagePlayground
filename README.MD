@@ -33,31 +33,34 @@ This module will work fine for PowerShell 5.1 and PowerShell 7+. It works on Win
 It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 
 ## Features
+- ☑️ **QR code generation and reading**
+  - Standard, Contact, WiFi, SMS, PhoneNumber, OTP, Bitcoin, Monero, BezahlCode, Girocode, Swiss, Slovenian UPN, ShadowSocks, SkypeCall, GeoLocation and more
+- ☑️ **Barcode generation and reading**
+  - Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix, PDF417
+- ☑️ **Chart creation**
+  - Bar, Pie, Line, Scatter, Polar, Radial, Heatmap, Histogram
+- ☑️ **Image manipulation**
+  - Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, watermark (text or image), add text
+- ☑️ **Avatar, icon, thumbnail and grid generation**
+- ☑️ **Animated GIF creation**
+- ☑️ **Base64 conversion**
+- ☑️ **EXIF metadata management**
+- ☑️ **Image comparison**
 
-- ☑️ QR Codes
-  - ☑️ QR Code Standard
-  - ☑️ QR Code WiFi
-  - ☑️ QR Code Contact
-  - 📥 Others to be added
- - ☑️ Barcode
-  - ☑️ EAN
-  - ☑️ UPC-A
-  - ☑️ UPC-E
-  - ☑️ Code 39
-  - ☑️ Code 93
-  - ☑️ Code 128
-  - ☑️ Kix Code
-  - ☑️ Data Matrix
-- ☑️ Barcode Reader - library can read barcodes
-- ☑️ QR Code Reader - library can read QR codes
-- ☑️ Image Combine
-- ☑️ Image Resize
-- ☑️ Image Crop
-- ☑️ Image Rotate
-- ☑️ Image Grayscale
-- ☑️ Image Blur
-- ☑️ Image Sharpen
-- ☑️ Many more
+
+## Available Cmdlets
+
+| Add-ImageText | Add-ImageTextBox | Add-ImageWatermark | Get-Image | Get-ImageBarCode |
+| --- | --- | --- | --- | --- |
+| Get-ImageExif | Get-ImageQRCode | New-ImageAvatar | New-ImageBarCode | New-ImageChart |
+| New-ImageChartAnnotation | New-ImageChartBar | New-ImageChartBarOptions | New-ImageChartHeatmap | New-ImageChartHistogram |
+| New-ImageChartLine | New-ImageChartPie | New-ImageChartPolar | New-ImageChartRadial | New-ImageChartScatter |
+| New-ImageCrop | New-ImageGif | New-ImageGrid | New-ImageIcon | New-ImageQRCode |
+| New-ImageQRCodeBezahlCode | New-ImageQRCodeBitcoin | New-ImageQRCodeGeoLocation | New-ImageQRCodeGirocode | New-ImageQRCodeMonero |
+| New-ImageQRCodeOtp | New-ImageQRCodePhoneNumber | New-ImageQRCodeShadowSocks | New-ImageQRCodeSkypeCall | New-ImageQRCodeSlovenianUpnQr |
+| New-ImageQRCodeSms | New-ImageQRCodeSwiss | New-ImageQRCodeWiFi | New-ImageQRContact | New-ImageThumbnail |
+| Remove-ImageExif | Resize-Image | Set-ImageExif | Compare-Image | ConvertFrom-ImageBase64 |
+| ConvertTo-Image | ConvertTo-ImageBase64 | Merge-Image | Save-Image |
 
 ## Installation
 
