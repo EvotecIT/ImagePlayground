@@ -33,17 +33,14 @@ This module will work fine for PowerShell 5.1 and PowerShell 7+. It works on Win
 It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 
 ## Features
-- ☑️ **QR code generation and reading**
-  - Standard, Contact, WiFi, SMS, PhoneNumber, OTP, Bitcoin, Monero, BezahlCode, Girocode, Swiss, Slovenian UPN, ShadowSocks, SkypeCall, GeoLocation and more
-- ☑️ **Barcode generation and reading**
-  - Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix, PDF417
-- ☑️ **Chart creation**
-  - Bar, Pie, Line, Scatter, Polar, Radial, Heatmap, Histogram
-- ☑️ **Image manipulation**
-  - Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid,
-    bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert,
-    sepia, kodachrome, lomograph, histogram equalization, vignette, skew,
-    watermark (text or image), add text
+- ☑️ **QR code generation and reading**  
+  Supports standard QR codes, contact cards, WiFi details, SMS, phone numbers, OTP, Bitcoin, Monero, BezahlCode, Girocode, Swiss, Slovenian UPN, ShadowSocks, SkypeCall, GeoLocation and more.
+- ☑️ **Barcode generation and reading**  
+  Supports Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix and PDF417.
+- ☑️ **Chart creation**  
+  Create bar, pie, line, scatter, polar, radial, heatmap and histogram charts.
+- ☑️ **Image manipulation**  
+  Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert, sepia, kodachrome, lomograph, histogram equalization, vignette, skew, watermark (text or image) and add text.
 - ☑️ **Avatar, icon, thumbnail and grid generation**
 - ☑️ **Animated GIF creation**
 - ☑️ **Base64 conversion**
@@ -53,17 +50,55 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 
 ## Available Cmdlets
 
-| Add-ImageText | Add-ImageTextBox | Add-ImageWatermark | Get-Image | Get-ImageBarCode |
-| --- | --- | --- | --- | --- |
-| Get-ImageExif | Get-ImageQRCode | New-ImageAvatar | New-ImageBarCode | New-ImageChart |
-| New-ImageChartAnnotation | New-ImageChartBar | New-ImageChartBarOptions | New-ImageChartHeatmap | New-ImageChartHistogram |
-| New-ImageChartLine | New-ImageChartPie | New-ImageChartPolar | New-ImageChartRadial | New-ImageChartScatter |
-| New-ImageCrop | New-ImageGif | New-ImageGrid | New-ImageIcon | New-ImageQRCode |
-| New-ImageQRCodeBezahlCode | New-ImageQRCodeBitcoin | New-ImageQRCodeGeoLocation | New-ImageQRCodeGirocode | New-ImageQRCodeMonero |
-| New-ImageQRCodeOtp | New-ImageQRCodePhoneNumber | New-ImageQRCodeShadowSocks | New-ImageQRCodeSkypeCall | New-ImageQRCodeSlovenianUpnQr |
-| New-ImageQRCodeSms | New-ImageQRCodeSwiss | New-ImageQRCodeWiFi | New-ImageQRContact | New-ImageThumbnail |
-| Remove-ImageExif | Resize-Image | Set-ImageExif | Compare-Image | ConvertFrom-ImageBase64 |
-| ConvertTo-Image | ConvertTo-ImageBase64 | Merge-Image | Save-Image |
+`Add-ImageText` - Adds text to an image at the provided coordinates and writes the updated image to disk.
+`Add-ImageTextBox` - Adds wrapped text to an image within a box.
+`Add-ImageWatermark` - Adds a watermark image to another image.
+`Compare-Image` - Compares two images and optionally saves a difference mask.
+`ConvertFrom-ImageBase64` - Converts a Base64 encoded string into an image file.
+`ConvertTo-Image` - Converts an image to a different format.
+`ConvertTo-ImageBase64` - Converts an image file into a Base64 encoded string.
+`Get-Image` - Loads an image from disk.
+`Get-ImageBarCode` - Reads barcode information from an image file.
+`Get-ImageExif` - Gets EXIF metadata from an image.
+`Get-ImageQRCode` - Reads QR code information from an image file.
+`Merge-Image` - Merges two images and saves the result.
+`New-ImageAvatar` - Creates a rounded avatar image.
+`New-ImageBarCode` - Creates a barcode image.
+`New-ImageChart` - Creates an image chart from definitions.
+`New-ImageChartAnnotation` - Creates chart annotation data item.
+`New-ImageChartBar` - Creates bar chart data item.
+`New-ImageChartBarOptions` - Creates bar chart options.
+`New-ImageChartHeatmap` - Creates heatmap chart data item.
+`New-ImageChartHistogram` - Creates histogram chart data item.
+`New-ImageChartLine` - Creates line chart data item.
+`New-ImageChartPie` - Creates pie chart data item.
+`New-ImageChartPolar` - Creates polar chart data item.
+`New-ImageChartRadial` - Creates radial gauge chart data item.
+`New-ImageChartScatter` - Creates scatter chart data item.
+`New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
+`New-ImageGif` - Creates an animated GIF from existing images.
+`New-ImageGrid` - Creates a simple grid-based image.
+`New-ImageIcon` - Creates an icon file from an image.
+`New-ImageQRCode` - Generates a QR code image.
+`New-ImageQRCodeBezahlCode` - Generates a BezahlCode QR for German payments.
+`New-ImageQRCodeBitcoin` - Generates a QR code for Bitcoin-like payments.
+`New-ImageQRCodeGeoLocation` - Generates a QR code with geolocation data.
+`New-ImageQRCodeGirocode` - Generates a Girocode QR code.
+`New-ImageQRCodeMonero` - Generates a QR code for a Monero transaction.
+`New-ImageQRCodeOtp` - Generates a QR code for one-time-password configuration.
+`New-ImageQRCodePhoneNumber` - Generates a QR code for dialling a phone number.
+`New-ImageQRCodeShadowSocks` - Generates a QR code for a Shadowsocks configuration.
+`New-ImageQRCodeSkypeCall` - Generates a QR code initiating a Skype call.
+`New-ImageQRCodeSlovenianUpnQr` - Generates a Slovenian UPN QR payment code.
+`New-ImageQRCodeSms` - Generates a QR code containing an SMS message.
+`New-ImageQRCodeSwiss` - Generates a Swiss QR payment code.
+`New-ImageQRCodeWiFi` - Creates a WiFi QR code image.
+`New-ImageQRContact` - Generates a QR code image containing the provided contact details.
+`New-ImageThumbnail` - Creates thumbnails for all images in a directory.
+`Remove-ImageExif` - Removes EXIF metadata from an image.
+`Resize-Image` - Resizes an image.
+`Save-Image` - Saves an image to disk.
+`Set-ImageExif` - Sets an EXIF tag value in an image.
 
 ## Installation
 
