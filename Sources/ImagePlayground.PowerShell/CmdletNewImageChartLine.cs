@@ -26,8 +26,12 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
     [Parameter]
     public ScottPlot.MarkerShape Marker { get; set; } = ScottPlot.MarkerShape.None;
 
+    /// <summary>Render the line using a smooth curve.</summary>
+    [Parameter]
+    public SwitchParameter Smooth { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value, Color, Marker));
+        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value, Color, Marker, null, Smooth.IsPresent));
     }
 }
