@@ -1,5 +1,6 @@
 ﻿<p align="center">
-  <a href="https://dev.azure.com/evotecpl/ImagePlayground/_build/results?buildId=latest"><img src="https://img.shields.io/azure-devops/build/evotecpl/39c74615-8f34-4af0-a835-68dc33f9214f/14?label=Azure%20Pipelines&style=flat-square"></a>
+  <a href="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml"><img src="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml/badge.svg?branch=master"/></a>
+  <a href="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml"><img src="https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master"/></a>
   <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/v/ImagePlayground.svg?style=flat-square"></a>
   <a href="https://www.powershellgallery.com/packages/ImagePlayground"><img src="https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square"></a>
   <a href="https://github.com/EvotecIT/ImagePlayground"><img src="https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg?style=flat-square"></a>
