@@ -1,4 +1,5 @@
 using ImagePlayground;
+using QRCoder;
 using System.IO;
 using System.Management.Automation;
 
