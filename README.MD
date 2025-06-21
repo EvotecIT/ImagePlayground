@@ -40,7 +40,10 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ **Chart creation**
   - Bar, Pie, Line, Scatter, Polar, Radial, Heatmap, Histogram
 - ☑️ **Image manipulation**
-  - Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, watermark (text or image), add text
+  - Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid,
+    bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert,
+    sepia, kodachrome, lomograph, histogram equalization, vignette, skew,
+    watermark (text or image), add text
 - ☑️ **Avatar, icon, thumbnail and grid generation**
 - ☑️ **Animated GIF creation**
 - ☑️ **Base64 conversion**
