@@ -1,24 +1,18 @@
-<p align="center">
   [![.NET tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_dotnet.yml)
   [![PowerShell tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml)
   [![Gallery](https://img.shields.io/powershellgallery/v/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
   [![Gallery Preview](https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
   [![License](https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
   [![Codecov](https://img.shields.io/codecov/c/github/EvotecIT/ImagePlayground?style=flat-square)](https://app.codecov.io/gh/EvotecIT/ImagePlayground)
-</p>
 
-<p align="center">
   [![PowerShell Gallery downloads](https://img.shields.io/powershellgallery/p/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
   [![Top language](https://img.shields.io/github/languages/top/evotecit/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
   [![Code size](https://img.shields.io/github/languages/code-size/evotecit/ImagePlayground.svg?style=flat-square)](https://github.com/EvotecIT/ImagePlayground)
   [![Downloads](https://img.shields.io/powershellgallery/dt/ImagePlayground.svg?style=flat-square)](https://www.powershellgallery.com/packages/ImagePlayground)
-</p>
 
-<p align="center">
   [![Twitter](https://img.shields.io/twitter/follow/PrzemyslawKlys.svg?label=Twitter%20%40PrzemyslawKlys&style=flat-square&logo=twitter)](https://twitter.com/PrzemyslawKlys)
   [![Blog](https://img.shields.io/badge/Blog-evotec.xyz-2A6496.svg?style=flat-square)](https://evotec.xyz/hub)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square)](https://www.linkedin.com/in/pklys)
-</p>
 
 `ImagePlayground` is a C# library and a PowerShell module that allows you to play with images in different ways.
 It allows to create QR codes, BAR codes, Charts and do image manipulation.
