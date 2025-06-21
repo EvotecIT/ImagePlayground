@@ -4,7 +4,10 @@ using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Adds text to an image and saves the result.</summary>
+/// <summary>
+/// Adds text to an image at the provided coordinates and writes the updated
+/// image to disk.
+/// </summary>
 /// <example>
 ///   <summary>Add watermark text</summary>
 ///   <code>Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10</code>
