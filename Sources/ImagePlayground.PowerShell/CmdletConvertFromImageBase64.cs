@@ -24,6 +24,7 @@ public sealed class ConvertFromImageBase64Cmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Open { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord() {
         var output = Helpers.ResolvePath(OutputPath);
         ImageHelper.ConvertFromBase64(Base64, output);

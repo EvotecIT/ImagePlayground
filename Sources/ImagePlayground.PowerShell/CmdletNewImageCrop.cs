@@ -67,6 +67,7 @@ public sealed class NewImageCropCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Open { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = Helpers.ResolvePath(FilePath);
         if (!File.Exists(filePath)) {

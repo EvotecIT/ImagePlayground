@@ -18,6 +18,7 @@ public sealed class ConvertToImageBase64Cmdlet : PSCmdlet {
     [Parameter(Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
+    /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = Helpers.ResolvePath(FilePath);
         if (!File.Exists(filePath)) {
