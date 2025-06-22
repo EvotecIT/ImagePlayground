@@ -8,6 +8,13 @@ using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
 public partial class Image : IDisposable {
+    /// <summary>
+    /// Calculates the dimensions required to render <paramref name="text"/> using the specified font.
+    /// </summary>
+    /// <param name="text">The text to measure.</param>
+    /// <param name="fontSize">Font size in points.</param>
+    /// <param name="fontFamilyName">Name of the font family to use.</param>
+    /// <returns>The measured text rectangle.</returns>
     public FontRectangle GetTextSize(string text, float fontSize, string fontFamilyName) {
         if (!SixLabors.Fonts.SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
             if (!SixLabors.Fonts.SystemFonts.TryGet("DejaVu Sans", out fontFamily)) {
@@ -20,6 +27,20 @@ public partial class Image : IDisposable {
         return textSize;
     }
 
+    /// <summary>
+    /// Draws a text string at the specified location.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the text origin.</param>
+    /// <param name="y">The y-coordinate of the text origin.</param>
+    /// <param name="text">The text to render.</param>
+    /// <param name="color">Text color.</param>
+    /// <param name="fontSize">Font size in points.</param>
+    /// <param name="fontFamilyName">Font family name.</param>
+    /// <param name="shadowColor">Optional shadow color.</param>
+    /// <param name="shadowOffsetX">Horizontal shadow offset.</param>
+    /// <param name="shadowOffsetY">Vertical shadow offset.</param>
+    /// <param name="outlineColor">Optional outline color.</param>
+    /// <param name="outlineWidth">Outline thickness.</param>
     public void AddText(float x, float y, string text, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.ImageSharp.Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, SixLabors.ImageSharp.Color? outlineColor = null, float outlineWidth = 0f) {
         if (!SixLabors.Fonts.SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
             if (!SixLabors.Fonts.SystemFonts.TryGet("DejaVu Sans", out fontFamily)) {
@@ -40,9 +61,44 @@ public partial class Image : IDisposable {
         });
     }
 
+    /// <summary>
+    /// Draws text confined to a bounding box.
+    /// </summary>
+    /// <param name="x">X coordinate of the bounding box origin.</param>
+    /// <param name="y">Y coordinate of the bounding box origin.</param>
+    /// <param name="text">Text to render.</param>
+    /// <param name="boxWidth">Width of the text box.</param>
+    /// <param name="color">Text color.</param>
+    /// <param name="fontSize">Font size in points.</param>
+    /// <param name="fontFamilyName">Font family name.</param>
+    /// <param name="horizontalAlignment">Horizontal alignment within the box.</param>
+    /// <param name="verticalAlignment">Vertical alignment within the box.</param>
+    /// <param name="shadowColor">Optional shadow color.</param>
+    /// <param name="shadowOffsetX">Horizontal shadow offset.</param>
+    /// <param name="shadowOffsetY">Vertical shadow offset.</param>
+    /// <param name="outlineColor">Optional outline color.</param>
+    /// <param name="outlineWidth">Outline thickness.</param>
     public void AddTextBox(float x, float y, string text, float boxWidth, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, SixLabors.ImageSharp.Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, SixLabors.ImageSharp.Color? outlineColor = null, float outlineWidth = 0f) =>
         AddTextBox(x, y, text, boxWidth, 0f, color, fontSize, fontFamilyName, horizontalAlignment, verticalAlignment, shadowColor, shadowOffsetX, shadowOffsetY, outlineColor, outlineWidth);
 
+    /// <summary>
+    /// Draws text confined to a bounding box with explicit height.
+    /// </summary>
+    /// <param name="x">X coordinate of the box.</param>
+    /// <param name="y">Y coordinate of the box.</param>
+    /// <param name="text">Text to render.</param>
+    /// <param name="boxWidth">Box width.</param>
+    /// <param name="boxHeight">Box height.</param>
+    /// <param name="color">Text color.</param>
+    /// <param name="fontSize">Font size in points.</param>
+    /// <param name="fontFamilyName">Font family name.</param>
+    /// <param name="horizontalAlignment">Horizontal alignment inside the box.</param>
+    /// <param name="verticalAlignment">Vertical alignment inside the box.</param>
+    /// <param name="shadowColor">Optional shadow color.</param>
+    /// <param name="shadowOffsetX">Horizontal shadow offset.</param>
+    /// <param name="shadowOffsetY">Vertical shadow offset.</param>
+    /// <param name="outlineColor">Optional outline color.</param>
+    /// <param name="outlineWidth">Outline thickness.</param>
     public void AddTextBox(float x, float y, string text, float boxWidth, float boxHeight, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, SixLabors.ImageSharp.Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, SixLabors.ImageSharp.Color? outlineColor = null, float outlineWidth = 0f) {
         if (!SixLabors.Fonts.SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
             if (!SixLabors.Fonts.SystemFonts.TryGet("DejaVu Sans", out fontFamily)) {

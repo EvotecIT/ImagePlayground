@@ -17,6 +17,16 @@ public partial class Image : IDisposable {
         Middle,
     }
 
+    /// <summary>
+    /// Draws a text watermark at the specified coordinates.
+    /// </summary>
+    /// <param name="text">Watermark text.</param>
+    /// <param name="x">X coordinate.</param>
+    /// <param name="y">Y coordinate.</param>
+    /// <param name="color">Watermark color.</param>
+    /// <param name="fontSize">Font size.</param>
+    /// <param name="fontFamilyName">Font family name.</param>
+    /// <param name="padding">Optional padding around the watermark.</param>
     public void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f) {
         if (!SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
             throw new Exception($"Couldn't find font {fontFamilyName}");
@@ -31,6 +41,15 @@ public partial class Image : IDisposable {
 
     }
 
+    /// <summary>
+    /// Places a text watermark using a predefined placement.
+    /// </summary>
+    /// <param name="text">Watermark text.</param>
+    /// <param name="placement">Placement of the watermark.</param>
+    /// <param name="color">Text color.</param>
+    /// <param name="fontSize">Font size.</param>
+    /// <param name="fontFamilyName">Font family.</param>
+    /// <param name="padding">Padding around the text.</param>
     public void Watermark(string text, WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f) {
         var textSize = GetTextSize(text, fontSize, fontFamilyName);
 
@@ -140,6 +159,15 @@ public partial class Image : IDisposable {
         }
     }
 
+    /// <summary>
+    /// Adds a tiled watermark image over the entire picture.
+    /// </summary>
+    /// <param name="filePath">Path to the watermark image.</param>
+    /// <param name="spacing">Spacing between tiles.</param>
+    /// <param name="opacity">Opacity of each tile.</param>
+    /// <param name="rotate">Rotation angle applied to the watermark.</param>
+    /// <param name="flipMode">Flip mode for the watermark.</param>
+    /// <param name="watermarkPercentage">Size of the watermark in percent (1-100).</param>
     public void WatermarkImageTiled(string filePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
         string fullPath = Helpers.ResolvePath(filePath);
         if (watermarkPercentage < 1 || watermarkPercentage > 100) {
