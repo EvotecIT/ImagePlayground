@@ -24,5 +24,14 @@ Describe 'New-ImageGrid' {
 
     }
 
+    It 'throws for negative dimensions' {
+
+        $dest = Join-Path $TestDir 'grid.png'
+
+        { New-ImageGrid -FilePath $dest -Width -5 -Height 10 } | Should -Throw
+        { New-ImageGrid -FilePath $dest -Width 10 -Height -5 } | Should -Throw
+
+    }
+
 }
 

@@ -16,10 +16,12 @@ public sealed class NewImageGridCmdlet : PSCmdlet {
 
     /// <summary>Width of the new image.</summary>
     [Parameter(Mandatory = true, Position = 1)]
+    [ValidateRange(1, 10000)]
     public int Width { get; set; }
 
     /// <summary>Height of the new image.</summary>
     [Parameter(Mandatory = true, Position = 2)]
+    [ValidateRange(1, 10000)]
     public int Height { get; set; }
 
     /// <summary>Background color.</summary>
