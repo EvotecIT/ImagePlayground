@@ -3,6 +3,11 @@ using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
 namespace ImagePlayground;
 public static partial class Helpers {
+    /// <summary>
+    /// Maps the <see cref="Image.Sampler"/> enumeration to a concrete resampler implementation.
+    /// </summary>
+    /// <param name="sampler">Sampler option.</param>
+    /// <returns>Corresponding image resampler.</returns>
     public static IResampler GetResampler(Image.Sampler sampler) =>
         sampler switch {
             Image.Sampler.NearestNeighbor => KnownResamplers.NearestNeighbor,

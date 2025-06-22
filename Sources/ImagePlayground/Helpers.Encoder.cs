@@ -12,6 +12,13 @@ using SixLabors.ImageSharp.Formats.Webp;
 
 namespace ImagePlayground;
 public static partial class Helpers {
+    /// <summary>
+    /// Returns an image encoder instance appropriate for the given file extension.
+    /// </summary>
+    /// <param name="extension">File extension including the leading dot.</param>
+    /// <param name="quality">Optional quality value for lossy formats.</param>
+    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
+    /// <returns>Configured image encoder.</returns>
     public static IImageEncoder GetEncoder(string extension, int? quality, int? compressionLevel) {
         extension = extension.ToLowerInvariant();
         return extension switch {
