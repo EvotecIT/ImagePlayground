@@ -8,6 +8,11 @@ using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
 public partial class Image {
+    /// <summary>
+    /// Saves the image in ICO format using multiple resolutions.
+    /// </summary>
+    /// <param name="filePath">Destination ICO file path.</param>
+    /// <param name="sizes">Optional list of icon sizes.</param>
     public void SaveAsIcon(string filePath, params int[] sizes) {
         string fullPath = Helpers.ResolvePath(filePath);
         if (sizes == null || sizes.Length == 0) {

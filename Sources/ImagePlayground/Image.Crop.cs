@@ -6,11 +6,21 @@ using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
 public partial class Image : System.IDisposable {
+    /// <summary>
+    /// Crops the image to a circular region.
+    /// </summary>
+    /// <param name="centerX">Center X coordinate.</param>
+    /// <param name="centerY">Center Y coordinate.</param>
+    /// <param name="radius">Radius of the circle.</param>
     public void CropCircle(float centerX, float centerY, float radius) {
         var circle = new EllipsePolygon(centerX, centerY, radius);
         ApplyClip(circle);
     }
 
+    /// <summary>
+    /// Crops the image to the specified polygon.
+    /// </summary>
+    /// <param name="points">Polygon vertices.</param>
     public void CropPolygon(params PointF[] points) {
         var polygon = new Polygon(new LinearLineSegment(points));
         ApplyClip(polygon);
