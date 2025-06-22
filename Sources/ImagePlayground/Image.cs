@@ -12,57 +12,113 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Extensions.Transforms;
 
 namespace ImagePlayground;
+
+/// <summary>
+/// Represents an image loaded using ImageSharp and exposes basic manipulation helpers.
+/// </summary>
 public partial class Image : IDisposable {
     private SixLabors.ImageSharp.Image _image;
     private string _filePath;
+
+    /// <summary>Gets the width of the image.</summary>
     public int Width => _image.Width;
+
+    /// <summary>Gets the height of the image.</summary>
     public int Height => _image.Height;
+
+    /// <summary>Gets the path the image was loaded from.</summary>
     public string FilePath => _filePath;
+
+    /// <summary>Gets the metadata associated with the image.</summary>
     public ImageMetadata Metadata => _image.Metadata;
+
+    /// <summary>Gets information about the underlying pixel type.</summary>
     public PixelTypeInfo PixelType => _image.PixelType;
+
+    /// <summary>Gets the frame collection for multi-frame images.</summary>
     public ImageFrameCollection Frames => _image.Frames;
 
+    /// <summary>
+    /// Resampling algorithms used when resizing images.
+    /// </summary>
     public enum Sampler {
+        /// <summary>Nearest neighbour sampling.</summary>
         NearestNeighbor,
+        /// <summary>Box resampling.</summary>
         Box,
+        /// <summary>Triangle resampling.</summary>
         Triangle,
+        /// <summary>Hermite resampling.</summary>
         Hermite,
+        /// <summary>Lanczos with a radius of 2.</summary>
         Lanczos2,
+        /// <summary>Lanczos with a radius of 3.</summary>
         Lanczos3,
+        /// <summary>Lanczos with a radius of 5.</summary>
         Lanczos5,
+        /// <summary>Lanczos with a radius of 8.</summary>
         Lanczos8,
+        /// <summary>Mitchell–Netravali filter.</summary>
         MitchellNetravali,
+        /// <summary>Catmull–Rom spline.</summary>
         CatmullRom,
+        /// <summary>Robidoux filter.</summary>
         Robidoux,
+        /// <summary>Sharper variant of Robidoux filter.</summary>
         RobidouxSharp,
+        /// <summary>B-Spline resampling.</summary>
         Spline,
+        /// <summary>Welch resampling.</summary>
         Welch,
     }
 
+    /// <summary>
+    /// Applies an adaptive threshold filter to the current image.
+    /// </summary>
     public void AdaptiveThreshold() {
         _image.Mutate(x => x.AdaptiveThreshold());
     }
 
+    /// <summary>
+    /// Automatically rotates the image according to EXIF orientation data.
+    /// </summary>
     public void AutoOrient() {
         _image.Mutate(x => x.AutoOrient());
     }
 
+    /// <summary>
+    /// Fills the background with the specified <paramref name="color"/>.
+    /// </summary>
+    /// <param name="color">Fill color.</param>
     public void BackgroundColor(Color color) {
         _image.Mutate(x => x.BackgroundColor(color));
     }
 
+    /// <summary>
+    /// Converts the image to black and white.
+    /// </summary>
     public void BlackWhite() {
         _image.Mutate(x => x.BlackWhite());
     }
 
+    /// <summary>
+    /// Adjusts brightness by the specified <paramref name="amount"/>.
+    /// </summary>
+    /// <param name="amount">Brightness adjustment factor.</param>
     public void Brightness(float amount) {
         _image.Mutate(x => x.Brightness(amount));
     }
 
+    /// <summary>
+    /// Applies a bokeh blur effect.
+    /// </summary>
     public void BokehBlur() {
         _image.Mutate(x => x.BokehBlur());
     }
 
+    /// <summary>
+    /// Applies a simple box blur.
+    /// </summary>
     public void BoxBlur() {
         _image.Mutate(x => x.BoxBlur());
     }
@@ -295,6 +351,13 @@ public partial class Image : IDisposable {
         return image;
     }
 
+    /// <summary>
+    /// Saves the image to disk.
+    /// </summary>
+    /// <param name="filePath">Target path or empty to overwrite the original file.</param>
+    /// <param name="openImage">Whether to open the saved file.</param>
+    /// <param name="quality">Optional quality for lossy formats.</param>
+    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
     public void Save(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null) {
         if (filePath == "") {
             filePath = _filePath;

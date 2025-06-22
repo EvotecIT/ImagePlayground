@@ -4,6 +4,15 @@ using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
 public partial class ImageHelper {
+    /// <summary>
+    /// Generates resized copies for all images found in <paramref name="directoryPath"/>.
+    /// </summary>
+    /// <param name="directoryPath">Folder containing the source images.</param>
+    /// <param name="outputDirectory">Destination folder for the thumbnails.</param>
+    /// <param name="width">Thumbnail width.</param>
+    /// <param name="height">Thumbnail height.</param>
+    /// <param name="keepAspectRatio">Whether to maintain aspect ratio.</param>
+    /// <param name="sampler">Optional sampler algorithm.</param>
     public static void GenerateThumbnails(string directoryPath, string outputDirectory, int width, int height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
         string inputDir = Helpers.ResolvePath(directoryPath);
         string outDir = Helpers.ResolvePath(outputDirectory);
