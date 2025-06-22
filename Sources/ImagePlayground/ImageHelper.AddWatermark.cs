@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
@@ -25,6 +26,19 @@ public partial class ImageHelper {
     }
 
     /// <summary>
+    /// Asynchronously adds an image watermark at one of the predefined placements.
+    /// </summary>
+    public static async Task WatermarkImageAsync(string filePath, string outFilePath, string watermarkFilePath, Image.WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        await Task.Run(() => {
+            using var img = Image.Load(fullPath);
+            img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage);
+            img.Save(outFullPath);
+        }).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Adds an image watermark at exact coordinates.
     /// </summary>
     /// <param name="filePath">Source image path.</param>
@@ -45,6 +59,19 @@ public partial class ImageHelper {
     }
 
     /// <summary>
+    /// Asynchronously adds an image watermark at exact coordinates.
+    /// </summary>
+    public static async Task WatermarkImageAsync(string filePath, string outFilePath, string watermarkFilePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        await Task.Run(() => {
+            using var img = Image.Load(fullPath);
+            img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
+            img.Save(outFullPath);
+        }).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Tiles the watermark image across the target image.
     /// </summary>
     /// <param name="filePath">Source image path.</param>
@@ -61,5 +88,18 @@ public partial class ImageHelper {
         using var img = Image.Load(fullPath);
         img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
         img.Save(outFullPath);
+    }
+
+    /// <summary>
+    /// Asynchronously tiles the watermark image across the target image.
+    /// </summary>
+    public static async Task WatermarkImageTiledAsync(string filePath, string outFilePath, string watermarkFilePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        await Task.Run(() => {
+            using var img = Image.Load(fullPath);
+            img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
+            img.Save(outFullPath);
+        }).ConfigureAwait(false);
     }
 }

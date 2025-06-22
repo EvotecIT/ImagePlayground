@@ -65,6 +65,10 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
     [ValidateRange(0, int.MaxValue)]
     public int? Spacing { get; set; }
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = Helpers.ResolvePath(FilePath);
@@ -80,11 +84,23 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
         var output = Helpers.ResolvePath(OutputPath);
 
         if (Spacing != null) {
-            ImagePlayground.ImageHelper.WatermarkImageTiled(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage);
+            if (Async.IsPresent) {
+                ImagePlayground.ImageHelper.WatermarkImageTiledAsync(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage).GetAwaiter().GetResult();
+            } else {
+                ImagePlayground.ImageHelper.WatermarkImageTiled(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage);
+            }
         } else if (ParameterSetName == ParameterSetCoordinates) {
-            ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
+            if (Async.IsPresent) {
+                ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage).GetAwaiter().GetResult();
+            } else {
+                ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
+            }
         } else {
-            ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
+            if (Async.IsPresent) {
+                ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage).GetAwaiter().GetResult();
+            } else {
+                ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
+            }
         }
     }
 }

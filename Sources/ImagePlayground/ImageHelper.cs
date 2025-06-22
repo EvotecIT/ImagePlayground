@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ScottPlot;
+using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -52,6 +53,21 @@ public partial class ImageHelper {
             Resize(image, width, height, keepAspectRatio, sampler);
             image.Save(outFullPath);
         }
+    }
+
+    /// <summary>
+    /// Asynchronously resizes an image to the specified width and height.
+    /// </summary>
+    public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+
+        await Task.Run(() => {
+            using var inStream = System.IO.File.OpenRead(fullPath);
+            using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
+            Resize(image, width, height, keepAspectRatio, sampler);
+            image.Save(outFullPath);
+        }).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -114,6 +130,27 @@ public partial class ImageHelper {
             Resize(image, width, height, false);
             image.Save(outFullPath);
         }
+    }
+
+    /// <summary>
+    /// Asynchronously resizes an image to the specified percentage.
+    /// </summary>
+    public static async Task ResizeAsync(string filePath, string outFilePath, int percentage) {
+        if (percentage <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(percentage));
+        }
+
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+
+        await Task.Run(() => {
+            using var inStream = System.IO.File.OpenRead(fullPath);
+            using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
+            int width = image.Width * percentage / 100;
+            int height = image.Height * percentage / 100;
+            Resize(image, width, height, false);
+            image.Save(outFullPath);
+        }).ConfigureAwait(false);
     }
 
     /// <summary>

@@ -48,6 +48,10 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
         public SwitchParameter DontRespectAspectRatio { get; set; }
 
+        /// <summary>Use asynchronous processing.</summary>
+        [Parameter]
+        public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = Helpers.ResolvePath(FilePath);
@@ -58,7 +62,11 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetPercentage) {
-            ImagePlayground.ImageHelper.Resize(filePath, output, Percentage);
+            if (Async.IsPresent) {
+                ImagePlayground.ImageHelper.ResizeAsync(filePath, output, Percentage).GetAwaiter().GetResult();
+            } else {
+                ImagePlayground.ImageHelper.Resize(filePath, output, Percentage);
+            }
             return;
         }
 
@@ -74,6 +82,10 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         int? height = heightBound ? Height : (int?)null;
         bool keepAspect = !DontRespectAspectRatio.IsPresent;
 
-        ImagePlayground.ImageHelper.Resize(filePath, output, width, height, keepAspect);
+        if (Async.IsPresent) {
+            ImagePlayground.ImageHelper.ResizeAsync(filePath, output, width, height, keepAspect).GetAwaiter().GetResult();
+        } else {
+            ImagePlayground.ImageHelper.Resize(filePath, output, width, height, keepAspect);
+        }
     }
 }
