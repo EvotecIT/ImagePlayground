@@ -1,7 +1,7 @@
 ﻿### 0.0.8 - 2024.06.05
 - Bump dependencies
 - Fix signing
-- Smnal fixes
+- Small fixes
 
 ### 0.0.7 - 2024.06.05
 - Add another method `$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",50,100, 0.5, 0.5)`
