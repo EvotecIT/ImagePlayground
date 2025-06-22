@@ -4,19 +4,19 @@ using System.IO;
 namespace ImagePlayground;
 public static partial class Helpers {
     /// <summary>
-    /// Converts Color to Hex Color
+    /// Converts a <see cref="SixLabors.ImageSharp.Color"/> to a 6 character hex string.
     /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
+    /// <param name="c">Color value to convert.</param>
+    /// <returns>Hex string without alpha component.</returns>
     public static string ToHexColor(this SixLabors.ImageSharp.Color c) {
         return c.ToHex().Remove(6);
     }
 
     /// <summary>
-    /// Opens up any file using assigned Application
+    /// Opens the specified file using the OS default application if <paramref name="open"/> is <c>true</c>.
     /// </summary>
-    /// <param name="filePath"></param>
-    /// <param name="open"></param>
+    /// <param name="filePath">Path to the file.</param>
+    /// <param name="open">Whether to open the file.</param>
     public static void Open(string filePath, bool open) {
         if (open) {
             ProcessStartInfo startInfo = new ProcessStartInfo(filePath) {

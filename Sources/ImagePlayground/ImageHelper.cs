@@ -16,8 +16,10 @@ public partial class ImageHelper {
     /// Converts an image from one format to another.
     /// Following image formats are supported: bmp, gif, jpeg, pbm, png, tga, tiff, webp
     /// </summary>
-    /// <param name="filePath"></param>
-    /// <param name="outFilePath"></param>
+    /// <param name="filePath">Source image path.</param>
+    /// <param name="outFilePath">Destination image path.</param>
+    /// <param name="quality">Optional quality value for lossy formats.</param>
+    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
     /// <exception cref="UnknownImageFormatException"></exception>
     public static void ConvertTo(string filePath, string outFilePath, int? quality = null, int? compressionLevel = null) {
         string fullPath = Helpers.ResolvePath(filePath);
