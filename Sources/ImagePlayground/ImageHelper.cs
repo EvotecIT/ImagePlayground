@@ -54,6 +54,15 @@ public partial class ImageHelper {
         }
     }
 
+    /// <summary>
+    /// Resizes the provided <paramref name="image"/> to the specified dimensions.
+    /// </summary>
+    /// <param name="image">Image instance to resize.</param>
+    /// <param name="width">Desired width or <c>null</c> to auto calculate.</param>
+    /// <param name="height">Desired height or <c>null</c> to auto calculate.</param>
+    /// <param name="keepAspectRatio">Preserve the original aspect ratio.</param>
+    /// <param name="sampler">Optional resampler algorithm.</param>
+    /// <returns>Resized image instance.</returns>
     public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Image.Sampler? sampler = null) {
         if (width == null && height == null) {
             return image;
@@ -107,6 +116,14 @@ public partial class ImageHelper {
         }
     }
 
+    /// <summary>
+    /// Combines two images either horizontally or vertically.
+    /// </summary>
+    /// <param name="filePath">Path to the first image.</param>
+    /// <param name="filePath2">Path to the second image.</param>
+    /// <param name="outFilePath">Destination path of the combined image.</param>
+    /// <param name="resizeToFit">Resize images so they fit next to each other.</param>
+    /// <param name="imagePlacement">Determines placement of <paramref name="filePath2"/>.</param>
     public static void Combine(string filePath, string filePath2, string outFilePath, bool resizeToFit = false, ImagePlacement imagePlacement = ImagePlacement.Bottom) {
         string fullPath = Helpers.ResolvePath(filePath);
         string fullPath2 = Helpers.ResolvePath(filePath2);
@@ -184,6 +201,14 @@ public partial class ImageHelper {
 
     }
 
+    /// <summary>
+    /// Generates a patterned image and saves it to disk.
+    /// </summary>
+    /// <param name="filePath">Destination image path.</param>
+    /// <param name="width">Image width.</param>
+    /// <param name="height">Image height.</param>
+    /// <param name="color">Background color.</param>
+    /// <param name="open">Open the image after saving.</param>
     public static void Create(string filePath, int width, int height, Color color, bool open = false) {
         string fullPath = Helpers.ResolvePath(filePath);
 

@@ -26,6 +26,11 @@ public static partial class Helpers {
         }
     }
 
+    /// <summary>
+    /// Checks whether the specified file is locked by another process.
+    /// </summary>
+    /// <param name="file">File to test.</param>
+    /// <returns><c>true</c> if the file cannot be opened exclusively.</returns>
     public static bool IsFileLocked(this FileInfo file) {
         try {
             using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)) {
@@ -43,6 +48,11 @@ public static partial class Helpers {
         return false;
     }
 
+    /// <summary>
+    /// Determines if the file specified by path is locked by another process.
+    /// </summary>
+    /// <param name="fileName">Path to the file.</param>
+    /// <returns><c>true</c> if the file cannot be opened exclusively.</returns>
     public static bool IsFileLocked(this string fileName) {
         try {
             var file = new FileInfo(fileName);
