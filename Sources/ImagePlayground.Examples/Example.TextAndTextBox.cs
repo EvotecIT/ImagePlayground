@@ -1,10 +1,11 @@
 using SixLabors.ImageSharp;
 using System;
+using System.Diagnostics;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
     public static void TextAndTextBox1(string folderPath) {
-        Console.WriteLine("[*] AddText vs AddTextBox example 1");
+        Trace.WriteLine("[*] AddText vs AddTextBox example 1");
         string src = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
         string dest = System.IO.Path.Combine(folderPath, "TextAndTextBox.jpg");
         using (var image = Image.Load(src)) {
@@ -15,7 +16,7 @@ internal partial class Example {
     }
 
     public static void TextAndTextBox2(string folderPath) {
-        Console.WriteLine("[*] AddText vs AddTextBox example 2");
+        Trace.WriteLine("[*] AddText vs AddTextBox example 2");
         string src = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
         string dest = System.IO.Path.Combine(folderPath, "TextAndTextBox2.jpg");
         using (var image = Image.Load(src)) {

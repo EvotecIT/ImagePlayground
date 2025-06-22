@@ -3,6 +3,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 /// <summary>
 /// OnModuleImportAndRemove is a class that implements the IModuleAssemblyInitializer and IModuleAssemblyCleanup interfaces.
@@ -54,7 +55,7 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
                 try {
                     return Assembly.LoadFrom(assemblyPath);
                 } catch (Exception ex) {
-                    Console.WriteLine($"Failed to load assembly from {assemblyPath}: {ex.Message}");
+                    Trace.WriteLine($"Failed to load assembly from {assemblyPath}: {ex.Message}");
                 }
             }
         }

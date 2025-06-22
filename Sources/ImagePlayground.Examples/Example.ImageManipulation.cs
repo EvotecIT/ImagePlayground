@@ -2,29 +2,30 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
+using System.Diagnostics;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
     public static void ImageModifications1(string folderPath) {
-        Console.WriteLine("[*] Manipulating Image - JPG");
+        Trace.WriteLine("[*] Manipulating Image - JPG");
         string filePath = System.IO.Path.Combine(folderPath, "LogoEvotec.png");
         string targetPath = System.IO.Path.Combine(folderPath, "LogoEvotec_Flipped.png");
         using (var image = Image.Load(filePath)) {
-            Console.WriteLine("[+] Flipping vertically");
+            Trace.WriteLine("[+] Flipping vertically");
             image.Flip(FlipMode.Vertical);
-            Console.WriteLine("[+] Resizing 1000x1000");
+            Trace.WriteLine("[+] Resizing 1000x1000");
             image.Resize(1000, 1000);
-            Console.WriteLine("[+] Changing background color");
+            Trace.WriteLine("[+] Changing background color");
             image.BackgroundColor(Color.Red);
             image.Save(targetPath);
         }
 
-        Console.WriteLine("[+] In use: " + Helpers.IsFileLocked(filePath));
-        Console.WriteLine("[+] In use: " + Helpers.IsFileLocked(targetPath));
+        Trace.WriteLine("[+] In use: " + Helpers.IsFileLocked(filePath));
+        Trace.WriteLine("[+] In use: " + Helpers.IsFileLocked(targetPath));
     }
 
     public static void ImageModifications2(string folderPath) {
-        Console.WriteLine("[*] Manipulating Image - JPG");
+        Trace.WriteLine("[*] Manipulating Image - JPG");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
         string targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_GrayScale.png");
         using (var image = Image.Load(filePath)) {
@@ -70,7 +71,7 @@ internal partial class Example {
         }
 
 
-        Console.WriteLine("[+] In use: " + Helpers.IsFileLocked(filePath));
-        Console.WriteLine("[+] In use: " + Helpers.IsFileLocked(targetPath));
+        Trace.WriteLine("[+] In use: " + Helpers.IsFileLocked(filePath));
+        Trace.WriteLine("[+] In use: " + Helpers.IsFileLocked(targetPath));
     }
 }

@@ -3,11 +3,12 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
     public static void ImageTextWatermark(string folderPath) {
-        Console.WriteLine("[*] Creating Text Watermark");
+        Trace.WriteLine("[*] Creating Text Watermark");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
         string waterMark = System.IO.Path.Combine(folderPath, "LogoEvotec.png");
         string targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_TextWatermark.png");
@@ -27,7 +28,7 @@ internal partial class Example {
 
 
     public static void ImageBGInfo(string folderPath) {
-        Console.WriteLine("[*] Creating Text Watermark");
+        Trace.WriteLine("[*] Creating Text Watermark");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
         string targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_BGInfo.png");
         using (var image = Image.Load(filePath)) {

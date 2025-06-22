@@ -258,7 +258,7 @@ BarCode.Generate(BarCode.BarcodeTypes.DataMatrix, "DataMatrixExample", "DataMatr
 BarCode.Generate(BarCode.BarcodeTypes.Code128, "1234567890", "BarcodeCode128.png");
 BarCode.Generate(BarCode.BarcodeTypes.PDF417, "Pdf417Example", "Pdf417.png");
 var result = BarCode.Read("DataMatrix.png");
-Console.WriteLine(result.Message);
+System.Diagnostics.Trace.WriteLine(result.Message);
 ```
 
 ### Image processing

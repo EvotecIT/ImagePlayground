@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
     public static void ChartsExamples(string folderPath) {
-        Console.WriteLine("[*] Creating Bar chart");
+        Trace.WriteLine("[*] Creating Bar chart");
         string bar = Path.Combine(folderPath, "ChartsBar.png");
         var bars = new List<Charts.ChartDefinition> {
                 new Charts.ChartBar("C#", new List<double> { 5 }),
@@ -14,7 +15,7 @@ internal partial class Example {
             };
         Charts.Generate(bars, bar, 500, 500);
 
-        Console.WriteLine("[*] Creating Pie chart");
+        Trace.WriteLine("[*] Creating Pie chart");
         string pie = Path.Combine(folderPath, "ChartsPie.png");
         var pies = new List<Charts.ChartDefinition> {
                 new Charts.ChartPie("C#", 5),
@@ -23,7 +24,7 @@ internal partial class Example {
             };
         Charts.Generate(pies, pie, 500, 500);
 
-        Console.WriteLine("[*] Creating Line chart");
+        Trace.WriteLine("[*] Creating Line chart");
         string line = Path.Combine(folderPath, "ChartsLine.png");
         var lines = new List<Charts.ChartDefinition> {
                 new Charts.ChartLine(
@@ -44,7 +45,7 @@ internal partial class Example {
             };
         Charts.Generate(lines, line, 500, 500);
 
-        Console.WriteLine("[*] Creating Scatter chart");
+        Trace.WriteLine("[*] Creating Scatter chart");
         string scatter = Path.Combine(folderPath, "ChartsScatter.png");
         var scatters = new List<Charts.ChartDefinition> {
                 new Charts.ChartScatter("First", new List<double> { 1, 2, 3 }, new List<double> { 4, 5, 6 }),
@@ -52,7 +53,7 @@ internal partial class Example {
             };
         Charts.Generate(scatters, scatter, 500, 500);
 
-        Console.WriteLine("[*] Creating Radial chart");
+        Trace.WriteLine("[*] Creating Radial chart");
         string radial = Path.Combine(folderPath, "ChartsRadial.png");
         var radials = new List<Charts.ChartDefinition> {
                 new Charts.ChartRadial("C#", 5),
@@ -63,21 +64,21 @@ internal partial class Example {
             };
         Charts.Generate(radials, radial, 500, 500);
 
-        Console.WriteLine("[*] Creating Line chart with annotations");
+        Trace.WriteLine("[*] Creating Line chart with annotations");
         string annotated = Path.Combine(folderPath, "ChartsAnnotated.png");
         var anns = new List<Charts.ChartAnnotation> {
                 new Charts.ChartAnnotation(1, 12, "first", true)
             };
         Charts.Generate(lines, annotated, 500, 500, null, null, null, false, Charts.ChartTheme.Default, anns);
 
-        Console.WriteLine("[*] Creating Heatmap chart");
+        Trace.WriteLine("[*] Creating Heatmap chart");
         string heatmap = Path.Combine(folderPath, "ChartsHeatmap.png");
         var maps = new List<Charts.ChartDefinition> {
                 new Charts.ChartHeatmap("Heat", new double[,] { { 1, 2 }, { 3, 4 } })
             };
         Charts.Generate(maps, heatmap, 500, 500);
 
-        Console.WriteLine("[*] Creating Histogram chart");
+        Trace.WriteLine("[*] Creating Histogram chart");
         string hist = Path.Combine(folderPath, "ChartsHistogram.png");
         var hists = new List<Charts.ChartDefinition> {
                 new Charts.ChartHistogram("Data", new double[] { 1, 2, 3, 3, 4, 5 }, 2)
