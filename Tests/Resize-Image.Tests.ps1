@@ -30,6 +30,18 @@ Describe 'Resize-Image' {
 
     }
 
+    It 'resizes an image asynchronously' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dest = Join-Path $TestDir 'logo-small-async.png'
+
+        Resize-Image -FilePath $src -OutputPath $dest -Width 40 -Height 40 -Async
+
+        $img = [ImagePlayground.Image]::Load($dest)
+        $img.Width | Should -Be 40
+        $img.Height | Should -Be 40
+        $img.Dispose()
+    }
+
     It 'resizes an image by percentage' {
 
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'

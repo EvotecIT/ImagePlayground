@@ -21,4 +21,20 @@ Describe 'Add-ImageWatermark' {
         $out.Dispose()
         $orig.Dispose()
     }
+
+    It 'adds watermark asynchronously' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = Join-Path $TestDir 'watermark-async.png'
+        $wmk = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        if (Test-Path $dest) { Remove-Item $dest }
+
+        Add-ImageWatermark -FilePath $src -OutputPath $dest -WatermarkPath $wmk -WatermarkPercentage 100 -Async
+        Test-Path $dest | Should -BeTrue
+        $out = [ImagePlayground.Image]::Load($dest)
+        $orig = [ImagePlayground.Image]::Load($src)
+        $out.Width | Should -Be $orig.Width
+        $out.Height | Should -Be $orig.Height
+        $out.Dispose()
+        $orig.Dispose()
+    }
 }
