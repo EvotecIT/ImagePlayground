@@ -40,6 +40,7 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
 
     /// <summary>Opacity of the watermark.</summary>
     [Parameter]
+    [ValidateRange(0.0, 1.0)]
     public float Opacity { get; set; } = 1f;
 
     /// <summary>Padding around the watermark.</summary>
@@ -56,10 +57,12 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
 
     /// <summary>Scale of the watermark relative to the image.</summary>
     [Parameter]
+    [ValidateRange(1, 100)]
     public int WatermarkPercentage { get; set; } = 20;
 
     /// <summary>Tile watermark across the image with given spacing.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int? Spacing { get; set; }
 
     /// <inheritdoc />
