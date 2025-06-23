@@ -3,6 +3,9 @@
 - Fix signing
 - Small fixes
 
+### 0.0.9 - 2024.06.05
+- Added thumbnail caching and `Clear-ImageThumbnailCache` cmdlet
+
 ### 0.0.7 - 2024.06.05
 - Add another method `$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",50,100, 0.5, 0.5)`
 

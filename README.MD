@@ -91,6 +91,7 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageQRCodeWiFi` - Creates a WiFi QR code image.
 - `New-ImageQRContact` - Generates a QR code image containing the provided contact details.
 - `New-ImageThumbnail` - Creates thumbnails for all images in a directory.
+- `Clear-ImageThumbnailCache` - Removes cached thumbnails.
 - `Remove-ImageExif` - Removes EXIF metadata from an image.
 - `Resize-Image` - Resizes an image.
 - `Save-Image` - Saves an image to disk.
