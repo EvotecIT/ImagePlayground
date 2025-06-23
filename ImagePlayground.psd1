@@ -45,6 +45,7 @@
         'New-ImageQRCodeSwiss',
         'New-ImageGif',
         'New-ImageThumbnail',
+        'Clear-ImageThumbnailCache',
         'Remove-ImageExif',
         'Resize-Image',
         'Save-Image',
