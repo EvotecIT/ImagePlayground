@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -49,5 +50,32 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "missing_async.txt");
         if (File.Exists(file)) File.Delete(file);
         await Assert.ThrowsAsync<FileNotFoundException>(async () => await Helpers.ReadFileCheckedAsync(file));
+    }
+
+    [Fact]
+    public void Test_ResolvePath_DownloadsUrl() {
+        var tcp = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        tcp.Start();
+        int port = ((System.Net.IPEndPoint)tcp.LocalEndpoint).Port;
+        tcp.Stop();
+        string prefix = $"http://localhost:{port}/";
+
+        using var listener = new HttpListener();
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+        var serverTask = System.Threading.Tasks.Task.Run(() => {
+            var context = listener.GetContext();
+            byte[] data = System.Text.Encoding.UTF8.GetBytes("hello");
+            context.Response.ContentLength64 = data.Length;
+            context.Response.OutputStream.Write(data, 0, data.Length);
+            context.Response.OutputStream.Close();
+        });
+
+        string path = Helpers.ResolvePath(prefix + "file.txt");
+        serverTask.Wait();
+        string content = File.ReadAllText(path);
+        Assert.Equal("hello", content);
+        Helpers.CleanupTempFiles();
+        Assert.False(File.Exists(path));
     }
 }
