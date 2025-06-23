@@ -1,4 +1,4 @@
-﻿### 0.0.8 - 2024.06.05
+### 0.0.8 - 2024.06.05
 - Bump dependencies
 - Fix signing
 - Small fixes

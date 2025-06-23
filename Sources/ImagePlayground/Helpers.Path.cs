@@ -4,6 +4,11 @@ namespace ImagePlayground;
 /// Helper methods for working with file paths.
 /// </summary>
 public static partial class Helpers {
+    private static readonly System.Collections.Concurrent.ConcurrentBag<string> _tempFiles = new();
+
+    static Helpers() {
+        System.AppDomain.CurrentDomain.ProcessExit += (_, _) => CleanupTempFiles();
+    }
     /// <summary>
     /// Resolves the provided path to an absolute file system path.
     /// Environment variables are expanded and relative paths are
@@ -18,6 +23,18 @@ public static partial class Helpers {
         }
 
         string expanded = System.Environment.ExpandEnvironmentVariables(path);
+
+        if (expanded.StartsWith("http://", System.StringComparison.OrdinalIgnoreCase) ||
+            expanded.StartsWith("https://", System.StringComparison.OrdinalIgnoreCase)) {
+            string tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
+            using (var client = new System.Net.Http.HttpClient()) {
+                var bytes = client.GetByteArrayAsync(expanded).GetAwaiter().GetResult();
+                System.IO.File.WriteAllBytes(tempFile, bytes);
+            }
+            _tempFiles.Add(tempFile);
+            return tempFile;
+        }
+
         return System.IO.Path.GetFullPath(expanded);
     }
 
@@ -102,5 +119,22 @@ public static partial class Helpers {
         }
 
         return System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
+    /// <summary>
+    /// Removes any temporary files created when resolving URLs.
+    /// </summary>
+    public static void CleanupTempFiles() {
+        foreach (string file in _tempFiles) {
+            try {
+                if (System.IO.File.Exists(file)) {
+                    System.IO.File.Delete(file);
+                }
+            } catch {
+            }
+        }
+        while (!_tempFiles.IsEmpty) {
+            _tempFiles.TryTake(out _);
+        }
     }
 }
