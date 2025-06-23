@@ -29,10 +29,12 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
 
     /// <summary>Width of the chart.</summary>
     [Parameter]
+    [ValidateRange(1, 10000)]
     public int Width { get; set; } = 600;
 
     /// <summary>Height of the chart.</summary>
     [Parameter]
+    [ValidateRange(1, 10000)]
     public int Height { get; set; } = 400;
 
     /// <summary>X axis title.</summary>

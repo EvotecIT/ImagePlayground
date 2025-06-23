@@ -74,6 +74,13 @@ Describe 'Resize-Image' {
         { Resize-Image -FilePath $src -OutputPath $dest -Percentage -5 } | Should -Throw
     }
 
+    It 'throws for negative dimensions' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dest = Join-Path $TestDir 'logo-invalid-dim.png'
+        { Resize-Image -FilePath $src -OutputPath $dest -Width -5 -Height 10 } | Should -Throw
+        { Resize-Image -FilePath $src -OutputPath $dest -Width 10 -Height -5 } | Should -Throw
+    }
+
 
 }
 

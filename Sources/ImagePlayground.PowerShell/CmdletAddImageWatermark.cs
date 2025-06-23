@@ -62,7 +62,7 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
 
     /// <summary>Tile watermark across the image with given spacing.</summary>
     [Parameter]
-    [ValidateRange(0, int.MaxValue)]
+    [ValidateRange(1, 10000)]
     public int? Spacing { get; set; }
 
     /// <summary>Use asynchronous processing.</summary>

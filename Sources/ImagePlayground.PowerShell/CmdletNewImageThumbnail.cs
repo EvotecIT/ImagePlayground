@@ -21,10 +21,12 @@ public sealed class NewImageThumbnailCmdlet : PSCmdlet {
 
     /// <summary>Thumbnail width.</summary>
     [Parameter]
+    [ValidateRange(1, 10000)]
     public int Width { get; set; } = 100;
 
     /// <summary>Thumbnail height.</summary>
     [Parameter]
+    [ValidateRange(1, 10000)]
     public int Height { get; set; } = 100;
 
     /// <summary>Ignore aspect ratio.</summary>
