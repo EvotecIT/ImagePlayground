@@ -60,6 +60,10 @@ public static class Charts {
         /// <summary>Bar color.</summary>
         public ImageColor? Color { get; }
 
+        /// <summary>Create a bar chart definition.</summary>
+        /// <param name="name">Series name.</param>
+        /// <param name="value">Bar values.</param>
+        /// <param name="color">Optional bar color.</param>
         public ChartBar(string name, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Bar, name) {
             Value = value;
             Color = color;
@@ -83,6 +87,13 @@ public static class Charts {
         /// <summary>Render the line using a smooth curve.</summary>
         public bool Smooth { get; }
 
+        /// <summary>Create a line chart definition.</summary>
+        /// <param name="name">Series name.</param>
+        /// <param name="value">Line values.</param>
+        /// <param name="color">Optional line color.</param>
+        /// <param name="markerShape">Marker shape.</param>
+        /// <param name="markerSize">Optional marker size.</param>
+        /// <param name="smooth">Render as a smooth curve.</param>
         public ChartLine(
             string name,
             IList<double> value,
@@ -109,6 +120,11 @@ public static class Charts {
         /// <summary>Point color.</summary>
         public ImageColor? Color { get; }
 
+        /// <summary>Create a scatter chart definition.</summary>
+        /// <param name="name">Series name.</param>
+        /// <param name="x">X data points.</param>
+        /// <param name="y">Y data points.</param>
+        /// <param name="color">Optional point color.</param>
         public ChartScatter(string name, IList<double> x, IList<double> y, ImageColor? color = null) : base(ChartDefinitionType.Scatter, name) {
             X = x;
             Y = y;
@@ -127,6 +143,11 @@ public static class Charts {
         /// <summary>Line color.</summary>
         public ImageColor? Color { get; }
 
+        /// <summary>Create a polar chart definition.</summary>
+        /// <param name="name">Series name.</param>
+        /// <param name="angle">Angle values.</param>
+        /// <param name="value">Radius values.</param>
+        /// <param name="color">Optional line color.</param>
         public ChartPolar(string name, IList<double> angle, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Polar, name) {
             Angle = angle;
             Value = value;
@@ -142,6 +163,10 @@ public static class Charts {
         /// <summary>Slice color.</summary>
         public ImageColor? Color { get; }
 
+        /// <summary>Create a pie slice definition.</summary>
+        /// <param name="name">Slice label.</param>
+        /// <param name="value">Slice value.</param>
+        /// <param name="color">Optional slice color.</param>
         public ChartPie(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Pie, name) {
             Value = value;
             Color = color;
@@ -156,6 +181,10 @@ public static class Charts {
         /// <summary>Gauge color.</summary>
         public ImageColor? Color { get; }
 
+        /// <summary>Create a radial gauge definition.</summary>
+        /// <param name="name">Gauge label.</param>
+        /// <param name="value">Gauge value.</param>
+        /// <param name="color">Optional gauge color.</param>
         public ChartRadial(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Radial, name) {
             Value = value;
             Color = color;
@@ -167,6 +196,9 @@ public static class Charts {
         /// <summary>Values of the heatmap.</summary>
         public double[,] Data { get; }
 
+        /// <summary>Create a heatmap definition.</summary>
+        /// <param name="name">Series name.</param>
+        /// <param name="data">Heatmap values.</param>
         public ChartHeatmap(string name, double[,] data) : base(ChartDefinitionType.Heatmap, name) {
             Data = data;
         }
@@ -180,6 +212,10 @@ public static class Charts {
         /// <summary>Size of each bin.</summary>
         public int? BinSize { get; }
 
+        /// <summary>Create a histogram definition.</summary>
+        /// <param name="name">Series name.</param>
+        /// <param name="values">Input values.</param>
+        /// <param name="binSize">Optional bin size.</param>
         public ChartHistogram(string name, double[] values, int? binSize = null) : base(ChartDefinitionType.Histogram, name) {
             Values = values;
             BinSize = binSize;
@@ -191,6 +227,8 @@ public static class Charts {
         /// <summary>Whether to show values above bars.</summary>
         public bool ShowValuesAboveBars { get; }
 
+        /// <summary>Initialize options for bar charts.</summary>
+        /// <param name="showValuesAboveBars">Show value labels.</param>
         public ChartBarOptions(bool showValuesAboveBars) {
             ShowValuesAboveBars = showValuesAboveBars;
         }
@@ -208,6 +246,11 @@ public static class Charts {
         /// <summary>Display arrow.</summary>
         public bool Arrow { get; }
 
+        /// <summary>Create an annotation.</summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="text">Annotation text.</param>
+        /// <param name="arrow">Display arrow.</param>
         public ChartAnnotation(double x, double y, string text, bool arrow = false) {
             X = x;
             Y = y;
