@@ -3,7 +3,7 @@
   [![License](https://img.shields.io/github/license/EvotecIT/ImagePlayground.svg)](https://github.com/EvotecIT/ImagePlayground)
 
   [![PowerShell tests](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml/badge.svg?branch=master)](https://github.com/EvotecIT/ImagePlayground/actions/workflows/test_powershell.yml)
-  [![Gallery](https://img.shields.io/powershellgallery/v/ImagePlayground.svge)](https://www.powershellgallery.com/packages/ImagePlayground)
+  [![Gallery](https://img.shields.io/powershellgallery/v/ImagePlayground.svg)](https://www.powershellgallery.com/packages/ImagePlayground)
   [![Gallery Preview](https://img.shields.io/powershellgallery/vpre/ImagePlayground.svg?label=powershell%20gallery%20preview&colorB=yellow)](https://www.powershellgallery.com/packages/ImagePlayground)
 
   [![PowerShell Gallery downloads](https://img.shields.io/powershellgallery/p/ImagePlayground.svg)](https://www.powershellgallery.com/packages/ImagePlayground)
