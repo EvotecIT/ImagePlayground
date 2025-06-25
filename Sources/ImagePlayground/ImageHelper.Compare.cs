@@ -4,6 +4,12 @@ using Codeuctivity.ImageSharpCompare;
 namespace ImagePlayground;
 public partial class ImageHelper {
 
+    /// <summary>
+    /// Compares two images and returns the difference result.
+    /// </summary>
+    /// <param name="filePath">Path to the first image.</param>
+    /// <param name="filePathToCompare">Path to the image to compare against.</param>
+    /// <returns>Comparison result.</returns>
     public static ICompareResult Compare(string filePath, string filePathToCompare) {
         string fullPath = Helpers.ResolvePath(filePath);
         string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
@@ -11,6 +17,12 @@ public partial class ImageHelper {
         return ImageSharpCompare.CalcDiff(fullPath, fullPathToCompare);
     }
 
+    /// <summary>
+    /// Compares two images and saves the difference mask.
+    /// </summary>
+    /// <param name="filePath">Path to the first image.</param>
+    /// <param name="filePathToCompare">Path to the image to compare against.</param>
+    /// <param name="filePathToSave">Destination path for the difference mask.</param>
     public static void Compare(string filePath, string filePathToCompare, string filePathToSave) {
         string fullPath = Helpers.ResolvePath(filePath);
         string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
