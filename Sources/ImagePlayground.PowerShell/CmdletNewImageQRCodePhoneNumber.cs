@@ -24,6 +24,7 @@ public sealed class NewImageQrCodePhoneNumberCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord() {
         if (string.IsNullOrWhiteSpace(FilePath)) {
             FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
