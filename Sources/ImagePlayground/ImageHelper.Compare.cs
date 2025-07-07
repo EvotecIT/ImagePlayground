@@ -2,6 +2,9 @@
 using Codeuctivity.ImageSharpCompare;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
 
     /// <summary>

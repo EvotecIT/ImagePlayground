@@ -5,6 +5,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image : System.IDisposable {
     /// <summary>
     /// Crops the image to a circular region.

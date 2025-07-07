@@ -4,6 +4,9 @@ using System.Security.Cryptography;
 using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
     private static string GetThumbnailCacheDirectory() {
         string dir = Path.Combine(Path.GetTempPath(), "ImagePlayground", "thumbnails");
