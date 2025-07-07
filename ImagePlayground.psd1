@@ -1,4 +1,4 @@
-﻿@{
+@{
     AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
     Author                 = 'Przemyslaw Klys'
     CmdletsToExport        = @(
@@ -58,7 +58,7 @@
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @()
     GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
-    ModuleVersion          = '0.0.9'
+    ModuleVersion        = '1.0.0'
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{

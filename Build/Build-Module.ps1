@@ -1,4 +1,4 @@
-﻿Import-Module PSPublishModule -Force -ErrorAction Stop
+Import-Module PSPublishModule -Force -ErrorAction Stop
 
 Build-Module -ModuleName 'ImagePlayground' {
     # Usual defaults as per standard module
@@ -10,7 +10,7 @@ Build-Module -ModuleName 'ImagePlayground' {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion          = '0.0.X'
+        ModuleVersion        = '1.0.0'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
