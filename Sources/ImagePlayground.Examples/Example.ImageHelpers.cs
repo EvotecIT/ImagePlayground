@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Demonstrates basic resizing and format conversion.
+    /// </summary>
+    /// <param name="folderPath">Folder containing source images.</param>
     public static void ResizeImage(string folderPath) {
         Console.WriteLine("[*] Resizing - JPG");
         string filePath = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.jpg");
@@ -24,6 +28,10 @@ internal partial class Example {
         ImageHelper.ConvertTo(filePathOutTemporary, filePathOutIco);
     }
 
+    /// <summary>
+    /// Converts an image into multiple formats.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the source image.</param>
     public static void ConvertTo(string folderPath) {
         Console.WriteLine("[*] Converting JPG to PNG");
         string filePath = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.jpg");
@@ -40,6 +48,10 @@ internal partial class Example {
         ImageHelper.ConvertTo(filePath, filePathOut);
     }
 
+    /// <summary>
+    /// Merges two images into a single file.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the source images.</param>
     public static void Combine(string folderPath) {
         Console.WriteLine("[*] Converting JPG to PNG");
         string filePath = System.IO.Path.Combine(folderPath, "KulekWSluchawkach.jpg");

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Creates several QR code samples and reads them back.
+    /// </summary>
+    /// <param name="folderPath">Folder used for input and output images.</param>
     public static void QRCode(string folderPath) {
         Console.WriteLine("[*] Creating QR code - JPG");
         string filePath = System.IO.Path.Combine(folderPath, "QRCode1.jpg");

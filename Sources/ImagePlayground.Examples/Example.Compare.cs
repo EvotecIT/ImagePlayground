@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Example showing how to compare two images.
+    /// </summary>
+    /// <param name="folderPath">Folder containing example images.</param>
     public static void Compare(string folderPath) {
         //Console.WriteLine("[*] Comparing two images - showing output");
         //string filePath = System.IO.Path.Combine(folderPath, "CalculatorBefore.png");

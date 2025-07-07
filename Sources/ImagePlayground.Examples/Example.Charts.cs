@@ -4,6 +4,10 @@ using System.IO;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Generates various chart images using the helper API.
+    /// </summary>
+    /// <param name="folderPath">Folder where chart images will be saved.</param>
     public static void ChartsExamples(string folderPath) {
         Console.WriteLine("[*] Creating Bar chart");
         string bar = Path.Combine(folderPath, "ChartsBar.png");

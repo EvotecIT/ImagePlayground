@@ -6,6 +6,10 @@ using System.IO;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Adds text and image watermarks to an image.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the source image.</param>
     public static void ImageTextWatermark(string folderPath) {
         Console.WriteLine("[*] Creating Text Watermark");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
@@ -26,6 +30,10 @@ internal partial class Example {
     }
 
 
+    /// <summary>
+    /// Creates an image with basic system information overlay.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the source image.</param>
     public static void ImageBGInfo(string folderPath) {
         Console.WriteLine("[*] Creating Text Watermark");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
