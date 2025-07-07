@@ -6,6 +6,10 @@ using System.IO;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Demonstrates applying text and image watermarks.
+    /// </summary>
+    /// <param name="folderPath">Folder containing images for watermarking.</param>
     public static void ImageTextWatermark(string folderPath) {
         Console.WriteLine("[*] Creating Text Watermark");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
@@ -26,6 +30,10 @@ internal partial class Example {
     }
 
 
+    /// <summary>
+    /// Adds basic system information as text overlay.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the source image.</param>
     public static void ImageBGInfo(string folderPath) {
         Console.WriteLine("[*] Creating Text Watermark");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
