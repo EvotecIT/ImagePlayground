@@ -7,6 +7,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image {
     /// <summary>
     /// Saves the image in ICO format using multiple resolutions.

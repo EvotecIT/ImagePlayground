@@ -7,6 +7,9 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image : IDisposable {
     /// <summary>
     /// Calculates the dimensions required to render <paramref name="text"/> using the specified font.

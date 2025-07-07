@@ -11,6 +11,9 @@ using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using Color = SixLabors.ImageSharp.Color;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
     /// <summary>
     /// Converts an image from one format to another.

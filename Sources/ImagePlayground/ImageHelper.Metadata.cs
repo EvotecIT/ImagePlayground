@@ -8,14 +8,33 @@ using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using SixLabors.ImageSharp.Metadata.Profiles.Xmp;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
+    /// <summary>
+    /// Serialization model for image metadata.
+    /// </summary>
     private sealed class SerializedImageMetadata {
+        /// <summary>Horizontal resolution.</summary>
         public double HorizontalResolution { get; set; }
+
+        /// <summary>Vertical resolution.</summary>
         public double VerticalResolution { get; set; }
+
+        /// <summary>Resolution measurement units.</summary>
         public PixelResolutionUnit ResolutionUnits { get; set; }
+
+        /// <summary>Serialized Exif profile.</summary>
         public byte[]? ExifProfile { get; set; }
+
+        /// <summary>Serialized XMP profile.</summary>
         public byte[]? XmpProfile { get; set; }
+
+        /// <summary>Serialized ICC profile.</summary>
         public byte[]? IccProfile { get; set; }
+
+        /// <summary>Serialized IPTC profile.</summary>
         public byte[]? IptcProfile { get; set; }
     }
     /// <summary>

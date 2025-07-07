@@ -2,6 +2,9 @@ using System.IO;
 using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
     /// <summary>
     /// Adds text to an image file and saves the result.
