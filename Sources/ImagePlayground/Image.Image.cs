@@ -4,6 +4,9 @@ using SixLabors.ImageSharp.Processing;
 
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image : IDisposable {
     /// <summary>
     /// Draws another image onto the current image from a file path.

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image {
     /// <summary>
     /// Gets all EXIF values from the image.

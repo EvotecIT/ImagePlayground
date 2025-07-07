@@ -3,6 +3,9 @@ using System.IO;
 using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
     /// <summary>
     /// Generates resized copies for all images found in <paramref name="directoryPath"/>.

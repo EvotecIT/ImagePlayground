@@ -6,6 +6,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image : IDisposable {
     /// <summary>
     /// Converts the image into an avatar with the specified size and corner radius.

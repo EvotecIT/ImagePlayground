@@ -7,6 +7,9 @@ using FontStyle = SixLabors.Fonts.FontStyle;
 using PointF = SixLabors.ImageSharp.PointF;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides image manipulation operations.
+/// </summary>
 public partial class Image : IDisposable {
 
     public enum WatermarkPlacement {

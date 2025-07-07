@@ -2,6 +2,9 @@ using System;
 using System.IO;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
     /// <summary>
     /// Reads an image file and returns its Base64 representation.

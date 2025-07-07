@@ -4,6 +4,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for image manipulation.
+/// </summary>
 public partial class ImageHelper {
     /// <summary>
     /// Adds an image watermark at one of the predefined placements.
