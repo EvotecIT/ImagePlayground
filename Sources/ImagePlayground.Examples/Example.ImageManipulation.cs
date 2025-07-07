@@ -5,6 +5,10 @@ using System;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Applies several modifications to demonstrate basic image processing.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the source image.</param>
     public static void ImageModifications1(string folderPath) {
         Console.WriteLine("[*] Manipulating Image - JPG");
         string filePath = System.IO.Path.Combine(folderPath, "LogoEvotec.png");
@@ -23,6 +27,10 @@ internal partial class Example {
         Console.WriteLine("[+] In use: " + Helpers.IsFileLocked(targetPath));
     }
 
+    /// <summary>
+    /// Shows additional image manipulation examples.
+    /// </summary>
+    /// <param name="folderPath">Folder containing the sample image.</param>
     public static void ImageModifications2(string folderPath) {
         Console.WriteLine("[*] Manipulating Image - JPG");
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");

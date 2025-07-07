@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 namespace ImagePlayground.Examples;
 
 internal partial class Example {
+    /// <summary>
+    /// Demonstrates generating and reading standard barcodes.
+    /// </summary>
+    /// <param name="folderPath">Output directory for the sample files.</param>
     public static void BarCodes1(string folderPath) {
         //string filePath = System.IO.Path.Combine(folderPath, "QR.png");
 
@@ -33,6 +37,10 @@ internal partial class Example {
         Console.Write(read.Message);
     }
 
+    /// <summary>
+    /// Generates a Data Matrix barcode and reads it back.
+    /// </summary>
+    /// <param name="folderPath">Destination directory for the generated image.</param>
     public static void DataMatrixSample(string folderPath) {
         Console.WriteLine("[*] Creating Data Matrix barcode - PNG");
         string filePath = System.IO.Path.Combine(folderPath, "DataMatrix.png");
@@ -43,6 +51,10 @@ internal partial class Example {
         Console.WriteLine(read.Message);
     }
 
+    /// <summary>
+    /// Creates and decodes a PDF417 barcode.
+    /// </summary>
+    /// <param name="folderPath">Directory where the barcode will be saved.</param>
     public static void Pdf417Sample(string folderPath) {
         Console.WriteLine("[*] Creating PDF417 barcode - PNG");
         string filePath = System.IO.Path.Combine(folderPath, "Pdf417.png");

@@ -3,6 +3,10 @@ using System;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
+    /// <summary>
+    /// Demonstrates AddText and AddTextBox methods side by side.
+    /// </summary>
+    /// <param name="folderPath">Directory with the source image.</param>
     public static void TextAndTextBox1(string folderPath) {
         Console.WriteLine("[*] AddText vs AddTextBox example 1");
         string src = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
@@ -14,6 +18,10 @@ internal partial class Example {
         }
     }
 
+    /// <summary>
+    /// Shows differences when using a narrow text box.
+    /// </summary>
+    /// <param name="folderPath">Directory with the source image.</param>
     public static void TextAndTextBox2(string folderPath) {
         Console.WriteLine("[*] AddText vs AddTextBox example 2");
         string src = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
