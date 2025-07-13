@@ -11,6 +11,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Metadata operations allow import and export of EXIF, ICC and other profiles.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Serialization model for image metadata.

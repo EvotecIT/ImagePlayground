@@ -16,6 +16,10 @@ namespace ImagePlayground;
 /// <summary>
 /// Represents an image loaded using ImageSharp and exposes basic manipulation helpers.
 /// </summary>
+/// <remarks>
+/// The class wraps <see cref="SixLabors.ImageSharp.Image"/> and ensures resources
+/// are properly disposed.
+/// </remarks>
 public partial class Image : IDisposable {
     private SixLabors.ImageSharp.Image _image;
     private string _filePath;

@@ -21,6 +21,10 @@ namespace ImagePlayground;
 /// <summary>
 /// Helper methods for generating and reading barcodes.
 /// </summary>
+/// <remarks>
+/// The methods in this class use the Barcoder library to create barcode images
+/// and ImageSharp for rendering.
+/// </remarks>
 public class BarCode {
     /// <summary>Supported barcode formats.</summary>
     public enum BarcodeTypes {

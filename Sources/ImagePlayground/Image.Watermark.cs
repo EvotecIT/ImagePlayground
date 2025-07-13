@@ -10,6 +10,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides image manipulation operations.
 /// </summary>
+/// <remarks>
+/// Watermarks can be applied as text or images with configurable placement.
+/// </remarks>
 public partial class Image : IDisposable {
 
     public enum WatermarkPlacement {

@@ -7,6 +7,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Useful for quickly applying watermarks without manually loading images.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Adds an image watermark at one of the predefined placements.

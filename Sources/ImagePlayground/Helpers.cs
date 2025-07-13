@@ -2,6 +2,9 @@
 using System.IO;
 
 namespace ImagePlayground;
+/// <summary>
+/// General helper utilities for file access and process handling.
+/// </summary>
 public static partial class Helpers {
     /// <summary>
     /// Converts a <see cref="SixLabors.ImageSharp.Color"/> to a 6 character hex string.

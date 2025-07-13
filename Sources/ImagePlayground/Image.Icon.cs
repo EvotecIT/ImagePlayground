@@ -10,6 +10,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides image manipulation operations.
 /// </summary>
+/// <remarks>
+/// Icon files can contain multiple resolutions which are generated automatically.
+/// </remarks>
 public partial class Image {
     /// <summary>
     /// Saves the image in ICO format using multiple resolutions.

@@ -11,6 +11,9 @@ using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
 
 namespace ImagePlayground;
+/// <summary>
+/// Provides helper methods for selecting the right image encoder.
+/// </summary>
 public static partial class Helpers {
     /// <summary>
     /// Returns an image encoder instance appropriate for the given file extension.

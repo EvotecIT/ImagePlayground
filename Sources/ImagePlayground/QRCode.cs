@@ -12,6 +12,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for generating various QR code payloads and reading QR codes.
 /// </summary>
+/// <remarks>
+/// Methods in this class use QRCoder to generate the underlying QR code data.
+/// </remarks>
 public class QrCode {
     /// <summary>
     /// Creates a QR code image from a raw string value.

@@ -8,6 +8,9 @@ using ImageColor = SixLabors.ImageSharp.Color;
 namespace ImagePlayground;
 
 /// <summary>Chart generation helpers.</summary>
+/// <remarks>
+/// Uses ScottPlot under the hood to render chart images.
+/// </remarks>
 public static class Charts {
     /// <summary>Type of chart definition.</summary>
     public enum ChartDefinitionType {

@@ -5,6 +5,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Converting images to and from Base64 strings allows easy transport via text formats.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Reads an image file and returns its Base64 representation.

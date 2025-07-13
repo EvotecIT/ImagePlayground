@@ -5,6 +5,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Comparison helpers rely on ImageSharpCompare to detect visual differences between files.
+/// </remarks>
 public partial class ImageHelper {
 
     /// <summary>

@@ -10,6 +10,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides image manipulation operations.
 /// </summary>
+/// <remarks>
+/// Text rendering relies on the fonts available in the operating system.
+/// </remarks>
 public partial class Image : IDisposable {
     /// <summary>
     /// Calculates the dimensions required to render <paramref name="text"/> using the specified font.

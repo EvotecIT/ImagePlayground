@@ -5,6 +5,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Useful for quickly cropping or clipping images without manual steps.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Crops an image to the specified rectangle and saves the result.

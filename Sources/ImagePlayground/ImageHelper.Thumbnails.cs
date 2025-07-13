@@ -6,6 +6,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Thumbnail generation can speed up gallery loading by creating small preview images.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Generates resized copies for all images found in <paramref name="directoryPath"/>.

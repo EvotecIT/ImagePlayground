@@ -7,6 +7,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Thumbnails are cached in the user's temporary directory for quick retrieval.
+/// </remarks>
 public partial class ImageHelper {
     private static string GetThumbnailCacheDirectory() {
         string dir = Path.Combine(Path.GetTempPath(), "ImagePlayground", "thumbnails");

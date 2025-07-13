@@ -9,6 +9,9 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace ImagePlayground;
 /// <summary>Helper methods for creating animated GIFs.</summary>
+/// <remarks>
+/// Each frame is loaded using ImageSharp and combined into a single GIF image.
+/// </remarks>
 public static class Gif {
     /// <summary>
     /// Generates an animated GIF from a set of images.

@@ -5,6 +5,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// Avatar helpers simplify creating square cropped images with rounded corners.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Converts an image file to an avatar and saves the result.

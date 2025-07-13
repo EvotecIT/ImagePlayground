@@ -14,6 +14,9 @@ namespace ImagePlayground;
 /// <summary>
 /// Provides helper methods for image manipulation.
 /// </summary>
+/// <remarks>
+/// This class exposes high-level convenience methods built on top of the <see cref="Image"/> type.
+/// </remarks>
 public partial class ImageHelper {
     /// <summary>
     /// Converts an image from one format to another.
