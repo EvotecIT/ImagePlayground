@@ -28,7 +28,7 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
 
     /// <summary>Watermark placement when coordinates are not specified.</summary>
     [Parameter(ParameterSetName = ParameterSetPlacement)]
-    public ImagePlayground.Image.WatermarkPlacement Placement { get; set; } = ImagePlayground.Image.WatermarkPlacement.Middle;
+    public WatermarkPlacement Placement { get; set; } = WatermarkPlacement.Middle;
 
     /// <summary>X coordinate for custom placement.</summary>
     [Parameter(ParameterSetName = ParameterSetCoordinates)]

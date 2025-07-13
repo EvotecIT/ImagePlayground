@@ -6,16 +6,16 @@ namespace ImagePlayground.Tests;
 
 public partial class ImagePlayground {
     [Theory]
-    [InlineData(BarCode.BarcodeTypes.Code128, "1234567890", "barcode_code128.png", "1234567890", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.Code93, "HELLOCODE93", "barcode_code93.png", "HELLOCODE93", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.Code39, "HELLO39", "barcode_code39.png", "HELLO39N", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.KixCode, "1234567890AB", "barcode_kix.png", "", Status.NotFound)]
-    [InlineData(BarCode.BarcodeTypes.UPCE, "123456", "barcode_upce.png", "01234565", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.UPCA, "123456789012", "barcode_upca.png", "123456789012", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.EAN, "9012341234571", "barcode_ean.png", "9012341234571", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.DataMatrix, "MatrixTest", "barcode_datamatrix.png", "MatrixTest", Status.Found)]
-    [InlineData(BarCode.BarcodeTypes.PDF417, "Pdf417Example", "barcode_pdf417.png", "Pdf417Example", Status.Found)]
-    public void Test_AllBarCodes(BarCode.BarcodeTypes type, string value, string fileName, string expected, Status status) {
+    [InlineData(BarcodeType.Code128, "1234567890", "barcode_code128.png", "1234567890", Status.Found)]
+    [InlineData(BarcodeType.Code93, "HELLOCODE93", "barcode_code93.png", "HELLOCODE93", Status.Found)]
+    [InlineData(BarcodeType.Code39, "HELLO39", "barcode_code39.png", "HELLO39N", Status.Found)]
+    [InlineData(BarcodeType.KixCode, "1234567890AB", "barcode_kix.png", "", Status.NotFound)]
+    [InlineData(BarcodeType.UPCE, "123456", "barcode_upce.png", "01234565", Status.Found)]
+    [InlineData(BarcodeType.UPCA, "123456789012", "barcode_upca.png", "123456789012", Status.Found)]
+    [InlineData(BarcodeType.EAN, "9012341234571", "barcode_ean.png", "9012341234571", Status.Found)]
+    [InlineData(BarcodeType.DataMatrix, "MatrixTest", "barcode_datamatrix.png", "MatrixTest", Status.Found)]
+    [InlineData(BarcodeType.PDF417, "Pdf417Example", "barcode_pdf417.png", "Pdf417Example", Status.Found)]
+    public void Test_AllBarCodes(BarcodeType type, string value, string fileName, string expected, Status status) {
         string filePath = Path.Combine(_directoryWithTests, fileName);
         if (File.Exists(filePath)) File.Delete(filePath);
 

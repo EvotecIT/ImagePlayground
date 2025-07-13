@@ -24,7 +24,7 @@ public partial class ImagePlayground {
         string dest = Path.Combine(_directoryWithTests, "wm_async.png");
         if (File.Exists(dest)) File.Delete(dest);
 
-        await ImageHelper.WatermarkImageAsync(src, dest, wmk, Image.WatermarkPlacement.Middle, watermarkPercentage: 100);
+        await ImageHelper.WatermarkImageAsync(src, dest, wmk, WatermarkPlacement.Middle, watermarkPercentage: 100);
         Assert.True(File.Exists(dest));
         using var orig = Image.Load(src);
         using var res = Image.Load(dest);

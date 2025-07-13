@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Company>Evotec</Company>
+    <Authors>Przemyslaw Klys</Authors>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
+    <AssemblyName>ImagePlayground.BarCode</AssemblyName>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
+    <PackageReference Include="Barcoder" Version="2.0.0" />
+    <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
+    <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Collections" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Collections.Concurrent" />
+    <Using Include="System.Threading" />
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Text" />
+    <Using Include="System.IO" />
+    <Using Include="System.Net" />
+    <Using Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+</Project>

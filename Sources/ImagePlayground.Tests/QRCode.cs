@@ -36,14 +36,14 @@ public partial class ImagePlayground {
     [Fact]
     public void Test_BarCode() {
         string filePath = System.IO.Path.Combine(_directoryWithTests, "BarcodeEAN13.png");
-        BarCode.Generate(BarCode.BarcodeTypes.EAN, "9012341234571", filePath);
+        BarCode.Generate(BarcodeType.EAN, "9012341234571", filePath);
 
         var read1 = BarCode.Read(filePath);
         Assert.True(read1.Message == "9012341234571");
         Assert.True(File.Exists(filePath) == true);
 
         filePath = System.IO.Path.Combine(_directoryWithTests, "BarcodeEAN7.png");
-        BarCode.Generate(BarCode.BarcodeTypes.EAN, "96385074", filePath);
+        BarCode.Generate(BarcodeType.EAN, "96385074", filePath);
         Assert.True(File.Exists(filePath) == true);
 
         var read2 = BarCode.Read(filePath);

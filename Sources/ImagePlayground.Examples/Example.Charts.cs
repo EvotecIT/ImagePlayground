@@ -72,7 +72,7 @@ internal partial class Example {
         var anns = new List<Charts.ChartAnnotation> {
                 new Charts.ChartAnnotation(1, 12, "first", true)
             };
-        Charts.Generate(lines, annotated, 500, 500, null, null, null, false, Charts.ChartTheme.Default, anns);
+        Charts.Generate(lines, annotated, 500, 500, null, null, null, false, ChartTheme.Default, anns);
 
         Console.WriteLine("[*] Creating Heatmap chart");
         string heatmap = Path.Combine(folderPath, "ChartsHeatmap.png");
