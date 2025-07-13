@@ -1,56 +1,7 @@
-@{
+﻿@{
     AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
     Author                 = 'Przemyslaw Klys'
-    CmdletsToExport        = @(
-        'Add-ImageText',
-        'Add-ImageTextBox',
-        'Add-ImageWatermark',
-        'Compare-Image',
-        'ConvertTo-Image',
-        'ConvertTo-ImageBase64',
-        'ConvertFrom-ImageBase64',
-        'Get-Image',
-        'Get-ImageBarCode',
-        'Get-ImageExif',
-        'Get-ImageQRCode',
-        'Merge-Image',
-        'New-ImageBarCode',
-        'New-ImageChart',
-        'New-ImageChartBar',
-        'New-ImageChartBarOptions',
-        'New-ImageChartLine',
-        'New-ImageChartScatter',
-        'New-ImageChartPolar',
-        'New-ImageChartPie',
-        'New-ImageChartRadial',
-        'New-ImageChartHeatmap',
-        'New-ImageChartHistogram',
-        'New-ImageCrop',
-        'New-ImageGrid',
-        'New-ImageIcon',
-        'New-ImageQRCode',
-        'New-ImageQRCodeWiFi',
-        'New-ImageQRContact',
-        'New-ImageQRCodeSms',
-        'New-ImageQRCodeGeoLocation',
-        'New-ImageQRCodeGirocode',
-        'New-ImageQRCodeBitcoin',
-        'New-ImageQRCodeMonero',
-        'New-ImageQRCodeSkypeCall',
-        'New-ImageQRCodeShadowSocks',
-        'New-ImageQRCodePhoneNumber',
-        'New-ImageQRCodeOtp',
-        'New-ImageQRCodeSlovenianUpnQr',
-        'New-ImageQRCodeBezahlCode',
-        'New-ImageQRCodeSwiss',
-        'New-ImageGif',
-        'New-ImageThumbnail',
-        'Clear-ImageThumbnailCache',
-        'Remove-ImageExif',
-        'Resize-Image',
-        'Save-Image',
-        'Set-ImageExif'
-    )
+    CmdletsToExport        = @('Add-ImageText', 'Add-ImageTextBox', 'Add-ImageWatermark', 'Clear-ImageThumbnailCache', 'Compare-Image', 'ConvertFrom-ImageBase64', 'ConvertTo-Image', 'ConvertTo-ImageBase64', 'Export-ImageMetadata', 'Get-Image', 'Get-ImageBarCode', 'Get-ImageExif', 'Get-ImageQRCode', 'Import-ImageMetadata', 'Merge-Image', 'New-ImageAvatar', 'New-ImageBarCode', 'New-ImageChart', 'New-ImageChartAnnotation', 'New-ImageChartBar', 'New-ImageChartBarOptions', 'New-ImageChartHeatmap', 'New-ImageChartHistogram', 'New-ImageChartLine', 'New-ImageChartPie', 'New-ImageChartPolar', 'New-ImageChartRadial', 'New-ImageChartScatter', 'New-ImageCrop', 'New-ImageGif', 'New-ImageGrid', 'New-ImageIcon', 'New-ImageQRCode', 'New-ImageQRCodeBezahlCode', 'New-ImageQRCodeBitcoin', 'New-ImageQRCodeGeoLocation', 'New-ImageQRCodeGirocode', 'New-ImageQRCodeMonero', 'New-ImageQRCodeOtp', 'New-ImageQRCodePhoneNumber', 'New-ImageQRCodeShadowSocks', 'New-ImageQRCodeSkypeCall', 'New-ImageQRCodeSlovenianUpnQr', 'New-ImageQRCodeSms', 'New-ImageQRCodeSwiss', 'New-ImageQRCodeWiFi', 'New-ImageQRContact', 'New-ImageThumbnail', 'Remove-ImageExif', 'Resize-Image', 'Save-Image', 'Set-ImageExif')
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
     Copyright              = '(c) 2011 - 2025 Przemyslaw Klys @ Evotec. All rights reserved.'
@@ -58,7 +9,7 @@
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @()
     GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
-    ModuleVersion        = '1.0.0'
+    ModuleVersion          = '1.0.0'
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
