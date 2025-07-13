@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageBarCodeCmdlet : PSCmdlet {
     /// <summary>Barcode type.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public ImagePlayground.BarCode.BarcodeTypes Type { get; set; }
+public BarcodeType Type { get; set; }
 
     /// <summary>Value encoded in the barcode.</summary>
     [Parameter(Mandatory = true, Position = 1)]
@@ -25,6 +25,6 @@ public sealed class NewImageBarCodeCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.BarCode.Generate(Type, Value, output);
+        BarCode.Generate(Type, Value, output);
     }
 }

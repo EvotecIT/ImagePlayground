@@ -95,7 +95,7 @@ public partial class ImagePlayground {
                 new Charts.ChartAnnotation(0, 1, "first", true)
             };
 
-        Charts.Generate(defs, file, 300, 200, null, null, null, false, Charts.ChartTheme.Default, anns);
+        Charts.Generate(defs, file, 300, 200, null, null, null, false, ChartTheme.Default, anns);
 
         Assert.True(File.Exists(file));
     }

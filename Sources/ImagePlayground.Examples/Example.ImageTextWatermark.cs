@@ -17,13 +17,13 @@ internal partial class Example {
         string targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_TextWatermark.png");
         using (var image = Image.Load(filePath)) {
             // image.Watermark("Evotec Example", Color.Red, 10, 0, 15, 30);
-            image.Watermark("Evotec Services Bottom Left", Image.WatermarkPlacement.BottomLeft, Color.DarkCyan);
-            image.Watermark("Evotec Services Bottom Right", Image.WatermarkPlacement.BottomRight, Color.DarkCyan);
-            image.Watermark("Evotec Services Top Left", Image.WatermarkPlacement.TopLeft, Color.DarkCyan);
-            image.Watermark("Evotec Services Top Right", Image.WatermarkPlacement.TopRight, Color.DarkCyan);
+            image.Watermark("Evotec Services Bottom Left", WatermarkPlacement.BottomLeft, Color.DarkCyan);
+            image.Watermark("Evotec Services Bottom Right", WatermarkPlacement.BottomRight, Color.DarkCyan);
+            image.Watermark("Evotec Services Top Left", WatermarkPlacement.TopLeft, Color.DarkCyan);
+            image.Watermark("Evotec Services Top Right", WatermarkPlacement.TopRight, Color.DarkCyan);
             //image.Watermark("Evotec Services Middle", Image.WatermarkPlacement.Middle, Color.DarkCyan);
 
-            image.WatermarkImage(waterMark, Image.WatermarkPlacement.Middle, 0.5f);
+            image.WatermarkImage(waterMark, WatermarkPlacement.Middle, 0.5f);
 
             image.Save(targetPath);
         }

@@ -33,7 +33,7 @@ public partial class ImagePlayground {
         if (File.Exists(dest)) File.Delete(dest);
 
         using (var img = Image.Load(src)) {
-            img.WatermarkImage(watermark, Image.WatermarkPlacement.TopRight, 0.8f, 10f, 90, FlipMode.Horizontal, 50);
+            img.WatermarkImage(watermark, WatermarkPlacement.TopRight, 0.8f, 10f, 90, FlipMode.Horizontal, 50);
             img.Save(dest);
         }
 
@@ -103,7 +103,7 @@ public partial class ImagePlayground {
 
     [Fact]
     public void Test_GetResampler_AllMapped() {
-        foreach (Image.Sampler sampler in Enum.GetValues(typeof(Image.Sampler))) {
+        foreach (Sampler sampler in Enum.GetValues(typeof(Sampler))) {
             Assert.NotNull(Helpers.GetResampler(sampler));
         }
     }

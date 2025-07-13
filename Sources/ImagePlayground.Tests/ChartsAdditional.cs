@@ -22,7 +22,7 @@ public partial class ImagePlayground {
         var defs = new List<Charts.ChartDefinition> {
                 new Charts.ChartBar("A", new List<double> {1,2})
             };
-        Charts.Generate(defs, file, 200, 150, null, null, null, false, Charts.ChartTheme.Dark);
+        Charts.Generate(defs, file, 200, 150, null, null, null, false, ChartTheme.Dark);
         Assert.True(File.Exists(file));
     }
 
@@ -33,7 +33,7 @@ public partial class ImagePlayground {
         var defs = new List<Charts.ChartDefinition> {
                 new Charts.ChartBar("A", new List<double> {1,2})
             };
-        Charts.Generate(defs, file, 200, 150, null, null, null, false, Charts.ChartTheme.Light);
+        Charts.Generate(defs, file, 200, 150, null, null, null, false, ChartTheme.Light);
         Assert.True(File.Exists(file));
     }
 }

@@ -21,7 +21,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
+        <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
+        <ProjectReference Include="..\ImagePlayground.Chart\ImagePlayground.Chart.csproj" />
+        <ProjectReference Include="..\ImagePlayground.BarCode\ImagePlayground.BarCode.csproj" />
+        <ProjectReference Include="..\ImagePlayground.QRCode\ImagePlayground.QRCode.csproj" />
     </ItemGroup>
 
     <ItemGroup>

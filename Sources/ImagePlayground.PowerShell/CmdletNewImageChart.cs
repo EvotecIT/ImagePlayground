@@ -59,7 +59,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
 
     /// <summary>Chart theme.</summary>
     [Parameter]
-    public Charts.ChartTheme Theme { get; set; } = Charts.ChartTheme.Default;
+    public ChartTheme Theme { get; set; } = ChartTheme.Default;
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
