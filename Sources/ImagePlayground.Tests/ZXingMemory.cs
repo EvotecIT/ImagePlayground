@@ -4,6 +4,10 @@ using BarcodeReader.ImageSharp;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for ZXingMemory.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_QrCodeRead_MemoryUsageStable() {

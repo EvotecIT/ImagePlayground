@@ -2,6 +2,10 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
 namespace ImagePlayground;
+
+/// <summary>
+/// Image resampling helper methods.
+/// </summary>
 public static partial class Helpers {
     /// <summary>
     /// Maps the <see cref="Sampler"/> enumeration to a concrete resampler implementation.

@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for AsyncMethods.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public async Task Test_ResizeAsync() {

@@ -2,6 +2,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for CompareOverloads.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_ImageCompare_WithImageOverload() {

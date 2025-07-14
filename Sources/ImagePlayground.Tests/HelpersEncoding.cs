@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for HelpersEncoding.
+/// </summary>
 public partial class ImagePlayground {
     private class FakeHttpHandler : HttpMessageHandler {
         private readonly HttpResponseMessage _response;

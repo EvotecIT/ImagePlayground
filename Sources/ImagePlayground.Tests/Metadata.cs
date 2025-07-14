@@ -4,6 +4,10 @@ using Xunit;
 using PlaygroundImage = ImagePlayground.Image;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for Metadata.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_Metadata_RoundTrip() {

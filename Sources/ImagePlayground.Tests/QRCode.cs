@@ -6,6 +6,10 @@ using SixLabors.ImageSharp.PixelFormats;
 
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for QRCode.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_QRCodeUrl() {

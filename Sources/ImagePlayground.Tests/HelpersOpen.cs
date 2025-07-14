@@ -3,6 +3,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for HelpersOpen.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_Open_InvalidPath_Handled() {

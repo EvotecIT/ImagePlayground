@@ -4,6 +4,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for WatermarkCoordinates.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_WatermarkImage_Coordinates() {

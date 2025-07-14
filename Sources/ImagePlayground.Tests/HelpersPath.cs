@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for HelpersPath.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_ResolvePath_ExpandsEnvironment() {

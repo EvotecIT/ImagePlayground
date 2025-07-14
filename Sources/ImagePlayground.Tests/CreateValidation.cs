@@ -3,6 +3,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for CreateValidation.
+/// </summary>
 public partial class ImagePlayground {
     [Theory]
     [InlineData(10, 30)]

@@ -3,6 +3,10 @@ using System.Diagnostics;
 using System.IO;
 
 namespace ImagePlayground;
+
+/// <summary>
+/// General helper utilities for the library.
+/// </summary>
 public static partial class Helpers {
     /// <summary>
     /// List of supported file extensions for image encoding.
