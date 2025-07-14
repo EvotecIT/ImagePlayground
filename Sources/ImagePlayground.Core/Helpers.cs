@@ -19,15 +19,23 @@ public static partial class Helpers {
     /// <param name="filePath">Path to the file.</param>
     /// <param name="open">Whether to open the file.</param>
     public static void Open(string filePath, bool open) {
-        if (open) {
-            ProcessStartInfo startInfo = new(filePath) {
-                UseShellExecute = true
-            };
-            try {
-                Process.Start(startInfo);
-            } catch (Exception ex) {
-                Console.Error.WriteLine($"Unable to open {filePath}: {ex.Message}");
-            }
+        if (!open) {
+            return;
+        }
+
+        if (!File.Exists(filePath)) {
+            Console.Error.WriteLine($"Unable to open {filePath}: file does not exist.");
+            return;
+        }
+
+        ProcessStartInfo startInfo = new(filePath) {
+            UseShellExecute = true
+        };
+
+        try {
+            Process.Start(startInfo);
+        } catch (Exception ex) {
+            Console.Error.WriteLine($"Unable to open {filePath}: {ex.Message}");
         }
     }
 

@@ -17,5 +17,6 @@ public partial class ImagePlayground {
         }
         string output = sw.ToString();
         Assert.Contains("Unable to open", output);
+        Assert.Contains("file does not exist", output);
     }
 }
