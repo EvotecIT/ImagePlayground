@@ -31,19 +31,19 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         /// <summary>New width of the image.</summary>
         /// <para>Used with <see cref="Height"/> when not using <see cref="Percentage"/>.</para>
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
-        [ValidateRange(1, 10000)]
+        [ValidateRange(1, 1000)]
         public int Width { get; set; }
 
         /// <summary>New height of the image.</summary>
         /// <para>Used with <see cref="Width"/> when not using <see cref="Percentage"/>.</para>
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
-        [ValidateRange(1, 10000)]
+        [ValidateRange(1, 1000)]
         public int Height { get; set; }
 
         /// <summary>Percentage based resize.</summary>
         /// <para>Applies uniform scaling relative to the original size.</para>
         [Parameter(ParameterSetName = ParameterSetPercentage)]
-        [ValidateRange(1, 10000)]
+        [ValidateRange(1, 1000)]
         public int Percentage { get; set; }
 
         /// <summary>Ignore aspect ratio.</summary>
