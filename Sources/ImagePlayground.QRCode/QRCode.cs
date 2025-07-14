@@ -29,7 +29,7 @@ public class QrCode {
         using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
                 using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
-                    using SixLabors.ImageSharp.Image qrCodeImage = qrCode.GetGraphic(20);
+                    using (SixLabors.ImageSharp.Image qrCodeImage = qrCode.GetGraphic(20)) {
                     if (transparent) {
                         //qrCodeImage.MakeTransparent();
                     }
@@ -55,6 +55,7 @@ public class QrCode {
                         SaveImageAsIcon(qrCodeImage, fullPath);
                     } else {
                         throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+                    }
                     }
                 }
             }
