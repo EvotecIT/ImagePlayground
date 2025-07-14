@@ -5,6 +5,7 @@ namespace ImagePlayground;
 /// </summary>
 public static partial class Helpers {
     private static readonly System.Collections.Concurrent.ConcurrentBag<string> _tempFiles = new();
+    private static readonly object _tempFilesLock = new();
 
     static Helpers() {
         System.AppDomain.CurrentDomain.ProcessExit += (_, _) => CleanupTempFiles();
@@ -135,7 +136,12 @@ public static partial class Helpers {
     /// Removes any temporary files created when resolving URLs.
     /// </summary>
     public static void CleanupTempFiles() {
-        foreach (string file in _tempFiles) {
+        string[] files;
+        lock (_tempFilesLock) {
+            files = _tempFiles.ToArray();
+        }
+
+        foreach (string file in System.Linq.Enumerable.Distinct(files)) {
             try {
                 if (System.IO.File.Exists(file)) {
                     System.IO.File.Delete(file);
@@ -143,8 +149,10 @@ public static partial class Helpers {
             } catch {
             }
         }
-        while (!_tempFiles.IsEmpty) {
-            _tempFiles.TryTake(out _);
+
+        lock (_tempFilesLock) {
+            while (_tempFiles.TryTake(out _)) {
+            }
         }
     }
 }
