@@ -26,22 +26,27 @@ namespace ImagePlayground.PowerShell;
 public sealed class AddImageTextCmdlet : PSCmdlet {
     /// <summary>Source image path.</summary>
     [Parameter(Mandatory = true, Position = 0)]
+    [ValidateNotNullOrEmpty]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Destination image path.</summary>
     [Parameter(Mandatory = true, Position = 1)]
+    [ValidateNotNullOrEmpty]
     public string OutputPath { get; set; } = string.Empty;
 
     /// <summary>Text to add.</summary>
     [Parameter(Mandatory = true, Position = 2)]
+    [ValidateNotNullOrEmpty]
     public string Text { get; set; } = string.Empty;
 
     /// <summary>X coordinate.</summary>
     [Parameter(Mandatory = true, Position = 3)]
+    [ValidateRange(0, float.MaxValue)]
     public float X { get; set; }
 
     /// <summary>Y coordinate.</summary>
     [Parameter(Mandatory = true, Position = 4)]
+    [ValidateRange(0, float.MaxValue)]
     public float Y { get; set; }
 
     /// <summary>Text color.</summary>
@@ -82,6 +87,14 @@ public sealed class AddImageTextCmdlet : PSCmdlet {
         if (!File.Exists(filePath)) {
             WriteWarning($"Add-ImageText - File {FilePath} not found. Please check the path.");
             return;
+        }
+
+        using (var img = ImagePlayground.Image.Load(filePath)) {
+            if (X >= img.Width || Y >= img.Height) {
+                var message = $"Coordinates ({X},{Y}) exceed image bounds {img.Width}x{img.Height}.";
+                var ex = new ArgumentOutOfRangeException(nameof(X), message);
+                ThrowTerminatingError(new ErrorRecord(ex, "InvalidCoordinates", ErrorCategory.InvalidArgument, this));
+            }
         }
 
         var output = Helpers.ResolvePath(OutputPath);
