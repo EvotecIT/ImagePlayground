@@ -1,4 +1,5 @@
 using System.IO;
+using System.Net;
 using Xunit;
 
 
@@ -53,6 +54,7 @@ public partial class ImagePlayground {
     [Theory]
     [InlineData("12345678")]
     [InlineData("pass123")]
+    [InlineData("pass;123!")]
     public void Test_QRCodeWiFi_Passwords(string password) {
         string filePath = System.IO.Path.Combine(_directoryWithImages, $"WiFi_{password}.png");
         File.Delete(filePath);
@@ -63,7 +65,8 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(filePath) == true);
 
         var read = QrCode.Read(filePath);
-        Assert.True(read.Message == $"WIFI:T:WPA;S:TestSSID;P:{password};;");
+        string expected = $"WIFI:T:WPA;S:TestSSID;P:{WebUtility.UrlEncode(password)};;";
+        Assert.Equal(expected, read.Message);
     }
 
     [Fact]

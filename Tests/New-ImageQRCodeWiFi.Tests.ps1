@@ -36,5 +36,12 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
 
     }
 
+    It 'handles passwords with symbols' {
+
+        $file = Join-Path $TestDrive 'wifi_symbols.png'
+        New-ImageQRCodeWiFi -SSID 'Test' -Password 'pass;123!' -FilePath $file
+        $result = Get-ImageQRCode -FilePath $file
+        $result.Message | Should -Be 'WIFI:T:WPA;S:Test;P:pass%3B123!;;'
+    }
 }
 
