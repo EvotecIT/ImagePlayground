@@ -119,7 +119,37 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
 
         string json = File.ReadAllText(metaFullPath);
-        SerializedImageMetadata? data = JsonSerializer.Deserialize<SerializedImageMetadata>(json);
+        SerializedImageMetadata? data;
+
+        try {
+            using JsonDocument doc = JsonDocument.Parse(json);
+            JsonElement root = doc.RootElement;
+            if (root.ValueKind != JsonValueKind.Object ||
+                !root.TryGetProperty(nameof(SerializedImageMetadata.HorizontalResolution), out JsonElement hRes) || hRes.ValueKind != JsonValueKind.Number ||
+                !root.TryGetProperty(nameof(SerializedImageMetadata.VerticalResolution), out JsonElement vRes) || vRes.ValueKind != JsonValueKind.Number ||
+                !root.TryGetProperty(nameof(SerializedImageMetadata.ResolutionUnits), out JsonElement unit)) {
+                throw new InvalidDataException("Metadata file is invalid");
+            }
+
+            if (unit.ValueKind == JsonValueKind.Number) {
+                int intVal = unit.GetInt32();
+                object val = Enum.ToObject(typeof(PixelResolutionUnit), intVal);
+                if (!Enum.IsDefined(typeof(PixelResolutionUnit), val)) {
+                    throw new InvalidDataException("Metadata file is invalid");
+                }
+            } else if (unit.ValueKind == JsonValueKind.String) {
+                string? text = unit.GetString();
+                if (!Enum.TryParse(typeof(PixelResolutionUnit), text, true, out object? _)) {
+                    throw new InvalidDataException("Metadata file is invalid");
+                }
+            } else {
+                throw new InvalidDataException("Metadata file is invalid");
+            }
+        } catch (JsonException ex) {
+            throw new InvalidDataException("Metadata file is invalid", ex);
+        }
+
+        data = JsonSerializer.Deserialize<SerializedImageMetadata>(json);
         if (data is null) {
             throw new InvalidDataException("Metadata file is invalid");
         }
