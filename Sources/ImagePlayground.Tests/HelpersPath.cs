@@ -53,7 +53,7 @@ public partial class ImagePlayground {
     }
 
     [Fact]
-    public void Test_ResolvePath_DownloadsUrl() {
+    public async Task Test_ResolvePath_DownloadsUrlAsync() {
         var tcp = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
         tcp.Start();
         int port = ((System.Net.IPEndPoint)tcp.LocalEndpoint).Port;
@@ -71,8 +71,8 @@ public partial class ImagePlayground {
             context.Response.OutputStream.Close();
         });
 
-        string path = Helpers.ResolvePath(prefix + "file.txt");
-        serverTask.Wait();
+        string path = await Helpers.ResolvePathAsync(prefix + "file.txt");
+        await serverTask;
         string content = File.ReadAllText(path);
         Assert.Equal("hello", content);
         Helpers.CleanupTempFiles();
