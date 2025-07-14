@@ -10,7 +10,7 @@ Describe 'New-ImageThumbnail' {
         $srcDir = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images'
         $outDir = Join-Path $TestDir 'thumbs'
         if (Test-Path $outDir) { Remove-Item $outDir -Recurse -Force }
-        New-ImageThumbnail -DirectoryPath $srcDir -OutputDirectory $outDir -Width 20 -Height 20
+        New-ImageThumbnail -DirectoryPath $srcDir -OutputDirectory $outDir -Width 20 -Height 20 -Sampler Lanczos3
         (Test-Path $outDir) | Should -BeTrue
         (Get-ChildItem -Path $outDir -File | Measure-Object).Count | Should -BeGreaterThan 0
         $file = Get-ChildItem -Path $outDir -File | Select-Object -First 1

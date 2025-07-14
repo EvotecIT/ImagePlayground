@@ -33,6 +33,10 @@ public sealed class NewImageThumbnailCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter DontRespectAspectRatio { get; set; }
 
+    /// <summary>Resampling algorithm.</summary>
+    [Parameter]
+    public Sampler? Sampler { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var dir = Helpers.ResolvePath(DirectoryPath);
@@ -41,6 +45,6 @@ public sealed class NewImageThumbnailCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputDirectory);
-        ImagePlayground.ImageHelper.GenerateThumbnails(dir, output, Width, Height, !DontRespectAspectRatio.IsPresent);
+        ImagePlayground.ImageHelper.GenerateThumbnails(dir, output, Width, Height, !DontRespectAspectRatio.IsPresent, Sampler);
     }
 }
