@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace ImagePlayground;
@@ -19,10 +20,14 @@ public static partial class Helpers {
     /// <param name="open">Whether to open the file.</param>
     public static void Open(string filePath, bool open) {
         if (open) {
-            ProcessStartInfo startInfo = new ProcessStartInfo(filePath) {
+            ProcessStartInfo startInfo = new(filePath) {
                 UseShellExecute = true
             };
-            Process.Start(startInfo);
+            try {
+                Process.Start(startInfo);
+            } catch (Exception ex) {
+                Console.Error.WriteLine($"Unable to open {filePath}: {ex.Message}");
+            }
         }
     }
 
