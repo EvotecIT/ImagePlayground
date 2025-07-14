@@ -247,10 +247,15 @@ public class QrCode {
     public static BarcodeResult<Rgba32> Read(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
 
-        Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
+        using Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
         BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
-        var response = reader.Decode(barcodeImage);
-        return response;
+        BarcodeResult<Rgba32> response = reader.Decode(barcodeImage);
+        BarcodeResult<Rgba32> result = new() {
+            Value = response.Value,
+            Status = response.Status,
+            Message = response.Message
+        };
+        return result;
     }
 
     /// <summary>
