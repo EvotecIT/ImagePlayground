@@ -51,5 +51,15 @@ Describe 'Add-ImageText' {
         Test-Path $dest | Should -BeTrue
     }
 
+    It 'throws for invalid coordinates' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = Join-Path $TestDir 'invalid.png'
+        $img = [ImagePlayground.Image]::Load($src)
+        $x = $img.Width + 10
+        $img.Dispose()
+        { Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X $x -Y 0 } | Should -Throw
+        { Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 0 -Y -1 } | Should -Throw
+    }
+
 }
 
