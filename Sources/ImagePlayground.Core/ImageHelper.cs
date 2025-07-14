@@ -30,7 +30,11 @@ public partial class ImageHelper {
         using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
             FileInfo fileInfo = new FileInfo(outFilePath);
             if (fileInfo.Extension == ".ico") {
-                System.IO.File.Copy(fullPath, outFullPath, true);
+                if (System.IO.Path.GetExtension(fullPath).Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
+                    System.IO.File.Copy(fullPath, outFullPath, true);
+                } else {
+                    throw new NotSupportedException("Conversion to .ico is only supported from .ico files.");
+                }
             } else {
                 var encoder = Helpers.GetEncoder(fileInfo.Extension, quality, compressionLevel);
                 image.Save(outFullPath, encoder);
