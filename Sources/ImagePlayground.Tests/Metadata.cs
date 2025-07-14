@@ -66,4 +66,46 @@ public partial class ImagePlayground {
         Assert.Equal(150, check.Metadata.HorizontalResolution);
         Assert.Equal(150, check.Metadata.VerticalResolution);
     }
+
+    [Fact]
+    public void Test_Metadata_InvalidJson_Throws() {
+        string imgPath = Path.Combine(_directoryWithTests, "metadata_invalid.jpg");
+        string metaPath = Path.Combine(_directoryWithTests, "metadata_invalid.json");
+        if (File.Exists(imgPath)) File.Delete(imgPath);
+        if (File.Exists(metaPath)) File.Delete(metaPath);
+
+        using (var img = new PlaygroundImage()) {
+            img.Create(imgPath, 10, 10);
+            img.Save();
+        }
+
+        File.WriteAllText(metaPath, "{ invalid json");
+
+        var options = new ImageHelper.ImportMetadataOptions(imgPath, metaPath, imgPath);
+        Assert.Throws<InvalidDataException>(() => ImageHelper.ImportMetadata(options));
+    }
+
+    [Fact]
+    public void Test_Metadata_MissingProperties_Throws() {
+        string imgPath = Path.Combine(_directoryWithTests, "metadata_missing.jpg");
+        string metaPath = Path.Combine(_directoryWithTests, "metadata_missing.json");
+        if (File.Exists(imgPath)) File.Delete(imgPath);
+        if (File.Exists(metaPath)) File.Delete(metaPath);
+
+        using (var img = new PlaygroundImage()) {
+            img.Create(imgPath, 10, 10);
+            img.Metadata.HorizontalResolution = 72;
+            img.Metadata.VerticalResolution = 72;
+            img.Save();
+        }
+
+        ImageHelper.ExportMetadata(imgPath, metaPath);
+
+        var node = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(metaPath))!;
+        node.AsObject().Remove("HorizontalResolution");
+        File.WriteAllText(metaPath, node.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+
+        var options = new ImageHelper.ImportMetadataOptions(imgPath, metaPath, imgPath);
+        Assert.Throws<InvalidDataException>(() => ImageHelper.ImportMetadata(options));
+    }
 }

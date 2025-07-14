@@ -17,7 +17,7 @@ public partial class ImagePlayground {
         Setup(_directoryWithTests);
     }
 
-    public static void Setup(string path) {
+    internal static void Setup(string path) {
         if (!Directory.Exists(path)) {
             Directory.CreateDirectory(path);
         }
