@@ -88,6 +88,7 @@ public partial class ImageHelper {
     public static void ExportMetadata(string filePath, string outFilePath) {
         string json = ExportMetadata(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         File.WriteAllText(outFullPath, json);
     }
 
@@ -117,6 +118,7 @@ public partial class ImageHelper {
         string fullPath = Helpers.ResolvePath(filePath);
         string metaFullPath = Helpers.ResolvePath(metadataFilePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         string json = File.ReadAllText(metaFullPath);
         SerializedImageMetadata? data = JsonSerializer.Deserialize<SerializedImageMetadata>(json);

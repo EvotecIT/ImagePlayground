@@ -30,6 +30,7 @@ public partial class ImageHelper {
         string fullPath = Helpers.ResolvePath(filePath);
         string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
         string outFullPath = Helpers.ResolvePath(filePathToSave);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
             using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(fullPath, fullPathToCompare)) {

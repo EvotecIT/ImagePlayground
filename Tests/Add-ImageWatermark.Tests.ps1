@@ -37,4 +37,16 @@ Describe 'Add-ImageWatermark' {
         $out.Dispose()
         $orig.Dispose()
     }
+
+    It 'creates directory when adding watermark to a new folder' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $wmk = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $folder = Join-Path $TestDir 'WatermarkFolder'
+        $dest = Join-Path $folder 'watermark.png'
+        if (Test-Path $folder) { Remove-Item $folder -Recurse -Force }
+
+        Add-ImageWatermark -FilePath $src -OutputPath $dest -WatermarkPath $wmk -WatermarkPercentage 100
+
+        Test-Path $dest | Should -BeTrue
+    }
 }

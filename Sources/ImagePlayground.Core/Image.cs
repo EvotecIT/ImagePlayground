@@ -128,6 +128,7 @@ public partial class Image : IDisposable {
     /// <param name="filePathToSave">Output path for the mask image.</param>
     public void Compare(Image imageToCompare, string filePathToSave) {
         string outFullPath = Helpers.ResolvePath(filePathToSave);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
             using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare._image)) {
                 SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
@@ -143,6 +144,7 @@ public partial class Image : IDisposable {
     public void Compare(string filePathToCompare, string filePathToSave) {
         string fullPath = Helpers.ResolvePath(filePathToCompare);
         string outFullPath = Helpers.ResolvePath(filePathToSave);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
             using (var imageToCompare = GetImage(fullPath)) {
