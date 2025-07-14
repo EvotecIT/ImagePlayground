@@ -29,6 +29,10 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Create QR code with transparent background.</summary>
+    [Parameter]
+    public SwitchParameter Transparent { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (string.IsNullOrWhiteSpace(FilePath)) {
@@ -37,7 +41,7 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.Generate(Content, output, false);
+        ImagePlayground.QrCode.Generate(Content, output, Transparent.IsPresent);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
