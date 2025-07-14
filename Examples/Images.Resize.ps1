@@ -7,3 +7,5 @@ Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScrip
 Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotecResizeDontMaintainAspectRatio.png -Width 300 -DontRespectAspectRatio
 
 Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotecResizePercent.png -Percentage 200
+
+#Resize-Image -FilePath $PSScriptRoot\Samples\LogoEvotec.png -OutputPath $PSScriptRoot\Output\LogoEvotecInvalid.png -DontRespectAspectRatio

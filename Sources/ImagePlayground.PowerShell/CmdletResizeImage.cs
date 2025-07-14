@@ -76,6 +76,12 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         bool widthBound = MyInvocation.BoundParameters.ContainsKey(nameof(Width));
         bool heightBound = MyInvocation.BoundParameters.ContainsKey(nameof(Height));
 
+        if (DontRespectAspectRatio.IsPresent && !widthBound && !heightBound) {
+            var ex = new PSArgumentException("DontRespectAspectRatio requires Width or Height");
+            ThrowTerminatingError(new ErrorRecord(ex, "MissingWidthOrHeight", ErrorCategory.InvalidArgument, null));
+            return;
+        }
+
         if (!widthBound && !heightBound) {
             WriteWarning("Resize-Image - Please specify Width or Height or Percentage.");
             return;

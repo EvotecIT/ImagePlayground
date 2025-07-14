@@ -81,6 +81,12 @@ Describe 'Resize-Image' {
         { Resize-Image -FilePath $src -OutputPath $dest -Width 10 -Height -5 } | Should -Throw
     }
 
+    It 'throws when DontRespectAspectRatio without dimensions' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dest = Join-Path $TestDir 'logo-invalid-aspect.png'
+        { Resize-Image -FilePath $src -OutputPath $dest -DontRespectAspectRatio } | Should -Throw
+    }
+
 
 }
 
