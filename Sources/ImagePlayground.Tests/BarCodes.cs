@@ -4,6 +4,10 @@ using Xunit;
 
 namespace ImagePlayground.Tests;
 
+/// <summary>
+/// Tests for BarCodes.
+/// </summary>
+
 public partial class ImagePlayground {
     [Theory]
     [InlineData(BarcodeType.Code128, "1234567890", "barcode_code128.png", "1234567890", Status.Found)]

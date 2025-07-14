@@ -5,6 +5,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for ImageHelperTextAndCompare.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_CompareImages() {

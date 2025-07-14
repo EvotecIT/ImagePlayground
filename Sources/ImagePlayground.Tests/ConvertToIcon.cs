@@ -3,6 +3,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for ConvertToIcon.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_ConvertToIcon_FromIcon_CopiesFile() {

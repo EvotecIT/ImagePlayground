@@ -6,6 +6,10 @@ using Xunit;
 using PlaygroundImage = ImagePlayground.Image;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for Exif.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_ReadExif() {

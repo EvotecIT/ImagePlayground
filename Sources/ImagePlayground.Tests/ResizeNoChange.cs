@@ -4,6 +4,10 @@ using Xunit;
 using ImageSharpImage = SixLabors.ImageSharp.Image;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for ResizeNoChange.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_Resize_NoChange_ReturnsSame() {

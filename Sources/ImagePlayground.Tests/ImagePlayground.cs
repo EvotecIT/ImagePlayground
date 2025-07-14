@@ -6,6 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for ImagePlayground.
+/// </summary>
 public partial class ImagePlayground {
     internal readonly string _directoryWithImages;
     internal readonly string _directoryWithTests;

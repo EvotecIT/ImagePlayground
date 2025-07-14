@@ -2,6 +2,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for BarCodeDispose.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_BarCodeRead_DoesNotLockFile() {

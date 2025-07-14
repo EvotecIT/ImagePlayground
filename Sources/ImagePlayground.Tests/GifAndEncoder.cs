@@ -7,6 +7,10 @@ using System.IO;
 using Xunit;
 
 namespace ImagePlayground.Tests;
+
+/// <summary>
+/// Tests for GifAndEncoder.
+/// </summary>
 public partial class ImagePlayground {
     [Fact]
     public void Test_GifGenerate_Success() {
