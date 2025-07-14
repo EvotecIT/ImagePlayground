@@ -16,6 +16,7 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithImages, "QRCode1.png");
         var result = QrCode.Read(filePath);
         Assert.True(!string.IsNullOrEmpty(result.Message));
+        Assert.Null(result.Image);
         using var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

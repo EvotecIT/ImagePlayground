@@ -252,6 +252,7 @@ public class QrCode {
         using Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
         BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
         BarcodeResult<Rgba32> response = reader.Decode(barcodeImage);
+        response.Image?.Dispose();
         BarcodeResult<Rgba32> result = new() {
             Value = response.Value,
             Status = response.Status,
