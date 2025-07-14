@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.Add, "ImageTextBox")]
 public sealed class AddImageTextBoxCmdlet : PSCmdlet {
     /// <summary>Source image path.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Destination image path.</summary>

@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsData.Compare, "Image")]
 public sealed class CompareImageCmdlet : PSCmdlet {
     /// <summary>First image path.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Second image path.</summary>

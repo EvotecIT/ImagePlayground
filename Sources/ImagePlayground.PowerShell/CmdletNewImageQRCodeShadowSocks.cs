@@ -33,7 +33,7 @@ public sealed class NewImageQrCodeShadowSocksCmdlet : PSCmdlet {
     public string? Tag { get; set; }
 
     /// <summary>Path where the QR code image is stored.</summary>
-    [Parameter(Mandatory = true, Position = 5)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 5)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

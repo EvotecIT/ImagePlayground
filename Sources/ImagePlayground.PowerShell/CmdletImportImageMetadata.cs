@@ -16,7 +16,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsData.Import, "ImageMetadata")]
 public sealed class ImportImageMetadataCmdlet : PSCmdlet {
     /// <summary>Image to update.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>JSON metadata file.</summary>

@@ -17,7 +17,7 @@ public sealed class NewImageQrCodeSkypeCallCmdlet : PSCmdlet {
     public string UserName { get; set; } = string.Empty;
 
     /// <summary>Output path for the QR image.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

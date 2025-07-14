@@ -13,7 +13,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class MergeImageCmdlet : PSCmdlet {
     /// <summary>Base image path.</summary>
     /// <para>Must exist.</para>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Second image path.</summary>

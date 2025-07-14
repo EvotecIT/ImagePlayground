@@ -19,7 +19,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.Get, "ImageExif")]
 public sealed class GetImageExifCmdlet : PSCmdlet {
     /// <summary>Path to the image file.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Return dictionary with tag names and values.</summary>

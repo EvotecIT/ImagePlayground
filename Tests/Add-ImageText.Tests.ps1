@@ -26,6 +26,16 @@ Describe 'Add-ImageText' {
 
     }
 
+    It 'accepts FilePath from pipeline' {
+
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = Join-Path $TestDir 'text_pipeline.png'
+        if (Test-Path $dest) { Remove-Item $dest }
+        $src | Add-ImageText -OutputPath $dest -Text 'Pipe' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        Test-Path $dest | Should -BeTrue
+
+    }
+
     It 'adds text with shadow and outline' {
 
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'

@@ -17,7 +17,7 @@ namespace ImagePlayground.PowerShell;
 [OutputType(typeof(string))]
 public sealed class ExportImageMetadataCmdlet : PSCmdlet {
     /// <summary>Source image file.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Optional path to write metadata JSON.</summary>

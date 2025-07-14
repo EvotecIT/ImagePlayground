@@ -21,7 +21,7 @@ public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
     public string Longitude { get; set; } = string.Empty;
 
     /// <summary>Output path for the QR code.</summary>
-    [Parameter(Mandatory = true, Position = 2)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Open image after creation.</summary>

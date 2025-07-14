@@ -15,7 +15,7 @@ public sealed class NewImageAvatarCmdlet : PSCmdlet {
     private const string ParameterSetStream = "Stream";
 
     /// <summary>Path to the input image.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetStream)]
     public string FilePath { get; set; } = string.Empty;
 

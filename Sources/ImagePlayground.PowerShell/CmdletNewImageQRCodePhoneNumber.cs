@@ -17,7 +17,7 @@ public sealed class NewImageQrCodePhoneNumberCmdlet : PSCmdlet {
     public string Number { get; set; } = string.Empty;
 
     /// <summary>Output path of the QR code image.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

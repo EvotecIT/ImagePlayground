@@ -17,7 +17,7 @@ public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {
     public PayloadGenerator.SwissQrCode Payload { get; set; } = null!;
 
     /// <summary>Path for the generated image.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image once generated.</summary>

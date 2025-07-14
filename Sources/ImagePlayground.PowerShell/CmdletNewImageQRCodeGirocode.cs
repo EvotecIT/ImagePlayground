@@ -33,7 +33,7 @@ public sealed class NewImageQrCodeGirocodeCmdlet : PSCmdlet {
     public string? RemittanceInformation { get; set; }
 
     /// <summary>Path to save the QR code.</summary>
-    [Parameter(Mandatory = true, Position = 5)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 5)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

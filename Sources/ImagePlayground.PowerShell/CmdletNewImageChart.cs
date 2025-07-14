@@ -46,7 +46,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     public string? YTitle { get; set; }
 
     /// <summary>Output file path.</summary>
-    [Parameter(Mandatory = true)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Open the image after creation.</summary>

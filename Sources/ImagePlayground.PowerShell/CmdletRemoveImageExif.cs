@@ -20,7 +20,7 @@ public sealed class RemoveImageExifCmdlet : PSCmdlet {
     private const string ParameterSetAll = "All";
 
     /// <summary>Path to the image file.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetTag)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0, ParameterSetName = ParameterSetTag)]
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetAll)]
     public string FilePath { get; set; } = string.Empty;
 

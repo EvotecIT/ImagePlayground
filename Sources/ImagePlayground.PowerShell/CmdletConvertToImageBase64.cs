@@ -19,7 +19,7 @@ namespace ImagePlayground.PowerShell;
 [OutputType(typeof(string))]
 public sealed class ConvertToImageBase64Cmdlet : PSCmdlet {
     /// <summary>Path to the image to convert.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <inheritdoc />

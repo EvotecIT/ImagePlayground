@@ -41,7 +41,7 @@ public sealed class NewImageQrCodeBezahlCodeCmdlet : PSCmdlet {
     public string Reason { get; set; } = string.Empty;
 
     /// <summary>Output image path.</summary>
-    [Parameter(Mandatory = true, Position = 7)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 7)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

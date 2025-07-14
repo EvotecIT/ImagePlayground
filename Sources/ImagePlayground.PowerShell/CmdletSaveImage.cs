@@ -19,7 +19,7 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     public ImagePlayground.Image Image { get; set; } = null!;
 
     /// <summary>Optional path for the new file.</summary>
-    [Parameter(Position = 1)]
+    [Parameter(ValueFromPipeline = true, Position = 1)]
     public string? FilePath { get; set; }
 
     /// <summary>Quality for JPEG or WEBP images.</summary>
