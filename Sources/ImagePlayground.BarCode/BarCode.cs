@@ -175,10 +175,14 @@ public class BarCode {
     public static BarcodeResult<Rgba32> Read(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
 
-        using (Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath)) {
-            BarcodeReader.ImageSharp.BarcodeReader<Rgba32> reader = new(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX, ZXing.BarcodeFormat.PDF_417 });
-            var response = reader.Decode(barcodeImage);
-            return response;
-        }
+        using Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
+        BarcodeReader.ImageSharp.BarcodeReader<Rgba32> reader = new(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX, ZXing.BarcodeFormat.PDF_417 });
+        BarcodeResult<Rgba32> response = reader.Decode(barcodeImage);
+        BarcodeResult<Rgba32> result = new() {
+            Value = response.Value,
+            Status = response.Status,
+            Message = response.Message
+        };
+        return result;
     }
 }
