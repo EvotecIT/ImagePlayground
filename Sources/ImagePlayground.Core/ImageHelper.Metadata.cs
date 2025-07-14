@@ -37,6 +37,28 @@ public partial class ImageHelper {
         /// <summary>Serialized IPTC profile.</summary>
         public byte[]? IptcProfile { get; set; }
     }
+
+    /// <summary>Options for importing metadata.</summary>
+    public sealed class ImportMetadataOptions {
+        /// <summary>Source image path.</summary>
+        public string FilePath { get; }
+
+        /// <summary>JSON metadata file.</summary>
+        public string MetadataPath { get; }
+
+        /// <summary>Destination image path.</summary>
+        public string? OutputPath { get; }
+
+        /// <summary>Create import options.</summary>
+        /// <param name="filePath">Path to the source image.</param>
+        /// <param name="metadataPath">Path to the metadata file.</param>
+        /// <param name="outputPath">Destination image path.</param>
+        public ImportMetadataOptions(string filePath, string metadataPath, string? outputPath = null) {
+            FilePath = filePath;
+            MetadataPath = metadataPath;
+            OutputPath = outputPath;
+        }
+    }
     /// <summary>
     /// Exports metadata from an image to a JSON string.
     /// </summary>
@@ -67,6 +89,22 @@ public partial class ImageHelper {
         string json = ExportMetadata(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         File.WriteAllText(outFullPath, json);
+    }
+
+    /// <summary>
+    /// Imports metadata using the specified <see cref="ImportMetadataOptions"/>.
+    /// </summary>
+    /// <param name="options">Import options.</param>
+    public static void ImportMetadata(ImportMetadataOptions options) {
+        if (options is null) {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        string output = string.IsNullOrWhiteSpace(options.OutputPath)
+            ? options.FilePath
+            : options.OutputPath!;
+
+        ImportMetadata(options.FilePath, options.MetadataPath, output);
     }
 
     /// <summary>

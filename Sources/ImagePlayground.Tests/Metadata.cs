@@ -29,11 +29,41 @@ public partial class ImagePlayground {
             img.Save();
         }
 
-        ImageHelper.ImportMetadata(imgPath, metaPath, imgPath);
+        var options1 = new ImageHelper.ImportMetadataOptions(imgPath, metaPath, imgPath);
+        ImageHelper.ImportMetadata(options1);
 
         using var check = PlaygroundImage.Load(imgPath);
         Assert.Equal(300, check.Metadata.HorizontalResolution);
         Assert.Equal(300, check.Metadata.VerticalResolution);
         Assert.Contains(check.GetExifValues(), v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "ImagePlayground");
+    }
+
+    [Fact]
+    public void Test_Metadata_RoundTrip_Edits() {
+        string imgPath = Path.Combine(_directoryWithTests, "metadata_edit.jpg");
+        string metaPath = Path.Combine(_directoryWithTests, "metadata_edit.json");
+        if (File.Exists(imgPath)) File.Delete(imgPath);
+        if (File.Exists(metaPath)) File.Delete(metaPath);
+
+        using (var img = new PlaygroundImage()) {
+            img.Create(imgPath, 10, 10);
+            img.Metadata.HorizontalResolution = 72;
+            img.Metadata.VerticalResolution = 72;
+            img.Save();
+        }
+
+        ImageHelper.ExportMetadata(imgPath, metaPath);
+
+        var node = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(metaPath))!;
+        node["HorizontalResolution"] = 150;
+        node["VerticalResolution"] = 150;
+        File.WriteAllText(metaPath, node.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+
+        var options2 = new ImageHelper.ImportMetadataOptions(imgPath, metaPath, imgPath);
+        ImageHelper.ImportMetadata(options2);
+
+        using var check = PlaygroundImage.Load(imgPath);
+        Assert.Equal(150, check.Metadata.HorizontalResolution);
+        Assert.Equal(150, check.Metadata.VerticalResolution);
     }
 }

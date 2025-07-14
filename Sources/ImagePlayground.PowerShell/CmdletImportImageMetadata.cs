@@ -42,6 +42,7 @@ public sealed class ImportImageMetadataCmdlet : PSCmdlet {
         }
 
         var output = string.IsNullOrWhiteSpace(OutputPath) ? filePath : Helpers.ResolvePath(OutputPath!);
-        ImageHelper.ImportMetadata(filePath, metaPath, output);
+        var options = new ImageHelper.ImportMetadataOptions(filePath, metaPath, output);
+        ImageHelper.ImportMetadata(options);
     }
 }
