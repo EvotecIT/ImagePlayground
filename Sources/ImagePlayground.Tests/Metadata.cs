@@ -66,4 +66,24 @@ public partial class ImagePlayground {
         Assert.Equal(150, check.Metadata.HorizontalResolution);
         Assert.Equal(150, check.Metadata.VerticalResolution);
     }
+
+    [Fact]
+    public void Test_ExportMetadata_Utf8Encoding() {
+        string imgPath = Path.Combine(_directoryWithTests, "metadata_utf8.jpg");
+        string metaPath = Path.Combine(_directoryWithTests, "metadata_utf8.json");
+        if (File.Exists(imgPath)) File.Delete(imgPath);
+        if (File.Exists(metaPath)) File.Delete(metaPath);
+
+        using (var img = new PlaygroundImage()) {
+            img.Create(imgPath, 1, 1);
+            img.Save();
+        }
+
+        string json = ImageHelper.ExportMetadata(imgPath);
+        ImageHelper.ExportMetadata(imgPath, metaPath);
+
+        byte[] expected = System.Text.Encoding.UTF8.GetBytes(json);
+        byte[] actual = File.ReadAllBytes(metaPath);
+        Assert.Equal(expected, actual);
+    }
 }

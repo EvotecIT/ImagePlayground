@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Metadata;
@@ -88,7 +89,7 @@ public partial class ImageHelper {
     public static void ExportMetadata(string filePath, string outFilePath) {
         string json = ExportMetadata(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
-        File.WriteAllText(outFullPath, json);
+        File.WriteAllText(outFullPath, json, Encoding.UTF8);
     }
 
     /// <summary>

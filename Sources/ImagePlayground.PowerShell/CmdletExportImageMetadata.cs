@@ -1,6 +1,7 @@
 using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
+using System.Text;
 
 namespace ImagePlayground.PowerShell;
 
@@ -37,7 +38,7 @@ public sealed class ExportImageMetadataCmdlet : PSCmdlet {
             WriteObject(json);
         } else {
             var output = Helpers.ResolvePath(OutputPath!);
-            File.WriteAllText(output, json);
+            File.WriteAllText(output, json, Encoding.UTF8);
         }
     }
 }
