@@ -41,7 +41,7 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithImages, "QRCodeTransparent.png");
         File.Delete(filePath);
         QrCode.Generate("https://evotec.xyz", filePath, true);
-        using var img = Image.Load<Rgba32>(filePath);
+        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(filePath);
         Assert.Equal(0, img[0, 0].A);
     }
 
