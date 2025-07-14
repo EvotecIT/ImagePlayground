@@ -25,7 +25,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.Add, "ImageText")]
 public sealed class AddImageTextCmdlet : PSCmdlet {
     /// <summary>Source image path.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     [ValidateNotNullOrEmpty]
     public string FilePath { get; set; } = string.Empty;
 

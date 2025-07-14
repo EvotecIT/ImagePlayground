@@ -18,7 +18,7 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
 
         /// <summary>Path to the source image.</summary>
         /// <para>The image must exist.</para>
-        [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetHeightWidth)]
+        [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0, ParameterSetName = ParameterSetHeightWidth)]
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPercentage)]
         public string FilePath { get; set; } = string.Empty;
 

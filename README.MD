@@ -42,6 +42,8 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ **Base64 conversion**
 - ☑️ **EXIF metadata management**
 - ☑️ **Image comparison**
+- ☑️ **Pipeline support**  
+  Cmdlets that use `-FilePath` accept the path from the pipeline.
 
 
 ## Available Cmdlets

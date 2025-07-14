@@ -19,7 +19,7 @@ public BarcodeType Type { get; set; }
     public string Value { get; set; } = string.Empty;
 
     /// <summary>Output path for the barcode image.</summary>
-    [Parameter(Mandatory = true, Position = 2)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <inheritdoc />

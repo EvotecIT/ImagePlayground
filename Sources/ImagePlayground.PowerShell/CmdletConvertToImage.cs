@@ -19,7 +19,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class ConvertToImageCmdlet : PSCmdlet {
     /// <summary>Path to the source image.</summary>
     /// <para>The file must exist.</para>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Destination file path including extension.</summary>

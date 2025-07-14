@@ -17,7 +17,7 @@ public sealed class NewImageQrCodeOtpCmdlet : PSCmdlet {
     public PayloadGenerator.OneTimePassword Payload { get; set; } = null!;
 
     /// <summary>Path to save the QR code image.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

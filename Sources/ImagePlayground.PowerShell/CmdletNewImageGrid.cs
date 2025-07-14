@@ -11,7 +11,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageGrid")]
 public sealed class NewImageGridCmdlet : PSCmdlet {
     /// <summary>Output file path.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Width of the new image.</summary>

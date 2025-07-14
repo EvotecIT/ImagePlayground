@@ -13,7 +13,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.Set, "ImageExif")]
 public sealed class SetImageExifCmdlet : PSCmdlet {
     /// <summary>Image file to modify.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Optional output path. When not specified the file is overwritten.</summary>

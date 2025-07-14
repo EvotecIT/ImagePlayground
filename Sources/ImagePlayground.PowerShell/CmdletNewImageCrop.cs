@@ -24,7 +24,7 @@ public sealed class NewImageCropCmdlet : PSCmdlet {
     private const string ParameterSetPolygon = "Polygon";
 
     /// <summary>Path to the image being cropped.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Where to save the cropped image.</summary>

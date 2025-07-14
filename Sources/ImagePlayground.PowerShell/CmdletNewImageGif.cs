@@ -18,7 +18,7 @@ public sealed class NewImageGifCmdlet : PSCmdlet {
     public string[] Frames { get; set; } = Array.Empty<string>();
 
     /// <summary>Output path for the GIF animation.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Delay between frames in milliseconds.</summary>

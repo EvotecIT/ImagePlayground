@@ -17,7 +17,7 @@ public sealed class NewImageQrCodeSlovenianUpnQrCmdlet : PSCmdlet {
     public PayloadGenerator.SlovenianUpnQr Payload { get; set; } = null!;
 
     /// <summary>Location of the output image.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Opens the image after creation.</summary>

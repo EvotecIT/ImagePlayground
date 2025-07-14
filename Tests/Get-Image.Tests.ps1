@@ -26,5 +26,19 @@ Describe 'Get-Image' {
 
     }
 
+    It 'accepts FilePath from pipeline' {
+
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+
+        $img = $src | Get-Image
+
+        $img.Width | Should -Be 660
+
+        $img.Height | Should -Be 660
+
+        $img.Dispose()
+
+    }
+
 }
 

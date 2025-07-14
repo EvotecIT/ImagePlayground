@@ -14,7 +14,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageQRContact")]
 public sealed class NewImageQrContactCmdlet : PSCmdlet {
     /// <summary>Output file path.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Contact output type.</summary>

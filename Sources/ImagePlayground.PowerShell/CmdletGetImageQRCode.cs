@@ -18,7 +18,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class GetImageQrCodeCmdlet : PSCmdlet {
     /// <summary>Path to the image file.</summary>
     /// <para>The file must exist.</para>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <inheritdoc />
