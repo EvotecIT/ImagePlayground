@@ -261,6 +261,12 @@ public partial class ImageHelper {
     /// <param name="open">Open the image after saving.</param>
     public static void Create(string filePath, int width, int height, Color color, bool open = false) {
         string fullPath = Helpers.ResolvePath(filePath);
+        if (width < 20) {
+            throw new ArgumentOutOfRangeException(nameof(width), "Width must be at least 20.");
+        }
+        if (height < 20) {
+            throw new ArgumentOutOfRangeException(nameof(height), "Height must be at least 20.");
+        }
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath)!);
 
         using (Image<Rgba32> outputImage = new Image<Rgba32>(width, height)) {
