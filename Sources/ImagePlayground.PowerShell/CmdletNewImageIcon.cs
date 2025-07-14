@@ -24,7 +24,7 @@ public sealed class NewImageIconCmdlet : PSCmdlet {
     /// <summary>Icon sizes to include.</summary>
     /// <para>Defaults to common icon sizes when empty.</para>
     [Parameter]
-    [ValidateRange(1, 10000)]
+    [ValidateRange(1, 1000)]
     public int[] Size { get; set; } = Array.Empty<int>();
 
     /// <summary>Open the icon after saving.</summary>

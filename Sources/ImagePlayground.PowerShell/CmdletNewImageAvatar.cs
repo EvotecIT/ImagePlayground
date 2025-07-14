@@ -29,12 +29,12 @@ public sealed class NewImageAvatarCmdlet : PSCmdlet {
 
     /// <summary>Width of the avatar.</summary>
     [Parameter]
-    [ValidateRange(1, 10000)]
+    [ValidateRange(1, 1000)]
     public int Width { get; set; } = 200;
 
     /// <summary>Height of the avatar.</summary>
     [Parameter]
-    [ValidateRange(1, 10000)]
+    [ValidateRange(1, 1000)]
     public int Height { get; set; } = 200;
 
     /// <summary>Corner radius for rounding.</summary>
