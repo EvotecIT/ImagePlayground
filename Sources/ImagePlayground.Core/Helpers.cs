@@ -5,6 +5,20 @@ using System.IO;
 namespace ImagePlayground;
 public static partial class Helpers {
     /// <summary>
+    /// List of supported file extensions for image encoding.
+    /// </summary>
+    public static readonly string[] SupportedExtensions = new[] {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".bmp",
+        ".gif",
+        ".pbm",
+        ".tga",
+        ".tiff",
+        ".webp"
+    };
+    /// <summary>
     /// Converts a <see cref="SixLabors.ImageSharp.Color"/> to a 6 character hex string.
     /// </summary>
     /// <param name="c">Color value to convert.</param>

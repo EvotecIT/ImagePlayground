@@ -47,7 +47,8 @@ public static partial class Helpers {
                     ? Math.Max(0, Math.Min(100, quality.Value))
                     : 75
             },
-            _ => throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it."),
+            _ => throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", SupportedExtensions)}"),
         };
     }
 }

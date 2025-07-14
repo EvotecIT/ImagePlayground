@@ -53,6 +53,7 @@ public partial class ImagePlayground {
 
     [Fact]
     public void Test_GetEncoder_UnknownExtensionThrows() {
-        Assert.Throws<SixLabors.ImageSharp.UnknownImageFormatException>(() => Helpers.GetEncoder(".xyz", null, null));
+        var ex = Assert.Throws<SixLabors.ImageSharp.UnknownImageFormatException>(() => Helpers.GetEncoder(".xyz", null, null));
+        Assert.Contains(".png", ex.Message);
     }
 }

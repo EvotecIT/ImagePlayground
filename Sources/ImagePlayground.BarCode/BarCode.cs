@@ -40,7 +40,8 @@ public class BarCode {
         } else if (fileInfo.Extension == ".bmp") {
             imageFormatDetected = ImageFormat.Bmp;
         } else {
-            throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+            throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
         }
 
         var options = new ImageRendererOptions();
@@ -64,7 +65,8 @@ public class BarCode {
         } else if (fileInfo.Extension == ".bmp") {
             image.SaveAsBmp(fullPath);
         } else {
-            throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+            throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
         }
     }
 
