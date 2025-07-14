@@ -87,6 +87,12 @@ Describe 'Resize-Image' {
         { Resize-Image -FilePath $src -OutputPath $dest -Width 1200 -Height 100 } | Should -Throw
         { Resize-Image -FilePath $src -OutputPath $dest -Width 100 -Height 1200 } | Should -Throw
     }
+    It 'accepts maximum dimension values' {
+        $src = Join-Path $PSScriptRoot "../Sources/ImagePlayground.Tests/Images/LogoEvotec.png"
+        $dest = Join-Path $TestDir "logo-max.png"
+        { Resize-Image -FilePath $src -OutputPath $dest -Width 1000 -Height 1000 } | Should -Not -Throw
+    }
+
 
     It 'throws when DontRespectAspectRatio without dimensions' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
