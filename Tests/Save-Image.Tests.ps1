@@ -58,4 +58,14 @@ Describe 'Save-Image' {
         $stream.Length | Should -BeGreaterThan 0
     }
 
+    It 'creates directory when saving to a new folder' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $folder = Join-Path $TestDir 'NewFolder'
+        $dest = Join-Path $folder 'saved.png'
+        if (Test-Path $folder) { Remove-Item $folder -Recurse -Force }
+        $img = Get-Image -FilePath $src
+        Save-Image -Image $img -FilePath $dest
+        $img.Dispose()
+        Test-Path $dest | Should -BeTrue
+    }
 }

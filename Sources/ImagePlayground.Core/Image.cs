@@ -511,6 +511,12 @@ public partial class Image : IDisposable {
         } else {
             filePath = Helpers.ResolvePath(filePath);
         }
+
+        string? directory = System.IO.Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(directory) && !System.IO.Directory.Exists(directory)) {
+            System.IO.Directory.CreateDirectory(directory);
+        }
+
         var encoder = Helpers.GetEncoder(System.IO.Path.GetExtension(filePath), quality, compressionLevel);
         _image.Save(filePath, encoder);
         Helpers.Open(filePath, openImage);
