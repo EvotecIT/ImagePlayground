@@ -36,6 +36,13 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
             return;
         }
 
+        Type expectedType = ExifTag.GetType().GenericTypeArguments[0];
+        if (Value is not null && !expectedType.IsInstanceOfType(Value)) {
+            throw new ArgumentException(
+                $"Value type '{Value.GetType()}' does not match tag type '{expectedType}'.",
+                nameof(Value));
+        }
+
         using var img = ImagePlayground.Image.Load(filePath);
         img.SetExifValue(ExifTag, Value);
 

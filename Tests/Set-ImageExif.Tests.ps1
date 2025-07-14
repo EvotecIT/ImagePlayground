@@ -38,5 +38,21 @@ Describe 'Set-ImageExif' {
 
     }
 
+    It 'throws when value type mismatches tag' {
+
+        $dest = Join-Path $TestDir 'exif-type-error.jpg'
+        if (Test-Path $dest) { Remove-Item $dest }
+
+        $img = [ImagePlayground.Image]::new()
+        $img.Create($dest, 10, 10)
+        $img.Save()
+        $img.Dispose()
+
+        {
+            Set-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Value 123
+        } | Should -Throw
+
+    }
+
 }
 
