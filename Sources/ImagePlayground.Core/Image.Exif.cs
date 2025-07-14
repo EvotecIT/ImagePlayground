@@ -20,8 +20,15 @@ public partial class Image {
     /// <param name="value">Value for the tag.</param>
     public void SetExifValue(ExifTag tag, object value) {
         _image.Metadata.ExifProfile ??= new ExifProfile();
+
         var method = typeof(ExifProfile).GetMethod("SetValue")!;
-        var generic = method.MakeGenericMethod(tag.GetType().GenericTypeArguments[0]);
+        Type expectedType = tag.GetType().GenericTypeArguments[0];
+
+        if (value is not null && !expectedType.IsInstanceOfType(value)) {
+            throw new ArgumentException($"Value of type '{value.GetType()}' does not match tag type '{expectedType}'.", nameof(value));
+        }
+
+        var generic = method.MakeGenericMethod(expectedType);
         generic.Invoke(_image.Metadata.ExifProfile, new[] { tag, value });
     }
 

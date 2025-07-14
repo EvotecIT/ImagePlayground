@@ -46,4 +46,12 @@ public partial class ImagePlayground {
         using var check = Image.Load(dest);
         Assert.Empty(check.GetExifValues());
     }
+
+    [Fact]
+    public void Test_SetExifValue_InvalidType_Throws() {
+        using var img = new PlaygroundImage();
+        img.Create(Path.Combine(_directoryWithTests, "invalid.jpg"), 10, 10);
+
+        Assert.Throws<ArgumentException>(() => img.SetExifValue(ExifTag.Software, 123));
+    }
 }
