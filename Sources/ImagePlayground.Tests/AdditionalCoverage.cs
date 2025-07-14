@@ -129,6 +129,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 300, 200);
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -145,6 +146,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 300, 200);
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -157,6 +159,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 300, 200);
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -169,6 +172,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(pies, pie);
         Assert.True(File.Exists(pie));
+        using var streamPie = File.Open(pie, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
 
         string radial = Path.Combine(_directoryWithTests, "chart_radial.png");
         if (File.Exists(radial)) File.Delete(radial);
@@ -179,6 +183,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(radials, radial, 300, 200);
         Assert.True(File.Exists(radial));
+        using var streamRadial = File.Open(radial, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -191,5 +196,6 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 100, 100);
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

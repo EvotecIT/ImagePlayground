@@ -19,6 +19,7 @@ public partial class ImagePlayground {
         global::ImagePlayground.Charts.Generate(defs, file, 300, 200);
 
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -34,6 +35,7 @@ public partial class ImagePlayground {
         global::ImagePlayground.Charts.Generate(defs, file, 300, 200, null, "X", "Y");
 
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -49,6 +51,7 @@ public partial class ImagePlayground {
         global::ImagePlayground.Charts.Generate(defs, file, 300, 200, null, null, null, true);
 
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -98,5 +101,6 @@ public partial class ImagePlayground {
         Charts.Generate(defs, file, 300, 200, null, null, null, false, ChartTheme.Default, anns);
 
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

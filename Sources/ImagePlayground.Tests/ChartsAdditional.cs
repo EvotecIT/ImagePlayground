@@ -13,6 +13,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 200, 150);
         Assert.True(File.Exists(file));
+        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -24,6 +25,7 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 200, 150, null, null, null, false, ChartTheme.Dark);
         Assert.True(File.Exists(file));
+        using var streamDark = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
     [Fact]
@@ -35,5 +37,6 @@ public partial class ImagePlayground {
             };
         Charts.Generate(defs, file, 200, 150, null, null, null, false, ChartTheme.Light);
         Assert.True(File.Exists(file));
+        using var streamLight = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }
