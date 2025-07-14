@@ -13,7 +13,7 @@ public partial class ImagePlayground {
         if (File.Exists(metaPath)) File.Delete(metaPath);
 
         using (var img = new PlaygroundImage()) {
-            img.Create(imgPath, 10, 10);
+            img.Create(imgPath, 20, 20);
             img.Metadata.HorizontalResolution = 300;
             img.Metadata.VerticalResolution = 300;
             img.SetExifValue(ExifTag.Software, "ImagePlayground");
@@ -46,7 +46,7 @@ public partial class ImagePlayground {
         if (File.Exists(metaPath)) File.Delete(metaPath);
 
         using (var img = new PlaygroundImage()) {
-            img.Create(imgPath, 10, 10);
+            img.Create(imgPath, 20, 20);
             img.Metadata.HorizontalResolution = 72;
             img.Metadata.VerticalResolution = 72;
             img.Save();
@@ -75,7 +75,7 @@ public partial class ImagePlayground {
         if (File.Exists(metaPath)) File.Delete(metaPath);
 
         using (var img = new PlaygroundImage()) {
-            img.Create(imgPath, 10, 10);
+            img.Create(imgPath, 20, 20);
             img.Save();
         }
 
@@ -93,7 +93,7 @@ public partial class ImagePlayground {
         if (File.Exists(metaPath)) File.Delete(metaPath);
 
         using (var img = new PlaygroundImage()) {
-            img.Create(imgPath, 10, 10);
+            img.Create(imgPath, 20, 20);
             img.Metadata.HorizontalResolution = 72;
             img.Metadata.VerticalResolution = 72;
             img.Save();

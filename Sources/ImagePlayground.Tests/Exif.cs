@@ -11,7 +11,7 @@ public partial class ImagePlayground {
     public void Test_ReadExif() {
         string filePath = Path.Combine(_directoryWithImages, "exif-read.jpg");
         using (var img = new PlaygroundImage()) {
-            img.Create(filePath, 10, 10);
+            img.Create(filePath, 20, 20);
             img.SetExifValue(ExifTag.Software, "ImagePlayground");
             img.Save();
         }
@@ -27,7 +27,7 @@ public partial class ImagePlayground {
         if (File.Exists(dest)) File.Delete(dest);
 
         using (var img = new PlaygroundImage()) {
-            img.Create(dest, 10, 10);
+            img.Create(dest, 20, 20);
             img.SetExifValue(ExifTag.Software, "ImagePlayground");
             img.Save();
         }
