@@ -15,6 +15,7 @@ public partial class ImageHelper {
     public static void Crop(string filePath, string outFilePath, Rectangle rectangle) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using var img = Image.Load(fullPath);
         img.Crop(rectangle);
@@ -32,6 +33,7 @@ public partial class ImageHelper {
     public static void CropCircle(string filePath, string outFilePath, float centerX, float centerY, float radius) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using var img = Image.Load(fullPath);
         img.CropCircle(centerX, centerY, radius);
@@ -47,6 +49,7 @@ public partial class ImageHelper {
     public static void CropPolygon(string filePath, string outFilePath, params PointF[] points) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using var img = Image.Load(fullPath);
         img.CropPolygon(points);

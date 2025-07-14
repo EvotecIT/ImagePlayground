@@ -26,6 +26,7 @@ public partial class ImageHelper {
     public static void ConvertTo(string filePath, string outFilePath, int? quality = null, int? compressionLevel = null) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using (var inStream = System.IO.File.OpenRead(fullPath))
         using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
             FileInfo fileInfo = new FileInfo(outFilePath);
@@ -51,6 +52,7 @@ public partial class ImageHelper {
     public static void Resize(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using (var inStream = System.IO.File.OpenRead(fullPath))
         using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
@@ -65,6 +67,7 @@ public partial class ImageHelper {
     public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         await Task.Run(() => {
             using var inStream = System.IO.File.OpenRead(fullPath);
@@ -126,6 +129,7 @@ public partial class ImageHelper {
 
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using (var inStream = System.IO.File.OpenRead(fullPath))
         using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
@@ -146,6 +150,7 @@ public partial class ImageHelper {
 
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         await Task.Run(() => {
             using var inStream = System.IO.File.OpenRead(fullPath);
@@ -252,6 +257,7 @@ public partial class ImageHelper {
     /// <param name="open">Open the image after saving.</param>
     public static void Create(string filePath, int width, int height, Color color, bool open = false) {
         string fullPath = Helpers.ResolvePath(filePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath)!);
 
         using (Image<Rgba32> outputImage = new Image<Rgba32>(width, height)) {
             //outputImage.Mutate(x => x.Fill(color));

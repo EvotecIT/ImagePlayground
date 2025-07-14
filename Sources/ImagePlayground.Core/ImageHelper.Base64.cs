@@ -26,6 +26,7 @@ public partial class ImageHelper {
     /// <param name="outFilePath">Destination file path.</param>
     public static void ConvertFromBase64(string base64, string outFilePath) {
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         var bytes = Convert.FromBase64String(base64);
         File.WriteAllBytes(outFullPath, bytes);
     }

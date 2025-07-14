@@ -17,6 +17,7 @@ public partial class ImageHelper {
     public static void Avatar(string filePath, string outFilePath, int width, int height, float cornerRadius) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using var img = Image.Load(fullPath);
         img.SaveAsAvatar(outFullPath, width, height, cornerRadius);
@@ -46,6 +47,7 @@ public partial class ImageHelper {
     public static void AvatarCircular(string filePath, string outFilePath, int size) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
         using var img = Image.Load(fullPath);
         img.SaveAsCircularAvatar(outFullPath, size);

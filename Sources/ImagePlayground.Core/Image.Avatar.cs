@@ -29,6 +29,7 @@ public partial class Image : IDisposable {
     /// <param name="cornerRadius">Radius of the rounded corners.</param>
     public void SaveAsAvatar(string filePath, int width, int height, float cornerRadius) {
         string fullPath = Helpers.ResolvePath(filePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath)!);
         using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
         clone.Save(fullPath);
     }
