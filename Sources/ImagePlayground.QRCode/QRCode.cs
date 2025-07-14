@@ -54,7 +54,8 @@ public class QrCode {
                         } else if (fileInfo.Extension == ".ico") {
                             SaveImageAsIcon(qrCodeImage, fullPath);
                         } else {
-                            throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
+                            throw new UnknownImageFormatException(
+                                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
                         }
                     }
                 }
