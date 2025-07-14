@@ -139,7 +139,7 @@ public partial class ImageHelper {
                 }
             } else if (unit.ValueKind == JsonValueKind.String) {
                 string? text = unit.GetString();
-                if (!Enum.TryParse(typeof(PixelResolutionUnit), text, true, out object? _)) {
+                if (!Enum.TryParse(text, true, out PixelResolutionUnit _)) {
                     throw new InvalidDataException("Metadata file is invalid");
                 }
             } else {
