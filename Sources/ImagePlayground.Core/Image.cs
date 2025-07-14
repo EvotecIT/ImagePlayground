@@ -490,9 +490,10 @@ public partial class Image : IDisposable {
     public static Image Load(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
 
+        using var stream = System.IO.File.OpenRead(fullPath);
         Image image = new Image {
             _filePath = fullPath,
-            _image = SixLabors.ImageSharp.Image.Load(fullPath)
+            _image = SixLabors.ImageSharp.Image.Load(stream)
         };
 
         return image;
