@@ -6,6 +6,7 @@ namespace ImagePlayground.PowerShell;
 
 /// <summary>Converts an image to a different format.</summary>
 /// <para>Outputs a new file using the extension from <see cref="OutputPath"/>.</para>
+/// <para>When <see cref="OutputPath"/> ends with <c>.ico</c>, the file is only copied if the source file is also an icon.</para>
 /// <example>
 ///   <summary>Convert PNG to JPEG</summary>
 ///   <code>ConvertTo-Image -FilePath image.png -OutputPath image.jpg -Quality 85</code>
