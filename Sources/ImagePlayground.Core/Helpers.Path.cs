@@ -17,7 +17,17 @@ public static partial class Helpers {
     /// <param name="path">File system path to resolve.</param>
     /// <returns>Absolute file path.</returns>
     /// <exception cref="System.ArgumentException">Thrown when path is null or empty.</exception>
-    public static string ResolvePath(string path) {
+    public static string ResolvePath(string path) =>
+        ResolvePathAsync(path).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Asynchronously resolves the provided path to an absolute file system path.
+    /// Environment variables are expanded and relative paths are converted to full paths.
+    /// </summary>
+    /// <param name="path">File system path to resolve.</param>
+    /// <returns>Absolute file path.</returns>
+    /// <exception cref="System.ArgumentException">Thrown when path is null or empty.</exception>
+    public static async System.Threading.Tasks.Task<string> ResolvePathAsync(string path) {
         if (string.IsNullOrWhiteSpace(path)) {
             throw new System.ArgumentException("Path cannot be null or empty", nameof(path));
         }
@@ -28,7 +38,7 @@ public static partial class Helpers {
             expanded.StartsWith("https://", System.StringComparison.OrdinalIgnoreCase)) {
             string tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
             using (var client = new System.Net.Http.HttpClient()) {
-                var bytes = client.GetByteArrayAsync(expanded).GetAwaiter().GetResult();
+                var bytes = await client.GetByteArrayAsync(expanded).ConfigureAwait(false);
                 System.IO.File.WriteAllBytes(tempFile, bytes);
             }
             _tempFiles.Add(tempFile);
@@ -60,7 +70,7 @@ public static partial class Helpers {
     /// <returns>File contents.</returns>
     /// <exception cref="System.IO.FileNotFoundException">Thrown when the file does not exist.</exception>
     public static async System.Threading.Tasks.Task<string> ReadFileCheckedAsync(string path) {
-        string fullPath = ResolvePath(path);
+        string fullPath = await ResolvePathAsync(path).ConfigureAwait(false);
         if (!System.IO.File.Exists(fullPath)) {
             throw new System.IO.FileNotFoundException($"File not found: {path}", fullPath);
         }
