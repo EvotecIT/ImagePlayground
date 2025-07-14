@@ -1,6 +1,8 @@
 using System.IO;
 using System.Net;
 using Xunit;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 
 namespace ImagePlayground.Tests;
@@ -32,6 +34,15 @@ public partial class ImagePlayground {
 
         var read = QrCode.Read(filePath);
         Assert.True(read.Message == "WIFI:T:WPA;S:Evotec;P:superHardPassword123!;;");
+    }
+
+    [Fact]
+    public void Test_QRCode_Transparent() {
+        string filePath = Path.Combine(_directoryWithImages, "QRCodeTransparent.png");
+        File.Delete(filePath);
+        QrCode.Generate("https://evotec.xyz", filePath, true);
+        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(filePath);
+        Assert.Equal(0, img[0, 0].A);
     }
 
     [Fact]

@@ -29,10 +29,8 @@ public class QrCode {
         using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
                 using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
-                    using (var qrCodeImage = qrCode.GetGraphic(20)) {
-                        if (transparent) {
-                            //qrCodeImage.MakeTransparent();
-                        }
+                    Color lightColor = transparent ? Color.Transparent : Color.White;
+                    using (var qrCodeImage = qrCode.GetGraphic(20, Color.Black, lightColor, true)) {
                         // this uses QRCoder
                         //ImageFormat imageFormatDetected;
                         //if (fileInfo.Extension == ".png") {
