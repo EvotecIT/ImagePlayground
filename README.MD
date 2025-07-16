@@ -14,6 +14,7 @@
   [![Twitter](https://img.shields.io/twitter/follow/PrzemyslawKlys.svg?label=Twitter%20%40PrzemyslawKlys&logo=twitter)](https://twitter.com/PrzemyslawKlys)
   [![Blog](https://img.shields.io/badge/Blog-evotec.xyz-2A6496.svg)](https://evotec.xyz/hub)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn)](https://www.linkedin.com/in/pklys)
+  [![Discord](https://img.shields.io/discord/508328927853281280?style=flat-square&label=discord%20chat)](https://evo.yt/discord)
 
 `ImagePlayground` is a C# library and a PowerShell module that allows you to play with images in different ways.
 It allows to create QR codes, BAR codes, Charts and do image manipulation.
