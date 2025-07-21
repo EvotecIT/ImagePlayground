@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Runtime.Loader;
 #endif
 
-namespace ImagePlayground.PowerShell;
+namespace ImagePlayground.PowerShell
+{
 
 /// <summary>
 /// OnModuleImportAndRemove is a class that implements the IModuleAssemblyInitializer and IModuleAssemblyCleanup interfaces.
@@ -23,7 +24,7 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
         }
 #if NET5_0_OR_GREATER
         else {
-            _ = _alc;
+            _ = _alc.LoadFromAssemblyPath(typeof(OnModuleImportAndRemove).Assembly.Location);
             AssemblyLoadContext.Default.Resolving += ResolveAlc;
         }
 #endif
@@ -115,3 +116,6 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
     }
 
 }
+
+}
+

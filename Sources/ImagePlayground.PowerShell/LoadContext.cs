@@ -3,7 +3,8 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace ImagePlayground.PowerShell;
+namespace ImagePlayground.PowerShell
+{
 
 internal class LoadContext : AssemblyLoadContext {
     private readonly string _assemblyDir;
@@ -17,5 +18,7 @@ internal class LoadContext : AssemblyLoadContext {
         string asmPath = Path.Combine(_assemblyDir, $"{assemblyName.Name}.dll");
         return File.Exists(asmPath) ? LoadFromAssemblyPath(asmPath) : null;
     }
+}
+
 }
 #endif
