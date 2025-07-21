@@ -23,6 +23,7 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
         }
 #if NET5_0_OR_GREATER
         else {
+            _ = _alc;
             AssemblyLoadContext.Default.Resolving += ResolveAlc;
         }
 #endif
