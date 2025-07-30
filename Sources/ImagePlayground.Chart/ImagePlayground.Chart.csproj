@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
     <PackageReference Include="ScottPlot" Version="5.0.55" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" />
   </ItemGroup>
 
   <ItemGroup>
