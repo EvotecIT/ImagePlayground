@@ -30,19 +30,15 @@ public class BarCode {
     private static void SaveToFile(IBarcode barcode, string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
 
-        ImageFormat imageFormatDetected;
         FileInfo fileInfo = new FileInfo(fullPath);
-
-        if (fileInfo.Extension == ".png") {
-            imageFormatDetected = ImageFormat.Png;
-        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-            imageFormatDetected = ImageFormat.Jpeg;
-        } else if (fileInfo.Extension == ".bmp") {
-            imageFormatDetected = ImageFormat.Bmp;
-        } else {
-            throw new UnknownImageFormatException(
-                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
-        }
+        string extension = fileInfo.Extension.ToLowerInvariant();
+        ImageFormat imageFormatDetected = extension switch {
+            ".png" => ImageFormat.Png,
+            ".jpg" or ".jpeg" => ImageFormat.Jpeg,
+            ".bmp" => ImageFormat.Bmp,
+            _ => throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}")
+        };
 
         var options = new ImageRendererOptions();
         options.ImageFormat = imageFormatDetected;
@@ -57,17 +53,16 @@ public class BarCode {
     private static void SaveToFile(Image<Rgba32> image, string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
         FileInfo fileInfo = new FileInfo(fullPath);
+        string extension = fileInfo.Extension.ToLowerInvariant();
 
-        if (fileInfo.Extension == ".png") {
-            image.SaveAsPng(fullPath);
-        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-            image.SaveAsJpeg(fullPath);
-        } else if (fileInfo.Extension == ".bmp") {
-            image.SaveAsBmp(fullPath);
-        } else {
-            throw new UnknownImageFormatException(
-                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
-        }
+        Action saveAction = extension switch {
+            ".png" => () => image.SaveAsPng(fullPath),
+            ".jpg" or ".jpeg" => () => image.SaveAsJpeg(fullPath),
+            ".bmp" => () => image.SaveAsBmp(fullPath),
+            _ => throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}")
+        };
+        saveAction();
     }
 
     /// <summary>Generates a QR code.</summary>
