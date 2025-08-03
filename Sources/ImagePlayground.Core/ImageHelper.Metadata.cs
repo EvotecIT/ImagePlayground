@@ -166,4 +166,23 @@ public partial class ImageHelper {
         img.Metadata.IptcProfile = data.IptcProfile != null ? new IptcProfile(data.IptcProfile) : null;
         img.Save(outFullPath);
     }
+
+    /// <summary>
+    /// Removes all metadata profiles from an image and saves it to the specified path.
+    /// </summary>
+    /// <param name="filePath">Source image path.</param>
+    /// <param name="outFilePath">Destination image path.</param>
+    public static void RemoveMetadata(string filePath, string outFilePath) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string outFullPath = Helpers.ResolvePath(outFilePath);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
+
+        using var img = Image.Load(fullPath);
+        var meta = img.Metadata;
+        meta.ExifProfile = null;
+        meta.XmpProfile = null;
+        meta.IccProfile = null;
+        meta.IptcProfile = null;
+        img.Save(outFullPath);
+    }
 }
