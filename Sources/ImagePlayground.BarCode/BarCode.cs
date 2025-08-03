@@ -33,13 +33,18 @@ public class BarCode {
         ImageFormat imageFormatDetected;
         FileInfo fileInfo = new FileInfo(fullPath);
 
-        if (fileInfo.Extension == ".png") {
+        switch (fileInfo.Extension) {
+        case var ext when string.Equals(ext, ".png", StringComparison.OrdinalIgnoreCase):
             imageFormatDetected = ImageFormat.Png;
-        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+            break;
+        case var ext when string.Equals(ext, ".jpg", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(ext, ".jpeg", StringComparison.OrdinalIgnoreCase):
             imageFormatDetected = ImageFormat.Jpeg;
-        } else if (fileInfo.Extension == ".bmp") {
+            break;
+        case var ext when string.Equals(ext, ".bmp", StringComparison.OrdinalIgnoreCase):
             imageFormatDetected = ImageFormat.Bmp;
-        } else {
+            break;
+        default:
             throw new UnknownImageFormatException(
                 $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
         }
@@ -49,6 +54,7 @@ public class BarCode {
         var renderer = new ImageRenderer(options);
         //var renderer = new ImageRenderer(imageFormat: imageFormatDetected);
 
+        Helpers.CreateParentDirectory(fullPath);
         using (var stream = new FileStream(fullPath, FileMode.Create)) {
             renderer.Render(barcode, stream);
         }
@@ -58,13 +64,21 @@ public class BarCode {
         string fullPath = Helpers.ResolvePath(filePath);
         FileInfo fileInfo = new FileInfo(fullPath);
 
-        if (fileInfo.Extension == ".png") {
+        switch (fileInfo.Extension) {
+        case var ext when string.Equals(ext, ".png", StringComparison.OrdinalIgnoreCase):
+            Helpers.CreateParentDirectory(fullPath);
             image.SaveAsPng(fullPath);
-        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
+            break;
+        case var ext when string.Equals(ext, ".jpg", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(ext, ".jpeg", StringComparison.OrdinalIgnoreCase):
+            Helpers.CreateParentDirectory(fullPath);
             image.SaveAsJpeg(fullPath);
-        } else if (fileInfo.Extension == ".bmp") {
+            break;
+        case var ext when string.Equals(ext, ".bmp", StringComparison.OrdinalIgnoreCase):
+            Helpers.CreateParentDirectory(fullPath);
             image.SaveAsBmp(fullPath);
-        } else {
+            break;
+        default:
             throw new UnknownImageFormatException(
                 $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
         }
