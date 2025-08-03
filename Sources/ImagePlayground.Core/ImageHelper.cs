@@ -106,7 +106,13 @@ public partial class ImageHelper {
         var options = new ResizeOptions();
         if (keepAspectRatio && (width == null || height == null)) {
             options.Mode = ResizeMode.Max;
-            options.Size = new Size(width ?? 0, height ?? 0);
+            if (width == null) {
+                int calculatedWidth = (int)Math.Round(height!.Value * image.Width / (double)image.Height);
+                options.Size = new Size(calculatedWidth, height.Value);
+            } else {
+                int calculatedHeight = (int)Math.Round(width.Value * image.Height / (double)image.Width);
+                options.Size = new Size(width.Value, calculatedHeight);
+            }
         } else {
             options.Mode = ResizeMode.Stretch;
             options.Size = new Size(width ?? image.Width, height ?? image.Height);

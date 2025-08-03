@@ -384,7 +384,13 @@ public partial class Image : IDisposable {
         var options = new ResizeOptions();
         if (keepAspectRatio && (width == null || height == null)) {
             options.Mode = ResizeMode.Max;
-            options.Size = new Size(width ?? 0, height ?? 0);
+            if (width == null) {
+                int calculatedWidth = (int)Math.Round(height!.Value * _image.Width / (double)_image.Height);
+                options.Size = new Size(calculatedWidth, height.Value);
+            } else {
+                int calculatedHeight = (int)Math.Round(width.Value * _image.Height / (double)_image.Width);
+                options.Size = new Size(width.Value, calculatedHeight);
+            }
         } else if (keepAspectRatio) {
             options.Mode = ResizeMode.Max;
             options.Size = new Size(width ?? _image.Width, height ?? _image.Height);
