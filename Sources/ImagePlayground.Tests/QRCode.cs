@@ -94,4 +94,27 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
     }
+
+    [Fact]
+    public void Test_QRCode_WithLogo() {
+        string filePath = Path.Combine(_directoryWithImages, "QRCodeWithLogo.png");
+        string logoPath = Path.Combine(_directoryWithImages, "LogoEvotec.png");
+        File.Delete(filePath);
+        Assert.True(File.Exists(filePath) == false);
+
+        string basePath = Path.Combine(_directoryWithImages, "QRCodeBase.png");
+        File.Delete(basePath);
+        QrCode.Generate("https://evotec.xyz", basePath);
+        byte[] baseBytes = File.ReadAllBytes(basePath);
+
+        QrCode.Generate("https://evotec.xyz", filePath, logoPath);
+
+        Assert.True(File.Exists(filePath) == true);
+
+        var read = QrCode.Read(filePath);
+        Assert.True(read.Message == "https://evotec.xyz");
+
+        byte[] logoBytes = File.ReadAllBytes(filePath);
+        Assert.NotEqual(baseBytes, logoBytes);
+    }
 }
