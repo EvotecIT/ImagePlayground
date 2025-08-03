@@ -81,16 +81,15 @@ public class QrCode {
                             qrCodeImage.Mutate(ctx => ctx.DrawImage(logo, new Point(posX, posY), 1f));
                         }
 
-                        if (fileInfo.Extension == ".png") {
-                            qrCodeImage.SaveAsPng(fullPath);
-                        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                            qrCodeImage.SaveAsJpeg(fullPath);
-                        } else if (fileInfo.Extension == ".ico") {
-                            SaveImageAsIcon(qrCodeImage, fullPath);
-                        } else {
-                            throw new UnknownImageFormatException(
-                                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
-                        }
+                        string extension = fileInfo.Extension.ToLowerInvariant();
+                        Action saveAction = extension switch {
+                            ".png" => () => qrCodeImage.SaveAsPng(fullPath),
+                            ".jpg" or ".jpeg" => () => qrCodeImage.SaveAsJpeg(fullPath),
+                            ".ico" => () => SaveImageAsIcon(qrCodeImage, fullPath),
+                            _ => throw new UnknownImageFormatException(
+                                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}")
+                        };
+                        saveAction();
                     }
                 }
             }
