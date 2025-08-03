@@ -1,5 +1,4 @@
 using System.IO;
-using System.Net;
 using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -80,7 +79,8 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(filePath) == true);
 
         var read = QrCode.Read(filePath);
-        string expected = $"WIFI:T:WPA;S:TestSSID;P:{WebUtility.UrlEncode(password)};;";
+        string escapedPassword = password.Replace(";", "\\;");
+        string expected = $"WIFI:T:WPA;S:TestSSID;P:{escapedPassword};;";
         Assert.Equal(expected, read.Message);
     }
 

@@ -27,7 +27,6 @@
     <Using Include="System.Linq" />
     <Using Include="System.Text" />
     <Using Include="System.IO" />
-    <Using Include="System.Net" />
     <Using Include="System.Net.Http" />
   </ItemGroup>
 

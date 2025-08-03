@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using BarcodeReader.ImageSharp;
 using QRCoder;
 using SixLabors.ImageSharp;
@@ -68,8 +67,7 @@ public class QrCode {
     /// <param name="filePath">Destination image path.</param>
     /// <param name="transparent">Whether the QR code should have transparent background.</param>
     public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false) {
-        string encodedPassword = WebUtility.UrlEncode(password);
-        PayloadGenerator.WiFi generator = new PayloadGenerator.WiFi(ssid, encodedPassword, PayloadGenerator.WiFi.Authentication.WPA, false, false);
+        PayloadGenerator.WiFi generator = new PayloadGenerator.WiFi(ssid, password, PayloadGenerator.WiFi.Authentication.WPA, false, false);
         Generate(generator.ToString(), filePath, transparent);
     }
 
