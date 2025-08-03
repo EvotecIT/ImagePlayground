@@ -71,6 +71,26 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_AddTextBoxAutoHeightEqualsExplicitHeight() {
+        string src = Path.Combine(_directoryWithImages, "QRCode1.png");
+        string autoDest = Path.Combine(_directoryWithTests, "textbox_autoheight.png");
+        string explicitDest = Path.Combine(_directoryWithTests, "textbox_explicitheight.png");
+        if (File.Exists(autoDest)) File.Delete(autoDest);
+        if (File.Exists(explicitDest)) File.Delete(explicitDest);
+
+        ImageHelper.AddTextBox(src, autoDest, 1, 1, "Wrapped Text", 100, SixLabors.ImageSharp.Color.Red);
+
+        using var img = global::ImagePlayground.Image.Load(src);
+        float height = img.GetTextSize("Wrapped Text", 16f, "Arial").Height;
+
+        ImageHelper.AddTextBox(src, explicitDest, 1, 1, "Wrapped Text", 100, height, SixLabors.ImageSharp.Color.Red);
+
+        byte[] autoBytes = File.ReadAllBytes(autoDest);
+        byte[] explicitBytes = File.ReadAllBytes(explicitDest);
+        Assert.Equal(explicitBytes, autoBytes);
+    }
+
+    [Fact]
     public void Test_GridImageContainsMultipleColors() {
         string dest = Path.Combine(_directoryWithTests, "gridcolors.png");
         if (File.Exists(dest)) File.Delete(dest);
