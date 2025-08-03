@@ -178,6 +178,7 @@ public partial class ImageHelper {
         string fullPath = Helpers.ResolvePath(filePath);
         string fullPath2 = Helpers.ResolvePath(filePath2);
         string outFullPath = Helpers.ResolvePath(outFilePath);
+        Helpers.CreateParentDirectory(outFullPath);
 
         using (var inStream = System.IO.File.OpenRead(fullPath))
         using (var inStream2 = System.IO.File.OpenRead(fullPath2))
