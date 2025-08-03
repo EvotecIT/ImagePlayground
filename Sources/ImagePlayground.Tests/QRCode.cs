@@ -94,4 +94,15 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
     }
+
+    [Theory]
+    [InlineData("PNG")]
+    [InlineData("JPG")]
+    [InlineData("ICO")]
+    public void Test_QRCodeUppercaseExtensions(string extension) {
+        string filePath = System.IO.Path.Combine(_directoryWithImages, $"QRCodeUpper.{extension}");
+        File.Delete(filePath);
+        QrCode.Generate("https://evotec.xyz", filePath);
+        Assert.True(File.Exists(filePath));
+    }
 }
