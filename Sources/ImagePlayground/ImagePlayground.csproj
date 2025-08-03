@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Company>Evotec</Company>
+    <Authors>Przemyslaw Klys</Authors>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
+    <AssemblyName>ImagePlayground</AssemblyName>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\ImagePlayground.Core\\ImagePlayground.Core.csproj" />
+    <ProjectReference Include="..\\ImagePlayground.Chart\\ImagePlayground.Chart.csproj" />
+    <ProjectReference Include="..\\ImagePlayground.BarCode\\ImagePlayground.BarCode.csproj" />
+    <ProjectReference Include="..\\ImagePlayground.QRCode\\ImagePlayground.QRCode.csproj" />
+  </ItemGroup>
+
+</Project>

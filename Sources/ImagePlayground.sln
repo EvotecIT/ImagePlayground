@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePlayground.BarCode", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePlayground.QRCode", "ImagePlayground.QRCode\ImagePlayground.QRCode.csproj", "{DF4E80FA-0538-4A8A-BD5D-EF82CD637BAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePlayground", "ImagePlayground\ImagePlayground.csproj", "{2CFA340A-689D-424C-BF01-860BF492571C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{DF4E80FA-0538-4A8A-BD5D-EF82CD637BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF4E80FA-0538-4A8A-BD5D-EF82CD637BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF4E80FA-0538-4A8A-BD5D-EF82CD637BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CFA340A-689D-424C-BF01-860BF492571C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CFA340A-689D-424C-BF01-860BF492571C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CFA340A-689D-424C-BF01-860BF492571C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CFA340A-689D-424C-BF01-860BF492571C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
