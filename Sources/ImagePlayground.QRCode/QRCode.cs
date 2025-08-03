@@ -31,29 +31,20 @@ public class QrCode {
                 using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
                     Color lightColor = transparent ? Color.Transparent : Color.White;
                     using (var qrCodeImage = qrCode.GetGraphic(20, Color.Black, lightColor, true)) {
-                        // this uses QRCoder
-                        //ImageFormat imageFormatDetected;
-                        //if (fileInfo.Extension == ".png") {
-                        //    imageFormatDetected = ImageFormat.Png;
-                        //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                        //    imageFormatDetected = ImageFormat.Jpeg;
-                        //} else if (fileInfo.Extension == ".ico") {
-                        //    imageFormatDetected = ImageFormat.Icon;
-                        //} else {
-                        //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-                        //}
-                        //qrCodeImage.Save(filePath, imageFormatDetected);
-
-                        //this uses QRCoder.ImageSharp
-                        if (fileInfo.Extension == ".png") {
-                            qrCodeImage.SaveAsPng(fullPath);
-                        } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                            qrCodeImage.SaveAsJpeg(fullPath);
-                        } else if (fileInfo.Extension == ".ico") {
-                            SaveImageAsIcon(qrCodeImage, fullPath);
-                        } else {
-                            throw new UnknownImageFormatException(
-                                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
+                        switch (fileInfo.Extension.ToLowerInvariant()) {
+                            case ".png":
+                                qrCodeImage.SaveAsPng(fullPath);
+                                break;
+                            case ".jpg":
+                            case ".jpeg":
+                                qrCodeImage.SaveAsJpeg(fullPath);
+                                break;
+                            case ".ico":
+                                SaveImageAsIcon(qrCodeImage, fullPath);
+                                break;
+                            default:
+                                throw new UnknownImageFormatException(
+                                    $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
                         }
                     }
                 }
