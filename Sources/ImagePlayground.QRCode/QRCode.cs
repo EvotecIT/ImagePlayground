@@ -30,20 +30,56 @@ public class QrCode {
                 using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
                     Color lightColor = transparent ? Color.Transparent : Color.White;
                     using (var qrCodeImage = qrCode.GetGraphic(20, Color.Black, lightColor, true)) {
-                        // this uses QRCoder
-                        //ImageFormat imageFormatDetected;
-                        //if (fileInfo.Extension == ".png") {
-                        //    imageFormatDetected = ImageFormat.Png;
-                        //} else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {
-                        //    imageFormatDetected = ImageFormat.Jpeg;
-                        //} else if (fileInfo.Extension == ".ico") {
-                        //    imageFormatDetected = ImageFormat.Icon;
-                        //} else {
-                        //    throw new UnknownImageFormatException("Image format not supported. Feel free to open an issue/fix it.");
-                        //}
-                        //qrCodeImage.Save(filePath, imageFormatDetected);
+                        switch (fileInfo.Extension.ToLowerInvariant()) {
+                            case ".png":
+                                qrCodeImage.SaveAsPng(fullPath);
+                                break;
+                            case ".jpg":
+                            case ".jpeg":
+                                qrCodeImage.SaveAsJpeg(fullPath);
+                                break;
+                            case ".ico":
+                                SaveImageAsIcon(qrCodeImage, fullPath);
+                                break;
+                            default:
+                                throw new UnknownImageFormatException(
+                                    $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// Creates a QR code image from a raw string and overlays a logo at the center.
+    /// </summary>
+    /// <param name="content">Content to encode.</param>
+    /// <param name="filePath">Path where the QR image will be saved.</param>
+    /// <param name="logoPath">Path to the logo image to overlay.</param>
+    /// <param name="transparent">Whether the background should be transparent.</param>
+    /// <param name="eccLevel">Error correction level.</param>
+    public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        string fullLogoPath = Helpers.ResolvePath(logoPath);
 
-                        //this uses QRCoder.ImageSharp
+        FileInfo fileInfo = new FileInfo(fullPath);
+
+        using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
+            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
+                using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
+                    Color lightColor = transparent ? Color.Transparent : Color.White;
+                    using (var qrCodeImage = qrCode.GetGraphic(20, Color.Black, lightColor, true)) {
+                        using (Image<Rgba32> logo = SixLabors.ImageSharp.Image.Load<Rgba32>(fullLogoPath)) {
+                            int logoSize = qrCodeImage.Width / 5;
+                            logo.Mutate(x => x.Resize(new ResizeOptions {
+                                Mode = ResizeMode.Max,
+                                Size = new Size(logoSize, logoSize)
+                            }));
+                            int posX = (qrCodeImage.Width - logo.Width) / 2;
+                            int posY = (qrCodeImage.Height - logo.Height) / 2;
+                            qrCodeImage.Mutate(ctx => ctx.DrawImage(logo, new Point(posX, posY), 1f));
+                        }
+
                         if (fileInfo.Extension == ".png") {
                             qrCodeImage.SaveAsPng(fullPath);
                         } else if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".jpeg") {

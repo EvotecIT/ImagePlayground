@@ -2,6 +2,11 @@ using System.IO;
 using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.IO;
+using System.Net;
+using Xunit;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 
 namespace ImagePlayground.Tests;
@@ -93,5 +98,39 @@ public partial class ImagePlayground {
         QrCode.Generate("https://evotec.xyz", filePath);
 
         Assert.True(File.Exists(filePath) == true);
+    }
+
+    [Theory]
+    [InlineData("PNG")]
+    [InlineData("JPG")]
+    [InlineData("ICO")]
+    public void Test_QRCodeUppercaseExtensions(string extension) {
+        string filePath = System.IO.Path.Combine(_directoryWithImages, $"QRCodeUpper.{extension}");
+        File.Delete(filePath);
+        QrCode.Generate("https://evotec.xyz", filePath);
+        Assert.True(File.Exists(filePath));
+    }
+      
+    [Fact]
+    public void Test_QRCode_WithLogo() {
+        string filePath = Path.Combine(_directoryWithImages, "QRCodeWithLogo.png");
+        string logoPath = Path.Combine(_directoryWithImages, "LogoEvotec.png");
+        File.Delete(filePath);
+        Assert.True(File.Exists(filePath) == false);
+
+        string basePath = Path.Combine(_directoryWithImages, "QRCodeBase.png");
+        File.Delete(basePath);
+        QrCode.Generate("https://evotec.xyz", basePath);
+        byte[] baseBytes = File.ReadAllBytes(basePath);
+
+        QrCode.Generate("https://evotec.xyz", filePath, logoPath);
+
+        Assert.True(File.Exists(filePath) == true);
+
+        var read = QrCode.Read(filePath);
+        Assert.True(read.Message == "https://evotec.xyz");
+
+        byte[] logoBytes = File.ReadAllBytes(filePath);
+        Assert.NotEqual(baseBytes, logoBytes);
     }
 }

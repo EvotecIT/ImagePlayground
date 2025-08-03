@@ -50,6 +50,17 @@ public static partial class Helpers {
     }
 
     /// <summary>
+    /// Ensures the parent directory for the specified file path exists.
+    /// </summary>
+    /// <param name="path">File path whose parent directory should be created.</param>
+    public static void CreateParentDirectory(string path) {
+        string? directory = System.IO.Path.GetDirectoryName(path);
+        if (!string.IsNullOrEmpty(directory)) {
+            System.IO.Directory.CreateDirectory(directory);
+        }
+    }
+
+    /// <summary>
     /// Reads the contents of a file after verifying that it exists.
     /// </summary>
     /// <param name="path">Path to the file.</param>

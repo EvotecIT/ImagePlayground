@@ -51,8 +51,17 @@ public partial class ImageHelper {
     /// <param name="shadowOffsetY">Shadow offset Y.</param>
     /// <param name="outlineColor">Optional outline color.</param>
     /// <param name="outlineWidth">Outline width.</param>
-    public static void AddTextBox(string filePath, string outFilePath, float x, float y, string text, float boxWidth, Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, Color? outlineColor = null, float outlineWidth = 0f) =>
-        AddTextBox(filePath, outFilePath, x, y, text, boxWidth, 0f, color, fontSize, fontFamilyName, horizontalAlignment, verticalAlignment, shadowColor, shadowOffsetX, shadowOffsetY, outlineColor, outlineWidth);
+    /// <param name="boxHeight">Optional height of the box. If not provided, it will be calculated based on the text.</param>
+    public static void AddTextBox(string filePath, string outFilePath, float x, float y, string text, float boxWidth, Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, Color? outlineColor = null, float outlineWidth = 0f, float? boxHeight = null) {
+        float height = boxHeight ?? 0f;
+        if (height <= 0f) {
+            string fullPath = Helpers.ResolvePath(filePath);
+            using var img = Image.Load(fullPath);
+            height = img.GetTextSize(text, fontSize, fontFamilyName).Height;
+        }
+
+        AddTextBox(filePath, outFilePath, x, y, text, boxWidth, height, color, fontSize, fontFamilyName, horizontalAlignment, verticalAlignment, shadowColor, shadowOffsetX, shadowOffsetY, outlineColor, outlineWidth);
+    }
 
     /// <summary>
     /// Adds text within a bounding box to an image file and saves the result.
