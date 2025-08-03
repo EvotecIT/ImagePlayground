@@ -15,7 +15,6 @@
     <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
     <PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
     <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,7 +16,6 @@
     <PackageReference Include="Barcoder" Version="2.0.0" />
     <PackageReference Include="Barcoder.Renderer.Image" Version="2.0.0" />
     <PackageReference Include="BarcodeReader.ImageSharp" Version="2.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
   </ItemGroup>
 
   <ItemGroup>

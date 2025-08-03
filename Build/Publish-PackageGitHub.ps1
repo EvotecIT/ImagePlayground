@@ -11,3 +11,12 @@ $publishGitHubReleaseAssetSplat = @{
 }
 
 Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
+
+$publishGitHubReleaseAssetSplat.ProjectPath = "$PSScriptRoot\..\Sources\ImagePlayground.BarCode"
+Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
+
+$publishGitHubReleaseAssetSplat.ProjectPath = "$PSScriptRoot\..\Sources\ImagePlayground.Chart"
+Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
+
+$publishGitHubReleaseAssetSplat.ProjectPath = "$PSScriptRoot\..\Sources\ImagePlayground.QRCode"
+Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
