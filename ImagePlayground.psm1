@@ -102,16 +102,30 @@ if ($Standard -and $Core -and $Default) {
 $Assembly = @(
     if ($Development) {
         if ($PSEdition -eq 'Core') {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { 
+                $_.FullName -notmatch '[\\/]runtimes[\\/]' -and
+                $_.DirectoryName -notmatch '[\\/](x64|x86|arm64|arm|musl-x64)$'
+            }
         } else {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { 
+                $_.FullName -notmatch '[\\/]runtimes[\\/]' -and
+                $_.DirectoryName -notmatch '[\\/](x64|x86|arm64|arm|musl-x64)$' -and
+                $_.Name -notmatch '^lib(HarfBuzzSharp|SkiaSharp)\.(dll|so|dylib)$'
+            }
         }
     } else {
         if ($Framework -and $PSEdition -eq 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { 
+                $_.FullName -notmatch '[\\/]runtimes[\\/]' -and
+                $_.DirectoryName -notmatch '[\\/](x64|x86|arm64|arm|musl-x64)$'
+            }
         }
         if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtime(s[\\/]' }
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { 
+                $_.FullName -notmatch '[\\/]runtimes[\\/]' -and
+                $_.DirectoryName -notmatch '[\\/](x64|x86|arm64|arm|musl-x64)$' -and
+                $_.Name -notmatch '^lib(HarfBuzzSharp|SkiaSharp)\.(dll|so|dylib)$'
+            }
         }
     }
 )
@@ -153,8 +167,21 @@ $FoundErrors = @(
             }
         }
     }
+    
+    # Get already loaded assemblies to avoid conflicts
+    $LoadedAssemblies = [AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {
+        $_.GetName().Name
+    }
+    
     foreach ($Import in @($Assembly)) {
         try {
+            # Skip if assembly is already loaded (by name, regardless of version)
+            $AssemblyName = [System.IO.Path]::GetFileNameWithoutExtension($Import.Name)
+            if ($AssemblyName -in $LoadedAssemblies) {
+                Write-Verbose -Message "Skipping already loaded assembly: $($Import.Name)"
+                continue
+            }
+            
             Write-Verbose -Message $Import.FullName
             Add-Type -Path $Import.Fullname -ErrorAction Stop
             #  }

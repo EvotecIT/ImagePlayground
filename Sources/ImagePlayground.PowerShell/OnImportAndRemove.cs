@@ -52,6 +52,18 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
     /// <param name="args"></param>
     /// <returns></returns>
     private static Assembly? ResolveAssembly(object? sender, ResolveEventArgs args) {
+        var requestedAssemblyName = new AssemblyName(args.Name);
+
+        // First check if the assembly is already loaded
+        foreach (Assembly loadedAssembly in AppDomain.CurrentDomain.GetAssemblies()) {
+            if (loadedAssembly.GetName().Name == requestedAssemblyName.Name) {
+                // Check if the loaded version satisfies the requirement
+                if (loadedAssembly.GetName().Version >= requestedAssemblyName.Version) {
+                    return loadedAssembly;
+                }
+            }
+        }
+
         var libDirectory = Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location);
         var directoriesToSearch = new List<string>();
 
@@ -62,10 +74,10 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
             }
         }
 
-        var requestedAssemblyName = new AssemblyName(args.Name).Name + ".dll";
+        var requestedAssemblyFileName = requestedAssemblyName.Name + ".dll";
 
         foreach (var directory in directoriesToSearch) {
-            var assemblyPath = Path.Combine(directory, requestedAssemblyName);
+            var assemblyPath = Path.Combine(directory, requestedAssemblyFileName);
 
             if (File.Exists(assemblyPath)) {
                 try {

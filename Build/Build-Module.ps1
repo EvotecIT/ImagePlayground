@@ -10,7 +10,7 @@ Build-Module -ModuleName 'ImagePlayground' {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion        = '1.0.0'
+        ModuleVersion          = '1.0.0'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
@@ -32,12 +32,12 @@ Build-Module -ModuleName 'ImagePlayground' {
     }
     New-ConfigurationManifest @Manifest
     # Add external module dependencies, using loop for simplicity
-    New-ConfigurationModule -Type ExternalModule -Name 'Microsoft.PowerShell.Management', 'Microsoft.PowerShell.Utility'
+    #New-ConfigurationModule -Type ExternalModule -Name 'Microsoft.PowerShell.Management', 'Microsoft.PowerShell.Utility'
 
     # Add approved modules, that can be used as a dependency, but only when specific function from those modules is used
     # And on that time only that function and dependant functions will be copied over
     # Keep in mind it has it's limits when "copying" functions such as it should not depend on DLLs or other external files
-    New-ConfigurationModule -Type ApprovedModule -Name 'PSSharedGoods', 'PSWriteColor', 'Connectimo', 'PSUnifi', 'PSWebToolbox', 'PSMyPassword'
+    #New-ConfigurationModule -Type ApprovedModule -Name 'PSSharedGoods', 'PSWriteColor', 'Connectimo', 'PSUnifi', 'PSWebToolbox', 'PSMyPassword'
 
     $ConfigurationFormat = [ordered] @{
         RemoveComments                              = $false
