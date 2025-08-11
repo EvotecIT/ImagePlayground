@@ -50,4 +50,22 @@ public partial class ImagePlayground {
         Assert.Equal(w, img.Height);
         Assert.Equal(h, img.Width);
     }
+
+    [Fact]
+    public async Task Test_BlurAsync() {
+        string src = Path.Combine(_directoryWithImages, "LogoEvotec.png");
+        string dest = Path.Combine(_directoryWithTests, "logo_blur_async.png");
+        if (File.Exists(dest)) File.Delete(dest);
+        await ImageHelper.BlurAsync(src, dest, 5);
+        Assert.True(File.Exists(dest));
+    }
+
+    [Fact]
+    public async Task Test_SharpenAsync() {
+        string src = Path.Combine(_directoryWithImages, "LogoEvotec.png");
+        string dest = Path.Combine(_directoryWithTests, "logo_sharp_async.png");
+        if (File.Exists(dest)) File.Delete(dest);
+        await ImageHelper.SharpenAsync(src, dest, 2);
+        Assert.True(File.Exists(dest));
+    }
 }
