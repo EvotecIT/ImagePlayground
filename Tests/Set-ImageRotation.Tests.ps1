@@ -1,4 +1,4 @@
-Describe 'Rotate-Image' {
+Describe 'Set-ImageRotation' {
 
     BeforeAll {
 
@@ -13,7 +13,7 @@ Describe 'Rotate-Image' {
     It 'rotates an image by degrees' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/PrzemyslawKlysAndKulkozaurr.jpg'
         $dest = Join-Path $TestDir 'rotate-deg.jpg'
-        Rotate-Image -FilePath $src -OutputPath $dest -Degrees 90
+        Set-ImageRotation -FilePath $src -OutputPath $dest -Degrees 90
         $orig = [ImagePlayground.Image]::Load($src)
         $img = [ImagePlayground.Image]::Load($dest)
         $img.Width | Should -Be $orig.Height
@@ -25,7 +25,7 @@ Describe 'Rotate-Image' {
     It 'rotates an image asynchronously' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/PrzemyslawKlysAndKulkozaurr.jpg'
         $dest = Join-Path $TestDir 'rotate-async.jpg'
-        Rotate-Image -FilePath $src -OutputPath $dest -Degrees 270 -Async
+        Set-ImageRotation -FilePath $src -OutputPath $dest -Degrees 270 -Async
         $orig = [ImagePlayground.Image]::Load($src)
         $img = [ImagePlayground.Image]::Load($dest)
         $img.Width | Should -Be $orig.Height
@@ -37,7 +37,7 @@ Describe 'Rotate-Image' {
     It 'rotates using rotate mode' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/PrzemyslawKlysAndKulkozaurr.jpg'
         $dest = Join-Path $TestDir 'rotate-mode.jpg'
-        Rotate-Image -FilePath $src -OutputPath $dest -RotateMode Rotate270
+        Set-ImageRotation -FilePath $src -OutputPath $dest -RotateMode Rotate270
         $orig = [ImagePlayground.Image]::Load($src)
         $img = [ImagePlayground.Image]::Load($dest)
         $img.Width | Should -Be $orig.Height
