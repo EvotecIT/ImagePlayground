@@ -131,6 +131,12 @@ public static partial class Helpers {
             asciiContent,
             @"<meta[^>]+charset\s*=\s*[""']?([^""'>\s]+)",
             System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        if (!metaMatch.Success) {
+            metaMatch = System.Text.RegularExpressions.Regex.Match(
+                asciiContent,
+                @"<meta[^>]+content\s*=\s*[""'][^""']*charset\s*=\s*([^""'>\s]+)",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        }
 
         if (metaMatch.Success) {
             try {
