@@ -76,4 +76,31 @@ public partial class ImagePlayground {
         string result = await Helpers.GetStringWithProperEncodingAsync(client, "http://test");
         Assert.Equal("<meta charset=\"utf-8\">Hello", result);
     }
+
+    [Fact]
+    public async Task Test_GetStringWithProperEncoding_BomUtf16BigEndian() {
+        byte[] prefix = Encoding.BigEndianUnicode.GetPreamble();
+        byte[] bytes = prefix.Concat(Encoding.BigEndianUnicode.GetBytes("hi")).ToArray();
+        var response = new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(bytes)
+        };
+        response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+        using var client = new HttpClient(new FakeHttpHandler(response));
+        string result = await Helpers.GetStringWithProperEncodingAsync(client, "http://test");
+        Assert.Equal("hi", result);
+    }
+
+    [Fact]
+    public async Task Test_GetStringWithProperEncoding_MetaTagContent() {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        string html = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">zażółć";
+        byte[] bytes = Encoding.GetEncoding("iso-8859-2").GetBytes(html);
+        var response = new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(bytes)
+        };
+        response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+        using var client = new HttpClient(new FakeHttpHandler(response));
+        string result = await Helpers.GetStringWithProperEncodingAsync(client, "http://test");
+        Assert.Equal(html, result);
+    }
 }
