@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
@@ -20,6 +21,6 @@ public sealed class NewImageChartHeatmapCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartHeatmap(Name, Matrix));
+        WriteObject(new ChartHeatmap(Name, Matrix));
     }
 }

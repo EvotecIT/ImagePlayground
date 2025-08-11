@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
@@ -24,6 +25,6 @@ public sealed class NewImageChartBarCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartBar(Name, Value, Color));
+        WriteObject(new ChartBar(Name, Value, Color));
     }
 }

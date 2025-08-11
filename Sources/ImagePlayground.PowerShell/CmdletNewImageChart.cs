@@ -17,7 +17,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
 
     /// <summary>Chart definitions provided directly.</summary>
     [Parameter(ValueFromPipeline = true)]
-    public Charts.ChartDefinition[]? Definition { get; set; }
+    public ChartDefinition[]? Definition { get; set; }
 
     /// <summary>ScriptBlock producing annotations.</summary>
     [Parameter]
@@ -25,7 +25,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
 
     /// <summary>Annotations for the chart.</summary>
     [Parameter]
-    public Charts.ChartAnnotation[]? Annotation { get; set; }
+    public ChartAnnotation[]? Annotation { get; set; }
 
     /// <summary>Width of the chart.</summary>
     [Parameter]
@@ -63,7 +63,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var list = new List<Charts.ChartDefinition>();
+        var list = new List<ChartDefinition>();
         if (Definition is not null) {
             list.AddRange(Definition);
         }
@@ -71,7 +71,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             var results = ChartsDefinition.Invoke();
             foreach (var o in results) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
-                if (obj is Charts.ChartDefinition def) {
+                if (obj is ChartDefinition def) {
                     list.Add(def);
                 }
             }
@@ -81,7 +81,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             return;
         }
 
-        var annotations = new List<Charts.ChartAnnotation>();
+        var annotations = new List<ChartAnnotation>();
         if (Annotation is not null) {
             annotations.AddRange(Annotation);
         }
@@ -89,14 +89,14 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
             var ares = AnnotationsDefinition.Invoke();
             foreach (var o in ares) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
-                if (obj is Charts.ChartAnnotation ann) {
+                if (obj is ChartAnnotation ann) {
                     annotations.Add(ann);
                 }
             }
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations);
+        Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

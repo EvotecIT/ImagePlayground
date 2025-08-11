@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
@@ -27,6 +28,6 @@ public sealed class NewImageChartAnnotationCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartAnnotation(X, Y, Text, Arrow.IsPresent));
+        WriteObject(new ChartAnnotation(X, Y, Text, Arrow.IsPresent));
     }
 }

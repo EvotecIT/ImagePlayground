@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
+using ImagePlayground;
 
 namespace ImagePlayground.Tests;
 
@@ -127,9 +128,9 @@ public partial class ImagePlayground {
     public void Test_LineChart() {
         string file = Path.Combine(_directoryWithTests, "chart_line.png");
         if (File.Exists(file)) File.Delete(file);
-        var defs = new List<Charts.ChartDefinition> {
-                new Charts.ChartLine("First", new List<double>{1,2,3}),
-                new Charts.ChartLine("Second", new List<double>{2,3,4})
+        var defs = new List<ChartDefinition> {
+                new ChartLine("First", new List<double>{1,2,3}),
+                new ChartLine("Second", new List<double>{2,3,4})
             };
         Charts.Generate(defs, file, 300, 200);
         Assert.True(File.Exists(file));
@@ -140,8 +141,8 @@ public partial class ImagePlayground {
     public void Test_LineChart_WithMarkers() {
         string file = Path.Combine(_directoryWithTests, "chart_line_marker.png");
         if (File.Exists(file)) File.Delete(file);
-        var defs = new List<Charts.ChartDefinition> {
-                new Charts.ChartLine(
+        var defs = new List<ChartDefinition> {
+                new ChartLine(
                     "First",
                     new List<double>{1,2,3},
                     null,
@@ -157,9 +158,9 @@ public partial class ImagePlayground {
     public void Test_ScatterChart() {
         string file = Path.Combine(_directoryWithTests, "chart_scatter.png");
         if (File.Exists(file)) File.Delete(file);
-        var defs = new List<Charts.ChartDefinition> {
-                new Charts.ChartScatter("First", new List<double>{1,2,3}, new List<double>{4,5,6}),
-                new Charts.ChartScatter("Second", new List<double>{1,2,3}, new List<double>{3,2,1})
+        var defs = new List<ChartDefinition> {
+                new ChartScatter("First", new List<double>{1,2,3}, new List<double>{4,5,6}),
+                new ChartScatter("Second", new List<double>{1,2,3}, new List<double>{3,2,1})
             };
         Charts.Generate(defs, file, 300, 200);
         Assert.True(File.Exists(file));
@@ -170,9 +171,9 @@ public partial class ImagePlayground {
     public void Test_PieAndRadialCharts() {
         string pie = Path.Combine(_directoryWithTests, "chart_pie.png");
         if (File.Exists(pie)) File.Delete(pie);
-        var pies = new List<Charts.ChartDefinition> {
-                new Charts.ChartPie("A", 1),
-                new Charts.ChartPie("B", 2)
+        var pies = new List<ChartDefinition> {
+                new ChartPie("A", 1),
+                new ChartPie("B", 2)
             };
         Charts.Generate(pies, pie);
         Assert.True(File.Exists(pie));
@@ -180,10 +181,10 @@ public partial class ImagePlayground {
 
         string radial = Path.Combine(_directoryWithTests, "chart_radial.png");
         if (File.Exists(radial)) File.Delete(radial);
-        var radials = new List<Charts.ChartDefinition> {
-                new Charts.ChartRadial("A", 0.2),
-                new Charts.ChartRadial("B", 0.4),
-                new Charts.ChartRadial("C", 0.6)
+        var radials = new List<ChartDefinition> {
+                new ChartRadial("A", 0.2),
+                new ChartRadial("B", 0.4),
+                new ChartRadial("C", 0.6)
             };
         Charts.Generate(radials, radial, 300, 200);
         Assert.True(File.Exists(radial));
@@ -195,8 +196,8 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "chart_heatmap.png");
         if (File.Exists(file)) File.Delete(file);
         var map = new double[,] { { 1, 2 }, { 3, 4 } };
-        var defs = new List<Charts.ChartDefinition> {
-                new Charts.ChartHeatmap("H", map)
+        var defs = new List<ChartDefinition> {
+                new ChartHeatmap("H", map)
             };
         Charts.Generate(defs, file, 100, 100);
         Assert.True(File.Exists(file));

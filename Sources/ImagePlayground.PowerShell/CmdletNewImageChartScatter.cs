@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
@@ -28,6 +29,6 @@ public sealed class NewImageChartScatterCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartScatter(Name, X, Y, Color));
+        WriteObject(new ChartScatter(Name, X, Y, Color));
     }
 }

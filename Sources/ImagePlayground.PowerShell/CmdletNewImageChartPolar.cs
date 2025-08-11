@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
@@ -32,6 +33,6 @@ public sealed class NewImageChartPolarCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartPolar(Name, Angle, Value, Color));
+        WriteObject(new ChartPolar(Name, Angle, Value, Color));
     }
 }
