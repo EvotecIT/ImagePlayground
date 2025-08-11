@@ -81,6 +81,16 @@ Describe 'Resize-Image' {
         { Resize-Image -FilePath $src -OutputPath $dest -Width 10 -Height -5 } | Should -Throw
     }
 
+    It 'throws for non-positive dimensions via API' {
+        $src = Join-Path -Path $PSScriptRoot -ChildPath '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $img = [ImagePlayground.Image]::Load($src)
+        { [ImagePlayground.ImageHelper]::Resize($img, 0, 10) } | Should -Throw
+        { [ImagePlayground.ImageHelper]::Resize($img, 10, 0) } | Should -Throw
+        { [ImagePlayground.ImageHelper]::Resize($img, -5, 10) } | Should -Throw
+        { [ImagePlayground.ImageHelper]::Resize($img, 10, -5) } | Should -Throw
+        $img.Dispose()
+    }
+
     It 'throws for dimensions above maximum' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
         $dest = Join-Path $TestDir 'logo-too-large.png'
