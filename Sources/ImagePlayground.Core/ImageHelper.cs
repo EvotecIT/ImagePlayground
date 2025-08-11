@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Color = SixLabors.ImageSharp.Color;
 
 namespace ImagePlayground;
@@ -26,10 +26,10 @@ public partial class ImageHelper {
     public static void ConvertTo(string filePath, string outFilePath, int? quality = null, int? compressionLevel = null) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
+        Helpers.CreateParentDirectory(outFullPath);
         using (var inStream = System.IO.File.OpenRead(fullPath))
         using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-            FileInfo fileInfo = new FileInfo(outFilePath);
+            FileInfo fileInfo = new FileInfo(outFullPath);
             if (fileInfo.Extension == ".ico") {
                 if (System.IO.Path.GetExtension(fullPath).Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
                     System.IO.File.Copy(fullPath, outFullPath, true);

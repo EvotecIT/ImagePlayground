@@ -14,6 +14,15 @@ Describe 'ConvertTo-Image' {
         Test-Path $dest | Should -BeTrue
     }
 
+    It 'converts when output path has no directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dest = 'qr_nodir.jpg'
+        if (Test-Path $dest) { Remove-Item $dest }
+        ConvertTo-Image -FilePath $src -OutputPath $dest
+        Test-Path $dest | Should -BeTrue
+        Remove-Item $dest
+    }
+
     It 'copies icon when converting icon to icon' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.ico'
         $dest = Join-Path $TestDir 'qr_copy.ico'
