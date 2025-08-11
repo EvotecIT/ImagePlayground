@@ -12,6 +12,7 @@ on:
   pull_request:
     branches:
       - master
+  workflow_dispatch:
 
 env:
   DOTNET_VERSION: '8.x'
