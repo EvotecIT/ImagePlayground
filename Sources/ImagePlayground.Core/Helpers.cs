@@ -72,9 +72,7 @@ public static partial class Helpers {
     /// <returns><c>true</c> if the file cannot be opened exclusively.</returns>
     public static bool IsFileLocked(this FileInfo file) {
         try {
-            using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)) {
-                stream.Close();
-            }
+            using FileStream _ = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
         } catch (IOException) {
             //the file is unavailable because it is:
             //still being written to
@@ -95,9 +93,7 @@ public static partial class Helpers {
     public static bool IsFileLocked(this string fileName) {
         try {
             var file = new FileInfo(fileName);
-            using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)) {
-                stream.Close();
-            }
+            using FileStream _ = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
         } catch (IOException) {
             //the file is unavailable because it is:
             //still being written to
