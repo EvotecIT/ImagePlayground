@@ -32,7 +32,7 @@ Describe 'Set-ImageExif' {
 
         (Get-ImageExif -FilePath $dest -Translate).Software | Should -Be 'Modified'
 
-        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software)
+        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Verbose
 
         (Get-ImageExif -FilePath $dest).Count | Should -Be 0
 

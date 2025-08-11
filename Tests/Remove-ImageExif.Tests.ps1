@@ -28,7 +28,7 @@ Describe 'Remove-ImageExif' {
 
         $img.Dispose()
 
-        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software)
+        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Verbose
 
         (Get-ImageExif -FilePath $dest).Count | Should -Be 0
 
@@ -52,7 +52,7 @@ Describe 'Remove-ImageExif' {
 
         $img.Dispose()
 
-        Remove-ImageExif -FilePath $dest -FilePathOutput $output -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software)
+        Remove-ImageExif -FilePath $dest -FilePathOutput $output -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Verbose
 
         Test-Path $output | Should -BeTrue
         (Get-ImageExif -FilePath $output).Count | Should -Be 0
