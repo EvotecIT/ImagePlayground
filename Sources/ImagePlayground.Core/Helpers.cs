@@ -28,7 +28,15 @@ public static partial class Helpers {
     /// <param name="c">Color value to convert.</param>
     /// <returns>Hex string without alpha component.</returns>
     public static string ToHexColor(this SixLabors.ImageSharp.Color c) {
-        return c.ToHex().Remove(6);
+        string hex = c.ToHex();
+        if (hex.Length < 6) {
+            return hex;
+        }
+#if NETSTANDARD2_0 || NET472
+        return hex.Substring(0, 6);
+#else
+        return hex[..6];
+#endif
     }
 
     /// <summary>
@@ -101,4 +109,4 @@ public static partial class Helpers {
         //file is not locked
         return false;
     }
-}
+}
