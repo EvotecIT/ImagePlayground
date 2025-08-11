@@ -49,6 +49,20 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
+    It 'creates a bar chart with background color' -Skip:(-not $IsWindows) {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_background.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartBar -Name 'Jan' -Value @(1,2)
+            New-ImageChartBar -Name 'Feb' -Value @(3,4)
+        } -FilePath $file -Width 200 -Height 150 -Background ([SixLabors.ImageSharp.Color]::Aqua)
+
+        Test-Path -Path $file | Should -BeTrue
+    }
+
     It 'creates a polar chart' -Skip:(-not $IsWindows) {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_polar.png'
         if (Test-Path -Path $file) {
