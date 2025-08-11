@@ -144,25 +144,19 @@ public class BarCode {
     /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
     /// </summary>
     public static void Generate(BarcodeType barcodeType, string content, string filePath) {
-        if (barcodeType == BarcodeType.Code128) {
-            GenerateCode128(content, filePath);
-        } else if (barcodeType == BarcodeType.Code93) {
-            GenerateCode93(content, filePath);
-        } else if (barcodeType == BarcodeType.Code39) {
-            GenerateCode39(content, filePath);
-        } else if (barcodeType == BarcodeType.KixCode) {
-            GenerateKix(content, filePath);
-        } else if (barcodeType == BarcodeType.UPCA) {
-            GenerateUpcA(content, filePath);
-        } else if (barcodeType == BarcodeType.UPCE) {
-            GenerateUpcE(content, filePath);
-        } else if (barcodeType == BarcodeType.EAN) {
-            GenerateEan(content, filePath);
-        } else if (barcodeType == BarcodeType.DataMatrix) {
-            GenerateDataMatrix(content, filePath);
-        } else if (barcodeType == BarcodeType.PDF417) {
-            GeneratePdf417(content, filePath);
-        }
+        Action? generator = barcodeType switch {
+            BarcodeType.Code128 => () => GenerateCode128(content, filePath),
+            BarcodeType.Code93 => () => GenerateCode93(content, filePath),
+            BarcodeType.Code39 => () => GenerateCode39(content, filePath),
+            BarcodeType.KixCode => () => GenerateKix(content, filePath),
+            BarcodeType.UPCA => () => GenerateUpcA(content, filePath),
+            BarcodeType.UPCE => () => GenerateUpcE(content, filePath),
+            BarcodeType.EAN => () => GenerateEan(content, filePath),
+            BarcodeType.DataMatrix => () => GenerateDataMatrix(content, filePath),
+            BarcodeType.PDF417 => () => GeneratePdf417(content, filePath),
+            _ => null
+        };
+        generator?.Invoke();
     }
 
     /// <summary>
