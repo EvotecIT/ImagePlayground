@@ -35,4 +35,19 @@ public partial class ImagePlayground {
         Assert.Equal(orig.Width, res.Width);
         Assert.Equal(orig.Height, res.Height);
     }
+
+    [Fact]
+    public async Task Test_RotateAsync() {
+        string src = Path.Combine(_directoryWithImages, "PrzemyslawKlysAndKulkozaurr.jpg");
+        string dest = Path.Combine(_directoryWithTests, "rotate_async.jpg");
+        if (File.Exists(dest)) File.Delete(dest);
+        using var orig = Image.Load(src);
+        int w = orig.Width;
+        int h = orig.Height;
+
+        await ImageHelper.RotateAsync(src, dest, 90);
+        using var img = Image.Load(dest);
+        Assert.Equal(w, img.Height);
+        Assert.Equal(h, img.Width);
+    }
 }
