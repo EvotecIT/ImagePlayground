@@ -15,12 +15,12 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "chart_bar.png");
         if (File.Exists(file)) File.Delete(file);
 
-        var defs = new List<global::ImagePlayground.Charts.ChartDefinition> {
-                new global::ImagePlayground.Charts.ChartBar("A", new List<double> { 1, 2 }),
-                new global::ImagePlayground.Charts.ChartBar("B", new List<double> { 3, 4 })
+        var defs = new List<ChartDefinition> {
+                new ChartBar("A", new List<double> { 1, 2 }),
+                new ChartBar("B", new List<double> { 3, 4 })
             };
 
-        global::ImagePlayground.Charts.Generate(defs, file, 300, 200);
+        Charts.Generate(defs, file, 300, 200);
 
         Assert.True(File.Exists(file));
         using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
@@ -31,12 +31,12 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "chart_bar_titles.png");
         if (File.Exists(file)) File.Delete(file);
 
-        var defs = new List<global::ImagePlayground.Charts.ChartDefinition> {
-                new global::ImagePlayground.Charts.ChartBar("A", new List<double> { 1, 2 }),
-                new global::ImagePlayground.Charts.ChartBar("B", new List<double> { 3, 4 })
+        var defs = new List<ChartDefinition> {
+                new ChartBar("A", new List<double> { 1, 2 }),
+                new ChartBar("B", new List<double> { 3, 4 })
             };
 
-        global::ImagePlayground.Charts.Generate(defs, file, 300, 200, null, "X", "Y");
+        Charts.Generate(defs, file, 300, 200, null, "X", "Y");
 
         Assert.True(File.Exists(file));
         using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
@@ -47,12 +47,12 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "chart_bar_grid.png");
         if (File.Exists(file)) File.Delete(file);
 
-        var defs = new List<global::ImagePlayground.Charts.ChartDefinition> {
-                new global::ImagePlayground.Charts.ChartBar("A", new List<double> { 1, 2 }),
-                new global::ImagePlayground.Charts.ChartBar("B", new List<double> { 3, 4 })
+        var defs = new List<ChartDefinition> {
+                new ChartBar("A", new List<double> { 1, 2 }),
+                new ChartBar("B", new List<double> { 3, 4 })
             };
 
-        global::ImagePlayground.Charts.Generate(defs, file, 300, 200, null, null, null, true);
+        Charts.Generate(defs, file, 300, 200, null, null, null, true);
 
         Assert.True(File.Exists(file));
         using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
@@ -72,9 +72,9 @@ public partial class ImagePlayground {
 
     [Fact]
     public void Test_GenerateMixedChartsThrows() {
-        var defs = new List<Charts.ChartDefinition> {
-                new Charts.ChartBar("A", new List<double> { 1 }),
-                new Charts.ChartLine("B", new List<double> { 2 })
+        var defs = new List<ChartDefinition> {
+                new ChartBar("A", new List<double> { 1 }),
+                new ChartLine("B", new List<double> { 2 })
             };
 
         Assert.Throws<ArgumentException>(() => Charts.Generate(defs, Path.Combine(_directoryWithTests, "mixed.png")));
@@ -87,7 +87,7 @@ public partial class ImagePlayground {
 
     [Fact]
     public void Test_GenerateEmptyDefinitionsThrows() {
-        Assert.Throws<ArgumentException>(() => Charts.Generate(new List<Charts.ChartDefinition>(), Path.Combine(_directoryWithTests, "empty.png")));
+        Assert.Throws<ArgumentException>(() => Charts.Generate(new List<ChartDefinition>(), Path.Combine(_directoryWithTests, "empty.png")));
     }
 
     [Fact]
@@ -95,11 +95,11 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "chart_annotation.png");
         if (File.Exists(file)) File.Delete(file);
 
-        var defs = new List<Charts.ChartDefinition> {
-                new Charts.ChartBar("A", new List<double> { 1 })
+        var defs = new List<ChartDefinition> {
+                new ChartBar("A", new List<double> { 1 })
             };
-        var anns = new List<Charts.ChartAnnotation> {
-                new Charts.ChartAnnotation(0, 1, "first", true)
+        var anns = new List<ChartAnnotation> {
+                new ChartAnnotation(0, 1, "first", true)
             };
 
         Charts.Generate(defs, file, 300, 200, null, null, null, false, ChartTheme.Default, anns);

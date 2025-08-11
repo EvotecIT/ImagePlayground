@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
@@ -32,6 +33,6 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImagePlayground.Charts.ChartLine(Name, Value, Color, Marker, null, Smooth.IsPresent));
+        WriteObject(new ChartLine(Name, Value, Color, Marker, null, Smooth.IsPresent));
     }
 }
