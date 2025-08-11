@@ -27,21 +27,6 @@ public partial class ImagePlayground {
     }
 
     [Fact]
-    public void Test_ReadFileChecked_ReturnsContent() {
-        string file = Path.Combine(_directoryWithTests, "readme.txt");
-        File.WriteAllText(file, "hello");
-        string content = Helpers.ReadFileChecked(file);
-        Assert.Equal("hello", content);
-    }
-
-    [Fact]
-    public void Test_ReadFileChecked_ThrowsWhenMissing() {
-        string file = Path.Combine(_directoryWithTests, "missing.txt");
-        if (File.Exists(file)) File.Delete(file);
-        Assert.Throws<FileNotFoundException>(() => Helpers.ReadFileChecked(file));
-    }
-
-    [Fact]
     public async Task Test_ReadFileCheckedAsync_ReturnsContent() {
         string file = Path.Combine(_directoryWithTests, "readme_async.txt");
         File.WriteAllText(file, "async");

@@ -62,18 +62,13 @@ public static partial class Helpers {
 
     /// <summary>
     /// Reads the contents of a file after verifying that it exists.
+    /// Wrapper around <see cref="ReadFileCheckedAsync(string)"/>.
     /// </summary>
     /// <param name="path">Path to the file.</param>
     /// <returns>File contents.</returns>
     /// <exception cref="System.IO.FileNotFoundException">Thrown when the file does not exist.</exception>
-    public static string ReadFileChecked(string path) {
-        string fullPath = ResolvePath(path);
-        if (!System.IO.File.Exists(fullPath)) {
-            throw new System.IO.FileNotFoundException($"File not found: {path}", fullPath);
-        }
-
-        return System.IO.File.ReadAllText(fullPath);
-    }
+    public static string ReadFileChecked(string path) =>
+        ReadFileCheckedAsync(path).GetAwaiter().GetResult();
 
     /// <summary>
     /// Asynchronously reads the contents of a file after verifying that it exists.
