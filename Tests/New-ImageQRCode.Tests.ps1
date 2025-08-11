@@ -26,6 +26,20 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'creates QR code with custom colors' {
+
+        $file = Join-Path $TestDir 'qr_custom.png'
+
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -ForegroundColor Red -BackgroundColor Yellow -PixelSize 10
+
+        Test-Path $file | Should -BeTrue
+
+        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'https://evotec.xyz'
+
+    }
+
     It 'creates QR code icon' {
 
         $file = Join-Path $TestDir 'qr.ico'

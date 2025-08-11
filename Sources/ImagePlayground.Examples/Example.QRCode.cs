@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QRCoder;
+using SixLabors.ImageSharp;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {
@@ -41,6 +43,10 @@ internal partial class Example {
         read = QrCode.Read(filePath);
         Console.Write(read.Message);
         Console.WriteLine();
+
+        Console.WriteLine("[*] Creating QR code with custom colors");
+        filePath = System.IO.Path.Combine(folderPath, "QRCodeColored.png");
+        QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, Color.Red, Color.Yellow, 10);
     }
 
 }
