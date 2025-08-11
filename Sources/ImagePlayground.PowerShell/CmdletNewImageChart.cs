@@ -11,12 +11,15 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChart")]
 public sealed class NewImageChartCmdlet : PSCmdlet {
+    private const string ScriptBlockSet = "ScriptBlock";
+    private const string DefinitionSet = "Definition";
+
     /// <summary>ScriptBlock producing chart definitions.</summary>
-    [Parameter(Position = 0)]
+    [Parameter(Position = 0, Mandatory = true, ParameterSetName = ScriptBlockSet)]
     public ScriptBlock? ChartsDefinition { get; set; }
 
     /// <summary>Chart definitions provided directly.</summary>
-    [Parameter(ValueFromPipeline = true)]
+    [Parameter(ValueFromPipeline = true, Mandatory = true, ParameterSetName = DefinitionSet)]
     public ChartDefinition[]? Definition { get; set; }
 
     /// <summary>ScriptBlock producing annotations.</summary>
@@ -46,7 +49,8 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     public string? YTitle { get; set; }
 
     /// <summary>Output file path.</summary>
-    [Parameter(ValueFromPipeline = true, Mandatory = true)]
+    [Parameter(Mandatory = true, ParameterSetName = ScriptBlockSet)]
+    [Parameter(Mandatory = true, ParameterSetName = DefinitionSet)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Open the image after creation.</summary>
