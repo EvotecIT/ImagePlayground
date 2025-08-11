@@ -29,7 +29,7 @@ public class BarCode {
     /// <param name="filePath">Destination file path.</param>
     private static void SaveToFile(IBarcode barcode, string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
-
+        Helpers.CreateParentDirectory(fullPath);
         FileInfo fileInfo = new FileInfo(fullPath);
         string extension = fileInfo.Extension.ToLowerInvariant();
         ImageFormat imageFormatDetected = extension switch {
@@ -52,6 +52,7 @@ public class BarCode {
 
     private static void SaveToFile(Image<Rgba32> image, string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
+        Helpers.CreateParentDirectory(fullPath);
         FileInfo fileInfo = new FileInfo(fullPath);
         string extension = fileInfo.Extension.ToLowerInvariant();
 
