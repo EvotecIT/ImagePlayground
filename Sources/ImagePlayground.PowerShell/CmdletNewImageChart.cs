@@ -65,6 +65,10 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     [Parameter]
     public ChartTheme Theme { get; set; } = ChartTheme.Default;
 
+    /// <summary>Chart background color.</summary>
+    [Parameter]
+    public SixLabors.ImageSharp.Color? Background { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var list = new List<ChartDefinition>();
@@ -100,7 +104,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations);
+        Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations, Background);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

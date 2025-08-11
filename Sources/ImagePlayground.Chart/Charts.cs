@@ -21,7 +21,8 @@ public static class Charts {
         string? yTitle = null,
         bool showGrid = false,
         ChartTheme theme = ChartTheme.Default,
-        IEnumerable<ChartAnnotation>? annotations = null) {
+        IEnumerable<ChartAnnotation>? annotations = null,
+        ImageColor? background = null) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
@@ -34,6 +35,13 @@ public static class Charts {
                 case ChartTheme.Light:
                     new ScottPlot.PlotStyles.Light().Apply(plot);
                     break;
+            }
+
+            if (background.HasValue) {
+                var px = background.Value.ToPixel<Rgba32>();
+                var color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                plot.FigureBackground.Color = color;
+                plot.DataBackground.Color = color;
             }
             var type = list[0].Type;
             if (list.Any(d => d.Type != type))
