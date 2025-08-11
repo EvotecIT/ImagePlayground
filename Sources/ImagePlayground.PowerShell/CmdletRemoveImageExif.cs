@@ -53,6 +53,7 @@ public sealed class RemoveImageExifCmdlet : PSCmdlet {
         }
 
         var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
+        Helpers.CreateParentDirectory(output);
         img.Save(output);
     }
 }
