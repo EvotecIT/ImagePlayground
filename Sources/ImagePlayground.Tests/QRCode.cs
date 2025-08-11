@@ -3,6 +3,7 @@ using System.Net;
 using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using QRCoder;
 
 
 namespace ImagePlayground.Tests;
@@ -24,6 +25,22 @@ public partial class ImagePlayground {
 
         var read = QrCode.Read(filePath);
         Assert.True(read.Message == "https://evotec.xyz");
+    }
+
+    [Fact]
+    public void Test_QRCode_CustomColors() {
+
+        string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeColors.png");
+        File.Delete(filePath);
+        QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, Color.Red, Color.Yellow, 10);
+
+        Assert.True(File.Exists(filePath) == true);
+
+        using SixLabors.ImageSharp.Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
+        Assert.Equal(Color.Yellow.ToPixel<Rgba32>(), img[0, 0]);
+
+        var read = QrCode.Read(filePath);
+        Assert.Equal("https://evotec.xyz", read.Message);
     }
 
     [Fact]
