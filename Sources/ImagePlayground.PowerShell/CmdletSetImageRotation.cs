@@ -4,18 +4,18 @@ using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Rotates an image.</summary>
+/// <summary>Sets image rotation.</summary>
 /// <para>Use <see cref="Degrees"/> for arbitrary angles or <see cref="RotateMode"/> for predefined rotations.</para>
 /// <example>
 ///   <summary>Rotate by 90 degrees</summary>
-///   <code>Rotate-Image -FilePath in.png -OutputPath out.png -Degrees 90</code>
+///   <code>Set-ImageRotation -FilePath in.png -OutputPath out.png -Degrees 90</code>
 /// </example>
 /// <example>
 ///   <summary>Rotate using RotateMode</summary>
-///   <code>Rotate-Image -FilePath in.png -OutputPath out.png -RotateMode Rotate180</code>
+///   <code>Set-ImageRotation -FilePath in.png -OutputPath out.png -RotateMode Rotate180</code>
 /// </example>
-[Cmdlet("Rotate", "Image", DefaultParameterSetName = ParameterSetDegrees)]
-public sealed class RotateImageCmdlet : PSCmdlet {
+[Cmdlet(VerbsCommon.Set, "ImageRotation", DefaultParameterSetName = ParameterSetDegrees)]
+public sealed class SetImageRotationCmdlet : PSCmdlet {
         private const string ParameterSetDegrees = "Degrees";
         private const string ParameterSetMode = "Mode";
 
@@ -49,7 +49,7 @@ public sealed class RotateImageCmdlet : PSCmdlet {
     protected override void ProcessRecord() {
         var filePath = Helpers.ResolvePath(FilePath);
         if (!File.Exists(filePath)) {
-            WriteWarning($"Rotate-Image - File {FilePath} not found. Please check the path.");
+            WriteWarning($"Set-ImageRotation - File {FilePath} not found. Please check the path.");
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
