@@ -54,6 +54,12 @@ public partial class ImageHelper {
     /// <param name="keepAspectRatio"></param>
     /// <param name="sampler"></param>
     public static void Resize(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
+        if (width.HasValue && width.Value <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than 0.");
+        }
+        if (height.HasValue && height.Value <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than 0.");
+        }
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
@@ -91,6 +97,12 @@ public partial class ImageHelper {
     /// <param name="sampler">Optional resampler algorithm.</param>
     /// <returns>Resized image instance.</returns>
     public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
+        if (width.HasValue && width.Value <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than 0.");
+        }
+        if (height.HasValue && height.Value <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than 0.");
+        }
         if (width == null && height == null) {
             return image;
         }
