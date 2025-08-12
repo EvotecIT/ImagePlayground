@@ -104,6 +104,22 @@ public static class Charts {
                     }
                     plot.ShowLegend();
                     break;
+                case ChartDefinitionType.Area:
+                    foreach (var area in list.Cast<ChartArea>()) {
+                        var xs = Enumerable.Range(0, area.Value.Count).Select(i => (double)i).ToArray();
+                        var sc = plot.Add.Scatter(xs, area.Value.ToArray());
+                        sc.LegendText = area.Name;
+                        sc.FillY = true;
+                        sc.FillYValue = 0;
+                        if (area.Color.HasValue) {
+                            var px = area.Color.Value.ToPixel<Rgba32>();
+                            var color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                            sc.FillYColor = color;
+                            sc.LineColor = color;
+                        }
+                    }
+                    plot.ShowLegend();
+                    break;
                 case ChartDefinitionType.Scatter:
                     foreach (var scatter in list.Cast<ChartScatter>()) {
                         var sc = plot.Add.Scatter(scatter.X.ToArray(), scatter.Y.ToArray());
