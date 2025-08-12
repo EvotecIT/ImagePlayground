@@ -64,5 +64,16 @@ internal partial class Example {
         var read = BarCode.Read(filePath);
         Console.WriteLine(read.Message);
     }
+
+    /// <summary>
+    /// Reads a barcode asynchronously.
+    /// </summary>
+    /// <param name="folderPath">Directory containing the barcode image.</param>
+    public static async Task ReadBarcodeAsyncSample(string folderPath) {
+        Console.WriteLine("[*] Reading Barcode asynchronously:");
+        string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN13.png");
+        var read = await BarCode.ReadAsync(filePath).ConfigureAwait(false);
+        Console.WriteLine(read.Message);
+    }
 }
 
