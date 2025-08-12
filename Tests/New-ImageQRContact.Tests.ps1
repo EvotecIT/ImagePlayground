@@ -14,4 +14,8 @@ Describe 'New-ImageQRContact' {
         Test-Path $file | Should -BeTrue
         (Get-ImageQRCode -FilePath $file).Message | Should -Match 'BEGIN:VCARD'
     }
+
+    It 'throws on invalid pixel size' {
+        { New-ImageQRContact -FilePath (Join-Path $TestDir 'contact_invalid.png') -Firstname 'John' -Lastname 'Doe' -PixelSize 0 } | Should -Throw
+    }
 }

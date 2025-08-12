@@ -50,5 +50,9 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
         Test-Path $file | Should -BeTrue
         (Get-ImageQRCode -FilePath $file).Message | Should -Be 'WIFI:T:WPA;S:Test;P:pass123;;'
     }
+
+    It 'throws on invalid pixel size' {
+        { New-ImageQRCodeWiFi -SSID 'Test' -Password '12345678' -FilePath (Join-Path $TestDrive 'wifi_invalid.png') -PixelSize 0 } | Should -Throw
+    }
 }
 

@@ -1,3 +1,4 @@
+using System;
 using ImagePlayground;
 using QRCoder;
 using System.IO;
@@ -62,6 +63,10 @@ public sealed class NewImageQrCodeBezahlCodeCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (PixelSize <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+        }
+
         if (string.IsNullOrWhiteSpace(FilePath)) {
             FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
             WriteWarning($"New-ImageQRCodeBezahlCode - No file path specified, saving to {FilePath}");
