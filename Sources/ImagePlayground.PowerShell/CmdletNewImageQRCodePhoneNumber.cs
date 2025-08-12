@@ -48,11 +48,10 @@ public sealed class NewImageQrCodePhoneNumberCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodePhoneNumber - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GeneratePhoneNumber(Number, output, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GeneratePhoneNumber(Number, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }

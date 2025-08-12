@@ -64,11 +64,10 @@ public sealed class NewImageQrCodeGirocodeCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeGirocode - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateGirocode(Iban, Bic, Name, Amount, output, RemittanceInformation, PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, null, null, PayloadGenerator.Girocode.GirocodeVersion.Version1, PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateGirocode(Iban, Bic, Name, Amount, FilePath, RemittanceInformation, PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, null, null, PayloadGenerator.Girocode.GirocodeVersion.Version1, PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }

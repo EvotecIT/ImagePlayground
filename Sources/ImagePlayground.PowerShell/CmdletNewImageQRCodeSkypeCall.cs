@@ -48,11 +48,10 @@ public sealed class NewImageQrCodeSkypeCallCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeSkypeCall - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateSkypeCall(UserName, output, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateSkypeCall(UserName, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }

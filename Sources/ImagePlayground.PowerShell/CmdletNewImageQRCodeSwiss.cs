@@ -48,11 +48,10 @@ public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeSwiss - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateSwissQrCode(Payload, output, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateSwissQrCode(Payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }

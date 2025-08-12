@@ -52,11 +52,10 @@ public sealed class NewImageQrCodeSmsCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeSms - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateSms(Number, Message, output, PayloadGenerator.SMS.SMSEncoding.SMS, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateSms(Number, Message, FilePath, PayloadGenerator.SMS.SMSEncoding.SMS, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }
