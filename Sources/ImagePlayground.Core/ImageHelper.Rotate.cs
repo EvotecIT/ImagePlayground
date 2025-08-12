@@ -41,28 +41,24 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously rotates an image using a <see cref="RotateMode"/>.
     /// </summary>
-    public static async Task RotateAsync(string filePath, string outFilePath, RotateMode rotateMode) {
+    public static async Task RotateAsync(string filePath, string outFilePath, RotateMode rotateMode, CancellationToken cancellationToken = default) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            img.Rotate(rotateMode);
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using SixLabors.ImageSharp.Image img = await SixLabors.ImageSharp.Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.Mutate(x => x.Rotate(rotateMode));
+        await img.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Asynchronously rotates an image by an arbitrary number of <paramref name="degrees"/>.
     /// </summary>
-    public static async Task RotateAsync(string filePath, string outFilePath, float degrees) {
+    public static async Task RotateAsync(string filePath, string outFilePath, float degrees, CancellationToken cancellationToken = default) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            img.Rotate(degrees);
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using SixLabors.ImageSharp.Image img = await SixLabors.ImageSharp.Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.Mutate(x => x.Rotate(degrees));
+        await img.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
     }
 }

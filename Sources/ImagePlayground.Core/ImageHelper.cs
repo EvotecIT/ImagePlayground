@@ -94,17 +94,15 @@ public partial class ImageHelper {
     /// <example>
     ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 400, 300);</code>
     /// </example>
-    public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
+    public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null, CancellationToken cancellationToken = default) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
-        await Task.Run(() => {
-            using var inStream = System.IO.File.OpenRead(fullPath);
-            using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
-            Resize(image, width, height, keepAspectRatio, sampler);
-            image.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var inStream = System.IO.File.OpenRead(fullPath);
+        using SixLabors.ImageSharp.Image image = await SixLabors.ImageSharp.Image.LoadAsync(inStream, cancellationToken).ConfigureAwait(false);
+        Resize(image, width, height, keepAspectRatio, sampler);
+        await image.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -195,7 +193,7 @@ public partial class ImageHelper {
     /// <example>
     ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 75);</code>
     /// </example>
-    public static async Task ResizeAsync(string filePath, string outFilePath, int percentage) {
+    public static async Task ResizeAsync(string filePath, string outFilePath, int percentage, CancellationToken cancellationToken = default) {
         if (percentage <= 0) {
             throw new ArgumentOutOfRangeException(nameof(percentage));
         }
@@ -204,14 +202,12 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
-        await Task.Run(() => {
-            using var inStream = System.IO.File.OpenRead(fullPath);
-            using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
-            int width = image.Width * percentage / 100;
-            int height = image.Height * percentage / 100;
-            Resize(image, width, height, false);
-            image.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var inStream = System.IO.File.OpenRead(fullPath);
+        using SixLabors.ImageSharp.Image image = await SixLabors.ImageSharp.Image.LoadAsync(inStream, cancellationToken).ConfigureAwait(false);
+        int width = image.Width * percentage / 100;
+        int height = image.Height * percentage / 100;
+        Resize(image, width, height, false);
+        await image.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

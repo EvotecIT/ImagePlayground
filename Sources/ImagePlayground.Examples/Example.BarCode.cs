@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImagePlayground.Examples;
@@ -69,10 +70,10 @@ internal partial class Example {
     /// Reads a barcode asynchronously.
     /// </summary>
     /// <param name="folderPath">Directory containing the barcode image.</param>
-    public static async Task ReadBarcodeAsyncSample(string folderPath) {
+    public static async Task ReadBarcodeAsyncSample(string folderPath, CancellationToken cancellationToken = default) {
         Console.WriteLine("[*] Reading Barcode asynchronously:");
         string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN13.png");
-        var read = await BarCode.ReadAsync(filePath).ConfigureAwait(false);
+        var read = await BarCode.ReadAsync(filePath, cancellationToken).ConfigureAwait(false);
         Console.WriteLine(read.Message);
     }
 }
