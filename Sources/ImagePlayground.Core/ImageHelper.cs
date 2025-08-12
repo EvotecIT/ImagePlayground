@@ -29,7 +29,7 @@ public partial class ImageHelper {
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using (var inStream = System.IO.File.OpenRead(fullPath))
         using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-            FileInfo fileInfo = new FileInfo(outFilePath);
+            FileInfo fileInfo = new FileInfo(outFullPath);
             if (fileInfo.Extension == ".ico") {
                 if (System.IO.Path.GetExtension(fullPath).Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
                     System.IO.File.Copy(fullPath, outFullPath, true);
