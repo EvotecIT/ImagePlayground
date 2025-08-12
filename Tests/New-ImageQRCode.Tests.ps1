@@ -52,5 +52,9 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'throws on invalid pixel size' {
+        { New-ImageQRCode -Content 'https://evotec.xyz' -FilePath (Join-Path $TestDir 'qr_invalid.png') -PixelSize 0 } | Should -Throw
+    }
+
 }
 

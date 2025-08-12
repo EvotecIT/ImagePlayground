@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using Xunit;
@@ -144,5 +145,13 @@ public partial class ImagePlayground {
 
         byte[] logoBytes = File.ReadAllBytes(filePath);
         Assert.NotEqual(baseBytes, logoBytes);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-5)]
+    public void Test_QRCode_InvalidPixelSize(int pixelSize) {
+        string filePath = Path.Combine(_directoryWithImages, "QRCodeInvalid.png");
+        Assert.Throws<ArgumentOutOfRangeException>(() => QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, null, null, pixelSize));
     }
 }

@@ -25,6 +25,10 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        if (pixelSize <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(pixelSize));
+        }
+
         string fullPath = Helpers.ResolvePath(filePath);
 
         FileInfo fileInfo = new FileInfo(fullPath);
@@ -67,6 +71,10 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        if (pixelSize <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(pixelSize));
+        }
+
         string fullPath = Helpers.ResolvePath(filePath);
         string fullLogoPath = Helpers.ResolvePath(logoPath);
 
