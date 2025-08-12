@@ -45,14 +45,21 @@ public partial class ImageHelper {
 
     /// <summary>
     /// Resizes an image to the specified width and height.
-    /// Following image formats are supported: GIF, JPEG, PNG, JFIF, GIF
+    /// Following image formats are supported: GIF, JPEG, PNG and JFIF.
     /// </summary>
-    /// <param name="filePath"></param>
-    /// <param name="outFilePath"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="keepAspectRatio"></param>
-    /// <param name="sampler"></param>
+    /// <param name="filePath">Path to the source image.</param>
+    /// <param name="outFilePath">Path where the resized image will be saved.</param>
+    /// <param name="width">Desired width or <c>null</c> to calculate automatically.</param>
+    /// <param name="height">Desired height or <c>null</c> to calculate automatically.</param>
+    /// <param name="keepAspectRatio">Preserve the original aspect ratio if <c>true</c>.</param>
+    /// <param name="sampler">Optional resampling algorithm to use.</param>
+    /// <remarks>
+    /// When <paramref name="keepAspectRatio"/> is <c>true</c> and one dimension is unspecified,
+    /// the missing dimension is calculated to maintain the aspect ratio.
+    /// </remarks>
+    /// <example>
+    ///   <code>ImageHelper.Resize("input.png", "output.png", 200, 100);</code>
+    /// </example>
     public static void Resize(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
         if (width.HasValue && width.Value <= 0) {
             throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than 0.");
@@ -74,6 +81,19 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously resizes an image to the specified width and height.
     /// </summary>
+    /// <param name="filePath">Path to the source image.</param>
+    /// <param name="outFilePath">Path where the resized image will be saved.</param>
+    /// <param name="width">Desired width or <c>null</c> to calculate automatically.</param>
+    /// <param name="height">Desired height or <c>null</c> to calculate automatically.</param>
+    /// <param name="keepAspectRatio">Preserve the original aspect ratio if <c>true</c>.</param>
+    /// <param name="sampler">Optional resampling algorithm to use.</param>
+    /// <returns>A task that represents the asynchronous resize operation.</returns>
+    /// <remarks>
+    /// This method offloads the processing to a background task, which can improve responsiveness in UI applications.
+    /// </remarks>
+    /// <example>
+    ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 400, 300);</code>
+    /// </example>
     public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
@@ -141,9 +161,12 @@ public partial class ImageHelper {
     /// <summary>
     /// Resizes an image to the specified percentage.
     /// </summary>
-    /// <param name="filePath"></param>
-    /// <param name="outFilePath"></param>
-    /// <param name="percentage"></param>
+    /// <param name="filePath">Path to the source image.</param>
+    /// <param name="outFilePath">Path where the resized image will be saved.</param>
+    /// <param name="percentage">Scale factor expressed as a percentage.</param>
+    /// <example>
+    ///   <code>ImageHelper.Resize("in.png", "out.png", 50);</code>
+    /// </example>
     public static void Resize(string filePath, string outFilePath, int percentage) {
         if (percentage <= 0) {
             throw new ArgumentOutOfRangeException(nameof(percentage));
@@ -165,6 +188,13 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously resizes an image to the specified percentage.
     /// </summary>
+    /// <param name="filePath">Path to the source image.</param>
+    /// <param name="outFilePath">Path where the resized image will be saved.</param>
+    /// <param name="percentage">Scale factor expressed as a percentage.</param>
+    /// <returns>A task that represents the asynchronous resize operation.</returns>
+    /// <example>
+    ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 75);</code>
+    /// </example>
     public static async Task ResizeAsync(string filePath, string outFilePath, int percentage) {
         if (percentage <= 0) {
             throw new ArgumentOutOfRangeException(nameof(percentage));
