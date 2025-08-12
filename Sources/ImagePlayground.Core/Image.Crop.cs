@@ -10,6 +10,14 @@ namespace ImagePlayground;
 /// </summary>
 public partial class Image : System.IDisposable {
     /// <summary>
+    /// Crops the image to the specified <paramref name="rectangle"/>.
+    /// </summary>
+    /// <param name="rectangle">Crop rectangle.</param>
+    public void Crop(Rectangle rectangle) {
+        _image.Mutate(x => x.Crop(rectangle));
+    }
+
+    /// <summary>
     /// Crops the image to a circular region.
     /// </summary>
     /// <param name="centerX">Center X coordinate.</param>
