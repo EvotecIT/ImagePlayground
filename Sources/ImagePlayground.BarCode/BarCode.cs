@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System;
+using System.IO;
 using Barcoder;
 using Barcoder.Code128;
 using Barcoder.Code39;
@@ -156,7 +157,10 @@ public class BarCode {
             BarcodeType.PDF417 => () => GeneratePdf417(content, filePath),
             _ => null
         };
-        generator?.Invoke();
+        if (generator is null) {
+            throw new ArgumentOutOfRangeException(nameof(barcodeType), barcodeType, "Unsupported barcode type.");
+        }
+        generator();
     }
 
     /// <summary>
