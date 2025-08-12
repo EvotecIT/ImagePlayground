@@ -20,5 +20,7 @@ public enum ChartDefinitionType
     /// <summary>Heatmap chart.</summary>
     Heatmap,
     /// <summary>Histogram chart.</summary>
-    Histogram
+    Histogram,
+    /// <summary>Area chart.</summary>
+    Area
 }

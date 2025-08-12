@@ -76,6 +76,20 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
+    It 'creates an area chart' -Skip:(-not $IsWindows) {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_area.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartArea -Name 'S1' -Value @(1,2,3)
+            New-ImageChartArea -Name 'S2' -Value @(2,4,6)
+        } -FilePath $file -Width 200 -Height 150
+
+        Test-Path -Path $file | Should -BeTrue
+    }
+
     It 'creates a bar chart from definitions' -Skip:(-not $IsWindows) {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_defs.png'
         if (Test-Path -Path $file) {
