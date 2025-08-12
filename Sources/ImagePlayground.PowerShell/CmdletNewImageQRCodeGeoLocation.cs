@@ -52,11 +52,10 @@ public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeGeoLocation - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateGeoLocation(Latitude, Longitude, output, PayloadGenerator.Geolocation.GeolocationEncoding.GEO, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateGeoLocation(Latitude, Longitude, FilePath, PayloadGenerator.Geolocation.GeolocationEncoding.GEO, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }

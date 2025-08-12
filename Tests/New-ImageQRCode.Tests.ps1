@@ -26,6 +26,22 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'creates QR code in current directory' {
+
+        $file = 'qr_current.png'
+
+        if (Test-Path -Path $file) { Remove-Item -Path $file }
+
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file
+
+        Test-Path -Path $file | Should -BeTrue
+
+        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'https://evotec.xyz'
+
+        Remove-Item -Path $file
+
+    }
+
     It 'creates QR code with custom colors' {
 
         $file = Join-Path $TestDir 'qr_custom.png'

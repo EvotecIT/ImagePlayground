@@ -39,6 +39,7 @@ public class QrCode {
                     Color dark = foregroundColor ?? Color.Black;
                     Color light = transparent ? Color.Transparent : (backgroundColor ?? Color.White);
                     using (var qrCodeImage = qrCode.GetGraphic(pixelSize, dark, light, true)) {
+                        Helpers.CreateParentDirectory(fullPath);
                         switch (fileInfo.Extension.ToLowerInvariant()) {
                             case ".png":
                                 qrCodeImage.SaveAsPng(fullPath);
@@ -97,6 +98,7 @@ public class QrCode {
                             qrCodeImage.Mutate(ctx => ctx.DrawImage(logo, new Point(posX, posY), 1f));
                         }
 
+                        Helpers.CreateParentDirectory(fullPath);
                         string extension = fileInfo.Extension.ToLowerInvariant();
                         Action saveAction = extension switch {
                             ".png" => () => qrCodeImage.SaveAsPng(fullPath),
@@ -528,6 +530,7 @@ public class QrCode {
     /// <param name="filePath">Destination ICO file path.</param>
     /// <param name="sizes">Icon sizes to include.</param>
     private static void SaveImageAsIcon(SixLabors.ImageSharp.Image image, string filePath, params int[] sizes) {
+        Helpers.CreateParentDirectory(filePath);
         if (sizes == null || sizes.Length == 0) {
             sizes = new[] { 16, 32, 48, 64, 128, 256 };
         }

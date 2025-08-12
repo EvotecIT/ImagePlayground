@@ -48,11 +48,10 @@ public sealed class NewImageQrCodeOtpCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeOtp - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateOneTimePassword(Payload, output, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateOneTimePassword(Payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }

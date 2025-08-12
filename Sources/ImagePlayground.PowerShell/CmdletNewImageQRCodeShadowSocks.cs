@@ -64,11 +64,10 @@ public sealed class NewImageQrCodeShadowSocksCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeShadowSocks - No file path specified, saving to {FilePath}");
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        ImagePlayground.QrCode.GenerateShadowSocks(Host, Port, Password, Method, output, Tag, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateShadowSocks(Host, Port, Password, Method, FilePath, Tag, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
+            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
         }
     }
 }
