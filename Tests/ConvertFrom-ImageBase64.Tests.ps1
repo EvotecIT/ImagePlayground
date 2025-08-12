@@ -12,4 +12,13 @@ describe 'ConvertFrom-ImageBase64' {
         ConvertFrom-ImageBase64 -Base64 $b64 -OutputPath $dest
         Test-Path $dest | Should -BeTrue
     }
+
+    It 'creates image in non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $b64 = ConvertTo-ImageBase64 -FilePath $src
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'fromb64.png'
+        ConvertFrom-ImageBase64 -Base64 $b64 -OutputPath $dest
+        Test-Path $dest | Should -BeTrue
+    }
 }

@@ -48,5 +48,16 @@ Describe 'Compare-Image' {
 
     }
 
+    It 'saves mask to non-existent directory' {
+        $img1 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $modified = Join-Path $TestDir 'qr_mod2.png'
+        if (Test-Path $modified) { Remove-Item $modified }
+        Add-ImageText -FilePath $img1 -OutputPath $modified -Text 'Diff' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'diff.png'
+        Compare-Image -FilePath $img1 -FilePathToCompare $modified -OutputPath $dest
+        Test-Path $dest | Should -BeTrue
+    }
+
 }
 

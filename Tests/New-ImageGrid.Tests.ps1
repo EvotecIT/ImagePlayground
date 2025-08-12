@@ -33,5 +33,12 @@ Describe 'New-ImageGrid' {
 
     }
 
+    It 'creates grid in non-existent directory' {
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'grid.png'
+        New-ImageGrid -FilePath $dest -Width 50 -Height 50
+        Test-Path $dest | Should -BeTrue
+    }
+
 }
 

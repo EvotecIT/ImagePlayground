@@ -53,6 +53,7 @@ public sealed class SetImageRotationCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
 
         if (ParameterSetName == ParameterSetDegrees) {
             if (Async.IsPresent) {

@@ -45,6 +45,7 @@ public sealed class NewImageThumbnailCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputDirectory);
+        Helpers.CreateParentDirectory(output);
         ImagePlayground.ImageHelper.GenerateThumbnails(dir, output, Width, Height, !DontRespectAspectRatio.IsPresent, Sampler);
     }
 }

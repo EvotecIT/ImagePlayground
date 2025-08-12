@@ -107,4 +107,14 @@ Describe 'New-ImageChart' {
 
         Test-Path -Path $file | Should -BeTrue
     }
+
+    It 'creates chart in non-existent directory' -Skip:(-not $IsWindows) {
+        $defs = @(
+            New-ImageChartBar -Name 'Jan' -Value @(1,2)
+        )
+        $dir = Join-Path -Path $TestDir -ChildPath ([guid]::NewGuid())
+        $file = Join-Path -Path $dir -ChildPath 'chart.png'
+        New-ImageChart -Definition $defs -FilePath $file -Width 200 -Height 150
+        Test-Path -Path $file | Should -BeTrue
+    }
 }

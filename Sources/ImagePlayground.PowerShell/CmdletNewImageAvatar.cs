@@ -58,6 +58,7 @@ public sealed class NewImageAvatarCmdlet : PSCmdlet {
             OutputStream.Position = 0;
         } else {
             var output = Helpers.ResolvePath(OutputPath);
+            Helpers.CreateParentDirectory(output);
             ImagePlayground.ImageHelper.Avatar(filePath, output, Width, Height, CornerRadius);
             if (Open.IsPresent) {
                 ImagePlayground.Helpers.Open(output, true);

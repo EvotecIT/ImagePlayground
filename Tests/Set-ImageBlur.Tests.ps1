@@ -23,7 +23,7 @@ Describe 'Set-ImageBlur' {
 
     It 'blurs an image asynchronously' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
-        $dest = Join-Path $TestDir 'logo-blur-async.png'
+       $dest = Join-Path $TestDir 'logo-blur-async.png'
         Set-ImageBlur -FilePath $src -OutputPath $dest -Amount 5 -Async
         $orig = [ImagePlayground.Image]::Load($src)
         $img = [ImagePlayground.Image]::Load($dest)
@@ -31,5 +31,13 @@ Describe 'Set-ImageBlur' {
         $img.Height | Should -Be $orig.Height
         $img.Dispose()
         $orig.Dispose()
+    }
+
+    It 'blurs to non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'logo-blur.png'
+        Set-ImageBlur -FilePath $src -OutputPath $dest -Amount 5
+        Test-Path $dest | Should -BeTrue
     }
 }

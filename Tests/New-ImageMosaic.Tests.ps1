@@ -31,4 +31,15 @@ Describe 'New-ImageMosaic' {
 
     }
 
+    It 'creates mosaic in non-existent directory' {
+        $src1 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $src2 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $src3 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/BarcodeEAN7.png'
+        $src4 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/BarcodeEAN13.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'mosaic.png'
+        New-ImageMosaic -FilePaths @($src1,$src2,$src3,$src4) -OutputPath $dest -Columns 2 -Width 100 -Height 100
+        Test-Path $dest | Should -BeTrue
+    }
+
 }

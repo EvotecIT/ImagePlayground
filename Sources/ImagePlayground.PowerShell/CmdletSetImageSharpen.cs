@@ -37,6 +37,7 @@ public sealed class SetImageSharpenCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         if (Async.IsPresent) {
             ImagePlayground.ImageHelper.SharpenAsync(filePath, output, Amount).GetAwaiter().GetResult();
         } else {

@@ -55,6 +55,7 @@ public sealed class SetImageAdjustCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         if (Async.IsPresent) {
             ImageHelper.AdjustAsync(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia).GetAwaiter().GetResult();
         } else {

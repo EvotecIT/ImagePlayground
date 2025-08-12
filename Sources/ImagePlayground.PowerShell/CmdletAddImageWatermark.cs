@@ -82,6 +82,7 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
 
         if (Spacing != null) {
             if (Async.IsPresent) {

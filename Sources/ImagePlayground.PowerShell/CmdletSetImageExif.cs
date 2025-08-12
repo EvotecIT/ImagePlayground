@@ -47,6 +47,7 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
         img.SetExifValue(ExifTag, Value);
 
         var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
+        Helpers.CreateParentDirectory(output);
         img.Save(output);
     }
 }

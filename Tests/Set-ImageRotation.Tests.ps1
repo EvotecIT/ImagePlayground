@@ -45,4 +45,12 @@ Describe 'Set-ImageRotation' {
         $img.Dispose()
         $orig.Dispose()
     }
+
+    It 'rotates into non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/PrzemyslawKlysAndKulkozaurr.jpg'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'rotate.jpg'
+        Set-ImageRotation -FilePath $src -OutputPath $dest -Degrees 90
+        Test-Path $dest | Should -BeTrue
+    }
 }

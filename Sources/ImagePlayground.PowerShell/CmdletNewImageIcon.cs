@@ -40,6 +40,7 @@ public sealed class NewImageIconCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         using var img = ImagePlayground.Image.Load(filePath);
         img.SaveAsIcon(output, Size);
         if (Open.IsPresent) {

@@ -44,6 +44,7 @@ public sealed class ConvertToImageCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         ImagePlayground.ImageHelper.ConvertTo(filePath, output, Quality, CompressionLevel);
     }
 }

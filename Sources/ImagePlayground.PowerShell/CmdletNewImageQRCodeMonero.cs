@@ -64,10 +64,12 @@ public sealed class NewImageQrCodeMoneroCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeMonero - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateMoneroTransaction(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
+        var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
+        ImagePlayground.QrCode.GenerateMoneroTransaction(Address, Amount, PaymentId, RecipientName, Description, output, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

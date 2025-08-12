@@ -75,6 +75,7 @@ public sealed class NewImageCropCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
 
         if (ParameterSetName == ParameterSetCircle) {
             ImageHelper.CropCircle(filePath, output, CenterX, CenterY, Radius);

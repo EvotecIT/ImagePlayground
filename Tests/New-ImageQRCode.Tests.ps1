@@ -72,5 +72,12 @@ Describe 'New-ImageQRCode' {
         { New-ImageQRCode -Content 'https://evotec.xyz' -FilePath (Join-Path $TestDir 'qr_invalid.png') -PixelSize 0 } | Should -Throw
     }
 
+    It 'creates QR code in non-existent directory' {
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $file = Join-Path $dir 'qr.png'
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file
+        Test-Path $file | Should -BeTrue
+    }
+
 }
 

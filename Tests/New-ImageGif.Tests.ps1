@@ -18,5 +18,15 @@ Describe 'New-ImageGif' {
         New-ImageGif -Frames $frames -FilePath $dest -FrameDelay 50
         Test-Path $dest | Should -BeTrue
     }
+
+    It 'creates gif in non-existent directory' {
+        $frames = @(
+            Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        )
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'anim.gif'
+        New-ImageGif -Frames $frames -FilePath $dest -FrameDelay 50
+        Test-Path $dest | Should -BeTrue
+    }
 }
 

@@ -63,6 +63,7 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
 
         if (ParameterSetName == ParameterSetPercentage) {
             if (Async.IsPresent) {

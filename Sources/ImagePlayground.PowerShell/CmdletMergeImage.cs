@@ -46,6 +46,7 @@ public sealed class MergeImageCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(FilePathOutput);
+        Helpers.CreateParentDirectory(output);
 
         ImagePlayground.ImageHelper.Combine(filePath, merge, output, ResizeToFit.IsPresent, Placement);
     }

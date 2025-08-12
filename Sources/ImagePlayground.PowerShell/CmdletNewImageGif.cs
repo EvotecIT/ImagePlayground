@@ -38,6 +38,7 @@ public sealed class NewImageGifCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
         Gif.Generate(checkedFrames, output, FrameDelay);
     }
 }

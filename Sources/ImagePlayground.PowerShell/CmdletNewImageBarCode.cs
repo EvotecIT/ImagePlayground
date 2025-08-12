@@ -25,6 +25,7 @@ public BarcodeType Type { get; set; }
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
         BarCode.Generate(Type, Value, output);
     }
 }

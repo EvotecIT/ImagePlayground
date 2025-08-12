@@ -98,6 +98,7 @@ public sealed class AddImageTextCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         ImagePlayground.ImageHelper.AddText(
             filePath,
             output,

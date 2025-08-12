@@ -32,4 +32,12 @@ Describe 'Set-ImageSharpen' {
         $img.Dispose()
         $orig.Dispose()
     }
+
+    It 'sharpens into non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'logo-sharp.png'
+        Set-ImageSharpen -FilePath $src -OutputPath $dest -Amount 2
+        Test-Path $dest | Should -BeTrue
+    }
 }

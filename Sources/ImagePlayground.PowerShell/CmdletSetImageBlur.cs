@@ -37,6 +37,7 @@ public sealed class SetImageBlurCmdlet : PSCmdlet {
             return;
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         if (Async.IsPresent) {
             ImagePlayground.ImageHelper.BlurAsync(filePath, output, Amount).GetAwaiter().GetResult();
         } else {

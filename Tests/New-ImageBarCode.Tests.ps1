@@ -44,4 +44,11 @@ Describe 'New-ImageBarCode' {
         (Get-ImageBarCode -FilePath $file).Message | Should -Be 'Pdf417Example'
     }
 
+    It 'creates barcode in non-existent directory' {
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $file = Join-Path $dir 'barcode.png'
+        New-ImageBarCode -Type EAN -Value '9012341234571' -FilePath $file
+        Test-Path $file | Should -BeTrue
+    }
+
 }

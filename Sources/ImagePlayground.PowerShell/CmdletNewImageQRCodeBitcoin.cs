@@ -64,10 +64,12 @@ public sealed class NewImageQrCodeBitcoinCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeBitcoin - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateBitcoinAddress(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
+        var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
+        ImagePlayground.QrCode.GenerateBitcoinAddress(Currency, Address, Amount, Label, Message, output, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

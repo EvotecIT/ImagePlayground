@@ -14,4 +14,12 @@ Describe 'New-ImageIcon' {
         New-ImageIcon -FilePath $src -OutputPath $dest -Size @(16,32)
         Test-Path $dest | Should -BeTrue
     }
+
+    It 'creates icon in non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'icon.ico'
+        New-ImageIcon -FilePath $src -OutputPath $dest -Size @(16,32)
+        Test-Path $dest | Should -BeTrue
+    }
 }

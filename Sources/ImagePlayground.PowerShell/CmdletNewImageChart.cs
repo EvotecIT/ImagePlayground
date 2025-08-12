@@ -104,6 +104,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
         Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations, Background);
 
         if (Show.IsPresent) {

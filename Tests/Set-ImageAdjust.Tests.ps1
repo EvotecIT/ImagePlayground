@@ -29,4 +29,12 @@ Describe 'Set-ImageAdjust' {
         $img.Dispose()
         $orig.Dispose()
     }
+
+    It 'adjusts image in non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'logo-adjust.png'
+        Set-ImageAdjust -FilePath $src -OutputPath $dest -Brightness 1.2 -Contrast 1.1
+        Test-Path $dest | Should -BeTrue
+    }
 }

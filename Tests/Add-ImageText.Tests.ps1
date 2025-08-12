@@ -71,5 +71,12 @@ Describe 'Add-ImageText' {
         { Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 0 -Y -1 } | Should -Throw
     }
 
+    It 'creates output in non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'text.png'
+        Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        Test-Path $dest | Should -BeTrue
+    }
 }
 

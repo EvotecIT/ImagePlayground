@@ -57,10 +57,12 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCode - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.Generate(Content, FilePath, Transparent.IsPresent, QRCodeGenerator.ECCLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
+        var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
+        ImagePlayground.QrCode.Generate(Content, output, Transparent.IsPresent, QRCodeGenerator.ECCLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

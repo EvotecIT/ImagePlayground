@@ -37,6 +37,7 @@ public sealed class ExportImageMetadataCmdlet : PSCmdlet {
             WriteObject(json);
         } else {
             var output = Helpers.ResolvePath(OutputPath!);
+            Helpers.CreateParentDirectory(output);
             File.WriteAllText(output, json);
         }
     }

@@ -30,6 +30,14 @@ Describe 'Resize-Image' {
 
     }
 
+    It 'resizes to non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'logo-small.png'
+        Resize-Image -FilePath $src -OutputPath $dest -Width 50 -Height 50
+        Test-Path $dest | Should -BeTrue
+    }
+
     It 'resizes an image asynchronously' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
         $dest = Join-Path $TestDir 'logo-small-async.png'

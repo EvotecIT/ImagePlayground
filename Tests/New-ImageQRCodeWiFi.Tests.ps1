@@ -51,6 +51,13 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
         (Get-ImageQRCode -FilePath $file).Message | Should -Be 'WIFI:T:WPA;S:Test;P:pass123;;'
     }
 
+    It 'creates WiFi QR in non-existent directory' {
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $file = Join-Path $dir 'wifi.png'
+        New-ImageQRCodeWiFi -SSID 'Test' -Password 'pass123' -FilePath $file
+        Test-Path $file | Should -BeTrue
+    }
+
     It 'throws on invalid pixel size' {
         { New-ImageQRCodeWiFi -SSID 'Test' -Password '12345678' -FilePath (Join-Path $TestDrive 'wifi_invalid.png') -PixelSize 0 } | Should -Throw
     }

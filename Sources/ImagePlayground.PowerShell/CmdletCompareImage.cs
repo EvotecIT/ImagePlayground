@@ -38,6 +38,7 @@ public sealed class CompareImageCmdlet : PSCmdlet {
 
         if (!string.IsNullOrWhiteSpace(OutputPath)) {
             var output = Helpers.ResolvePath(OutputPath);
+            Helpers.CreateParentDirectory(output);
             ImagePlayground.ImageHelper.Compare(filePath, compare, output);
         } else {
             var result = ImagePlayground.ImageHelper.Compare(filePath, compare);

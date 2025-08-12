@@ -48,10 +48,12 @@ public sealed class NewImageQrCodeSlovenianUpnQrCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeSlovenianUpnQr - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateSlovenianUpnQr(Payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
+        var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
+        ImagePlayground.QrCode.GenerateSlovenianUpnQr(Payload, output, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
+            ImagePlayground.Helpers.Open(output, true);
         }
     }
 }

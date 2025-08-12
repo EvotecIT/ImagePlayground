@@ -20,4 +20,12 @@ Describe 'Add-ImageTextBox' {
         Add-ImageTextBox -FilePath $src -OutputPath $dest -Text 'Long text to wrap properly' -X 1 -Y 1 -Width 50 -Color ([SixLabors.ImageSharp.Color]::Blue)
         Test-Path $dest | Should -BeTrue
     }
+
+    It 'adds textbox to non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'textbox.png'
+        Add-ImageTextBox -FilePath $src -OutputPath $dest -Text 'Test Wrap' -X 1 -Y 1 -Width 100 -Color ([SixLabors.ImageSharp.Color]::Red)
+        Test-Path $dest | Should -BeTrue
+    }
 }

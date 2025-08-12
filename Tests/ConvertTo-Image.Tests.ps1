@@ -28,4 +28,12 @@ Describe 'ConvertTo-Image' {
         $dest = Join-Path $TestDir 'invalid.ico'
         { ConvertTo-Image -FilePath $src -OutputPath $dest } | Should -Throw
     }
+
+    It 'converts image to non-existent directory' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'qr.jpg'
+        ConvertTo-Image -FilePath $src -OutputPath $dest -Quality 80
+        Test-Path $dest | Should -BeTrue
+    }
 }

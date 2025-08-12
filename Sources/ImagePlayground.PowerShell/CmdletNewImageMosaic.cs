@@ -49,6 +49,7 @@ public sealed class NewImageMosaicCmdlet : PSCmdlet {
             checkedFiles.Add(full);
         }
         var output = Helpers.ResolvePath(OutputPath);
+        Helpers.CreateParentDirectory(output);
         ImageHelper.Mosaic(checkedFiles, output, Columns, Width, Height);
         if (Open.IsPresent) {
             Helpers.Open(output, true);

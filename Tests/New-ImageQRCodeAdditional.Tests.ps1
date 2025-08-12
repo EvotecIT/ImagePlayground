@@ -29,6 +29,13 @@ describe 'New-ImageQRCode additional cmdlets' {
         (Get-ImageQRCode -FilePath $file).Message | Should -Match 'bitcoin:'
     }
 
+    It 'creates SMS QR code in non-existent directory' {
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $file = Join-Path $dir 'sms.png'
+        New-ImageQRCodeSms -Number '+1234567890' -Message 'Hello' -FilePath $file
+        Test-Path $file | Should -BeTrue
+    }
+
     It 'throws on invalid pixel size for Sms' {
         { New-ImageQRCodeSms -Number '+1234567890' -Message 'Hello' -FilePath (Join-Path $TestDir 'sms_invalid.png') -PixelSize 0 } | Should -Throw
     }

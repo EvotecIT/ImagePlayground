@@ -48,5 +48,14 @@ Describe 'Merge-Image' {
 
     }
 
+    It 'merges images into non-existent directory' {
+        $src1 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $src2 = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+        $dir = Join-Path $TestDir ([guid]::NewGuid())
+        $dest = Join-Path $dir 'merged.png'
+        Merge-Image -FilePath $src1 -FilePathToMerge $src2 -FilePathOutput $dest
+        Test-Path $dest | Should -BeTrue
+    }
+
 }
 
