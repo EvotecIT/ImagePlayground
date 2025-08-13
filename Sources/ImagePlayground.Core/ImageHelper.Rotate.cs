@@ -42,6 +42,7 @@ public partial class ImageHelper {
     /// Asynchronously rotates an image using a <see cref="RotateMode"/>.
     /// </summary>
     public static async Task RotateAsync(string filePath, string outFilePath, RotateMode rotateMode, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
@@ -54,6 +55,7 @@ public partial class ImageHelper {
     /// Asynchronously rotates an image by an arbitrary number of <paramref name="degrees"/>.
     /// </summary>
     public static async Task RotateAsync(string filePath, string outFilePath, float degrees, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);

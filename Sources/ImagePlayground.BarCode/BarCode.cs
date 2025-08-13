@@ -169,6 +169,7 @@ public class BarCode {
     /// <param name="filePath">Path to the barcode image.</param>
     /// <returns>A task containing the decoded barcode result.</returns>
     public static async Task<BarcodeResult<Rgba32>> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
 
         using Image<Rgba32> barcodeImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(fullPath, cancellationToken).ConfigureAwait(false);

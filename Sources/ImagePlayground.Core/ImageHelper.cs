@@ -95,6 +95,7 @@ public partial class ImageHelper {
     ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 400, 300);</code>
     /// </example>
     public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
@@ -198,6 +199,7 @@ public partial class ImageHelper {
             throw new ArgumentOutOfRangeException(nameof(percentage));
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
