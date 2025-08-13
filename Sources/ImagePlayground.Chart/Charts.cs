@@ -131,6 +131,20 @@ public static class Charts {
                     }
                     plot.ShowLegend();
                     break;
+                case ChartDefinitionType.Bubble:
+                    foreach (var bubble in list.Cast<ChartBubble>()) {
+                        for (int i = 0; i < bubble.X.Count && i < bubble.Y.Count && i < bubble.Size.Count; i++) {
+                            var marker = plot.Add.Marker(bubble.X[i], bubble.Y[i], size: (float)bubble.Size[i]);
+                            if (i == 0)
+                                marker.LegendText = bubble.Name;
+                            if (bubble.Color.HasValue) {
+                                var px = bubble.Color.Value.ToPixel<Rgba32>();
+                                marker.Color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                            }
+                        }
+                    }
+                    plot.ShowLegend();
+                    break;
                 case ChartDefinitionType.Polar:
                     foreach (var polar in list.Cast<ChartPolar>()) {
                         var pp = plot.Add.Polar(polar.Angle.ToArray(), polar.Value.ToArray());
