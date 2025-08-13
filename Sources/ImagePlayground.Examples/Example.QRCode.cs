@@ -47,6 +47,10 @@ internal partial class Example {
         Console.WriteLine("[*] Creating QR code with custom colors");
         filePath = System.IO.Path.Combine(folderPath, "QRCodeColored.png");
         QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, Color.Red, Color.Yellow, 10);
+
+        Console.WriteLine("[*] Creating QR code for email");
+        filePath = System.IO.Path.Combine(folderPath, "QRCodeEmail.png");
+        QrCode.GenerateEmail(filePath, "user@example.com", "Hello", "Body");
     }
 
 }

@@ -13,6 +13,14 @@ describe 'New-ImageQRCode additional cmdlets' {
         (Get-ImageQRCode -FilePath $file).Message | Should -Match 'sms:|SMSTO'
     }
 
+    It 'creates email QR code' {
+        $file = Join-Path $TestDir 'email.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCodeEmail -Email 'user@example.com' -Subject 'Hi' -Message 'Body' -FilePath $file
+        Test-Path $file | Should -BeTrue
+        (Get-ImageQRCode -FilePath $file).Message | Should -Match 'mailto:'
+    }
+
     It 'creates geolocation QR code' {
         $file = Join-Path $TestDir 'geo.png'
         if (Test-Path $file) { Remove-Item $file }
@@ -31,6 +39,10 @@ describe 'New-ImageQRCode additional cmdlets' {
 
     It 'throws on invalid pixel size for Sms' {
         { New-ImageQRCodeSms -Number '+1234567890' -Message 'Hello' -FilePath (Join-Path $TestDir 'sms_invalid.png') -PixelSize 0 } | Should -Throw
+    }
+
+    It 'throws on invalid pixel size for Email' {
+        { New-ImageQRCodeEmail -Email 'user@example.com' -FilePath (Join-Path $TestDir 'email_invalid.png') -PixelSize 0 } | Should -Throw
     }
 
     It 'throws on invalid pixel size for GeoLocation' {
