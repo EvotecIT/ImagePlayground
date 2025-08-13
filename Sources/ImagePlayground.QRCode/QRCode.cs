@@ -242,6 +242,10 @@ public class QrCode {
     ///   <code>QrCode.GenerateEmail("email.png", "user@example.com", "Hello", "Body");</code>
     /// </example>
     public static void GenerateEmail(string filePath, string email, string subject = null, string message = null, PayloadGenerator.Mail.MailEncoding encoding = PayloadGenerator.Mail.MailEncoding.MAILTO, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        if (pixelSize <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(pixelSize));
+        }
+
         PayloadGenerator.Mail generator = new PayloadGenerator.Mail(email, subject, message, encoding);
         Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
     }
