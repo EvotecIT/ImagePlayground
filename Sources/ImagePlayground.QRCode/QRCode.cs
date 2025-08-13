@@ -185,8 +185,8 @@ public class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void GenerateCalendarEvent(string calendarEntry, string calendarMessage, string calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, PayloadGenerator.CalendarEvent.EventEncoding calendarEventEncoding = PayloadGenerator.CalendarEvent.EventEncoding.iCalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        PayloadGenerator.CalendarEvent generator = new PayloadGenerator.CalendarEvent(calendarEntry, calendarMessage, calendarGeoLocation, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
+    public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, PayloadGenerator.CalendarEvent.EventEncoding calendarEventEncoding = PayloadGenerator.CalendarEvent.EventEncoding.iCalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        PayloadGenerator.CalendarEvent generator = new PayloadGenerator.CalendarEvent(calendarEntry, calendarMessage ?? string.Empty, calendarGeoLocation ?? string.Empty, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
         Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
     }
 
