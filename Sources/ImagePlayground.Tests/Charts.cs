@@ -2,6 +2,7 @@ using global::ImagePlayground;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CodeMatrix.Payloads;
 using Xunit;
 
 namespace ImagePlayground.Tests;
@@ -63,11 +64,15 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "contact.png");
         if (File.Exists(file)) File.Delete(file);
 
-        QrCode.GenerateContact(file, QRCoder.PayloadGenerator.ContactData.ContactOutputType.VCard4, "John", "Doe");
+        QrCode.GenerateContact(file, QrContactOutputType.VCard4, "John", "Doe");
 
         Assert.True(File.Exists(file));
         var read = QrCode.Read(file);
+#if NET8_0_OR_GREATER
         Assert.Contains("BEGIN", read.Message);
+#else
+        Assert.Equal(Status.Error, read.Status);
+#endif
     }
 
     [Fact]

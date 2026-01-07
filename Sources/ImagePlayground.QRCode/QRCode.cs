@@ -2,12 +2,13 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using BarcodeReader.ImageSharp;
-using QRCoder;
+using CodeMatrix;
+using CodeMatrix.Payloads;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using CodeMatrixPixelFormat = CodeMatrix.PixelFormat;
+using CodeMatrixRgba32 = CodeMatrix.Rendering.Png.Rgba32;
 
 namespace ImagePlayground;
 /// <summary>
@@ -24,41 +25,9 @@ public class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void Generate(string content, string filePath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        if (pixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(pixelSize));
-        }
-
-        string fullPath = Helpers.ResolvePath(filePath);
-
-        FileInfo fileInfo = new FileInfo(fullPath);
-
-        using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
-            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
-                using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
-                    Color dark = foregroundColor ?? Color.Black;
-                    Color light = transparent ? Color.Transparent : (backgroundColor ?? Color.White);
-                    using (var qrCodeImage = qrCode.GetGraphic(pixelSize, dark, light, true)) {
-                        Helpers.CreateParentDirectory(fullPath);
-                        switch (fileInfo.Extension.ToLowerInvariant()) {
-                            case ".png":
-                                qrCodeImage.SaveAsPng(fullPath);
-                                break;
-                            case ".jpg":
-                            case ".jpeg":
-                                qrCodeImage.SaveAsJpeg(fullPath);
-                                break;
-                            case ".ico":
-                                SaveImageAsIcon(qrCodeImage, fullPath);
-                                break;
-                            default:
-                                throw new UnknownImageFormatException(
-                                    $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
-                        }
-                    }
-                }
-            }
-        }
+    public static void Generate(string content, string filePath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var options = BuildOptions(transparent, eccLevel, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(new QrPayloadData(content), filePath, options);
     }
     /// <summary>
     /// Creates a QR code image from a raw string and overlays a logo at the center.
@@ -71,47 +40,10 @@ public class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QRCodeGenerator.ECCLevel eccLevel = QRCodeGenerator.ECCLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        if (pixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(pixelSize));
-        }
-
-        string fullPath = Helpers.ResolvePath(filePath);
-        string fullLogoPath = Helpers.ResolvePath(logoPath);
-
-        FileInfo fileInfo = new FileInfo(fullPath);
-
-        using (QRCodeGenerator qrGenerator = new QRCodeGenerator()) {
-            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, eccLevel)) {
-                using (QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData)) {
-                    Color dark = foregroundColor ?? Color.Black;
-                    Color light = transparent ? Color.Transparent : (backgroundColor ?? Color.White);
-                    using (var qrCodeImage = qrCode.GetGraphic(pixelSize, dark, light, true)) {
-                        using (SixLabors.ImageSharp.Image<Rgba32> logo = SixLabors.ImageSharp.Image.Load<Rgba32>(fullLogoPath)) {
-                            int logoSize = qrCodeImage.Width / 5;
-                            logo.Mutate(x => x.Resize(new ResizeOptions {
-                                Mode = ResizeMode.Max,
-                                Size = new Size(logoSize, logoSize)
-                            }));
-                            int posX = (qrCodeImage.Width - logo.Width) / 2;
-                            int posY = (qrCodeImage.Height - logo.Height) / 2;
-                            qrCodeImage.Mutate(ctx => ctx.DrawImage(logo, new Point(posX, posY), 1f));
-                        }
-
-                        Helpers.CreateParentDirectory(fullPath);
-                        string extension = fileInfo.Extension.ToLowerInvariant();
-                        Action saveAction = extension switch {
-                            ".png" => () => qrCodeImage.SaveAsPng(fullPath),
-                            ".jpg" or ".jpeg" => () => qrCodeImage.SaveAsJpeg(fullPath),
-                            ".ico" => () => SaveImageAsIcon(qrCodeImage, fullPath),
-                            _ => throw new UnknownImageFormatException(
-                                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}")
-                        };
-                        saveAction();
-                    }
-                }
-            }
-        }
+    public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var logoBytes = LoadLogoPng(logoPath);
+        var options = BuildOptions(transparent, eccLevel, foregroundColor, backgroundColor, pixelSize, logoBytes, drawLogoBackground: false);
+        RenderToFile(new QrPayloadData(content), filePath, options);
     }
     /// <summary>
     /// Creates a QR code containing WiFi configuration information.
@@ -124,9 +56,9 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        string encodedPassword = WebUtility.UrlEncode(password);
-        PayloadGenerator.WiFi generator = new PayloadGenerator.WiFi(ssid, encodedPassword, PayloadGenerator.WiFi.Authentication.WPA, false, false);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.Wifi(ssid, password, "WPA", false);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -139,8 +71,9 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateWhatsAppMessage(string message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        PayloadGenerator.WhatsAppMessage generator = new PayloadGenerator.WhatsAppMessage(message);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.WhatsAppMessage(message);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
     /// <summary>
     /// Generates a QR code representing a hyperlink.
@@ -152,8 +85,9 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateUrl(string url, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        PayloadGenerator.Url generator = new PayloadGenerator.Url(url);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.Url(url);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
     /// <summary>
     /// Generates a QR code that opens a bookmark in the browser.
@@ -166,8 +100,9 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateBookmark(string bookmarkUrl, string bookmarkName, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        PayloadGenerator.Bookmark generator = new PayloadGenerator.Bookmark(bookmarkUrl, bookmarkName);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.Bookmark(bookmarkUrl, bookmarkName);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -185,9 +120,10 @@ public class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, PayloadGenerator.CalendarEvent.EventEncoding calendarEventEncoding = PayloadGenerator.CalendarEvent.EventEncoding.iCalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        PayloadGenerator.CalendarEvent generator = new PayloadGenerator.CalendarEvent(calendarEntry, calendarMessage ?? string.Empty, calendarGeoLocation ?? string.Empty, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.CalendarEvent(calendarEntry, calendarFrom, calendarTo, calendarGeoLocation, calendarMessage, allDayEvent, calendarEventEncoding);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -219,11 +155,12 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <example>
-    ///   <code>QrCode.GenerateContact("contact.png", PayloadGenerator.ContactData.ContactOutputType.MeCard, "John", "Doe");</code>
+    ///   <code>QrCode.GenerateContact("contact.png", QrContactOutputType.MeCard, "John", "Doe");</code>
     /// </example>
-    public static void GenerateContact(string filePath, PayloadGenerator.ContactData.ContactOutputType outputType, string firstname, string lastname, string nickname = null, string phone = null, string mobilePhone = null, string workPhone = null, string email = null, DateTime? birthday = null, string website = null, string street = null, string houseNumber = null, string city = null, string zipCode = null, string country = null, string note = null, string stateRegion = null, PayloadGenerator.ContactData.AddressOrder addressOrder = PayloadGenerator.ContactData.AddressOrder.Default, string org = null, string orgTitle = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        PayloadGenerator.ContactData generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, stateRegion, addressOrder, org, orgTitle);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateContact(string filePath, QrContactOutputType outputType, string firstname, string lastname, string? nickname = null, string? phone = null, string? mobilePhone = null, string? workPhone = null, string? email = null, DateTime? birthday = null, string? website = null, string? street = null, string? houseNumber = null, string? city = null, string? zipCode = null, string? country = null, string? note = null, string? stateRegion = null, QrContactAddressOrder addressOrder = QrContactAddressOrder.Default, string? org = null, string? orgTitle = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, QrContactAddressType addressType = QrContactAddressType.HomePreferred) {
+        var payload = QrPayloads.Contact(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, stateRegion, addressOrder, org, orgTitle, addressType);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -241,13 +178,10 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateEmail("email.png", "user@example.com", "Hello", "Body");</code>
     /// </example>
-    public static void GenerateEmail(string filePath, string email, string subject = null, string message = null, PayloadGenerator.Mail.MailEncoding encoding = PayloadGenerator.Mail.MailEncoding.MAILTO, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        if (pixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(pixelSize));
-        }
-
-        PayloadGenerator.Mail generator = new PayloadGenerator.Mail(email, subject, message, encoding);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateEmail(string filePath, string email, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.Email(email, subject, message, encoding);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -264,9 +198,10 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateMMS("mms.png", "+123456789", "Hi");</code>
     /// </example>
-    public static void GenerateMMS(string filePath, string phoneNumber, string subject = "", PayloadGenerator.MMS.MMSEncoding encoding = PayloadGenerator.MMS.MMSEncoding.MMSTO, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = subject == "" ? new PayloadGenerator.MMS(phoneNumber, encoding) : new PayloadGenerator.MMS(phoneNumber, subject, encoding);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateMMS(string filePath, string phoneNumber, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mmsto, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.Mms(phoneNumber, subject, encoding);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -283,11 +218,10 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSms("+123456789", "Hello", "sms.png");</code>
     /// </example>
-    public static void GenerateSms(string number, string? message, string filePath, PayloadGenerator.SMS.SMSEncoding encoding = PayloadGenerator.SMS.SMSEncoding.SMS, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = string.IsNullOrEmpty(message)
-            ? new PayloadGenerator.SMS(number, encoding)
-            : new PayloadGenerator.SMS(number, message!, encoding);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateSms(string number, string? message, string filePath, QrSmsEncoding encoding = QrSmsEncoding.Sms, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.Sms(number, message, encoding);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -304,9 +238,10 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateGeoLocation("46.0569", "14.5058", "geo.png");</code>
     /// </example>
-    public static void GenerateGeoLocation(string latitude, string longitude, string filePath, PayloadGenerator.Geolocation.GeolocationEncoding encoding = PayloadGenerator.Geolocation.GeolocationEncoding.GEO, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.Geolocation(latitude, longitude, encoding);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateGeoLocation(string latitude, string longitude, string filePath, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.Geo(latitude, longitude, encoding);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -330,9 +265,10 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateGirocode("DE02120300000000202051", "BYLADEM1001", "ACME", 10m, "giro.png");</code>
     /// </example>
-    public static void GenerateGirocode(string iban, string bic, string name, decimal amount, string filePath, string? remittanceInformation = null, PayloadGenerator.Girocode.TypeOfRemittance type = PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, string? purposeOfCreditTransfer = null, string? messageToGirocodeUser = null, PayloadGenerator.Girocode.GirocodeVersion version = PayloadGenerator.Girocode.GirocodeVersion.Version1, PayloadGenerator.Girocode.GirocodeEncoding encoding = PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation ?? string.Empty, type, purposeOfCreditTransfer ?? string.Empty, messageToGirocodeUser ?? string.Empty, version, encoding);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateGirocode(string iban, string bic, string name, decimal amount, string filePath, string? remittanceInformation = null, QrGirocodeRemittanceType type = QrGirocodeRemittanceType.Unstructured, string? purposeOfCreditTransfer = null, string? messageToGirocodeUser = null, QrGirocodeVersion version = QrGirocodeVersion.Version1, QrGirocodeEncoding encoding = QrGirocodeEncoding.Iso8859_1, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.Girocode(iban, bic, name, amount, remittanceInformation ?? string.Empty, type, purposeOfCreditTransfer ?? string.Empty, messageToGirocodeUser ?? string.Empty, version, encoding);
+        var options = BuildOptions(transparent, null, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -349,11 +285,12 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <example>
-    ///   <code>QrCode.GenerateBitcoinAddress(PayloadGenerator.BitcoinLikeCryptoCurrencyAddress.BitcoinLikeCryptoCurrencyType.Bitcoin, "addr", 0.5, null, null, "btc.png");</code>
+    ///   <code>QrCode.GenerateBitcoinAddress(QrBitcoinLikeType.Bitcoin, "addr", 0.5, null, null, "btc.png");</code>
     /// </example>
-    public static void GenerateBitcoinAddress(PayloadGenerator.BitcoinLikeCryptoCurrencyAddress.BitcoinLikeCryptoCurrencyType currency, string address, double? amount, string? label, string? message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.BitcoinLikeCryptoCurrencyAddress(currency, address, amount, label, message);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateBitcoinAddress(QrBitcoinLikeType currency, string address, double? amount, string? label, string? message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.BitcoinLike(currency, address, amount, label, message);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -373,8 +310,9 @@ public class QrCode {
     ///   <code>QrCode.GenerateMoneroTransaction("addr", 1.0f, null, null, null, "xmr.png");</code>
     /// </example>
     public static void GenerateMoneroTransaction(string address, float? amount, string? paymentId, string? recipientName, string? description, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.MoneroTransaction(address, amount, paymentId, recipientName, description);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.Monero(address, amount, paymentId, recipientName, description);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -390,8 +328,9 @@ public class QrCode {
     ///   <code>QrCode.GeneratePhoneNumber("+123456789", "phone.png");</code>
     /// </example>
     public static void GeneratePhoneNumber(string number, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.PhoneNumber(number);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.Phone(number);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -407,8 +346,9 @@ public class QrCode {
     ///   <code>QrCode.GenerateSkypeCall("user", "skype.png");</code>
     /// </example>
     public static void GenerateSkypeCall(string username, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.SkypeCall(username);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var payload = QrPayloads.SkypeCall(username);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -425,27 +365,37 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <example>
-    ///   <code>QrCode.GenerateShadowSocks("host", 8388, "pass", PayloadGenerator.ShadowSocksConfig.Method.AES_256_GCM, "ss.png");</code>
+    ///   <code>QrCode.GenerateShadowSocks("host", 8388, "pass", QrShadowSocksMethod.Aes256Gcm, "ss.png");</code>
     /// </example>
-    public static void GenerateShadowSocks(string hostname, int port, string password, PayloadGenerator.ShadowSocksConfig.Method method, string filePath, string? tag = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.ShadowSocksConfig(hostname, port, password, method, tag);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, string filePath, string? tag = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.ShadowSocks(hostname, port, password, method, tag);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
     /// Generates a QR code for configuring a one-time password generator.
     /// </summary>
-    /// <param name="otp">Payload with OTP configuration.</param>
+    /// <param name="type">OTP type.</param>
+    /// <param name="secretBase32">Base32-encoded secret.</param>
     /// <param name="filePath">Destination image path.</param>
+    /// <param name="label">Optional label.</param>
+    /// <param name="issuer">Optional issuer.</param>
+    /// <param name="algorithm">Hash algorithm.</param>
+    /// <param name="digits">Number of digits.</param>
+    /// <param name="period">Period for TOTP.</param>
+    /// <param name="counter">Counter for HOTP.</param>
     /// <param name="transparent">Whether the background should be transparent.</param>
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <example>
-    ///   <code>QrCode.GenerateOneTimePassword(otp, "otp.png");</code>
+    ///   <code>QrCode.GenerateOneTimePassword(OtpAuthType.Totp, "BASE32SECRET", "otp.png");</code>
     /// </example>
-    public static void GenerateOneTimePassword(PayloadGenerator.OneTimePassword otp, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        Generate(otp.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateOneTimePassword(OtpAuthType type, string secretBase32, string filePath, string? label = null, string? issuer = null, OtpAlgorithm algorithm = OtpAlgorithm.Sha1, int digits = 6, int? period = 30, int? counter = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.OneTimePassword(type, secretBase32, label, issuer, algorithm, digits, period, counter);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
 
@@ -461,8 +411,12 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSlovenianUpnQr(upn, "upn.png");</code>
     /// </example>
-    public static void GenerateSlovenianUpnQr(PayloadGenerator.SlovenianUpnQr upn, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        Generate(upn.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateSlovenianUpnQr(SlovenianUpnQrPayload upn, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        if (upn is null) {
+            throw new ArgumentNullException(nameof(upn));
+        }
+        var options = BuildOptions(transparent, null, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(upn.ToPayloadData(), filePath, options);
     }
 
     /// <summary>
@@ -481,11 +435,12 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <example>
-    ///   <code>QrCode.GenerateBezahlCode(PayloadGenerator.BezahlCode.AuthorityType.Person, "John", "123", "10020030", "DE89...", "BICCODE", "Invoice", "bezahl.png");</code>
+    ///   <code>QrCode.GenerateBezahlCode(QrBezahlAuthorityType.Contact, "John", "123", "10020030", "DE89...", "BICCODE", "Invoice", "bezahl.png");</code>
     /// </example>
-    public static void GenerateBezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var generator = new PayloadGenerator.BezahlCode(authority, name, account, bnc, iban, bic, reason);
-        Generate(generator.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateBezahlCode(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        var payload = QrPayloads.BezahlCode(authority, name, account, bnc, iban, bic, reason);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(payload, filePath, options);
     }
 
     /// <summary>
@@ -500,8 +455,74 @@ public class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSwissQrCode(swissPayload, "swiss.png");</code>
     /// </example>
-    public static void GenerateSwissQrCode(PayloadGenerator.SwissQrCode swiss, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        Generate(swiss.ToString(), filePath, transparent, QRCodeGenerator.ECCLevel.Q, foregroundColor, backgroundColor, pixelSize);
+    public static void GenerateSwissQrCode(SwissQrCodePayload swiss, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+        if (swiss is null) {
+            throw new ArgumentNullException(nameof(swiss));
+        }
+        var options = BuildOptions(transparent, null, foregroundColor, backgroundColor, pixelSize);
+        RenderToFile(swiss.ToPayloadData(), filePath, options);
+    }
+
+    private static QrEasyOptions BuildOptions(bool transparent, QrErrorCorrectionLevel? eccLevel, Color? foregroundColor, Color? backgroundColor, int pixelSize, byte[]? logoPng = null, bool drawLogoBackground = true) {
+        if (pixelSize <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(pixelSize));
+        }
+
+        Color fg = foregroundColor ?? Color.Black;
+        Color bg = transparent ? Color.Transparent : (backgroundColor ?? Color.White);
+        var options = new QrEasyOptions {
+            ModuleSize = pixelSize,
+            Foreground = ToCodeMatrixColor(fg),
+            Background = ToCodeMatrixColor(bg)
+        };
+        if (eccLevel.HasValue) {
+            options.ErrorCorrectionLevel = eccLevel;
+        }
+
+        if (logoPng is { Length: > 0 }) {
+            options.LogoPng = logoPng;
+            options.LogoDrawBackground = drawLogoBackground;
+        }
+
+        return options;
+    }
+
+    private static CodeMatrixRgba32 ToCodeMatrixColor(Color color) {
+        var px = color.ToPixel<Rgba32>();
+        return new CodeMatrixRgba32(px.R, px.G, px.B, px.A);
+    }
+
+    private static void RenderToFile(QrPayloadData payload, string filePath, QrEasyOptions options) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        Helpers.CreateParentDirectory(fullPath);
+        string extension = Path.GetExtension(fullPath).ToLowerInvariant();
+
+        switch (extension) {
+            case ".png":
+                File.WriteAllBytes(fullPath, QrEasy.RenderPng(payload, options));
+                break;
+            case ".jpg":
+            case ".jpeg":
+                File.WriteAllBytes(fullPath, QrEasy.RenderJpeg(payload, options));
+                break;
+            case ".ico": {
+                    byte[] pngBytes = QrEasy.RenderPng(payload, options);
+                    using Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(pngBytes);
+                    SaveImageAsIcon(image, fullPath);
+                    break;
+                }
+            default:
+                throw new UnknownImageFormatException(
+                    $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
+        }
+    }
+
+    private static byte[] LoadLogoPng(string logoPath) {
+        string fullLogoPath = Helpers.ResolvePath(logoPath);
+        using Image<Rgba32> logo = SixLabors.ImageSharp.Image.Load<Rgba32>(fullLogoPath);
+        using MemoryStream ms = new();
+        logo.SaveAsPng(ms);
+        return ms.ToArray();
     }
 
     /// <summary>
@@ -514,17 +535,27 @@ public class QrCode {
     /// </example>
     public static BarcodeResult<Rgba32> Read(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
+        using Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
+        byte[] pixels = new byte[image.Width * image.Height * 4];
+        image.CopyPixelDataTo(pixels);
 
-        using Image<Rgba32> barcodeImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
-        BarcodeReader<Rgba32> reader = new BarcodeReader<Rgba32>(types: ZXing.BarcodeFormat.QR_CODE);
-        BarcodeResult<Rgba32> response = reader.Decode(barcodeImage);
-        response.Image?.Dispose();
-        BarcodeResult<Rgba32> result = new() {
-            Value = response.Value,
-            Status = response.Status,
-            Message = response.Message
+#if NET8_0_OR_GREATER
+        if (QrImageDecoder.TryDecode(pixels, image.Width, image.Height, image.Width * 4, CodeMatrixPixelFormat.Rgba32, out var decoded)) {
+            return new BarcodeResult<Rgba32> {
+                Status = Status.Found,
+                Message = decoded.Text,
+                Value = decoded.Text
+            };
+        }
+        return new BarcodeResult<Rgba32> {
+            Status = Status.NotFound
         };
-        return result;
+#else
+        return new BarcodeResult<Rgba32> {
+            Status = Status.Error,
+            Message = "QR decoding requires .NET 8.0 or newer."
+        };
+#endif
     }
 
     /// <summary>

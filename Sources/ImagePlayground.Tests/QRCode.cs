@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using System.Net;
 using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using QRCoder;
+using CodeMatrix;
+using CodeMatrix.Payloads;
 
 
 namespace ImagePlayground.Tests;
@@ -24,8 +24,7 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
 
-        var read = QrCode.Read(filePath);
-        Assert.True(read.Message == "https://evotec.xyz");
+        AssertQrDecoded(filePath, "https://evotec.xyz");
     }
 
     [Fact]
@@ -33,15 +32,14 @@ public partial class ImagePlayground {
 
         string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeColors.png");
         File.Delete(filePath);
-        QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, Color.Red, Color.Yellow, 10);
+        QrCode.Generate("https://evotec.xyz", filePath, false, QrErrorCorrectionLevel.Q, Color.Red, Color.Yellow, 10);
 
         Assert.True(File.Exists(filePath) == true);
 
         using SixLabors.ImageSharp.Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
         Assert.Equal(Color.Yellow.ToPixel<Rgba32>(), img[0, 0]);
 
-        var read = QrCode.Read(filePath);
-        Assert.Equal("https://evotec.xyz", read.Message);
+        AssertQrDecoded(filePath, "https://evotec.xyz");
     }
 
     [Fact]
@@ -54,8 +52,7 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
 
-        var read = QrCode.Read(filePath);
-        Assert.True(read.Message == "WIFI:T:WPA;S:Evotec;P:superHardPassword123!;;");
+        AssertQrDecoded(filePath, QrPayloads.Wifi("Evotec", "superHardPassword123!", "WPA", false).Text);
     }
 
     [Fact]
@@ -97,9 +94,8 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
 
-        var read = QrCode.Read(filePath);
-        string expected = $"WIFI:T:WPA;S:TestSSID;P:{WebUtility.UrlEncode(password)};;";
-        Assert.Equal(expected, read.Message);
+        string expected = QrPayloads.Wifi("TestSSID", password, "WPA", false).Text;
+        AssertQrDecoded(filePath, expected);
     }
 
     [Fact]
@@ -140,8 +136,7 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
 
-        var read = QrCode.Read(filePath);
-        Assert.True(read.Message == "https://evotec.xyz");
+        AssertQrDecoded(filePath, "https://evotec.xyz");
 
         byte[] logoBytes = File.ReadAllBytes(filePath);
         Assert.NotEqual(baseBytes, logoBytes);
@@ -152,6 +147,6 @@ public partial class ImagePlayground {
     [InlineData(-5)]
     public void Test_QRCode_InvalidPixelSize(int pixelSize) {
         string filePath = Path.Combine(_directoryWithImages, "QRCodeInvalid.png");
-        Assert.Throws<ArgumentOutOfRangeException>(() => QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, null, null, pixelSize));
+        Assert.Throws<ArgumentOutOfRangeException>(() => QrCode.Generate("https://evotec.xyz", filePath, false, QrErrorCorrectionLevel.Q, null, null, pixelSize));
     }
 }

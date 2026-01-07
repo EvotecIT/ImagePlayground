@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeMatrix.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -52,7 +52,7 @@ public sealed class NewImageQrCodeSmsCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeSms - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateSms(Number, Message, FilePath, PayloadGenerator.SMS.SMSEncoding.SMS, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateSms(Number, Message, FilePath, QrSmsEncoding.Sms, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);

@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeMatrix.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -27,7 +27,7 @@ public sealed class NewImageQrCodeShadowSocksCmdlet : PSCmdlet {
 
     /// <summary>Encryption method.</summary>
     [Parameter(Mandatory = true, Position = 3)]
-    public PayloadGenerator.ShadowSocksConfig.Method Method { get; set; }
+    public QrShadowSocksMethod Method { get; set; }
 
     /// <summary>Optional tag.</summary>
     [Parameter(Position = 4)]

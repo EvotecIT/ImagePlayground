@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeMatrix.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -56,7 +56,7 @@ public sealed class NewImageQrCodeEmailCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeEmail - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateEmail(FilePath, Email, Subject, Message, PayloadGenerator.Mail.MailEncoding.MAILTO, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateEmail(FilePath, Email, Subject, Message, QrMailEncoding.Mailto, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);

@@ -1,6 +1,7 @@
 using ImagePlayground;
 using System;
 using System.Management.Automation;
+using CodeMatrix.Payloads;
 
 namespace ImagePlayground.PowerShell;
 
@@ -19,7 +20,7 @@ public sealed class NewImageQrContactCmdlet : PSCmdlet {
 
     /// <summary>Contact output type.</summary>
     [Parameter]
-    public QRCoder.PayloadGenerator.ContactData.ContactOutputType OutputType { get; set; } = QRCoder.PayloadGenerator.ContactData.ContactOutputType.VCard4;
+    public QrContactOutputType OutputType { get; set; } = QrContactOutputType.VCard4;
 
     /// <summary>Given name of the contact.</summary>
     [Parameter]
@@ -86,7 +87,7 @@ public sealed class NewImageQrContactCmdlet : PSCmdlet {
     public string? StateRegion { get; set; }
     /// <summary>Order of address fields in the QR code.</summary>
     [Parameter]
-    public QRCoder.PayloadGenerator.ContactData.AddressOrder AddressOrder { get; set; } = QRCoder.PayloadGenerator.ContactData.AddressOrder.Default;
+    public QrContactAddressOrder AddressOrder { get; set; } = QrContactAddressOrder.Default;
 
     /// <summary>Organization name.</summary>
     [Parameter]

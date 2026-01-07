@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using QRCoder;
+using CodeMatrix;
 using SixLabors.ImageSharp;
 
 namespace ImagePlayground.Examples;
@@ -46,7 +46,7 @@ internal partial class Example {
 
         Console.WriteLine("[*] Creating QR code with custom colors");
         filePath = System.IO.Path.Combine(folderPath, "QRCodeColored.png");
-        QrCode.Generate("https://evotec.xyz", filePath, false, QRCodeGenerator.ECCLevel.Q, Color.Red, Color.Yellow, 10);
+        QrCode.Generate("https://evotec.xyz", filePath, false, QrErrorCorrectionLevel.Q, Color.Red, Color.Yellow, 10);
 
         Console.WriteLine("[*] Creating QR code for email");
         filePath = System.IO.Path.Combine(folderPath, "QRCodeEmail.png");

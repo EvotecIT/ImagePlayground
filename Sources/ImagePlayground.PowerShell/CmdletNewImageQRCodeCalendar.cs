@@ -1,6 +1,6 @@
 using System;
-using ImagePlayground;
-using QRCoder;
+using ImagePlayground;
+using CodeMatrix.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -43,7 +43,7 @@ public sealed class NewImageQrCodeCalendarCmdlet : PSCmdlet {
 
     /// <summary>Calendar encoding.</summary>
     [Parameter]
-    public PayloadGenerator.CalendarEvent.EventEncoding EventEncoding { get; set; } = PayloadGenerator.CalendarEvent.EventEncoding.iCalComplete;
+    public QrCalendarEncoding EventEncoding { get; set; } = QrCalendarEncoding.ICalComplete;
 
     /// <summary>Open the image after creation.</summary>
     [Parameter]

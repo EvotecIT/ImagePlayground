@@ -1,5 +1,4 @@
 using System.IO;
-using BarcodeReader.ImageSharp;
 using Xunit;
 
 namespace ImagePlayground.Tests;

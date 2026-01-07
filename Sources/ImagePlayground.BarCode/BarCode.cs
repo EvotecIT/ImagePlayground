@@ -174,14 +174,13 @@ public class BarCode {
 
         using Image<Rgba32> barcodeImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(fullPath, cancellationToken).ConfigureAwait(false);
         BarcodeReader.ImageSharp.BarcodeReader<Rgba32> reader = new(types: new[] { ZXing.BarcodeFormat.All_1D, ZXing.BarcodeFormat.DATA_MATRIX, ZXing.BarcodeFormat.PDF_417 });
-        BarcodeResult<Rgba32> response = reader.Decode(barcodeImage);
+        var response = reader.Decode(barcodeImage);
         response.Image?.Dispose();
-        BarcodeResult<Rgba32> result = new() {
+        return new BarcodeResult<Rgba32> {
             Value = response.Value,
-            Status = response.Status,
+            Status = MapStatus(response.Status),
             Message = response.Message
         };
-        return result;
     }
 
     /// <summary>
@@ -191,5 +190,13 @@ public class BarCode {
     /// <returns>Decoded barcode result.</returns>
     public static BarcodeResult<Rgba32> Read(string filePath) {
         return ReadAsync(filePath).GetAwaiter().GetResult();
+    }
+
+    private static Status MapStatus(BarcodeReader.ImageSharp.Status status) {
+        return status switch {
+            BarcodeReader.ImageSharp.Status.Found => Status.Found,
+            BarcodeReader.ImageSharp.Status.Error => Status.Error,
+            _ => Status.NotFound
+        };
     }
 }

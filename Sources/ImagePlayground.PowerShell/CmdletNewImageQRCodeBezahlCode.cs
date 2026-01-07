@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeMatrix.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageQrCodeBezahlCodeCmdlet : PSCmdlet {
     /// <summary>Payment authority type.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public PayloadGenerator.BezahlCode.AuthorityType Authority { get; set; }
+    public QrBezahlAuthorityType Authority { get; set; }
 
     /// <summary>Payer or payee name.</summary>
     [Parameter(Mandatory = true, Position = 1)]
