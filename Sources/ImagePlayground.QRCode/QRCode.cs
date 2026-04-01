@@ -493,6 +493,7 @@ public class QrCode {
 
     private static void RenderToFile(QrPayloadData payload, string filePath, QrEasyOptions options) {
         string fullPath = Helpers.ResolvePath(filePath);
+        Helpers.CreateParentDirectory(fullPath);
         string extension = Path.GetExtension(fullPath);
         if (string.IsNullOrWhiteSpace(extension)) {
             throw new UnknownImageFormatException(

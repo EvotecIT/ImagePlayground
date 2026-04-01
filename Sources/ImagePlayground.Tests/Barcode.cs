@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Xunit;
 
@@ -18,6 +19,13 @@ public partial class ImagePlayground {
         BarCode.GenerateCode128("123456", dest);
 
         Assert.True(File.Exists(dest));
+    }
+
+    [Fact]
+    public void Test_BarCode_Code128_RejectsDisabledChecksum() {
+        string dest = Path.Combine(_directoryWithTests, "barcode_no_checksum.png");
+
+        Assert.Throws<NotSupportedException>(() => BarCode.GenerateCode128("123456", dest, includeChecksum: false));
     }
 
     [Fact]

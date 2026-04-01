@@ -43,6 +43,20 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_QRCode_CreatesOutputDirectory() {
+        string destDir = Path.Combine(_directoryWithTests, "qr_created");
+        string filePath = Path.Combine(destDir, "qr.png");
+        if (Directory.Exists(destDir)) {
+            Directory.Delete(destDir, true);
+        }
+
+        QrCode.Generate("https://evotec.xyz", filePath);
+
+        Assert.True(File.Exists(filePath));
+        AssertQrDecoded(filePath, "https://evotec.xyz");
+    }
+
+    [Fact]
     public void Test_QRCodeWiFi() {
         string filePath = System.IO.Path.Combine(_directoryWithImages, "QRCodeWiFi.png");
         File.Delete(filePath);

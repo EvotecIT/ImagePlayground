@@ -90,6 +90,7 @@ public class BarCode {
         }
 
         string fullPath = Helpers.ResolvePath(filePath);
+        Helpers.CreateParentDirectory(fullPath);
         CodeGlyphX.QrCode.Save(content, fullPath, options);
     }
 
@@ -102,7 +103,10 @@ public class BarCode {
 
     /// <summary>Generates a Code 128 barcode.</summary>
     public static void GenerateCode128(string content, string filePath, bool includeChecksum = true) {
-        _ = includeChecksum;
+        if (!includeChecksum) {
+            throw new NotSupportedException("Code128 generation via CodeGlyphX always includes the required checksum.");
+        }
+
         SaveToFile(Render1DPng(BarcodeType.Code128, content), filePath);
     }
 
