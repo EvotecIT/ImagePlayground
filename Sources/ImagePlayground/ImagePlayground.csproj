@@ -9,6 +9,8 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>Image processing, QR code generation, barcode generation, chart rendering, EXIF metadata, and image comparison APIs for .NET.</Description>
+    <PackageTags>images;image-processing;qr;qrcode;barcode;charts;exif;imagesharp;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

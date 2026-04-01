@@ -9,6 +9,8 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <UseSystemDrawing>true</UseSystemDrawing>
+    <Description>Windows-focused GDI and chart helpers for ImagePlayground and PowerBGInfo-style scenarios.</Description>
+    <PackageTags>gdi;system.drawing;windows;charts;powerbginfo;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

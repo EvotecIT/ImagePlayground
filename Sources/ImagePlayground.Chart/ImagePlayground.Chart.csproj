@@ -9,6 +9,8 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>Chart rendering APIs for ImagePlayground, powered by ScottPlot.</Description>
+    <PackageTags>charts;scottplot;plotting;heatmap;histogram;line;pie;scatter;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

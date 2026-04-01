@@ -9,6 +9,8 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>QR code generation and reading APIs for ImagePlayground, powered by CodeGlyphX.</Description>
+    <PackageTags>qr;qrcode;otp;wifi;payments;girocode;swiss;codeglyphx;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

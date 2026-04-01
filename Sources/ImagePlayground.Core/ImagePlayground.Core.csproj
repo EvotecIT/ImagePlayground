@@ -9,6 +9,8 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>Core image processing, EXIF metadata, image comparison, and utility APIs for the ImagePlayground package family.</Description>
+    <PackageTags>images;image-processing;exif;metadata;compare;imagesharp;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

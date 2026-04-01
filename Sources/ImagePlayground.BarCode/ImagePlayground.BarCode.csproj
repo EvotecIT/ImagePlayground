@@ -9,6 +9,8 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>Barcode generation and reading APIs for ImagePlayground, powered by CodeGlyphX.</Description>
+    <PackageTags>barcode;code128;ean;upc;datamatrix;pdf417;codeglyphx;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
