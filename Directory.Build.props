@@ -1,6 +1,9 @@
 <Project>
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeGlyphXVersion>1.3.0</CodeGlyphXVersion>
+    <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj')">true</UseLocalCodeGlyphXProject>
+    <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>

@@ -15,7 +15,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true'">
     <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true'">
+    <PackageReference Include="CodeGlyphX" Version="$(CodeGlyphXVersion)" />
   </ItemGroup>
 
   <ItemGroup>
