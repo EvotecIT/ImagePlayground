@@ -13,13 +13,13 @@
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
-            IconUri                  = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
-            LicenseUri               = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
-            ProjectUri               = 'https://github.com/EvotecIT/ImagePlayground'
-            RequireLicenseAcceptance = $false
-            Tags                     = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
+            IconUri                    = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
+            LicenseUri                 = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
+            ProjectUri                 = 'https://github.com/EvotecIT/ImagePlayground'
+            RequireLicenseAcceptance   = $false
+            Tags                       = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
             ExternalModuleDependencies = @()
-}
+        }
     }
     RootModule             = 'ImagePlayground.psm1'
     RequiredModules        = @()
