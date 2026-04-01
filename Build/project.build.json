@@ -3,19 +3,19 @@
   "RootPath": "..",
   "ExpectedVersion": null,
   "ExpectedVersionMap": {
-    "ImagePlayground.Core": "1.0.X",
-    "ImagePlayground.BarCode": "1.0.X",
-    "ImagePlayground.Chart": "1.0.X",
-    "ImagePlayground.QRCode": "1.0.X",
-    "ImagePlayground": "1.0.X"
+    "ImagePlayground.Core": "2.0.X",
+    "ImagePlayground.BarCode": "2.0.X",
+    "ImagePlayground.Chart": "2.0.X",
+    "ImagePlayground.QRCode": "2.0.X",
+    "ImagePlayground": "2.0.X",
+    "ImagePlayground.Gdi": "2.0.X"
   },
   "ExpectedVersionMapAsInclude": true,
   "ExpectedVersionMapUseWildcards": false,
   "ExcludeProjects": [
     "ImagePlayground.Tests",
     "ImagePlayground.Examples",
-    "ImagePlayground.PowerShell",
-    "ImagePlayground.Gdi"
+    "ImagePlayground.PowerShell"
   ],
   "NugetSource": [],
   "IncludePrerelease": false,
