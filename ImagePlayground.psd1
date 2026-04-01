@@ -18,7 +18,10 @@
             ProjectUri               = 'https://github.com/EvotecIT/ImagePlayground'
             RequireLicenseAcceptance = $false
             Tags                     = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
-        }
+            ExternalModuleDependencies = @()
+}
     }
     RootModule             = 'ImagePlayground.psm1'
+    RequiredModules        = @()
+    ScriptsToProcess       = @()
 }
