@@ -51,6 +51,8 @@ public partial class ImagePlayground {
         QrCode.GenerateWiFi("Evotec", "superHardPassword123!", filePath, true);
 
         Assert.True(File.Exists(filePath) == true);
+        using SixLabors.ImageSharp.Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
+        Assert.Equal(0, img[0, 0].A);
 
         AssertQrDecoded(filePath, QrPayloads.Wifi("Evotec", "superHardPassword123!", "WPA", false).Text);
     }

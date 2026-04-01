@@ -56,7 +56,7 @@ public class QrCode {
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Wifi(ssid, password, "WPA", false);
-        var options = BuildOptions(false, QrErrorCorrectionLevel.H, foregroundColor, backgroundColor ?? Color.White, pixelSize);
+        var options = BuildOptions(transparent, QrErrorCorrectionLevel.H, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options);
     }
 
