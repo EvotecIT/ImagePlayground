@@ -12,7 +12,7 @@ Describe 'New-ImageQRContact' {
         New-ImageQRContact -FilePath $file -Firstname 'John' -Lastname 'Doe'
 
         Test-Path $file | Should -BeTrue
-        (Get-ImageQRCode -FilePath $file).Message | Should -Match 'BEGIN:VCARD'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern 'BEGIN:VCARD'
     }
 
     It 'throws on invalid pixel size' {

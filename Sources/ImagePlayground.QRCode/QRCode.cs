@@ -554,15 +554,21 @@ public class QrCode {
             Status = Status.NotFound
         };
         #else
+        if (TryDecodeImageFallback(fullPath, out var decoded)) {
+            return new BarcodeResult<Rgba32> {
+                Status = Status.Found,
+                Message = decoded.Text,
+                Value = decoded.Text
+            };
+        }
+
         return new BarcodeResult<Rgba32> {
-            Status = Status.Error,
-            Message = "QR decoding requires .NET 8.0 or newer."
+            Status = Status.NotFound
         };
         #endif
 
     }
 
-    #if NET8_0_OR_GREATER
     private static bool TryDecodeImageFallback(string fullPath, out QrDecoded decoded) {
         var aggressiveOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
@@ -578,6 +584,7 @@ public class QrCode {
         return QrImageDecoder.TryDecodeImage(stream, aggressiveOptions, out decoded);
     }
 
+    #if NET8_0_OR_GREATER
     private static bool TryDecodePixels(byte[] pixels, int width, int height, out QrDecoded decoded) {
         if (QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, out decoded)) {
             return true;

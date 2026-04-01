@@ -18,9 +18,7 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
 
         New-ImageQRCodeWiFi -SSID 'Test' -Password '12345678' -FilePath $file
 
-        $result = Get-ImageQRCode -FilePath $file
-
-        $result.Message | Should -Be 'WIFI:T:WPA;S:Test;P:12345678;;'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'WIFI:T:WPA;S:Test;P:"12345678";;'
 
     }
 
@@ -30,9 +28,7 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
 
         New-ImageQRCodeWiFi -SSID 'Test' -Password 'pass123' -FilePath $file
 
-        $result = Get-ImageQRCode -FilePath $file
-
-        $result.Message | Should -Be 'WIFI:T:WPA;S:Test;P:pass123;;'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'WIFI:T:WPA;S:Test;P:pass123;;'
 
     }
 
@@ -40,15 +36,14 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
 
         $file = Join-Path $TestDrive 'wifi_symbols.png'
         New-ImageQRCodeWiFi -SSID 'Test' -Password 'pass;123!' -FilePath $file
-        $result = Get-ImageQRCode -FilePath $file
-        $result.Message | Should -Be 'WIFI:T:WPA;S:Test;P:pass%3B123!;;'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'WIFI:T:WPA;S:Test;P:pass\;123!;;'
     }
 
     It 'supports custom colors' {
         $file = Join-Path $TestDrive 'wifi_colors.png'
         New-ImageQRCodeWiFi -SSID 'Test' -Password 'pass123' -FilePath $file -ForegroundColor Blue -BackgroundColor White -PixelSize 15
         Test-Path $file | Should -BeTrue
-        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'WIFI:T:WPA;S:Test;P:pass123;;'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'WIFI:T:WPA;S:Test;P:pass123;;'
     }
 
     It 'throws on invalid pixel size' {

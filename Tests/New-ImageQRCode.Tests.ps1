@@ -22,7 +22,7 @@ Describe 'New-ImageQRCode' {
 
         Test-Path $file | Should -BeTrue
 
-        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'https://evotec.xyz'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz'
 
     }
 
@@ -36,7 +36,7 @@ Describe 'New-ImageQRCode' {
 
         Test-Path -Path $file | Should -BeTrue
 
-        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'https://evotec.xyz'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz'
 
         Remove-Item -Path $file
 
@@ -52,7 +52,7 @@ Describe 'New-ImageQRCode' {
 
         Test-Path $file | Should -BeTrue
 
-        (Get-ImageQRCode -FilePath $file).Message | Should -Be 'https://evotec.xyz'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz'
 
     }
 
