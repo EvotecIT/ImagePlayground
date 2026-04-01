@@ -12,7 +12,7 @@ Creates a QR code for an OTP configuration.
 
 ## SYNTAX
 ```powershell
-New-ImageQRCodeOtp [-Payload] <OneTimePassword> [-FilePath] <String> [-Show] [<CommonParameters>]
+New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <String> [[-Label] <String>] [[-Issuer] <String>] [-Algorithm <OtpAlgorithm>] [-Digits <Int32>] [-Period <Int32>] [-Counter <Int32>] [-FilePath] <String> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,16 +21,36 @@ Encodes the provided OneTimePassword payload into a QR code for use with authent
 ## EXAMPLES
 ### Example 1
 ```powershell
-PS C:\> $otp = [QRCoder.PayloadGenerator+OneTimePassword]::new();$otp.Secret='ABC';$otp.Label='User';New-ImageQRCodeOtp -Payload $otp -FilePath .\otp.png
+PS C:\> New-ImageQRCodeOtp -Type Totp -SecretBase32 'ABC' -Label 'User' -FilePath .\otp.png
 ```
 Creates otp.png with OTP configuration.
 
 ## PARAMETERS
-### -Payload
-OneTimePassword payload object.
+### -Type
+OTP type (Totp or Hotp).
+### -SecretBase32
+Base32-encoded secret.
+### -Label
+Account label.
+### -Issuer
+Issuer name.
+### -Algorithm
+Hash algorithm.
+### -Digits
+Number of digits.
+### -Period
+Period for TOTP.
+### -Counter
+Counter for HOTP.
 ### -FilePath
 Output path for the image.
 ### -Show
 Opens the result.
+### -ForegroundColor
+Foreground color of QR modules.
+### -BackgroundColor
+Background color of the QR code.
+### -PixelSize
+Pixel size for each QR module.
 ### CommonParameters
 This cmdlet supports the common parameters.

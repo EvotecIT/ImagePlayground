@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using Xunit;
-using CodeMatrix;
-using CodeMatrix.Payloads;
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
 
 namespace ImagePlayground.Tests;
 
@@ -16,7 +16,7 @@ public partial class ImagePlayground {
         if (File.Exists(file)) File.Delete(file);
         QrCode.GenerateBookmark("https://example.com", "Example", file);
         Assert.True(File.Exists(file));
-        var expected = QrPayload.Bookmark("https://example.com", "Example");
+        var expected = QrPayloads.Bookmark("https://example.com", "Example").Text;
         AssertQrDecoded(file, expected);
     }
 
@@ -68,7 +68,7 @@ public partial class ImagePlayground {
         DateTime to = from.AddHours(1);
         QrCode.GenerateCalendarEvent("Meeting", "Discuss", "Loc", from, to, file, false);
         Assert.True(File.Exists(file));
-        var expected = QrPayloads.CalendarEvent("Meeting", from, to, "Loc", "Discuss", false, QrCalendarEncoding.ICalComplete).Text;
+        var expected = QrPayloads.CalendarEvent("Meeting", "Discuss", "Loc", from, to, false, QrCalendarEncoding.ICalComplete).Text;
         AssertQrDecoded(file, expected);
     }
 

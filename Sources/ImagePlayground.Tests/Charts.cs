@@ -2,7 +2,7 @@ using global::ImagePlayground;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CodeMatrix.Payloads;
+using CodeGlyphX.Payloads;
 using Xunit;
 
 namespace ImagePlayground.Tests;

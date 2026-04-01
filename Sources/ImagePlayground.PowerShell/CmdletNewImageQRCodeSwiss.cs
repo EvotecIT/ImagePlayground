@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using CodeMatrix.Payloads;
+using CodeGlyphX.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -9,7 +9,7 @@ namespace ImagePlayground.PowerShell;
 /// <summary>Generates a Swiss QR payment code.</summary>
 /// <example>
 ///   <summary>Create Swiss QR</summary>
-///   <code>$swiss = [CodeMatrix.Payloads.SwissQrCodePayload]::new($iban,$currency,$cred,$ref);New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png</code>
+///   <code>$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban,$currency,$cred,$ref);New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSwiss")]
 public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {

@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
-    <ProjectReference Include="..\..\..\CodeMatrix\CodeMatrix\CodeMatrix.csproj" />
+    <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
   </ItemGroup>
 
   <ItemGroup>

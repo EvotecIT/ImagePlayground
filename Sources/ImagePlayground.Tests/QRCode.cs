@@ -3,8 +3,8 @@ using System.IO;
 using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using CodeMatrix;
-using CodeMatrix.Payloads;
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
 
 
 namespace ImagePlayground.Tests;

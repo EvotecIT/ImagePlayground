@@ -40,8 +40,9 @@ public sealed class SaveImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (!string.IsNullOrWhiteSpace(FilePath)) {
-            var output = Helpers.ResolvePath(FilePath);
+        var filePath = FilePath;
+        if (!string.IsNullOrWhiteSpace(filePath)) {
+            var output = Helpers.ResolvePath(filePath!);
             Image.Save(output, Open.IsPresent, Quality, CompressionLevel);
         } else if (AsStream.IsPresent) {
             WriteObject(Image.ToStream(Quality, CompressionLevel));

@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
-    <PackageReference Include="ScottPlot" Version="5.0.55" />
+    <PackageReference Include="ScottPlot" Version="5.1.58" />
   </ItemGroup>
 
   <ItemGroup>

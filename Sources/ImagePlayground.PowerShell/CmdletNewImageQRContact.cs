@@ -1,7 +1,7 @@
 using ImagePlayground;
 using System;
 using System.Management.Automation;
-using CodeMatrix.Payloads;
+using CodeGlyphX.Payloads;
 
 namespace ImagePlayground.PowerShell;
 

@@ -1,6 +1,34 @@
-﻿Import-Module PSPublishModule -Force -ErrorAction Stop
+param(
+    [string] $ConfigPath = "$PSScriptRoot\project.build.json",
+    [Nullable[bool]] $UpdateVersions = $false,
+    [Nullable[bool]] $Build = $true,
+    [Nullable[bool]] $PublishNuget = $false,
+    [Nullable[bool]] $PublishGitHub = $false,
+    [Nullable[bool]] $Plan,
+    [string] $PlanPath
+)
 
-Invoke-DotNetReleaseBuild -ProjectPath "$PSScriptRoot\..\Sources\ImagePlayground.Core" -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
-Invoke-DotNetReleaseBuild -ProjectPath "$PSScriptRoot\..\Sources\ImagePlayground.BarCode" -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
-Invoke-DotNetReleaseBuild -ProjectPath "$PSScriptRoot\..\Sources\ImagePlayground.Chart" -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
-Invoke-DotNetReleaseBuild -ProjectPath "$PSScriptRoot\..\Sources\ImagePlayground.QRCode" -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
+$buildProjectSplat = @{
+    ConfigPath = $ConfigPath
+}
+
+if ($null -ne $UpdateVersions) {
+    $buildProjectSplat.UpdateVersions = $UpdateVersions
+}
+if ($null -ne $Build) {
+    $buildProjectSplat.Build = $Build
+}
+if ($null -ne $PublishNuget) {
+    $buildProjectSplat.PublishNuget = $PublishNuget
+}
+if ($null -ne $PublishGitHub) {
+    $buildProjectSplat.PublishGitHub = $PublishGitHub
+}
+if ($null -ne $Plan) {
+    $buildProjectSplat.Plan = $Plan
+}
+if ($PlanPath) {
+    $buildProjectSplat.PlanPath = $PlanPath
+}
+
+& "$PSScriptRoot\Build-Project.ps1" @buildProjectSplat

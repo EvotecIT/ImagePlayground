@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using CodeMatrix.Payloads;
+using CodeGlyphX.Payloads;
 using System.IO;
 using System.Management.Automation;
 

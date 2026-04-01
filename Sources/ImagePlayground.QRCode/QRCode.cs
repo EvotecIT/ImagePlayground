@@ -1,14 +1,13 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using CodeMatrix;
-using CodeMatrix.Payloads;
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using CodeMatrixPixelFormat = CodeMatrix.PixelFormat;
-using CodeMatrixRgba32 = CodeMatrix.Rendering.Png.Rgba32;
+using CodeGlyphXPixelFormat = CodeGlyphX.PixelFormat;
+using CodeGlyphXRgba32 = CodeGlyphX.Rendering.Png.Rgba32;
 
 namespace ImagePlayground;
 /// <summary>
@@ -57,7 +56,7 @@ public class QrCode {
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Wifi(ssid, password, "WPA", false);
-        var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
+        var options = BuildOptions(false, QrErrorCorrectionLevel.H, foregroundColor, backgroundColor ?? Color.White, pixelSize);
         RenderToFile(payload, filePath, options);
     }
 
@@ -121,7 +120,7 @@ public class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
-        var payload = QrPayloads.CalendarEvent(calendarEntry, calendarFrom, calendarTo, calendarGeoLocation, calendarMessage, allDayEvent, calendarEventEncoding);
+        var payload = QrPayloads.CalendarEvent(calendarEntry, calendarMessage, calendarGeoLocation, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
         var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options);
     }
@@ -472,8 +471,8 @@ public class QrCode {
         Color bg = transparent ? Color.Transparent : (backgroundColor ?? Color.White);
         var options = new QrEasyOptions {
             ModuleSize = pixelSize,
-            Foreground = ToCodeMatrixColor(fg),
-            Background = ToCodeMatrixColor(bg)
+            Foreground = ToCodeGlyphXColor(fg),
+            Background = ToCodeGlyphXColor(bg)
         };
         if (eccLevel.HasValue) {
             options.ErrorCorrectionLevel = eccLevel;
@@ -487,34 +486,20 @@ public class QrCode {
         return options;
     }
 
-    private static CodeMatrixRgba32 ToCodeMatrixColor(Color color) {
+    private static CodeGlyphXRgba32 ToCodeGlyphXColor(Color color) {
         var px = color.ToPixel<Rgba32>();
-        return new CodeMatrixRgba32(px.R, px.G, px.B, px.A);
+        return new CodeGlyphXRgba32(px.R, px.G, px.B, px.A);
     }
 
     private static void RenderToFile(QrPayloadData payload, string filePath, QrEasyOptions options) {
         string fullPath = Helpers.ResolvePath(filePath);
-        Helpers.CreateParentDirectory(fullPath);
-        string extension = Path.GetExtension(fullPath).ToLowerInvariant();
-
-        switch (extension) {
-            case ".png":
-                File.WriteAllBytes(fullPath, QrEasy.RenderPng(payload, options));
-                break;
-            case ".jpg":
-            case ".jpeg":
-                File.WriteAllBytes(fullPath, QrEasy.RenderJpeg(payload, options));
-                break;
-            case ".ico": {
-                    byte[] pngBytes = QrEasy.RenderPng(payload, options);
-                    using Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(pngBytes);
-                    SaveImageAsIcon(image, fullPath);
-                    break;
-                }
-            default:
-                throw new UnknownImageFormatException(
-                    $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
+        string extension = Path.GetExtension(fullPath);
+        if (string.IsNullOrWhiteSpace(extension)) {
+            throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
         }
+
+        CodeGlyphX.QrCode.Save(payload, fullPath, options);
     }
 
     private static byte[] LoadLogoPng(string logoPath) {
@@ -535,80 +520,120 @@ public class QrCode {
     /// </example>
     public static BarcodeResult<Rgba32> Read(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
+        #if NET8_0_OR_GREATER
         using Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(fullPath);
         byte[] pixels = new byte[image.Width * image.Height * 4];
         image.CopyPixelDataTo(pixels);
 
-#if NET8_0_OR_GREATER
-        if (QrImageDecoder.TryDecode(pixels, image.Width, image.Height, image.Width * 4, CodeMatrixPixelFormat.Rgba32, out var decoded)) {
+        if (TryDecodePixels(pixels, image.Width, image.Height, out var decoded)) {
             return new BarcodeResult<Rgba32> {
                 Status = Status.Found,
                 Message = decoded.Text,
                 Value = decoded.Text
             };
         }
+
+        var composited = CompositeOnWhite(image);
+        if (composited is not null && TryDecodePixels(composited, image.Width, image.Height, out decoded)) {
+            return new BarcodeResult<Rgba32> {
+                Status = Status.Found,
+                Message = decoded.Text,
+                Value = decoded.Text
+            };
+        }
+
+        if (TryDecodeImageFallback(fullPath, out decoded)) {
+            return new BarcodeResult<Rgba32> {
+                Status = Status.Found,
+                Message = decoded.Text,
+                Value = decoded.Text
+            };
+        }
+
         return new BarcodeResult<Rgba32> {
             Status = Status.NotFound
         };
-#else
+        #else
         return new BarcodeResult<Rgba32> {
             Status = Status.Error,
             Message = "QR decoding requires .NET 8.0 or newer."
         };
-#endif
+        #endif
+
     }
 
-    /// <summary>
-    /// Saves an ImageSharp image as an ICO file with multiple resolutions.
-    /// </summary>
-    /// <param name="image">Image to save.</param>
-    /// <param name="filePath">Destination ICO file path.</param>
-    /// <param name="sizes">Icon sizes to include.</param>
-    private static void SaveImageAsIcon(SixLabors.ImageSharp.Image image, string filePath, params int[] sizes) {
-        Helpers.CreateParentDirectory(filePath);
-        if (sizes == null || sizes.Length == 0) {
-            sizes = new[] { 16, 32, 48, 64, 128, 256 };
+    #if NET8_0_OR_GREATER
+    private static bool TryDecodeImageFallback(string fullPath, out QrDecoded decoded) {
+        var aggressiveOptions = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            AggressiveSampling = true,
+            StylizedSampling = true
+        };
+
+        if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes(fullPath), aggressiveOptions, out decoded)) {
+            return true;
         }
 
-        List<byte[]> frames = new();
-        List<(int Width, int Height)> dims = new();
+        using FileStream stream = File.OpenRead(fullPath);
+        return QrImageDecoder.TryDecodeImage(stream, aggressiveOptions, out decoded);
+    }
 
-        foreach (int size in sizes.Distinct().OrderBy(s => s)) {
-            using Image<Rgba32> clone = image.CloneAs<Rgba32>();
-            clone.Mutate(ctx => ctx.Resize(new ResizeOptions {
-                Mode = ResizeMode.Stretch,
-                Size = new Size(size, size)
-            }));
-            using MemoryStream ms = new();
-            clone.SaveAsPng(ms);
-            frames.Add(ms.ToArray());
-            dims.Add((size, size));
+    private static bool TryDecodePixels(byte[] pixels, int width, int height, out QrDecoded decoded) {
+        if (QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, out decoded)) {
+            return true;
         }
 
-        using FileStream fs = File.Create(filePath);
-        using BinaryWriter bw = new(fs);
-        bw.Write((ushort)0);
-        bw.Write((ushort)1);
-        bw.Write((ushort)frames.Count);
+        var aggressiveOptions = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            AggressiveSampling = true,
+            StylizedSampling = true
+        };
+        return QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, aggressiveOptions, out decoded);
+    }
+    #endif
 
-        int offset = 6 + 16 * frames.Count;
-        for (int i = 0; i < frames.Count; i++) {
-            var (w, h) = dims[i];
-            bw.Write((byte)(w >= 256 ? 0 : w));
-            bw.Write((byte)(h >= 256 ? 0 : h));
-            bw.Write((byte)0);
-            bw.Write((byte)0);
-            bw.Write((ushort)1);
-            bw.Write((ushort)32);
-            bw.Write(frames[i].Length);
-            bw.Write(offset);
-            offset += frames[i].Length;
+    private static byte[]? CompositeOnWhite(Image<Rgba32> image) {
+        byte[]? composited = null;
+        var index = 0;
+
+        for (var y = 0; y < image.Height; y++) {
+            for (var x = 0; x < image.Width; x++) {
+                Rgba32 pixel = image[x, y];
+                if (pixel.A == 255) {
+                    if (composited is not null) {
+                        composited[index] = pixel.R;
+                        composited[index + 1] = pixel.G;
+                        composited[index + 2] = pixel.B;
+                        composited[index + 3] = 255;
+                    }
+
+                    index += 4;
+                    continue;
+                }
+
+                composited ??= new byte[image.Width * image.Height * 4];
+                if (index > 0) {
+                    image.CopyPixelDataTo(composited);
+                }
+
+                byte alpha = pixel.A;
+                composited[index] = BlendChannel(pixel.R, alpha);
+                composited[index + 1] = BlendChannel(pixel.G, alpha);
+                composited[index + 2] = BlendChannel(pixel.B, alpha);
+                composited[index + 3] = 255;
+                index += 4;
+            }
         }
 
-        foreach (byte[] data in frames) {
-            bw.Write(data);
-        }
+        return composited;
+    }
 
-        bw.Flush();
+    private static byte BlendChannel(byte foreground, byte alpha) {
+        const int background = 255;
+        return (byte)((foreground * alpha + background * (255 - alpha) + 127) / 255);
     }
 }
+
+
+
+
