@@ -5,7 +5,7 @@ using Xunit;
 namespace ImagePlayground.Tests;
 
 /// <summary>
-/// Tests for ZXingMemory.
+/// Tests for CodeGlyphX-based memory stability checks.
 /// </summary>
 public partial class ImagePlayground {
     [Fact]
