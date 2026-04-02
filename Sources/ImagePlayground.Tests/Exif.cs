@@ -58,4 +58,17 @@ public partial class ImagePlayground {
 
         Assert.Throws<ArgumentException>(() => img.SetExifValue(ExifTag.Software, 123));
     }
+
+    [Fact]
+    public void Test_SetExifValue_NumberTag_Works() {
+        using var img = new PlaygroundImage();
+        img.Create(Path.Combine(_directoryWithTests, "number-tag.jpg"), 10, 10);
+
+        var imageWidth = new Number(123);
+        img.SetExifValue(ExifTag.ImageWidth, imageWidth);
+
+        var exifValue = Assert.Single(img.GetExifValues(), v => v.Tag == ExifTag.ImageWidth);
+        Assert.Equal(typeof(Number), exifValue.GetValue()?.GetType());
+        Assert.Equal(imageWidth.ToString(), exifValue.GetValue()?.ToString());
+    }
 }

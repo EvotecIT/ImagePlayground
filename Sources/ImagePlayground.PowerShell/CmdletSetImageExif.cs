@@ -36,15 +36,20 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
             return;
         }
 
+        var value = Value;
+        if (value is null) {
+            throw new ArgumentNullException(nameof(Value));
+        }
+
         Type expectedType = ExifTag.GetType().GenericTypeArguments[0];
-        if (Value is not null && !expectedType.IsInstanceOfType(Value)) {
+        if (!expectedType.IsInstanceOfType(value)) {
             throw new ArgumentException(
-                $"Value type '{Value.GetType()}' does not match tag type '{expectedType}'.",
+                $"Value type '{value.GetType()}' does not match tag type '{expectedType}'.",
                 nameof(Value));
         }
 
         using var img = ImagePlayground.Image.Load(filePath);
-        img.SetExifValue(ExifTag, Value);
+        img.SetExifValue(ExifTag, value);
 
         var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
         img.Save(output);

@@ -1,22 +1,34 @@
-﻿Import-Module PSPublishModule -Force -ErrorAction Stop
+param(
+    [string] $ConfigPath = "$PSScriptRoot\project.build.json",
+    [Nullable[bool]] $UpdateVersions = $false,
+    [Nullable[bool]] $Build = $true,
+    [Nullable[bool]] $PublishNuget = $false,
+    [Nullable[bool]] $PublishGitHub = $true,
+    [Nullable[bool]] $Plan,
+    [string] $PlanPath
+)
 
-$GitHubAccessToken = Get-Content -Raw 'C:\Support\Important\GithubAPI.txt'
-
-$publishGitHubReleaseAssetSplat = @{
-    ProjectPath          = "$PSScriptRoot\..\Sources\ImagePlayground"
-    GitHubAccessToken    = $GitHubAccessToken
-    GitHubUsername       = "EvotecIT"
-    GitHubRepositoryName = "ImagePlayground"
-    IsPreRelease         = $false
+$buildProjectSplat = @{
+    ConfigPath = $ConfigPath
 }
 
-Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
+if ($null -ne $UpdateVersions) {
+    $buildProjectSplat.UpdateVersions = $UpdateVersions
+}
+if ($null -ne $Build) {
+    $buildProjectSplat.Build = $Build
+}
+if ($null -ne $PublishNuget) {
+    $buildProjectSplat.PublishNuget = $PublishNuget
+}
+if ($null -ne $PublishGitHub) {
+    $buildProjectSplat.PublishGitHub = $PublishGitHub
+}
+if ($null -ne $Plan) {
+    $buildProjectSplat.Plan = $Plan
+}
+if ($PlanPath) {
+    $buildProjectSplat.PlanPath = $PlanPath
+}
 
-$publishGitHubReleaseAssetSplat.ProjectPath = "$PSScriptRoot\..\Sources\ImagePlayground.BarCode"
-Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
-
-$publishGitHubReleaseAssetSplat.ProjectPath = "$PSScriptRoot\..\Sources\ImagePlayground.Chart"
-Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
-
-$publishGitHubReleaseAssetSplat.ProjectPath = "$PSScriptRoot\..\Sources\ImagePlayground.QRCode"
-Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
+& "$PSScriptRoot\Build-Project.ps1" @buildProjectSplat

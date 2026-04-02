@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeGlyphX.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -52,7 +52,7 @@ public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeGeoLocation - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateGeoLocation(Latitude, Longitude, FilePath, PayloadGenerator.Geolocation.GeolocationEncoding.GEO, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateGeoLocation(Latitude, Longitude, FilePath, QrGeolocationEncoding.Geo, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);

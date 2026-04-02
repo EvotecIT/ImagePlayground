@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,6 +11,12 @@ namespace ImagePlayground.Tests;
 /// Tests for HelpersPath.
 /// </summary>
 public partial class ImagePlayground {
+    public static IEnumerable<object?[]> InvalidPaths => new[] {
+        new object?[] { null },
+        new object?[] { string.Empty },
+        new object?[] { " " }
+    };
+
     [Fact]
     public void Test_ResolvePath_ExpandsEnvironment() {
         string testDir = _directoryWithTests;
@@ -19,10 +26,8 @@ public partial class ImagePlayground {
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData(" ")]
-    public void Test_ResolvePath_Invalid(string value) {
+    [MemberData(nameof(InvalidPaths))]
+    public void Test_ResolvePath_Invalid(string? value) {
         Assert.Throws<ArgumentException>(() => Helpers.ResolvePath(value!));
     }
 

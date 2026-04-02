@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeGlyphX.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageQrCodeBitcoinCmdlet : PSCmdlet {
     /// <summary>Type of cryptocurrency.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public PayloadGenerator.BitcoinLikeCryptoCurrencyAddress.BitcoinLikeCryptoCurrencyType Currency { get; set; }
+    public QrBitcoinLikeType Currency { get; set; }
 
     /// <summary>Destination address.</summary>
     [Parameter(Mandatory = true, Position = 1)]

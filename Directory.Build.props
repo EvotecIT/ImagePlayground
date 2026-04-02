@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeGlyphXVersion>1.4.0</CodeGlyphXVersion>
+    <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj')">true</UseLocalCodeGlyphXProject>
+    <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/EvotecIT/ImagePlayground</PackageProjectUrl>
+    <PackageReadmeFile>README.MD</PackageReadmeFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'ImagePlayground.Tests' and '$(MSBuildProjectName)' != 'ImagePlayground.Examples'">
+    <None Include="$(MSBuildThisFileDirectory)README.MD" Pack="true" PackagePath="\" Visible="false" Link="README.MD" />
+  </ItemGroup>
+</Project>

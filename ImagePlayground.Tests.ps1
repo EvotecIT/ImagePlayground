@@ -53,6 +53,26 @@ try {
     throw "Failed to import module $ModuleName"
 }
 
+function Assert-ImagePlaygroundQrMessage {
+    param(
+        [Parameter(Mandatory)]
+        [string] $FilePath,
+        [string] $ExpectedMessage,
+        [string] $ExpectedPattern
+    )
+
+    $result = Get-ImageQRCode -FilePath $FilePath
+    $result.Status | Should -Be ([ImagePlayground.Status]::Found)
+
+    if ($PSBoundParameters.ContainsKey('ExpectedMessage')) {
+        $result.Message | Should -Be $ExpectedMessage
+    } elseif ($PSBoundParameters.ContainsKey('ExpectedPattern')) {
+        $result.Message | Should -Match $ExpectedPattern
+    } else {
+        throw 'ExpectedMessage or ExpectedPattern must be provided.'
+    }
+}
+
 $Configuration = [PesterConfiguration]::Default
 $Configuration.Run.Path = "$PSScriptRoot\Tests"
 $Configuration.Run.Exit = $true

@@ -28,8 +28,8 @@ public partial class ImagePlayground {
     public void Test_QrCodeRead_DoesNotLockFile() {
         string filePath = Path.Combine(_directoryWithImages, "QRCode1.png");
         var result = QrCode.Read(filePath);
+        Assert.Equal(Status.Found, result.Status);
         Assert.True(!string.IsNullOrEmpty(result.Message));
-        Assert.Null(result.Image);
         using var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

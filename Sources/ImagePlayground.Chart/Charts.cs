@@ -84,22 +84,33 @@ public static class Charts {
                     break;
                 case ChartDefinitionType.Line:
                     foreach (var line in list.Cast<ChartLine>()) {
-                        var sig = plot.Add.Signal(line.Value.ToArray());
                         if (line.Smooth) {
-                            var prop = sig.GetType().GetProperty("SignalLineStyle");
-                            if (prop is not null) {
-                                var enumType = prop.PropertyType;
-                                var spline = Enum.Parse(enumType, "Spline");
-                                prop.SetValue(sig, spline);
+                            var values = line.Value.ToArray();
+                            var xs = Enumerable.Range(0, values.Length).Select(i => (double)i).ToArray();
+                            var scatter = plot.Add.Scatter(xs, values);
+                            scatter.Smooth = true;
+                            scatter.LegendText = line.Name;
+                            scatter.MarkerShape = line.MarkerShape;
+                            if (line.MarkerSize.HasValue) {
+                                scatter.MarkerSize = line.MarkerSize.Value;
                             }
-                        }
-                        sig.LegendText = line.Name;
-                        sig.MarkerShape = line.MarkerShape;
-                        if (line.MarkerSize.HasValue)
-                            sig.MarkerSize = line.MarkerSize.Value;
-                        if (line.Color.HasValue) {
-                            var px = line.Color.Value.ToPixel<Rgba32>();
-                            sig.LineColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                            if (line.Color.HasValue) {
+                                var px = line.Color.Value.ToPixel<Rgba32>();
+                                var color = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                                scatter.LineColor = color;
+                                scatter.MarkerColor = color;
+                            }
+                        } else {
+                            var sig = plot.Add.Signal(line.Value.ToArray());
+                            sig.LegendText = line.Name;
+                            sig.MarkerShape = line.MarkerShape;
+                            if (line.MarkerSize.HasValue) {
+                                sig.MarkerSize = line.MarkerSize.Value;
+                            }
+                            if (line.Color.HasValue) {
+                                var px = line.Color.Value.ToPixel<Rgba32>();
+                                sig.LineColor = new ScottPlot.Color(px.R, px.G, px.B, px.A);
+                            }
                         }
                     }
                     plot.ShowLegend();
@@ -207,11 +218,11 @@ public static class Charts {
             }
     
             if (!string.IsNullOrEmpty(xTitle)) {
-                plot.Axes.Bottom.Label.Text = xTitle;
+                plot.Axes.Bottom.Label.Text = xTitle!;
             }
-    
+
             if (!string.IsNullOrEmpty(yTitle)) {
-                plot.Axes.Left.Label.Text = yTitle;
+                plot.Axes.Left.Label.Text = yTitle!;
             }
     
             if (showGrid) {

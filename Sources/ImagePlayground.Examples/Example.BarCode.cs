@@ -13,18 +13,6 @@ internal partial class Example {
     /// </summary>
     /// <param name="folderPath">Output directory for the sample files.</param>
     public static void BarCodes1(string folderPath) {
-        //string filePath = System.IO.Path.Combine(folderPath, "QR.png");
-
-        //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Png);
-
-        //filePath = System.IO.Path.Combine(folderPath, "QR.jpg");
-
-        //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Jpeg);
-
-        //filePath = System.IO.Path.Combine(folderPath, "QR.bmp");
-
-        //BarCode.GenerateQR("Hello world!", filePath, Barcoder.Renderer.Image.ImageFormat.Bmp);
-
         Console.WriteLine("[*] Creating Barcode EAN13 - PNG");
         string filePath = System.IO.Path.Combine(folderPath, "BarcodeEAN13.png");
         BarCode.Generate(BarcodeType.EAN, "901234123457", filePath);

@@ -3,20 +3,22 @@
   <PropertyGroup>
     <Company>Evotec</Company>
     <Authors>Przemyslaw Klys</Authors>
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
     <AssemblyName>ImagePlayground.Core</AssemblyName>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Description>Core image processing, EXIF metadata, image comparison, and utility APIs for the ImagePlayground package family.</Description>
+    <PackageTags>images;image-processing;exif;metadata;compare;imagesharp;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
   </ItemGroup>

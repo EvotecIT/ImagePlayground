@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeGlyphX;
 using System.IO;
 using System.Management.Automation;
 
@@ -57,7 +57,7 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCode - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.Generate(Content, FilePath, Transparent.IsPresent, QRCodeGenerator.ECCLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.Generate(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);

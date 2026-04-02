@@ -12,8 +12,8 @@ namespace ImagePlayground;
 /// Represents an image loaded using ImageSharp and exposes basic manipulation helpers.
 /// </summary>
 public partial class Image : IDisposable {
-    private SixLabors.ImageSharp.Image _image;
-    private string _filePath;
+    private SixLabors.ImageSharp.Image _image = null!;
+    private string _filePath = string.Empty;
 
     /// <summary>Gets the width of the image.</summary>
     public int Width => _image.Width;
@@ -168,7 +168,7 @@ public partial class Image : IDisposable {
     /// <param name="quality">Optional quality for lossy formats.</param>
     /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
     public void Save(Stream stream, int? quality = null, int? compressionLevel = null) {
-        string extension = System.IO.Path.GetExtension(_filePath)?.ToLowerInvariant();
+        string extension = System.IO.Path.GetExtension(_filePath).ToLowerInvariant();
         var encoder = Helpers.GetEncoder(extension, quality, compressionLevel);
         _image.Save(stream, encoder);
         stream.Seek(0, SeekOrigin.Begin);

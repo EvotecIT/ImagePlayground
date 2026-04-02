@@ -1,6 +1,6 @@
 using System;
 using ImagePlayground;
-using QRCoder;
+using CodeGlyphX.Payloads;
 using System.IO;
 using System.Management.Automation;
 
@@ -64,7 +64,7 @@ public sealed class NewImageQrCodeGirocodeCmdlet : PSCmdlet {
             WriteWarning($"New-ImageQRCodeGirocode - No file path specified, saving to {FilePath}");
         }
 
-        ImagePlayground.QrCode.GenerateGirocode(Iban, Bic, Name, Amount, FilePath, RemittanceInformation, PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, null, null, PayloadGenerator.Girocode.GirocodeVersion.Version1, PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1, false, ForegroundColor, BackgroundColor, PixelSize);
+        ImagePlayground.QrCode.GenerateGirocode(Iban, Bic, Name, Amount, FilePath, RemittanceInformation, QrGirocodeRemittanceType.Unstructured, null, null, QrGirocodeVersion.Version1, QrGirocodeEncoding.Iso8859_1, false, ForegroundColor, BackgroundColor, PixelSize);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);

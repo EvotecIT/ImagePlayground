@@ -1,7 +1,34 @@
-﻿Import-Module PSPublishModule -Force -ErrorAction Stop
+param(
+    [string] $ConfigPath = "$PSScriptRoot\project.build.json",
+    [Nullable[bool]] $UpdateVersions = $false,
+    [Nullable[bool]] $Build = $true,
+    [Nullable[bool]] $PublishNuget = $true,
+    [Nullable[bool]] $PublishGitHub = $false,
+    [Nullable[bool]] $Plan,
+    [string] $PlanPath
+)
 
-$NugetAPI = Get-Content -Raw -LiteralPath "C:\Support\Important\NugetOrgEvotec.txt"
-Publish-NugetPackage -Path "$PSScriptRoot\..\Sources\ImagePlayground.Core\bin\Release" -ApiKey $NugetAPI
-Publish-NugetPackage -Path "$PSScriptRoot\..\Sources\ImagePlayground.BarCode\bin\Release" -ApiKey $NugetAPI
-Publish-NugetPackage -Path "$PSScriptRoot\..\Sources\ImagePlayground.Chart\bin\Release" -ApiKey $NugetAPI
-Publish-NugetPackage -Path "$PSScriptRoot\..\Sources\ImagePlayground.QRCode\bin\Release" -ApiKey $NugetAPI
+$buildProjectSplat = @{
+    ConfigPath = $ConfigPath
+}
+
+if ($null -ne $UpdateVersions) {
+    $buildProjectSplat.UpdateVersions = $UpdateVersions
+}
+if ($null -ne $Build) {
+    $buildProjectSplat.Build = $Build
+}
+if ($null -ne $PublishNuget) {
+    $buildProjectSplat.PublishNuget = $PublishNuget
+}
+if ($null -ne $PublishGitHub) {
+    $buildProjectSplat.PublishGitHub = $PublishGitHub
+}
+if ($null -ne $Plan) {
+    $buildProjectSplat.Plan = $Plan
+}
+if ($PlanPath) {
+    $buildProjectSplat.PlanPath = $PlanPath
+}
+
+& "$PSScriptRoot\Build-Project.ps1" @buildProjectSplat

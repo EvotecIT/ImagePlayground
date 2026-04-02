@@ -12,7 +12,7 @@ describe 'New-ImageQRCodeCalendar cmdlet' {
         $to = $from.AddHours(1)
         New-ImageQRCodeCalendar -Entry 'Meeting' -Message 'Discuss' -Location 'Office' -From $from -To $to -FilePath $file
         Test-Path -Path $file | Should -BeTrue
-        (Get-ImageQRCode -FilePath $file).Message | Should -Match 'BEGIN:VEVENT'
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern 'BEGIN:VEVENT'
     }
 
     It 'throws on invalid pixel size' {
