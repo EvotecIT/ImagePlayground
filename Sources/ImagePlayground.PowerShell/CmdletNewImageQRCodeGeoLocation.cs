@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code with geolocation data.</summary>
+/// <para>Use this cmdlet to create location QR codes that open map applications at a specific coordinate.</para>
 /// <example>
-///   <summary>Create geolocation QR</summary>
-///   <code>New-ImageQRCodeGeoLocation -Latitude '52.1' -Longitude '21.0' -FilePath geo.png</code>
+///   <summary>Create a basic geolocation QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeGeoLocation -Latitude '52.2297' -Longitude '21.0122' -FilePath geo.png</code>
+///   <para>Generates a QR code that opens the target coordinates in compatible map applications.</para>
+/// </example>
+/// <example>
+///   <summary>Create an event-location QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeGeoLocation -Latitude '51.1079' -Longitude '17.0385' -FilePath venue.png -ForegroundColor DarkGreen -PixelSize 16 -Show</code>
+///   <para>Creates a location QR for signage, invitations, or venue directions and previews it immediately.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeGeoLocation")]
 public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
@@ -22,6 +31,7 @@ public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
     public string Longitude { get; set; } = string.Empty;
 
     /// <summary>Output path for the QR code.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 

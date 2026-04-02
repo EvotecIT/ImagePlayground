@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code that opens an email draft.</summary>
+/// <para>Use this cmdlet to create scannable mailto-style QR codes for support, sales, or campaign responses.</para>
 /// <example>
-///   <summary>Create email QR</summary>
+///   <summary>Create a basic email QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodeEmail -Email 'user@example.com' -Subject 'Hello' -Message 'Body' -FilePath qr.png</code>
+///   <para>Creates a QR code that opens the default mail client with recipient, subject, and body prefilled.</para>
+/// </example>
+/// <example>
+///   <summary>Create a support-contact QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeEmail -Email 'support@evotec.pl' -Subject 'Support Request' -Message 'Please describe the issue before sending.' -FilePath support-mail.png -ForegroundColor DarkSlateBlue -PixelSize 14 -Show</code>
+///   <para>Generates a support-oriented email QR code and opens the image after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeEmail")]
 public sealed class NewImageQrCodeEmailCmdlet : PSCmdlet {
@@ -26,6 +35,7 @@ public sealed class NewImageQrCodeEmailCmdlet : PSCmdlet {
     public string? Message { get; set; }
 
     /// <summary>Output path for the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 3)]
     public string FilePath { get; set; } = string.Empty;
 
@@ -63,4 +73,3 @@ public sealed class NewImageQrCodeEmailCmdlet : PSCmdlet {
         }
     }
 }
-

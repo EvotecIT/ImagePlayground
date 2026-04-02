@@ -6,9 +6,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code initiating a Skype call.</summary>
+/// <para>Use this cmdlet for legacy Skype calling scenarios where a QR scan should start a call with a specific account.</para>
 /// <example>
-///   <summary>Create Skype call QR</summary>
+///   <summary>Create a basic Skype-call QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodeSkypeCall -UserName 'echo123' -FilePath skype.png</code>
+///   <para>Creates a QR code that opens Skype and targets the selected username for a call.</para>
+/// </example>
+/// <example>
+///   <summary>Create a helpdesk Skype QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeSkypeCall -UserName 'evotec.helpdesk' -FilePath skype-helpdesk.png -ForegroundColor MidnightBlue -PixelSize 16 -Show</code>
+///   <para>Generates a branded Skype call QR code and opens the resulting image after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSkypeCall")]
 public sealed class NewImageQrCodeSkypeCallCmdlet : PSCmdlet {
@@ -17,6 +26,7 @@ public sealed class NewImageQrCodeSkypeCallCmdlet : PSCmdlet {
     public string UserName { get; set; } = string.Empty;
 
     /// <summary>Output path for the QR image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 

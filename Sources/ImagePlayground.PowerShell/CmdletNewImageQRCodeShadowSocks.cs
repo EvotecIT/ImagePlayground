@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code for a Shadowsocks configuration.</summary>
+/// <para>Use this cmdlet to share a client-ready Shadowsocks connection string as a scannable QR code.</para>
 /// <example>
-///   <summary>Create Shadowsocks QR</summary>
+///   <summary>Create a basic Shadowsocks QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodeShadowSocks -Host 'example.com' -Port 8388 -Password 'pwd' -Method Aes256Gcm -FilePath ss.png</code>
+///   <para>Creates a QR code for importing a Shadowsocks connection into a compatible client.</para>
+/// </example>
+/// <example>
+///   <summary>Create a tagged Shadowsocks client profile QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeShadowSocks -Host 'vpn.evotec.pl' -Port 8388 -Password 'StrongSecret!' -Method Chacha20IetfPoly1305 -Tag 'Warsaw Edge' -FilePath ss-warsaw.png -ForegroundColor Purple -PixelSize 14 -Show</code>
+///   <para>Generates a named client profile QR code and opens it immediately after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeShadowSocks")]
 public sealed class NewImageQrCodeShadowSocksCmdlet : PSCmdlet {
@@ -35,6 +44,7 @@ public sealed class NewImageQrCodeShadowSocksCmdlet : PSCmdlet {
     public string? Tag { get; set; }
 
     /// <summary>Path where the QR code image is stored.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 5)]
     public string FilePath { get; set; } = string.Empty;
 

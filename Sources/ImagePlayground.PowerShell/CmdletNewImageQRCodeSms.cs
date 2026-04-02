@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code containing an SMS message.</summary>
+/// <para>Use this cmdlet when a scan should open the SMS app with recipient and optional message body prefilled.</para>
 /// <example>
-///   <summary>Create SMS QR</summary>
+///   <summary>Create a basic SMS QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodeSms -Number '+123456789' -Message 'Hello' -FilePath sms.png</code>
+///   <para>Creates a QR code that opens the SMS app with the recipient number and message body prefilled.</para>
+/// </example>
+/// <example>
+///   <summary>Create an RSVP SMS QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeSms -Number '+48 500 600 700' -Message 'RSVP: I will attend' -FilePath rsvp-sms.png -ForegroundColor Teal -PixelSize 16 -Show</code>
+///   <para>Generates a ready-to-send RSVP QR code for invitations or registration desks.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSms")]
 public sealed class NewImageQrCodeSmsCmdlet : PSCmdlet {
@@ -22,6 +31,7 @@ public sealed class NewImageQrCodeSmsCmdlet : PSCmdlet {
     public string? Message { get; set; }
 
     /// <summary>Output path for the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 

@@ -6,9 +6,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code for dialling a phone number.</summary>
+/// <para>Use this cmdlet when you want a scan action to immediately open the dialer with a predefined number.</para>
 /// <example>
-///   <summary>Create phone number QR</summary>
+///   <summary>Create a basic phone-number QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodePhoneNumber -Number '+123456' -FilePath phone.png</code>
+///   <para>Generates a QR code that opens the dialer with the selected number.</para>
+/// </example>
+/// <example>
+///   <summary>Create a support hotline QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodePhoneNumber -Number '+48 500 600 700' -FilePath hotline.png -ForegroundColor DarkRed -PixelSize 18 -Show</code>
+///   <para>Creates a styled call-now QR code suitable for posters, intranet pages, or support desks.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodePhoneNumber")]
 public sealed class NewImageQrCodePhoneNumberCmdlet : PSCmdlet {
@@ -17,6 +26,7 @@ public sealed class NewImageQrCodePhoneNumberCmdlet : PSCmdlet {
     public string Number { get; set; } = string.Empty;
 
     /// <summary>Output path of the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
