@@ -26,7 +26,9 @@ public static class ChartRenderer {
             }
 
             var categories = BuildCategories(options.Categories, options.Series.Select(s => s.Values.Count).DefaultIfEmpty(0).Max());
-            var yScale = AxisScale.FromSeries(options.Series.SelectMany(s => s.Values), options.YAxis, includeZero: true);
+            var yScale = options.Stacked
+                ? AxisScale.FromSeries(GetStackedBarExtents(options, categories.Count), options.YAxis, includeZero: true)
+                : AxisScale.FromSeries(options.Series.SelectMany(s => s.Values), options.YAxis, includeZero: true);
 
             DrawYAxis(graphics, layout.PlotArea, yScale, options.YAxis, fonts, options.Style);
             DrawXAxisLabels(graphics, layout.PlotArea, categories, fonts, options.Style);
@@ -43,15 +45,27 @@ public static class ChartRenderer {
             for (var c = 0; c < categories.Count; c++) {
                 var baseX = layout.PlotArea.Left + c * groupWidth + (groupWidth - availableGroupWidth) / 2f;
                 if (options.Stacked) {
-                    var stackBase = layout.PlotArea.Bottom;
+                    var positiveTotal = 0d;
+                    var negativeTotal = 0d;
                     foreach (var series in options.Series) {
                         if (c >= series.Values.Count) continue;
                         var value = series.Values[c];
-                        var y = yScale.ToY(layout.PlotArea, value);
-                        var height = stackBase - y;
-                        var rect = new RectangleF(baseX, y, Math.Max(1f, availableGroupWidth), Math.Abs(height));
+                        double startValue;
+                        double endValue;
+                        if (value >= 0) {
+                            startValue = positiveTotal;
+                            positiveTotal += value;
+                            endValue = positiveTotal;
+                        } else {
+                            startValue = negativeTotal;
+                            negativeTotal += value;
+                            endValue = negativeTotal;
+                        }
+
+                        var startY = yScale.ToY(layout.PlotArea, startValue);
+                        var endY = yScale.ToY(layout.PlotArea, endValue);
+                        var rect = new RectangleF(baseX, Math.Min(startY, endY), Math.Max(1f, availableGroupWidth), Math.Abs(endY - startY));
                         FillRect(graphics, rect, series.Color);
-                        stackBase = y;
                     }
                 } else {
                     for (var s = 0; s < options.Series.Count; s++) {
@@ -675,6 +689,25 @@ public static class ChartRenderer {
             .ToArray();
     }
 
+    private static IEnumerable<double> GetStackedBarExtents(ChartBarOptions options, int categoryCount) {
+        for (var c = 0; c < categoryCount; c++) {
+            var positiveTotal = 0d;
+            var negativeTotal = 0d;
+            foreach (var series in options.Series) {
+                if (c >= series.Values.Count) continue;
+                var value = series.Values[c];
+                if (value >= 0) {
+                    positiveTotal += value;
+                } else {
+                    negativeTotal += value;
+                }
+            }
+
+            yield return positiveTotal;
+            yield return negativeTotal;
+        }
+    }
+
     private readonly struct LegendItem {
         public string Label { get; }
         public Color Color { get; }
@@ -748,12 +781,13 @@ public static class ChartRenderer {
                 min = Math.Min(min, 0);
                 max = Math.Max(max, 0);
             }
+            var hasExplicitBounds = axis.Min.HasValue || axis.Max.HasValue;
             if (axis.Min.HasValue) min = axis.Min.Value;
             if (axis.Max.HasValue) max = axis.Max.Value;
             if (Math.Abs(max - min) < double.Epsilon) {
                 max = min + 1;
             }
-            var padding = (max - min) * 0.05;
+            var padding = hasExplicitBounds ? 0 : (max - min) * 0.05;
             return new AxisScale(min - padding, max + padding);
         }
     }
