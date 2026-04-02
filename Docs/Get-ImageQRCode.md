@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-ImageQRCode
 ## SYNOPSIS
-Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
+Reads QR code information from an image file.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
+Returns the decoded content and symbology details.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Get-ImageQRCode -FilePath 'C:\Path'
+Get-ImageQRCode -FilePath qr.png
+```
+
+### EXAMPLE 2
+```powershell
+(Get-ImageQRCode -FilePath qr.png).Message
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The file must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -51,7 +56,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

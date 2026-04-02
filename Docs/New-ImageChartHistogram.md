@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartHistogram
 ## SYNOPSIS
-New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [<CommonParameters>]
+Creates histogram chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [
 ```
 
 ## DESCRIPTION
-New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [<CommonParameters>]
+Creates histogram chart data item.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartHistogram -Name 'Name'
+New-ImageChartHistogram -Name 'Data' -Values @(1,2,3) -BinSize 2
 ```
 
 ## PARAMETERS
 
 ### -BinSize
-{{ Fill BinSize Description }}
+Optional bin size.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,7 +43,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the histogram.
 
 ```yaml
 Type: String
@@ -59,12 +59,12 @@ Accept wildcard characters: True
 ```
 
 ### -Values
-{{ Fill Values Description }}
+Data values.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -83,7 +83,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

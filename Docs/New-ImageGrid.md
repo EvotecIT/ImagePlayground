@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageGrid
 ## SYNOPSIS
-New-ImageGrid [-FilePath] <string> [-Width] <int> [-Height] <int> [-Color <Color>] [-Open] [<CommonParameters>]
+Creates a simple grid-based image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,40 @@ New-ImageGrid [-FilePath] <string> [-Width] <int> [-Height] <int> [-Color <Color
 ```
 
 ## DESCRIPTION
-New-ImageGrid [-FilePath] <string> [-Width] <int> [-Height] <int> [-Color <Color>] [-Open] [<CommonParameters>]
+Creates a simple grid-based image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageGrid -FilePath 'C:\Path'
+New-ImageGrid -FilePath out.png -Width 100 -Height 100
 ```
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Background color.
 
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: FFFFFFFF
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Output file path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,49 +59,49 @@ Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Height of the new image.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 2
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Open
-{{ Fill Open Description }}
+Open the image after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Width of the new image.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 1
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -115,7 +115,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

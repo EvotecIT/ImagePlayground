@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeGeoLocation
 ## SYNOPSIS
-New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code with geolocation data.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,49 @@ New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet to create location QR codes that open map applications at a specific coordinate.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeGeoLocation -FilePath 'C:\Path'
+New-ImageQRCodeGeoLocation -Latitude '52.2297' -Longitude '21.0122' -FilePath geo.png
 ```
+
+Generates a QR code that opens the target coordinates in compatible map applications.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRCodeGeoLocation -Latitude '51.1079' -Longitude '17.0385' -FilePath venue.png -ForegroundColor DarkGreen -PixelSize 16 -Show
+```
+
+Creates a location QR for signage, invitations, or venue directions and previews it immediately.
 
 ## PARAMETERS
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -42,13 +67,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Latitude
-{{ Fill Latitude Description }}
+Latitude value.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +100,12 @@ Accept wildcard characters: True
 ```
 
 ### -Longitude
-{{ Fill Longitude Description }}
+Longitude value.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -74,18 +115,34 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -PixelSize
+Pixel size for each QR module.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Open image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -99,7 +156,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

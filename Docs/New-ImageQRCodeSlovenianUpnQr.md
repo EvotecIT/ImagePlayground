@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeSlovenianUpnQr
 ## SYNOPSIS
-New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a Slovenian UPN QR payment code.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,51 @@ New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-Fil
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet when a prepared Slovenian UPN payment payload should be rendered into a scannable QR image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSlovenianUpnQr -FilePath 'C:\Path'
+$upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Invoice 2026-041',19999)
+            New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn.png
 ```
+
+Generates a UPN payment QR code from a complete Slovenian payment payload object.
+
+### EXAMPLE 2
+```powershell
+$upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Annual subscription',4900)
+            New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn-brand.png -ForegroundColor DarkGreen -PixelSize 14 -Show
+```
+
+Creates a styled payment QR code and opens the resulting image after generation.
 
 ## PARAMETERS
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -42,13 +69,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Payload
-{{ Fill Payload Description }}
+UPN payment payload.
 
 ```yaml
 Type: SlovenianUpnQr
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -58,18 +101,34 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -PixelSize
+Pixel size for each QR module.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Opens the image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -83,7 +142,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

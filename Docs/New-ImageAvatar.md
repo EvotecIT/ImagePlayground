@@ -6,9 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageAvatar
 ## SYNOPSIS
-New-ImageAvatar [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
-
-New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
+Creates a rounded avatar image.
 
 ## SYNTAX
 ### Path (Default)
@@ -22,42 +20,40 @@ New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-H
 ```
 
 ## DESCRIPTION
-New-ImageAvatar [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
-
-New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
+Creates a rounded avatar image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageAvatar -FilePath 'C:\Path'
+New-ImageAvatar -FilePath user.jpg -OutputPath avatar.png -Open
 ```
 
 ## PARAMETERS
 
 ### -CornerRadius
-{{ Fill CornerRadius Description }}
+Corner radius for rounding.
 
 ```yaml
 Type: Single
 Parameter Sets: Path, Stream
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the input image.
 
 ```yaml
 Type: String
 Parameter Sets: Path, Stream
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -68,44 +64,44 @@ Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Height of the avatar.
 
 ```yaml
 Type: Int32
 Parameter Sets: Path, Stream
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 200
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Open
-{{ Fill Open Description }}
+Open the avatar after saving.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Path, Stream
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination path when saving to disk.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -116,33 +112,33 @@ Accept wildcard characters: True
 ```
 
 ### -OutputStream
-{{ Fill OutputStream Description }}
+Stream that receives the avatar image.
 
 ```yaml
 Type: Stream
 Parameter Sets: Stream
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 1
-Default value: None
+Default value: System.IO.Stream+NullStream
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Width of the avatar.
 
 ```yaml
 Type: Int32
 Parameter Sets: Path, Stream
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 200
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -156,7 +152,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

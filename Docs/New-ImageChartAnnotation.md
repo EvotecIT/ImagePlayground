@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartAnnotation
 ## SYNOPSIS
-New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [<CommonParameters>]
+Creates chart annotation data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,42 @@ New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [
 ```
 
 ## DESCRIPTION
-New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [<CommonParameters>]
+Use this cmdlet with New-ImageChart to highlight notable points on a generated chart.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartAnnotation -Arrow
+New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak usage' -Arrow
 ```
+
+Creates an annotation definition that can be passed to New-ImageChart via -Annotation or -AnnotationsDefinition.
 
 ## PARAMETERS
 
 ### -Arrow
-{{ Fill Arrow Description }}
+Display arrow.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Text
-{{ Fill Text Description }}
+Annotation text.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,33 +61,33 @@ Accept wildcard characters: True
 ```
 
 ### -X
-{{ Fill X Description }}
+X coordinate for annotation.
 
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 0
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Y coordinate for annotation.
 
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 1
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -99,7 +101,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

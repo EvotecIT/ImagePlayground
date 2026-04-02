@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # ConvertFrom-ImageBase64
 ## SYNOPSIS
-ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<CommonParameters>]
+Converts a Base64 encoded string into an image file.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<Comm
 ```
 
 ## DESCRIPTION
-ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<CommonParameters>]
+Converts a Base64 encoded string into an image file.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-ConvertFrom-ImageBase64 -OutputPath 'C:\Path'
+ConvertFrom-ImageBase64 -Base64 $content -OutputPath out.png
+```
+
+### EXAMPLE 2
+```powershell
+ConvertFrom-ImageBase64 -Base64 $content -OutputPath out.png -Open
 ```
 
 ## PARAMETERS
 
 ### -Base64
-{{ Fill Base64 Description }}
+Base64 encoded image data.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,28 +48,28 @@ Accept wildcard characters: True
 ```
 
 ### -Open
-{{ Fill Open Description }}
+Open the newly created file after saving.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Path where the image will be written.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -83,7 +88,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

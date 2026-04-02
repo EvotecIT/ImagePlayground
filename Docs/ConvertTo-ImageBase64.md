@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # ConvertTo-ImageBase64
 ## SYNOPSIS
-ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
+Converts an image file into a Base64 encoded string.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
+Converts an image file into a Base64 encoded string.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-ConvertTo-ImageBase64 -FilePath 'C:\Path'
+ConvertTo-ImageBase64 -FilePath in.png
+```
+
+### EXAMPLE 2
+```powershell
+$b64 = ConvertTo-ImageBase64 -FilePath photo.jpg; Invoke-RestMethod -Uri https://example/upload -Body $b64
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the image to convert.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True

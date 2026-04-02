@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Add-ImageText
 ## SYNOPSIS
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Adds text to an image at the provided coordinates and writes the updated image to disk.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,49 @@ Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] 
 ```
 
 ## DESCRIPTION
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Adds text to an image at the provided coordinates and writes the updated image to disk.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Add-ImageText -FilePath 'C:\Path'
+Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10
+```
+
+### EXAMPLE 2
+```powershell
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.ColorSpaces;
+using var img = Image.Load("in.png");
+img.AddText(10, 10, "Sample", Color.Black, 24);
+img.Save("out.png");
 ```
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Text color.
 
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 000000FF
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Source image path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,44 +68,44 @@ Accept wildcard characters: True
 ```
 
 ### -FontFamily
-{{ Fill FontFamily Description }}
+Font family.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: Arial
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FontSize
-{{ Fill FontSize Description }}
+Font size.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 16
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutlineColor
-{{ Fill OutlineColor Description }}
+Outline color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -107,28 +116,28 @@ Accept wildcard characters: True
 ```
 
 ### -OutlineWidth
-{{ Fill OutlineWidth Description }}
+Outline width.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination image path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -139,12 +148,12 @@ Accept wildcard characters: True
 ```
 
 ### -ShadowColor
-{{ Fill ShadowColor Description }}
+Color of shadow.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -155,44 +164,44 @@ Accept wildcard characters: True
 ```
 
 ### -ShadowOffsetX
-{{ Fill ShadowOffsetX Description }}
+X offset for shadow.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -ShadowOffsetY
-{{ Fill ShadowOffsetY Description }}
+Y offset for shadow.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Text
-{{ Fill Text Description }}
+Text to add.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -203,33 +212,33 @@ Accept wildcard characters: True
 ```
 
 ### -X
-{{ Fill X Description }}
+X coordinate.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 3
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Y coordinate.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 4
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -243,7 +252,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

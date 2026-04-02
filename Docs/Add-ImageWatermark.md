@@ -6,9 +6,7 @@ schema: 2.0.0
 ---
 # Add-ImageWatermark
 ## SYNOPSIS
-Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] <string> [-Placement <WatermarkPlacement>] [-Opacity <float>] [-Padding <float>] [-Rotate <int>] [-FlipMode <FlipMode>] [-WatermarkPercentage <int>] [-Spacing <int>] [-Async] [<CommonParameters>]
-
-Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] <string> [-X <int>] [-Y <int>] [-Opacity <float>] [-Rotate <int>] [-FlipMode <FlipMode>] [-WatermarkPercentage <int>] [-Spacing <int>] [-Async] [<CommonParameters>]
+Adds a watermark image to another image.
 
 ## SYNTAX
 ### Placement (Default)
@@ -22,42 +20,40 @@ Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] 
 ```
 
 ## DESCRIPTION
-Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] <string> [-Placement <WatermarkPlacement>] [-Opacity <float>] [-Padding <float>] [-Rotate <int>] [-FlipMode <FlipMode>] [-WatermarkPercentage <int>] [-Spacing <int>] [-Async] [<CommonParameters>]
-
-Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] <string> [-X <int>] [-Y <int>] [-Opacity <float>] [-Rotate <int>] [-FlipMode <FlipMode>] [-WatermarkPercentage <int>] [-Spacing <int>] [-Async] [<CommonParameters>]
+Adds a watermark image to another image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Add-ImageWatermark -FilePath 'C:\Path'
+Add-ImageWatermark -FilePath photo.png -OutputPath out.png -WatermarkPath logo.png -Placement BottomRight
 ```
 
 ## PARAMETERS
 
 ### -Async
-{{ Fill Async Description }}
+Use asynchronous processing.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the source image.
 
 ```yaml
 Type: String
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -68,12 +64,14 @@ Accept wildcard characters: True
 ```
 
 ### -FlipMode
-{{ Fill FlipMode Description }}
+Flip mode for the image.
+
+Possible values: None, Horizontal, Vertical
 
 ```yaml
 Type: FlipMode
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: None, Horizontal, Vertical
 
 Required: False
@@ -84,28 +82,28 @@ Accept wildcard characters: True
 ```
 
 ### -Opacity
-{{ Fill Opacity Description }}
+Opacity of the watermark.
 
 ```yaml
 Type: Single
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 1
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination path for the watermarked image.
 
 ```yaml
 Type: String
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -116,60 +114,62 @@ Accept wildcard characters: True
 ```
 
 ### -Padding
-{{ Fill Padding Description }}
+Padding around the watermark.
 
 ```yaml
 Type: Single
 Parameter Sets: Placement
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 18
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Placement
-{{ Fill Placement Description }}
+Watermark placement when coordinates are not specified.
+
+Possible values: TopLeft, TopRight, BottomLeft, BottomRight, Middle
 
 ```yaml
 Type: WatermarkPlacement
 Parameter Sets: Placement
-Aliases: None
+Aliases: 
 Possible values: TopLeft, TopRight, BottomLeft, BottomRight, Middle
 
 Required: False
 Position: named
-Default value: None
+Default value: Middle
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Rotate
-{{ Fill Rotate Description }}
+Rotation angle in degrees.
 
 ```yaml
 Type: Int32
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Spacing
-{{ Fill Spacing Description }}
+Tile watermark across the image with given spacing.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -180,12 +180,12 @@ Accept wildcard characters: True
 ```
 
 ### -WatermarkPath
-{{ Fill WatermarkPath Description }}
+Image used as the watermark.
 
 ```yaml
 Type: String
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -196,49 +196,49 @@ Accept wildcard characters: True
 ```
 
 ### -WatermarkPercentage
-{{ Fill WatermarkPercentage Description }}
+Scale of the watermark relative to the image.
 
 ```yaml
 Type: Int32
 Parameter Sets: Placement, Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -X
-{{ Fill X Description }}
+X coordinate for custom placement.
 
 ```yaml
 Type: Int32
 Parameter Sets: Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Y coordinate for custom placement.
 
 ```yaml
 Type: Int32
 Parameter Sets: Coordinates
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -252,7 +252,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

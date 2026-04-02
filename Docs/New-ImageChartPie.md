@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartPie
 ## SYNOPSIS
-New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
+Creates pie chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonPa
 ```
 
 ## DESCRIPTION
-New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
+Creates pie chart data item.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartPie -Name 'Name'
+New-ImageChartPie -Name 'Chrome' -Value 60 -Color Red
 ```
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Slice color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,7 +43,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the slice.
 
 ```yaml
 Type: String
@@ -59,17 +59,17 @@ Accept wildcard characters: True
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Value for the slice.
 
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 1
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -83,7 +83,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

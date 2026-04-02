@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartBar
 ## SYNOPSIS
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates bar chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,26 @@ New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<Common
 ```
 
 ## DESCRIPTION
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Use this cmdlet inside New-ImageChart to define one bar series.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartBar -Name 'Name'
+New-ImageChartBar -Name 'Revenue' -Value 12,18,25 -Color Blue
 ```
+
+Creates a single bar-series definition that can be passed into New-ImageChart.
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Bar color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,7 +45,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the bar data.
 
 ```yaml
 Type: String
@@ -59,12 +61,12 @@ Accept wildcard characters: True
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Values for the bar.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -83,7 +85,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

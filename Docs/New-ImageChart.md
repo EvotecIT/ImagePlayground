@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChart
 ## SYNOPSIS
-New-ImageChart [[-ChartsDefinition] <scriptblock>] -FilePath <string> [-Definition <Charts+ChartDefinition[]>] [-AnnotationsDefinition <scriptblock>] [-Annotation <Charts+ChartAnnotation[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [<CommonParameters>]
+Creates an image chart from definitions.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,42 @@ New-ImageChart [[-ChartsDefinition] <scriptblock>] -FilePath <string> [-Definiti
 ```
 
 ## DESCRIPTION
-New-ImageChart [[-ChartsDefinition] <scriptblock>] -FilePath <string> [-Definition <Charts+ChartDefinition[]>] [-AnnotationsDefinition <scriptblock>] [-Annotation <Charts+ChartAnnotation[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [<CommonParameters>]
+Use this cmdlet to render one or more chart definitions into a final image file.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChart -FilePath 'C:\Path'
+New-ImageChart -ChartsDefinition {
+                New-ImageChartBar -Name 'Q1' -Value 12,18,25 -Color CornflowerBlue
+                New-ImageChartBar -Name 'Q2' -Value 14,20,28 -Color Orange
+            } -FilePath chart.png -XTitle 'Month' -YTitle 'Revenue'
 ```
+
+Builds chart definitions inside a script block and renders them into a PNG file.
+
+### EXAMPLE 2
+```powershell
+$defs = @(
+                New-ImageChartLine -Name 'CPU' -Value 35,42,58,61,49 -Color LimeGreen -Smooth
+            )
+            $ann = @(
+                New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak' -Arrow
+            )
+            New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme Dark -ShowGrid -Show
+```
+
+Renders a themed line chart and overlays an annotation highlighting the peak value.
 
 ## PARAMETERS
 
 ### -Annotation
-{{ Fill Annotation Description }}
+Annotations for the chart.
 
 ```yaml
 Type: ChartAnnotation[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,12 +61,28 @@ Accept wildcard characters: True
 ```
 
 ### -AnnotationsDefinition
-{{ Fill AnnotationsDefinition Description }}
+ScriptBlock producing annotations.
 
 ```yaml
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Background
+Chart background color.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
@@ -59,12 +93,12 @@ Accept wildcard characters: True
 ```
 
 ### -ChartsDefinition
-{{ Fill ChartsDefinition Description }}
+ScriptBlock producing chart definitions.
 
 ```yaml
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -75,12 +109,12 @@ Accept wildcard characters: True
 ```
 
 ### -Definition
-{{ Fill Definition Description }}
+Chart definitions provided directly.
 
 ```yaml
 Type: ChartDefinition[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -91,12 +125,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -107,92 +141,94 @@ Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Height of the chart.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 400
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Show
-{{ Fill Show Description }}
+Open the image after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -ShowGrid
-{{ Fill ShowGrid Description }}
+Display grid lines.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Theme
-{{ Fill Theme Description }}
+Chart theme.
+
+Possible values: Default, Dark, Light
 
 ```yaml
 Type: ChartTheme
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Default, Dark, Light
 
 Required: False
 Position: named
-Default value: None
+Default value: Default
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Width of the chart.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 600
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -XTitle
-{{ Fill XTitle Description }}
+X axis title.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -203,12 +239,12 @@ Accept wildcard characters: True
 ```
 
 ### -YTitle
-{{ Fill YTitle Description }}
+Y axis title.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -223,12 +259,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `ImagePlayground.Charts+ChartDefinition[]
-System.String`
+- `ImagePlayground.ChartDefinition[]`
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

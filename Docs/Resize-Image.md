@@ -6,9 +6,7 @@ schema: 2.0.0
 ---
 # Resize-Image
 ## SYNOPSIS
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
-
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
+Resizes an image.
 
 ## SYNTAX
 ### HeightWidth (Default)
@@ -22,58 +20,61 @@ Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-A
 ```
 
 ## DESCRIPTION
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
-
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
+Use width/height parameters or Percentage.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Resize-Image -FilePath 'C:\Path'
+Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100
+```
+
+### EXAMPLE 2
+```powershell
+Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200
 ```
 
 ## PARAMETERS
 
 ### -Async
-{{ Fill Async Description }}
+Use asynchronous processing.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: HeightWidth, Percentage
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -DontRespectAspectRatio
-{{ Fill DontRespectAspectRatio Description }}
+Only valid when resizing by width or height.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: HeightWidth
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The image must exist.
 
 ```yaml
 Type: String
 Parameter Sets: HeightWidth, Percentage
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -84,28 +85,28 @@ Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Used with Width when not using .
 
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Supported formats depend on the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: HeightWidth, Percentage
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -116,33 +117,33 @@ Accept wildcard characters: True
 ```
 
 ### -Percentage
-{{ Fill Percentage Description }}
+Applies uniform scaling relative to the original size.
 
 ```yaml
 Type: Int32
 Parameter Sets: Percentage
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Used with Height when not using .
 
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -156,7 +157,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

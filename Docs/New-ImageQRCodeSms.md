@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeSms
 ## SYNOPSIS
-New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code containing an SMS message.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,49 @@ New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string>
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet when a scan should open the SMS app with recipient and optional message body prefilled.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSms -FilePath 'C:\Path'
+New-ImageQRCodeSms -Number '+123456789' -Message 'Hello' -FilePath sms.png
 ```
+
+Creates a QR code that opens the SMS app with the recipient number and message body prefilled.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRCodeSms -Number '+48 500 600 700' -Message 'RSVP: I will attend' -FilePath rsvp-sms.png -ForegroundColor Teal -PixelSize 16 -Show
+```
+
+Generates a ready-to-send RSVP QR code for invitations or registration desks.
 
 ## PARAMETERS
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -42,13 +67,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Message
-{{ Fill Message Description }}
+Text message.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -59,12 +100,12 @@ Accept wildcard characters: True
 ```
 
 ### -Number
-{{ Fill Number Description }}
+Recipient phone number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -74,18 +115,34 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -PixelSize
+Pixel size for each QR module.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Open the image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -99,7 +156,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

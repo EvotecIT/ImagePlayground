@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeSwiss
 ## SYNOPSIS
-New-ImageQRCodeSwiss [-Payload] <PayloadGenerator+SwissQrCode> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a Swiss QR payment code.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,51 @@ New-ImageQRCodeSwiss [-Payload] <PayloadGenerator+SwissQrCode> [-FilePath] <stri
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeSwiss [-Payload] <PayloadGenerator+SwissQrCode> [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet when a prepared SwissQrCodePayload should be rendered into a payment QR image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSwiss -FilePath 'C:\Path'
+$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+            New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png
 ```
+
+Renders a Swiss payment QR code from a previously prepared payment payload object.
+
+### EXAMPLE 2
+```powershell
+$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+            New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show
+```
+
+Creates a branded QR image and opens it immediately after generation.
 
 ## PARAMETERS
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -42,13 +69,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Payload
-{{ Fill Payload Description }}
+Swiss QR payload data.
 
 ```yaml
 Type: SwissQrCode
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -58,18 +101,34 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -PixelSize
+Pixel size for each QR module.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Opens the image once generated.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -83,7 +142,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

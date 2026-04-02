@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-ImageExif
 ## SYNOPSIS
-Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
+Gets EXIF metadata from an image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
+Gets EXIF metadata from an image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Get-ImageExif -FilePath 'C:\Path'
+Get-ImageExif -FilePath img.jpg
+```
+
+### EXAMPLE 2
+```powershell
+Get-ImageExif -FilePath img.jpg -Translate
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the image file.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,17 +48,17 @@ Accept wildcard characters: True
 ```
 
 ### -Translate
-{{ Fill Translate Description }}
+Return dictionary with tag names and values.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -67,7 +72,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

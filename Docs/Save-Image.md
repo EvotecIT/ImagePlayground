@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Save-Image
 ## SYNOPSIS
-Save-Image [-Image] <Image> [[-FilePath] <string>] [-Quality <int>] [-CompressionLevel <int>] [-AsStream] [-Open] [<CommonParameters>]
+Saves an image to disk or returns its encoded bytes as a stream.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,45 @@ Save-Image [-Image] <Image> [[-FilePath] <string>] [-Quality <int>] [-Compressio
 ```
 
 ## DESCRIPTION
-Save-Image [-Image] <Image> [[-FilePath] <string>] [-Quality <int>] [-CompressionLevel <int>] [-AsStream] [-Open] [<CommonParameters>]
+Use this cmdlet to persist an Image instance after applying transformations.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Save-Image -FilePath 'C:\Path'
+Save-Image -Image $img
+```
+
+### EXAMPLE 2
+```powershell
+Save-Image -Image $img -FilePath out.jpg -Quality 80
 ```
 
 ## PARAMETERS
 
 ### -AsStream
-{{ Fill AsStream Description }}
+When used without FilePath, the cmdlet writes a stream object to the pipeline.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -CompressionLevel
-{{ Fill CompressionLevel Description }}
+Compression level for PNG images.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -59,12 +64,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+When omitted, the image is saved using the path already associated with the image object.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -75,12 +80,12 @@ Accept wildcard characters: True
 ```
 
 ### -Image
-{{ Fill Image Description }}
+Image object to save.
 
 ```yaml
 Type: Image
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -91,28 +96,28 @@ Accept wildcard characters: True
 ```
 
 ### -Open
-{{ Fill Open Description }}
+Open file after saving.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Quality
-{{ Fill Quality Description }}
+Quality for JPEG or WEBP images.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -131,7 +136,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

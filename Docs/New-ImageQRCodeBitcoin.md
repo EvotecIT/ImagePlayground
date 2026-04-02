@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeBitcoin
 ## SYNOPSIS
-New-ImageQRCodeBitcoin [-Currency] <PayloadGenerator+BitcoinLikeCryptoCurrencyAddress+BitcoinLikeCryptoCurrencyType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for Bitcoin-like payments.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,33 @@ New-ImageQRCodeBitcoin [-Currency] <PayloadGenerator+BitcoinLikeCryptoCurrencyAd
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeBitcoin [-Currency] <PayloadGenerator+BitcoinLikeCryptoCurrencyAddress+BitcoinLikeCryptoCurrencyType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet to create payment request QR codes for Bitcoin and similar supported cryptocurrencies.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeBitcoin -FilePath 'C:\Path'
+New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.01 -FilePath btc.png
 ```
+
+Creates a payment QR code that includes the destination address and requested amount.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.005 -Label 'Evotec Donation' -Message 'Thank you for supporting the project' -FilePath donation.png -ForegroundColor DarkOrange -PixelSize 18 -Show
+```
+
+Generates a donation-style payment QR code and opens it after creation.
 
 ## PARAMETERS
 
 ### -Address
-{{ Fill Address Description }}
+Destination address.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +52,12 @@ Accept wildcard characters: True
 ```
 
 ### -Amount
-{{ Fill Amount Description }}
+Optional payment amount.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -58,29 +67,47 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Currency
-{{ Fill Currency Description }}
+Type of cryptocurrency.
+
+Possible values: Bitcoin, BitcoinCash, Litecoin
 
 ```yaml
 Type: BitcoinLikeCryptoCurrencyType
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Bitcoin, BitcoinCash, Litecoin
 
 Required: True
 Position: 0
-Default value: None
+Default value: Bitcoin
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -90,13 +117,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Label
-{{ Fill Label Description }}
+Optional transaction label.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -107,12 +150,12 @@ Accept wildcard characters: True
 ```
 
 ### -Message
-{{ Fill Message Description }}
+Optional message.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -122,18 +165,34 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -PixelSize
+Pixel size for each QR module.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Opens the image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -147,7 +206,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

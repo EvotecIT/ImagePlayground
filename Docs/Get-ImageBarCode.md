@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-ImageBarCode
 ## SYNOPSIS
-Get-ImageBarCode [-FilePath] <string> [<CommonParameters>]
+Reads barcode information from an image file.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ Get-ImageBarCode [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-ImageBarCode [-FilePath] <string> [<CommonParameters>]
+Reads barcode information from an image file.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Get-ImageBarCode -FilePath 'C:\Path'
+Get-ImageBarCode -FilePath barcode.png
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The file must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -51,7 +51,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

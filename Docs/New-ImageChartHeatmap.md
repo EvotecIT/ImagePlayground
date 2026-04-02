@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartHeatmap
 ## SYNOPSIS
-New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>]
+Creates heatmap chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>
 ```
 
 ## DESCRIPTION
-New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>]
+Creates heatmap chart data item.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartHeatmap -Name 'Name'
+New-ImageChartHeatmap -Name 'Matrix' -Matrix ((1,2),(3,4))
 ```
 
 ## PARAMETERS
 
 ### -Matrix
-{{ Fill Matrix Description }}
+Matrix data for the heatmap.
 
 ```yaml
 Type: Double[,]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,7 +43,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the heatmap.
 
 ```yaml
 Type: String
@@ -67,7 +67,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

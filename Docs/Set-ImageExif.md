@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Set-ImageExif
 ## SYNOPSIS
-Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
+Sets an EXIF tag value in an image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <Exif
 ```
 
 ## DESCRIPTION
-Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
+The value must match the type declared by the selected EXIF tag, including ImageSharp wrapper types such as Number or Rational.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Set-ImageExif -FilePath 'C:\Path'
+Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)
 ```
 
 ## PARAMETERS
 
 ### -ExifTag
-{{ Fill ExifTag Description }}
+Tag to set.
 
 ```yaml
 Type: ExifTag
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +43,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Image file to modify.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +59,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathOutput
-{{ Fill FilePathOutput Description }}
+When not specified the source file is overwritten.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -75,12 +75,12 @@ Accept wildcard characters: True
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Value for the tag.
 
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -99,7 +99,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

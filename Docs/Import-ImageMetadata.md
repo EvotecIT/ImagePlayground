@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Import-ImageMetadata
 ## SYNOPSIS
-Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Imports metadata into an image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath
 ```
 
 ## DESCRIPTION
-Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Imports metadata into an image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Import-ImageMetadata -FilePath 'C:\Path'
+Import-ImageMetadata -FilePath img.jpg -MetadataPath meta.json
+```
+
+### EXAMPLE 2
+```powershell
+Import-ImageMetadata -FilePath img.jpg -MetadataPath meta.json -OutputPath out.jpg
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Image to update.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +48,12 @@ Accept wildcard characters: True
 ```
 
 ### -MetadataPath
-{{ Fill MetadataPath Description }}
+JSON metadata file.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +64,12 @@ Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination image path. Defaults to FilePath.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -83,7 +88,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

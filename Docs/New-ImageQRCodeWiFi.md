@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeWiFi
 ## SYNOPSIS
-New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Creates a WiFi QR code image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,40 @@ New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+The generated QR code uses a WiFi payload that can be scanned by mobile devices to prefill network settings.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeWiFi -FilePath 'C:\Path'
+New-ImageQRCodeWiFi -SSID Test -Password pass123 -FilePath wifi.png
 ```
 
 ## PARAMETERS
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -42,13 +58,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Password
-{{ Fill Password Description }}
+WiFi password.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -58,29 +90,45 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -PixelSize
+Pixel size for each QR module.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Open the image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -SSID
-{{ Fill SSID Description }}
+WiFi network name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -99,7 +147,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

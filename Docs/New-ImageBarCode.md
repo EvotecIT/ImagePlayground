@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageBarCode
 ## SYNOPSIS
-New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
+Creates a barcode image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<
 ```
 
 ## DESCRIPTION
-New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
+Creates a barcode image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageBarCode -FilePath 'C:\Path'
+New-ImageBarCode -Type EAN -Value 9012341234571 -FilePath barcode.png
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Output path for the barcode image.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,28 +43,30 @@ Accept wildcard characters: True
 ```
 
 ### -Type
-{{ Fill Type Description }}
+Barcode type.
+
+Possible values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, PDF417
 
 ```yaml
 Type: BarcodeType
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, PDF417
 
 Required: True
 Position: 0
-Default value: None
+Default value: Code128
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Value encoded in the barcode.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -83,7 +85,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

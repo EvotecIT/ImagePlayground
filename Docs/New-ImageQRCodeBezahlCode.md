@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeBezahlCode
 ## SYNOPSIS
-New-ImageQRCodeBezahlCode [-Authority] <PayloadGenerator+BezahlCode+AuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-Iban] <string> [-Bic] <string> [-Reason] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a BezahlCode QR for German payments.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,33 @@ New-ImageQRCodeBezahlCode [-Authority] <PayloadGenerator+BezahlCode+AuthorityTyp
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeBezahlCode [-Authority] <PayloadGenerator+BezahlCode+AuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-Iban] <string> [-Bic] <string> [-Reason] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet to render BezahlCode payment payloads for German banking scenarios.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeBezahlCode -FilePath 'C:\Path'
+New-ImageQRCodeBezahlCode -Authority SinglePayment -Name 'Evotec GmbH' -Account '1234567890' -Bnc '10020030' -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Reason 'Invoice 2026-041' -FilePath bezahl.png
 ```
+
+Creates a standard payment QR code that can be scanned by BezahlCode-aware banking apps.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRCodeBezahlCode -Authority SinglePayment -Name 'Evotec GmbH' -Account '1234567890' -Bnc '10020030' -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Reason 'Consulting Retainer' -FilePath bezahl-brand.png -ForegroundColor Navy -BackgroundColor WhiteSmoke -PixelSize 16 -Show
+```
+
+Produces a payment QR code with custom styling and opens it after generation.
 
 ## PARAMETERS
 
 ### -Account
-{{ Fill Account Description }}
+Account number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,28 +52,46 @@ Accept wildcard characters: True
 ```
 
 ### -Authority
-{{ Fill Authority Description }}
+Payment authority type.
+
+Possible values: SinglePayment, SinglePaymentSepa, SingleDirectDebit, SingleDirectDebitSepa, PeriodicSinglePayment, PeriodicSinglePaymentSepa, Contact, ContactV2
 
 ```yaml
 Type: AuthorityType
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: singlepayment, singlepaymentsepa, singledirectdebit, singledirectdebitsepa, periodicsinglepayment, periodicsinglepaymentsepa, contact, contact_v2
 
 Required: True
 Position: 0
-Default value: None
+Default value: SinglePayment
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Bic
-{{ Fill Bic Description }}
+BIC/SWIFT code.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -75,12 +102,12 @@ Accept wildcard characters: True
 ```
 
 ### -Bnc
-{{ Fill Bnc Description }}
+Bank number code.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -91,12 +118,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -106,13 +133,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Iban
-{{ Fill Iban Description }}
+International bank account number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -123,12 +166,12 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Payer or payee name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -138,13 +181,29 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Reason
-{{ Fill Reason Description }}
+Reason for payment.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -155,17 +214,17 @@ Accept wildcard characters: True
 ```
 
 ### -Show
-{{ Fill Show Description }}
+Opens the image after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -179,7 +238,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageIcon
 ## SYNOPSIS
-New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open] [<CommonParameters>]
+Creates an icon file from an image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open
 ```
 
 ## DESCRIPTION
-New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open] [<CommonParameters>]
+Generates multiple icon sizes using Size.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageIcon -FilePath 'C:\Path'
+New-ImageIcon -FilePath in.png -OutputPath icon.ico -Size 16,32
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The file must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,28 +43,28 @@ Accept wildcard characters: True
 ```
 
 ### -Open
-{{ Fill Open Description }}
+Open the icon after saving.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination icon file.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -75,12 +75,12 @@ Accept wildcard characters: True
 ```
 
 ### -Size
-{{ Fill Size Description }}
+Defaults to common icon sizes when empty.
 
 ```yaml
 Type: Int32[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -99,7 +99,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

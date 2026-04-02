@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Clear-ImageThumbnailCache
 ## SYNOPSIS
-Clear-ImageThumbnailCache [<CommonParameters>]
+Clears cached thumbnails.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,7 +15,7 @@ Clear-ImageThumbnailCache [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Clear-ImageThumbnailCache [<CommonParameters>]
+Clears cached thumbnails.
 
 ## EXAMPLES
 
@@ -35,7 +35,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

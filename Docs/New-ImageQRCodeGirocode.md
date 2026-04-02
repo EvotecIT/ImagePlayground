@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeGirocode
 ## SYNOPSIS
-New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a Girocode QR code.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,65 @@ New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amou
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet to create SEPA payment QR codes for European bank transfers.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeGirocode -FilePath 'C:\Path'
+New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 12.34 -FilePath giro.png
 ```
+
+Creates a payment QR code with the core SEPA transfer fields.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 249.99 -RemittanceInformation 'Invoice 2026-041' -FilePath invoice-payment.png -ForegroundColor DarkBlue -PixelSize 14 -Show
+```
+
+Generates a branded invoice-payment QR code and opens it after creation.
 
 ## PARAMETERS
 
 ### -Amount
-{{ Fill Amount Description }}
+Transfer amount.
 
 ```yaml
 Type: Decimal
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 3
-Default value: None
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Bic
-{{ Fill Bic Description }}
+BIC of the payee.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +84,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -74,13 +99,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Iban
-{{ Fill Iban Description }}
+IBAN of the payee.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -91,12 +132,12 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Recipient name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -106,13 +147,29 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -RemittanceInformation
-{{ Fill RemittanceInformation Description }}
+Optional remittance information.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -123,17 +180,17 @@ Accept wildcard characters: True
 ```
 
 ### -Show
-{{ Fill Show Description }}
+Opens the image after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -147,7 +204,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-Image
 ## SYNOPSIS
-Get-Image [-FilePath] <string> [<CommonParameters>]
+Loads an image from disk.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ Get-Image [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-Image [-FilePath] <string> [<CommonParameters>]
+Returns a SixLabors.ImageSharp.Image object for further processing.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Get-Image -FilePath 'C:\Path'
+$img = Get-Image -FilePath sample.png
+```
+
+### EXAMPLE 2
+```powershell
+(Get-Image -FilePath sample.png).Width
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The file must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -51,7 +56,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

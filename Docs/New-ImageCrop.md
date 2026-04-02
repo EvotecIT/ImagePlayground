@@ -6,11 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageCrop
 ## SYNOPSIS
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-Open] [<CommonParameters>]
-
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-CenterY <float>] [-Radius <float>] [-Open] [<CommonParameters>]
-
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
+Creates a cropped version of an image using rectangular, circular or polygonal areas.
 
 ## SYNTAX
 ### Rectangle (Default)
@@ -29,60 +25,61 @@ New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [
 ```
 
 ## DESCRIPTION
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-Open] [<CommonParameters>]
-
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-CenterY <float>] [-Radius <float>] [-Open] [<CommonParameters>]
-
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
+Creates a cropped version of an image using rectangular, circular or polygonal areas.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageCrop -FilePath 'C:\Path'
+New-ImageCrop -FilePath in.png -OutputPath out.png -X 10 -Y 10 -Width 100 -Height 100
+```
+
+### EXAMPLE 2
+```powershell
+New-ImageCrop -FilePath in.png -OutputPath out.png -CenterX 50 -CenterY 50 -Radius 25
 ```
 
 ## PARAMETERS
 
 ### -CenterX
-{{ Fill CenterX Description }}
+X coordinate of the circle center.
 
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -CenterY
-{{ Fill CenterY Description }}
+Y coordinate of the circle center.
 
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the image being cropped.
 
 ```yaml
 Type: String
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -93,44 +90,44 @@ Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Height of the rectangle.
 
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Open
-{{ Fill Open Description }}
+Open the cropped file after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Where to save the cropped image.
 
 ```yaml
 Type: String
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -141,12 +138,12 @@ Accept wildcard characters: True
 ```
 
 ### -Points
-{{ Fill Points Description }}
+Points describing a polygon.
 
 ```yaml
 Type: PointF[]
 Parameter Sets: Polygon
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -157,65 +154,65 @@ Accept wildcard characters: True
 ```
 
 ### -Radius
-{{ Fill Radius Description }}
+Radius of the circle.
 
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Width of the rectangle.
 
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -X
-{{ Fill X Description }}
+X coordinate for rectangle cropping.
 
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Y coordinate for rectangle cropping.
 
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -229,7 +226,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

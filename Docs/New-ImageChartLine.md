@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartLine
 ## SYNOPSIS
-New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
+Creates line chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,26 @@ New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marke
 ```
 
 ## DESCRIPTION
-New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
+Use this cmdlet inside New-ImageChart to define a line-series dataset.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartLine -Name 'Name'
+New-ImageChartLine -Name 'Sales' -Value 10,20,18,24 -Color Green -Smooth
 ```
+
+Creates a smoothed line-series definition ready to be rendered by New-ImageChart.
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Line color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,12 +45,14 @@ Accept wildcard characters: True
 ```
 
 ### -Marker
-{{ Fill Marker Description }}
+Shape of markers placed on data points.
+
+Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight
 
 ```yaml
 Type: MarkerShape
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag
 
 Required: False
@@ -59,7 +63,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the line.
 
 ```yaml
 Type: String
@@ -75,28 +79,28 @@ Accept wildcard characters: True
 ```
 
 ### -Smooth
-{{ Fill Smooth Description }}
+Render the line using a smooth curve.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Y values for the line.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -115,7 +119,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

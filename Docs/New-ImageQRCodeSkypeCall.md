@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeSkypeCall
 ## SYNOPSIS
-New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code initiating a Skype call.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,49 @@ New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [<Com
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Use this cmdlet for legacy Skype calling scenarios where a QR scan should start a call with a specific account.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSkypeCall -FilePath 'C:\Path'
+New-ImageQRCodeSkypeCall -UserName 'echo123' -FilePath skype.png
 ```
+
+Creates a QR code that opens Skype and targets the selected username for a call.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRCodeSkypeCall -UserName 'evotec.helpdesk' -FilePath skype-helpdesk.png -ForegroundColor MidnightBlue -PixelSize 16 -Show
+```
+
+Generates a branded Skype call QR code and opens the resulting image after creation.
 
 ## PARAMETERS
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -42,29 +67,61 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -Show
-{{ Fill Show Description }}
+### -ForegroundColor
+Foreground color of QR modules.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Opens the image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -UserName
-{{ Fill UserName Description }}
+Skype username to call.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -83,7 +140,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

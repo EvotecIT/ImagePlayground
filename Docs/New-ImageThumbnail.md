@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageThumbnail
 ## SYNOPSIS
-New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
+Creates thumbnails for all images in a directory.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width
 ```
 
 ## DESCRIPTION
-New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
+Creates thumbnails for all images in a directory.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageThumbnail -DirectoryPath 'C:\Path'
+New-ImageThumbnail -DirectoryPath images -OutputDirectory thumbs -Width 64 -Height 64
 ```
 
 ## PARAMETERS
 
 ### -DirectoryPath
-{{ Fill DirectoryPath Description }}
+Directory containing images.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,44 +43,44 @@ Accept wildcard characters: True
 ```
 
 ### -DontRespectAspectRatio
-{{ Fill DontRespectAspectRatio Description }}
+Ignore aspect ratio.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Thumbnail height.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 100
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputDirectory
-{{ Fill OutputDirectory Description }}
+Destination directory for thumbnails.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -91,12 +91,14 @@ Accept wildcard characters: True
 ```
 
 ### -Sampler
-{{ Fill Sampler Description }}
+Resampling algorithm.
+
+Possible values: NearestNeighbor, Box, Triangle, Hermite, Lanczos2, Lanczos3, Lanczos5, Lanczos8, MitchellNetravali, CatmullRom, Robidoux, RobidouxSharp, Spline, Welch
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -107,17 +109,17 @@ Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Thumbnail width.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 100
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -131,7 +133,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

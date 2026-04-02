@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageGif
 ## SYNOPSIS
-New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<CommonParameters>]
+Creates an animated GIF from existing images.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<Com
 ```
 
 ## DESCRIPTION
-New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<CommonParameters>]
+Creates an animated GIF from existing images.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageGif -FilePath 'C:\Path'
+New-ImageGif -Frames img1.png,img2.png -FilePath out.gif -FrameDelay 100
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Output path for the GIF animation.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,28 +43,28 @@ Accept wildcard characters: True
 ```
 
 ### -FrameDelay
-{{ Fill FrameDelay Description }}
+Delay between frames in milliseconds.
 
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 100
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Frames
-{{ Fill Frames Description }}
+Source image paths used as frames.
 
 ```yaml
 Type: String[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -83,7 +83,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

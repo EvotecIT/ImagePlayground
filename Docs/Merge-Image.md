@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Merge-Image
 ## SYNOPSIS
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+Merges two images and saves the result.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <
 ```
 
 ## DESCRIPTION
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+Merges two images and saves the result.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Merge-Image -FilePath 'C:\Path'
+Merge-Image -FilePath img1.png -FilePathToMerge img2.png -FilePathOutput out.png
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +43,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathOutput
-{{ Fill FilePathOutput Description }}
+Output file path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +59,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathToMerge
-{{ Fill FilePathToMerge Description }}
+Must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -75,33 +75,35 @@ Accept wildcard characters: True
 ```
 
 ### -Placement
-{{ Fill Placement Description }}
+Placement of the second image.
+
+Possible values: Bottom, Right, Top, Left
 
 ```yaml
 Type: ImagePlacement
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Bottom, Right, Top, Left
 
 Required: False
 Position: named
-Default value: None
+Default value: Bottom
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -ResizeToFit
-{{ Fill ResizeToFit Description }}
+Resize images to fit before merging.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -115,7 +117,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

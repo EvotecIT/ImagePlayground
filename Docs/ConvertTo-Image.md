@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # ConvertTo-Image
 ## SYNOPSIS
-ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-CompressionLevel <int>] [<CommonParameters>]
+Converts an image to a different format.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,31 @@ ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-C
 ```
 
 ## DESCRIPTION
-ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-CompressionLevel <int>] [<CommonParameters>]
+Outputs a new file using the extension from OutputPath.
+
+When OutputPath ends with .ico, the file is only copied if the source file is also an icon.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-ConvertTo-Image -FilePath 'C:\Path'
+ConvertTo-Image -FilePath image.png -OutputPath image.jpg -Quality 85
+```
+
+### EXAMPLE 2
+```powershell
+ConvertTo-Image -FilePath photo.jpg -OutputPath photo.png -CompressionLevel 6
 ```
 
 ## PARAMETERS
 
 ### -CompressionLevel
-{{ Fill CompressionLevel Description }}
+Compression level for PNG images.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,12 +50,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The file must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +66,12 @@ Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+The extension determines the output format.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -75,12 +82,12 @@ Accept wildcard characters: True
 ```
 
 ### -Quality
-{{ Fill Quality Description }}
+Quality for JPEG or WEBP images.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -99,7 +106,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

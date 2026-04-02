@@ -1,5 +1,23 @@
 Import-Module PSPublishModule -Force -ErrorAction Stop
 
+$projectRoot = Split-Path -Parent $PSScriptRoot
+$externalHelpTarget = Join-Path -Path $projectRoot -ChildPath 'en-US\ImagePlayground-help.xml'
+$externalHelpCandidates = @(
+    (Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Release\net8.0\ImagePlayground.PowerShell.dll-Help.xml')
+    (Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Release\net472\ImagePlayground.PowerShell.dll-Help.xml')
+) | Where-Object {
+    Test-Path -LiteralPath $_
+}
+
+if ($externalHelpCandidates.Count -gt 0) {
+    $externalHelpSource = $externalHelpCandidates[0]
+    $externalHelpDirectory = Split-Path -Parent $externalHelpTarget
+    if (-not (Test-Path -LiteralPath $externalHelpDirectory)) {
+        $null = New-Item -Path $externalHelpDirectory -ItemType Directory -Force
+    }
+    Copy-Item -LiteralPath $externalHelpSource -Destination $externalHelpTarget -Force
+}
+
 Build-Module -ModuleName 'ImagePlayground' {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
@@ -80,7 +98,7 @@ Build-Module -ModuleName 'ImagePlayground' {
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
 
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$true -StartClean -UpdateWhenNew -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$true -StartClean -UpdateWhenNew -SkipExternalHelp -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf #-ImportRequiredModules
 
@@ -101,6 +119,7 @@ Build-Module -ModuleName 'ImagePlayground' {
         NETProjectName                    = 'ImagePlayground.PowerShell'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
+        NETBinaryModuleDocumentation      = $true
         #NETExcludeMainLibrary             = $true
         NETExcludeLibraryFilter           = @(
             #'System.Management.*.dll'

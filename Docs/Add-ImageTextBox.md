@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Add-ImageTextBox
 ## SYNOPSIS
-Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Adds wrapped text to an image within a box.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,40 @@ Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-
 ```
 
 ## DESCRIPTION
-Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Adds wrapped text to an image within a box.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Add-ImageTextBox -FilePath 'C:\Path'
+Add-ImageTextBox -FilePath in.png -OutputPath out.png -Text "Sample text" -X 10 -Y 10 -Width 100
 ```
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Text color.
 
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 000000FF
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Source image path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,76 +59,78 @@ Accept wildcard characters: True
 ```
 
 ### -FontFamily
-{{ Fill FontFamily Description }}
+Font family.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: Arial
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -FontSize
-{{ Fill FontSize Description }}
+Font size.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 16
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Height
-{{ Fill Height Description }}
+Height of the text box.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: 6
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -HorizontalAlignment
-{{ Fill HorizontalAlignment Description }}
+Horizontal alignment.
+
+Possible values: Left, Right, Center
 
 ```yaml
 Type: HorizontalAlignment
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Left, Right, Center
 
 Required: False
 Position: named
-Default value: None
+Default value: Left
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutlineColor
-{{ Fill OutlineColor Description }}
+Outline color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -139,28 +141,28 @@ Accept wildcard characters: True
 ```
 
 ### -OutlineWidth
-{{ Fill OutlineWidth Description }}
+Outline width.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Destination image path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -171,12 +173,12 @@ Accept wildcard characters: True
 ```
 
 ### -ShadowColor
-{{ Fill ShadowColor Description }}
+Color of shadow.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -187,44 +189,44 @@ Accept wildcard characters: True
 ```
 
 ### -ShadowOffsetX
-{{ Fill ShadowOffsetX Description }}
+X offset for shadow.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -ShadowOffsetY
-{{ Fill ShadowOffsetY Description }}
+Y offset for shadow.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Text
-{{ Fill Text Description }}
+Text to add.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -235,65 +237,67 @@ Accept wildcard characters: True
 ```
 
 ### -VerticalAlignment
-{{ Fill VerticalAlignment Description }}
+Vertical alignment.
+
+Possible values: Top, Center, Bottom
 
 ```yaml
 Type: VerticalAlignment
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Top, Center, Bottom
 
 Required: False
 Position: named
-Default value: None
+Default value: Top
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-{{ Fill Width Description }}
+Width of the text box.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 5
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -X
-{{ Fill X Description }}
+X coordinate.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 3
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Y coordinate.
 
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: 4
-Default value: None
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -307,7 +311,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

@@ -6,9 +6,7 @@ schema: 2.0.0
 ---
 # Remove-ImageExif
 ## SYNOPSIS
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
-
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<CommonParameters>]
+Removes EXIF metadata from an image.
 
 ## SYNTAX
 ### Tag (Default)
@@ -22,47 +20,45 @@ Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<Common
 ```
 
 ## DESCRIPTION
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
-
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<CommonParameters>]
+Removes EXIF metadata from an image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Remove-ImageExif -ExifTag @('Value')
+Remove-ImageExif -FilePath img.jpg -ExifTag ExifIFD.DateTimeOriginal
 ```
 
 ### EXAMPLE 2
 ```powershell
-Remove-ImageExif -All
+Remove-ImageExif -FilePath img.jpg -All
 ```
 
 ## PARAMETERS
 
 ### -All
-{{ Fill All Description }}
+Remove all tags.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: All
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -ExifTag
-{{ Fill ExifTag Description }}
+Tags to remove.
 
 ```yaml
 Type: ExifTag[]
 Parameter Sets: Tag
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -73,12 +69,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to the image file.
 
 ```yaml
 Type: String
 Parameter Sets: Tag, All
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -89,12 +85,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathOutput
-{{ Fill FilePathOutput Description }}
+Optional output path.
 
 ```yaml
 Type: String
 Parameter Sets: Tag, All
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -113,7 +109,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

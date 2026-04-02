@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRCodeMonero
 ## SYNOPSIS
-New-ImageQRCodeMonero [-Address] <string> [[-Amount] <float>] [[-PaymentId] <string>] [[-RecipientName] <string>] [[-Description] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for a Monero transaction.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageQRCodeMonero [-Address] <string> [[-Amount] <float>] [[-PaymentId] <str
 ```
 
 ## DESCRIPTION
-New-ImageQRCodeMonero [-Address] <string> [[-Amount] <float>] [[-PaymentId] <string>] [[-RecipientName] <string>] [[-Description] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for a Monero transaction.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeMonero -FilePath 'C:\Path'
+New-ImageQRCodeMonero -Address '44AFFq5kSiGBoZ...'' -Amount 1.0 -FilePath xmr.png
 ```
 
 ## PARAMETERS
 
 ### -Address
-{{ Fill Address Description }}
+Destination wallet address.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +43,12 @@ Accept wildcard characters: True
 ```
 
 ### -Amount
-{{ Fill Amount Description }}
+Optional payment amount.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -58,13 +58,29 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Description
-{{ Fill Description Description }}
+Payment description.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -75,12 +91,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Path to save the QR code image.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -90,13 +106,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -PaymentId
-{{ Fill PaymentId Description }}
+Optional payment identifier.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -106,13 +138,29 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -RecipientName
-{{ Fill RecipientName Description }}
+Recipient name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -123,17 +171,17 @@ Accept wildcard characters: True
 ```
 
 ### -Show
-{{ Fill Show Description }}
+Opens the image after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -147,7 +195,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

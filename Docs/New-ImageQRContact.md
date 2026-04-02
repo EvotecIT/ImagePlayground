@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageQRContact
 ## SYNOPSIS
-New-ImageQRContact [-FilePath] <string> [-OutputType <PayloadGenerator+ContactData+ContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <PayloadGenerator+ContactData+AddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [<CommonParameters>]
+Generates a QR code image containing the provided contact details.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,40 +15,67 @@ New-ImageQRContact [-FilePath] <string> [-OutputType <PayloadGenerator+ContactDa
 ```
 
 ## DESCRIPTION
-New-ImageQRContact [-FilePath] <string> [-OutputType <PayloadGenerator+ContactData+ContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <PayloadGenerator+ContactData+AddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [<CommonParameters>]
+Generates a QR code image containing the provided contact details.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRContact -FilePath 'C:\Path'
+New-ImageQRContact -FilePath contact.png -Firstname John -Lastname Doe -Phone 123456789
 ```
+
+Creates a simple contact QR code that can be scanned into a phone address book.
+
+### EXAMPLE 2
+```powershell
+New-ImageQRContact -FilePath consultant.png -OutputType VCard4 -Firstname John -Lastname Doe -Email john.doe@evotec.pl -MobilePhone '+48 500 600 700' -Org Evotec -OrgTitle Consultant -Street Example -HouseNumber 15A -City Warsaw -ZipCode '00-001' -Country Poland -Website 'https://evotec.pl'
+```
+
+Generates a business card style QR code with address, organization, and contact metadata.
 
 ## PARAMETERS
 
 ### -AddressOrder
-{{ Fill AddressOrder Description }}
+Order of address fields in the QR code.
+
+Possible values: Default, Reversed
 
 ```yaml
 Type: AddressOrder
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: Default, Reversed
 
 Required: False
 Position: named
-Default value: None
+Default value: Default
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: FFFFFFFF
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Birthday
-{{ Fill Birthday Description }}
+Birthday date.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -59,12 +86,12 @@ Accept wildcard characters: True
 ```
 
 ### -City
-{{ Fill City Description }}
+City name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -75,12 +102,12 @@ Accept wildcard characters: True
 ```
 
 ### -Country
-{{ Fill Country Description }}
+Country name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -91,12 +118,12 @@ Accept wildcard characters: True
 ```
 
 ### -Email
-{{ Fill Email Description }}
+Email address.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -107,12 +134,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+The image format is inferred from the file extension.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -123,12 +150,12 @@ Accept wildcard characters: True
 ```
 
 ### -Firstname
-{{ Fill Firstname Description }}
+Given name of the contact.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -138,13 +165,29 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: SixLabors.ImageSharp.Color
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -HouseNumber
-{{ Fill HouseNumber Description }}
+House or building number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -155,12 +198,12 @@ Accept wildcard characters: True
 ```
 
 ### -Lastname
-{{ Fill Lastname Description }}
+Surname of the contact.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -171,12 +214,12 @@ Accept wildcard characters: True
 ```
 
 ### -MobilePhone
-{{ Fill MobilePhone Description }}
+Mobile phone number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -187,12 +230,12 @@ Accept wildcard characters: True
 ```
 
 ### -Nickname
-{{ Fill Nickname Description }}
+Optional nickname.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -203,12 +246,12 @@ Accept wildcard characters: True
 ```
 
 ### -Note
-{{ Fill Note Description }}
+Additional notes.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -219,12 +262,12 @@ Accept wildcard characters: True
 ```
 
 ### -Org
-{{ Fill Org Description }}
+Organization name.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -235,12 +278,12 @@ Accept wildcard characters: True
 ```
 
 ### -OrgTitle
-{{ Fill OrgTitle Description }}
+Contact's title or role within the organization.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -251,60 +294,78 @@ Accept wildcard characters: True
 ```
 
 ### -OutputType
-{{ Fill OutputType Description }}
+Contact output type.
+
+Possible values: MeCard, VCard21, VCard3, VCard4
 
 ```yaml
 Type: ContactOutputType
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: MeCard, VCard21, VCard3, VCard4
 
 Required: False
 Position: named
-Default value: None
+Default value: VCard4
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Phone
-{{ Fill Phone Description }}
+Primary phone number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: System.Int32
+Parameter Sets: (All)
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: 20
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Show
-{{ Fill Show Description }}
+Open image after creation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -StateRegion
-{{ Fill StateRegion Description }}
+State or region.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -315,12 +376,12 @@ Accept wildcard characters: True
 ```
 
 ### -Street
-{{ Fill Street Description }}
+Street name of the address.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -331,12 +392,12 @@ Accept wildcard characters: True
 ```
 
 ### -Website
-{{ Fill Website Description }}
+Personal or company website.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -347,12 +408,12 @@ Accept wildcard characters: True
 ```
 
 ### -WorkPhone
-{{ Fill WorkPhone Description }}
+Work phone number.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -363,12 +424,12 @@ Accept wildcard characters: True
 ```
 
 ### -ZipCode
-{{ Fill ZipCode Description }}
+Postal code.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -387,7 +448,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

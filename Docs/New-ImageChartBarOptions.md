@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartBarOptions
 ## SYNOPSIS
-New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
+Creates bar chart options.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,7 +15,7 @@ New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
+Creates bar chart options.
 
 ## EXAMPLES
 
@@ -27,17 +27,17 @@ New-ImageChartBarOptions -ShowValuesAboveBars
 ## PARAMETERS
 
 ### -ShowValuesAboveBars
-{{ Fill ShowValuesAboveBars Description }}
+Display values above bars.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -51,7 +51,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

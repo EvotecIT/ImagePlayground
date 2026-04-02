@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Compare-Image
 ## SYNOPSIS
-Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Compares two images and optionally saves a difference mask.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] 
 ```
 
 ## DESCRIPTION
-Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] <string>] [<CommonParameters>]
+When OutputPath is omitted, the cmdlet writes the comparison result to the pipeline instead of creating a file.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Compare-Image -FilePath 'C:\Path'
+Compare-Image -FilePath img1.png -FilePathToCompare img2.png
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+First image path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +43,12 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathToCompare
-{{ Fill FilePathToCompare Description }}
+Second image path.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -59,12 +59,12 @@ Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+When provided, the cmdlet writes a visual difference image instead of only returning the comparison result.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -83,7 +83,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

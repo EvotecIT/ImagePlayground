@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Export-ImageMetadata
 ## SYNOPSIS
-Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Exports metadata from an image.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParam
 ```
 
 ## DESCRIPTION
-Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Exports metadata from an image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Export-ImageMetadata -FilePath 'C:\Path'
+Export-ImageMetadata -FilePath in.jpg
+```
+
+### EXAMPLE 2
+```powershell
+Export-ImageMetadata -FilePath in.jpg -OutputPath meta.json
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Source image file.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +48,12 @@ Accept wildcard characters: True
 ```
 
 ### -OutputPath
-{{ Fill OutputPath Description }}
+Optional path to write metadata JSON.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False

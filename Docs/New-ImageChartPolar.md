@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartPolar
 ## SYNOPSIS
-New-ImageChartPolar [-Name] <string> [-Angle] <double[]> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates polar chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,29 @@ New-ImageChartPolar [-Name] <string> [-Angle] <double[]> [-Value] <double[]> [-C
 ```
 
 ## DESCRIPTION
-New-ImageChartPolar [-Name] <string> [-Angle] <double[]> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates polar chart data item.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartPolar -Name 'Name'
+New-ImageChartPolar -Name 'Series1' -Angle 0,1.57 -Value 1,2 -Color Blue
+```
+
+### EXAMPLE 2
+```powershell
+New-ImageChartPolar -Name 'Advanced' -Angle 0,1.57,3.14 -Value 1,2,1 -Color Red
 ```
 
 ## PARAMETERS
 
 ### -Angle
-{{ Fill Angle Description }}
+Angle values for the series.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -43,12 +48,12 @@ Accept wildcard characters: True
 ```
 
 ### -Color
-{{ Fill Color Description }}
+Series color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -59,7 +64,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the series.
 
 ```yaml
 Type: String
@@ -75,12 +80,12 @@ Accept wildcard characters: True
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Radius values for the series.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -99,7 +104,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-ImageChartScatter
 ## SYNOPSIS
-New-ImageChartScatter [-Name] <string> [-X] <double[]> [-Y] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates scatter chart data item.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,24 +15,24 @@ New-ImageChartScatter [-Name] <string> [-X] <double[]> [-Y] <double[]> [-Color <
 ```
 
 ## DESCRIPTION
-New-ImageChartScatter [-Name] <string> [-X] <double[]> [-Y] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates scatter chart data item.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartScatter -Name 'Name'
+New-ImageChartScatter -Name 'Series1' -X 1,2,3 -Y 4,5,6 -Color Blue
 ```
 
 ## PARAMETERS
 
 ### -Color
-{{ Fill Color Description }}
+Series color.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: False
@@ -43,7 +43,7 @@ Accept wildcard characters: True
 ```
 
 ### -Name
-{{ Fill Name Description }}
+Label for the scatter series.
 
 ```yaml
 Type: String
@@ -59,12 +59,12 @@ Accept wildcard characters: True
 ```
 
 ### -X
-{{ Fill X Description }}
+X values for the series.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -75,12 +75,12 @@ Accept wildcard characters: True
 ```
 
 ### -Y
-{{ Fill Y Description }}
+Y values for the series.
 
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: 
 Possible values: 
 
 Required: True
@@ -99,7 +99,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

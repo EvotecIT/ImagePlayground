@@ -11,170 +11,158 @@ ImagePlayground is a PowerShell module that provides a set of functions for imag
 
 ## ImagePlayground Cmdlets
 ### [Add-ImageText](Add-ImageText.md)
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Adds text to an image at the provided coordinates and writes the updated image to disk.
 
 ### [Add-ImageTextBox](Add-ImageTextBox.md)
-Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Adds wrapped text to an image within a box.
 
 ### [Add-ImageWatermark](Add-ImageWatermark.md)
-Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] <string> [-Placement <WatermarkPlacement>] [-Opacity <float>] [-Padding <float>] [-Rotate <int>] [-FlipMode <FlipMode>] [-WatermarkPercentage <int>] [-Spacing <int>] [-Async] [<CommonParameters>]
-
-Add-ImageWatermark [-FilePath] <string> [-OutputPath] <string> [-WatermarkPath] <string> [-X <int>] [-Y <int>] [-Opacity <float>] [-Rotate <int>] [-FlipMode <FlipMode>] [-WatermarkPercentage <int>] [-Spacing <int>] [-Async] [<CommonParameters>]
+Adds a watermark image to another image.
 
 ### [Clear-ImageThumbnailCache](Clear-ImageThumbnailCache.md)
-Clear-ImageThumbnailCache [<CommonParameters>]
+Clears cached thumbnails.
 
 ### [Compare-Image](Compare-Image.md)
-Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Compares two images and optionally saves a difference mask.
 
 ### [ConvertFrom-ImageBase64](ConvertFrom-ImageBase64.md)
-ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<CommonParameters>]
+Converts a Base64 encoded string into an image file.
 
 ### [ConvertTo-Image](ConvertTo-Image.md)
-ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-CompressionLevel <int>] [<CommonParameters>]
+Converts an image to a different format.
 
 ### [ConvertTo-ImageBase64](ConvertTo-ImageBase64.md)
-ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
+Converts an image file into a Base64 encoded string.
 
 ### [Export-ImageMetadata](Export-ImageMetadata.md)
-Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Exports metadata from an image.
 
 ### [Get-Image](Get-Image.md)
-Get-Image [-FilePath] <string> [<CommonParameters>]
+Loads an image from disk.
 
 ### [Get-ImageBarCode](Get-ImageBarCode.md)
-Get-ImageBarCode [-FilePath] <string> [<CommonParameters>]
+Reads barcode information from an image file.
 
 ### [Get-ImageExif](Get-ImageExif.md)
-Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
+Gets EXIF metadata from an image.
 
 ### [Get-ImageQRCode](Get-ImageQRCode.md)
-Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
+Reads QR code information from an image file.
 
 ### [Import-ImageMetadata](Import-ImageMetadata.md)
-Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath] <string>] [<CommonParameters>]
+Imports metadata into an image.
 
 ### [Merge-Image](Merge-Image.md)
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+Merges two images and saves the result.
 
 ### [New-ImageAvatar](New-ImageAvatar.md)
-New-ImageAvatar [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
-
-New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
+Creates a rounded avatar image.
 
 ### [New-ImageBarCode](New-ImageBarCode.md)
-New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
+Creates a barcode image.
 
 ### [New-ImageChart](New-ImageChart.md)
-New-ImageChart [[-ChartsDefinition] <scriptblock>] -FilePath <string> [-Definition <Charts+ChartDefinition[]>] [-AnnotationsDefinition <scriptblock>] [-Annotation <Charts+ChartAnnotation[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [<CommonParameters>]
+Creates an image chart from definitions.
 
 ### [New-ImageChartAnnotation](New-ImageChartAnnotation.md)
-New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [<CommonParameters>]
+Creates chart annotation data item.
 
 ### [New-ImageChartBar](New-ImageChartBar.md)
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates bar chart data item.
 
 ### [New-ImageChartBarOptions](New-ImageChartBarOptions.md)
-New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
+Creates bar chart options.
 
 ### [New-ImageChartHeatmap](New-ImageChartHeatmap.md)
-New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>]
+Creates heatmap chart data item.
 
 ### [New-ImageChartHistogram](New-ImageChartHistogram.md)
-New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [<CommonParameters>]
+Creates histogram chart data item.
 
 ### [New-ImageChartLine](New-ImageChartLine.md)
-New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
+Creates line chart data item.
 
 ### [New-ImageChartPie](New-ImageChartPie.md)
-New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
+Creates pie chart data item.
 
 ### [New-ImageChartPolar](New-ImageChartPolar.md)
-New-ImageChartPolar [-Name] <string> [-Angle] <double[]> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates polar chart data item.
 
 ### [New-ImageChartRadial](New-ImageChartRadial.md)
-New-ImageChartRadial [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
+Creates radial gauge chart data item.
 
 ### [New-ImageChartScatter](New-ImageChartScatter.md)
-New-ImageChartScatter [-Name] <string> [-X] <double[]> [-Y] <double[]> [-Color <Color>] [<CommonParameters>]
+Creates scatter chart data item.
 
 ### [New-ImageCrop](New-ImageCrop.md)
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-Open] [<CommonParameters>]
-
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-CenterY <float>] [-Radius <float>] [-Open] [<CommonParameters>]
-
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
+Creates a cropped version of an image using rectangular, circular or polygonal areas.
 
 ### [New-ImageGif](New-ImageGif.md)
-New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<CommonParameters>]
+Creates an animated GIF from existing images.
 
 ### [New-ImageGrid](New-ImageGrid.md)
-New-ImageGrid [-FilePath] <string> [-Width] <int> [-Height] <int> [-Color <Color>] [-Open] [<CommonParameters>]
+Creates a simple grid-based image.
 
 ### [New-ImageIcon](New-ImageIcon.md)
-New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open] [<CommonParameters>]
+Creates an icon file from an image.
 
 ### [New-ImageQRCode](New-ImageQRCode.md)
-New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-Transparent] [<CommonParameters>]
+Generates a QR code image from plain text content.
 
 ### [New-ImageQRCodeBezahlCode](New-ImageQRCodeBezahlCode.md)
-New-ImageQRCodeBezahlCode [-Authority] <PayloadGenerator+BezahlCode+AuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-Iban] <string> [-Bic] <string> [-Reason] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a BezahlCode QR for German payments.
 
 ### [New-ImageQRCodeBitcoin](New-ImageQRCodeBitcoin.md)
-New-ImageQRCodeBitcoin [-Currency] <PayloadGenerator+BitcoinLikeCryptoCurrencyAddress+BitcoinLikeCryptoCurrencyType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for Bitcoin-like payments.
 
 ### [New-ImageQRCodeGeoLocation](New-ImageQRCodeGeoLocation.md)
-New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code with geolocation data.
 
 ### [New-ImageQRCodeGirocode](New-ImageQRCodeGirocode.md)
-New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a Girocode QR code.
 
 ### [New-ImageQRCodeMonero](New-ImageQRCodeMonero.md)
-New-ImageQRCodeMonero [-Address] <string> [[-Amount] <float>] [[-PaymentId] <string>] [[-RecipientName] <string>] [[-Description] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for a Monero transaction.
 
 ### [New-ImageQRCodeOtp](New-ImageQRCodeOtp.md)
-New-ImageQRCodeOtp [-Payload] <PayloadGenerator+OneTimePassword> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for one-time-password configuration.
 
 ### [New-ImageQRCodePhoneNumber](New-ImageQRCodePhoneNumber.md)
-New-ImageQRCodePhoneNumber [-Number] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for dialling a phone number.
 
 ### [New-ImageQRCodeShadowSocks](New-ImageQRCodeShadowSocks.md)
-New-ImageQRCodeShadowSocks [-Host] <string> [-Port] <int> [-Password] <string> [-Method] <PayloadGenerator+ShadowSocksConfig+Method> [[-Tag] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code for a Shadowsocks configuration.
 
 ### [New-ImageQRCodeSkypeCall](New-ImageQRCodeSkypeCall.md)
-New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code initiating a Skype call.
 
 ### [New-ImageQRCodeSlovenianUpnQr](New-ImageQRCodeSlovenianUpnQr.md)
-New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a Slovenian UPN QR payment code.
 
 ### [New-ImageQRCodeSms](New-ImageQRCodeSms.md)
-New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a QR code containing an SMS message.
 
 ### [New-ImageQRCodeSwiss](New-ImageQRCodeSwiss.md)
-New-ImageQRCodeSwiss [-Payload] <PayloadGenerator+SwissQrCode> [-FilePath] <string> [-Show] [<CommonParameters>]
+Generates a Swiss QR payment code.
 
 ### [New-ImageQRCodeWiFi](New-ImageQRCodeWiFi.md)
-New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+Creates a WiFi QR code image.
 
 ### [New-ImageQRContact](New-ImageQRContact.md)
-New-ImageQRContact [-FilePath] <string> [-OutputType <PayloadGenerator+ContactData+ContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <PayloadGenerator+ContactData+AddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [<CommonParameters>]
+Generates a QR code image containing the provided contact details.
 
 ### [New-ImageThumbnail](New-ImageThumbnail.md)
-New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
+Creates thumbnails for all images in a directory.
 
 ### [Remove-ImageExif](Remove-ImageExif.md)
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
-
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<CommonParameters>]
+Removes EXIF metadata from an image.
 
 ### [Resize-Image](Resize-Image.md)
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
-
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
+Resizes an image.
 
 ### [Save-Image](Save-Image.md)
-Save-Image [-Image] <Image> [[-FilePath] <string>] [-Quality <int>] [-CompressionLevel <int>] [-AsStream] [-Open] [<CommonParameters>]
+Saves an image to disk or returns its encoded bytes as a stream.
 
 ### [Set-ImageExif](Set-ImageExif.md)
-Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
+Sets an EXIF tag value in an image.
 
