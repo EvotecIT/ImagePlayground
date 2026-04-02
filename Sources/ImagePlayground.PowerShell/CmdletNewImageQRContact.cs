@@ -10,11 +10,20 @@ namespace ImagePlayground.PowerShell;
 /// </summary>
 /// <example>
 ///   <summary>Create a vCard QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRContact -FilePath contact.png -Firstname John -Lastname Doe -Phone 123456789</code>
+///   <para>Creates a simple contact QR code that can be scanned into a phone address book.</para>
+/// </example>
+/// <example>
+///   <summary>Create a richer business contact QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRContact -FilePath consultant.png -OutputType VCard4 -Firstname John -Lastname Doe -Email john.doe@evotec.pl -MobilePhone '+48 500 600 700' -Org Evotec -OrgTitle Consultant -Street Example -HouseNumber 15A -City Warsaw -ZipCode '00-001' -Country Poland -Website 'https://evotec.pl'</code>
+///   <para>Generates a business card style QR code with address, organization, and contact metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRContact")]
 public sealed class NewImageQrContactCmdlet : PSCmdlet {
     /// <summary>Output file path.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 

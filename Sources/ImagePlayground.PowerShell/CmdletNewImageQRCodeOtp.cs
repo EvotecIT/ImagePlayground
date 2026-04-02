@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code for one-time-password configuration.</summary>
+/// <para>Use this cmdlet to create QR codes for authenticator apps that support TOTP or HOTP provisioning.</para>
 /// <example>
-///   <summary>Create OTP QR</summary>
-///   <code>New-ImageQRCodeOtp -Type Totp -SecretBase32 'ABC' -Label 'user' -FilePath otp.png</code>
+///   <summary>Create a TOTP QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeOtp -Type Totp -SecretBase32 'JBSWY3DPEHPK3PXP' -Label 'john.doe@evotec.pl' -Issuer 'Evotec' -FilePath otp.png</code>
+///   <para>Creates a QR code that can be scanned into a typical authenticator app for time-based MFA.</para>
+/// </example>
+/// <example>
+///   <summary>Create an HOTP QR code with a custom counter</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeOtp -Type Hotp -SecretBase32 'JBSWY3DPEHPK3PXP' -Label 'lab-token' -Issuer 'Evotec Lab' -Counter 10 -Digits 8 -Algorithm Sha256 -FilePath hotp.png</code>
+///   <para>Creates a counter-based OTP payload for systems that use event-driven one-time passwords.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeOtp")]
 public sealed class NewImageQrCodeOtpCmdlet : PSCmdlet {
@@ -46,6 +55,7 @@ public sealed class NewImageQrCodeOtpCmdlet : PSCmdlet {
     public int? Counter { get; set; }
 
     /// <summary>Path to save the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 4)]
     public string FilePath { get; set; } = string.Empty;
 

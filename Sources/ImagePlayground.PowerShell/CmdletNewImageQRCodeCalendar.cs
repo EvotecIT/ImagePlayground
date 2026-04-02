@@ -13,11 +13,18 @@ namespace ImagePlayground.PowerShell;
 
 
 /// <summary>Creates a calendar event QR code image.</summary>
+/// <para>Use this cmdlet to encode meeting or appointment details into a QR code that can be scanned into calendar applications.</para>
 /// <example>
-///   <summary>Create calendar event QR</summary>
-///   <prefix>PS> </prefix>
-///   <code>New-ImageQRCodeCalendar -Entry 'Meeting' -Message 'Discuss' -Location 'Office' -From (Get-Date) -To (Get-Date).AddHours(1) -FilePath qr.png</code>
-///   <para>Generates a QR code image containing a calendar event.</para>
+///   <summary>Create a timed meeting QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeCalendar -Entry 'Project Sync' -Message 'Weekly delivery review' -Location 'Office' -From (Get-Date) -To (Get-Date).AddHours(1) -FilePath qr.png</code>
+///   <para>Creates a QR code for a calendar event with explicit start and end times.</para>
+/// </example>
+/// <example>
+///   <summary>Create an all-day calendar event QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeCalendar -Entry 'Company Offsite' -Location 'Gdansk' -From (Get-Date).Date -To (Get-Date).Date.AddDays(1) -AllDayEvent -EventEncoding ICalComplete -FilePath offsite.png -Show</code>
+///   <para>Generates an all-day event payload and opens the QR image after creation.</para>
 /// </example>
 
 [Cmdlet(VerbsCommon.New, "ImageQRCodeCalendar")]
@@ -65,6 +72,7 @@ public sealed class NewImageQrCodeCalendarCmdlet : PSCmdlet {
 
 
     /// <summary>Output path for the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
 
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 5)]
 

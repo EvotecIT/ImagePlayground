@@ -7,9 +7,20 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a Swiss QR payment code.</summary>
+/// <para>Use this cmdlet when a prepared <see cref="SwissQrCodePayload"/> should be rendered into a payment QR image.</para>
 /// <example>
-///   <summary>Create Swiss QR</summary>
-///   <code>$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban,$currency,$cred,$ref);New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png</code>
+///   <summary>Create a Swiss QR payment code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+/// New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png</code>
+///   <para>Renders a Swiss payment QR code from a previously prepared payment payload object.</para>
+/// </example>
+/// <example>
+///   <summary>Create a Swiss QR code with custom colors and preview</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+/// New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show</code>
+///   <para>Creates a branded QR image and opens it immediately after generation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSwiss")]
 public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {
@@ -18,6 +29,7 @@ public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {
     public SwissQrCodePayload Payload { get; set; } = null!;
 
     /// <summary>Path for the generated image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
