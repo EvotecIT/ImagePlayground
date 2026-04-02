@@ -553,15 +553,16 @@ public static class ChartRenderer {
 
     private static void DrawTitle(Graphics graphics, RectangleF area, ChartTitle title, ChartFonts fonts, ChartStyle style) {
         if (string.IsNullOrWhiteSpace(title.Text) && string.IsNullOrWhiteSpace(title.Subtitle)) return;
+        using var textBrush = new SolidBrush(style.TextColor);
         var y = area.Top;
         if (!string.IsNullOrWhiteSpace(title.Text)) {
             var size = graphics.MeasureString(title.Text, fonts.TitleFont);
-            graphics.DrawString(title.Text, fonts.TitleFont, new SolidBrush(style.TextColor), area.Left + (area.Width - size.Width) / 2f, y);
+            graphics.DrawString(title.Text, fonts.TitleFont, textBrush, area.Left + (area.Width - size.Width) / 2f, y);
             y += size.Height + 2f;
         }
         if (!string.IsNullOrWhiteSpace(title.Subtitle)) {
             var size = graphics.MeasureString(title.Subtitle, fonts.BaseFont);
-            graphics.DrawString(title.Subtitle, fonts.BaseFont, new SolidBrush(style.TextColor), area.Left + (area.Width - size.Width) / 2f, y);
+            graphics.DrawString(title.Subtitle, fonts.BaseFont, textBrush, area.Left + (area.Width - size.Width) / 2f, y);
         }
     }
 
