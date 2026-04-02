@@ -473,22 +473,31 @@ public static class ChartRenderer {
             var radius = Math.Min(layout.PlotArea.Width, layout.PlotArea.Height) * 0.9f;
             var startAngle = 180f;
             var sweepAngle = 180f;
+            var hasValueRange = Math.Abs(options.Max - options.Min) >= double.Epsilon;
 
             var ranges = options.Ranges.Count > 0 ? options.Ranges : new[] {
                 new ChartGaugeRange { Start = options.Min, End = options.Max, Color = Color.LimeGreen }
             };
 
-            foreach (var range in ranges) {
-                var rangeStart = (range.Start - options.Min) / (options.Max - options.Min);
-                var rangeEnd = (range.End - options.Min) / (options.Max - options.Min);
-                var rangeSweep = (float)((rangeEnd - rangeStart) * sweepAngle);
-                var rangeAngle = startAngle + (float)(rangeStart * sweepAngle);
-                using var pen = new Pen(range.Color, 18f) { StartCap = LineCap.Round, EndCap = LineCap.Round };
-                graphics.DrawArc(pen, center.X - radius / 2f, center.Y - radius / 2f, radius, radius, rangeAngle, rangeSweep);
+            if (hasValueRange) {
+                foreach (var range in ranges) {
+                    var rangeStart = (range.Start - options.Min) / (options.Max - options.Min);
+                    var rangeEnd = (range.End - options.Min) / (options.Max - options.Min);
+                    var rangeSweep = (float)((rangeEnd - rangeStart) * sweepAngle);
+                    var rangeAngle = startAngle + (float)(rangeStart * sweepAngle);
+                    using var pen = new Pen(range.Color, 18f) { StartCap = LineCap.Round, EndCap = LineCap.Round };
+                    graphics.DrawArc(pen, center.X - radius / 2f, center.Y - radius / 2f, radius, radius, rangeAngle, rangeSweep);
+                }
+            } else {
+                // Degenerate gauges still render deterministically instead of propagating NaN/Infinity into GDI.
+                var fallbackColor = ranges[ranges.Count - 1].Color;
+                using var pen = new Pen(fallbackColor, 18f) { StartCap = LineCap.Round, EndCap = LineCap.Round };
+                graphics.DrawArc(pen, center.X - radius / 2f, center.Y - radius / 2f, radius, radius, startAngle, sweepAngle);
             }
 
-            var valueT = (options.Value - options.Min) / (options.Max - options.Min);
-            valueT = GdiMath.Clamp(valueT, 0d, 1d);
+            var valueT = hasValueRange
+                ? GdiMath.Clamp((options.Value - options.Min) / (options.Max - options.Min), 0d, 1d)
+                : 0.5d;
             var needleAngle = startAngle + (float)(valueT * sweepAngle);
             var needleRad = (float)(Math.PI / 180f * needleAngle);
             var needleLength = radius * 0.45f;
