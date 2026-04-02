@@ -2,22 +2,6 @@ Import-Module PSPublishModule -Force -ErrorAction Stop
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $powerShellProjectPath = Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
-$externalHelpTarget = Join-Path -Path $projectRoot -ChildPath 'en-US\ImagePlayground-help.xml'
-$externalHelpCandidates = @(
-    (Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Release\net8.0\ImagePlayground.PowerShell.dll-Help.xml')
-    (Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Release\net472\ImagePlayground.PowerShell.dll-Help.xml')
-) | Where-Object {
-    Test-Path -LiteralPath $_
-}
-
-if ($externalHelpCandidates.Count -gt 0) {
-    $externalHelpSource = $externalHelpCandidates[0]
-    $externalHelpDirectory = Split-Path -Parent $externalHelpTarget
-    if (-not (Test-Path -LiteralPath $externalHelpDirectory)) {
-        $null = New-Item -Path $externalHelpDirectory -ItemType Directory -Force
-    }
-    Copy-Item -LiteralPath $externalHelpSource -Destination $externalHelpTarget -Force
-}
 
 Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     # Usual defaults as per standard module
