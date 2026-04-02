@@ -11,7 +11,7 @@ Generates a QR code with geolocation data.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,8 +39,8 @@ Creates a location QR for signage, invitations, or venue directions and previews
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -71,8 +71,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -119,8 +119,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 

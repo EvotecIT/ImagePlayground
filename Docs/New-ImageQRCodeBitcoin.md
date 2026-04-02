@@ -11,7 +11,7 @@ Generates a QR code for Bitcoin-like payments.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeBitcoin [-Currency] <PayloadGenerator+BitcoinLikeCryptoCurrencyAddress+BitcoinLikeCryptoCurrencyType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeBitcoin [-Currency] <QrBitcoinLikeType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,8 +71,8 @@ Accept wildcard characters: True
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -89,7 +89,7 @@ Type of cryptocurrency.
 Possible values: Bitcoin, BitcoinCash, Litecoin
 
 ```yaml
-Type: BitcoinLikeCryptoCurrencyType
+Type: QrBitcoinLikeType
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: Bitcoin, BitcoinCash, Litecoin
@@ -121,8 +121,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -169,8 +169,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 

@@ -4,52 +4,36 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# New-ImageQRCodeGirocode
+# New-ImageQRCodeEmail
 ## SYNOPSIS
-Generates a Girocode QR code.
+Generates a QR code that opens an email draft.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeEmail [-Email] <string> [[-Subject] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet to create SEPA payment QR codes for European bank transfers.
+Use this cmdlet to create scannable mailto-style QR codes for support, sales, or campaign responses.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 12.34 -FilePath giro.png
+New-ImageQRCodeEmail -Email 'user@example.com' -Subject 'Hello' -Message 'Body' -FilePath qr.png
 ```
 
-Creates a payment QR code with the core SEPA transfer fields.
+Creates a QR code that opens the default mail client with recipient, subject, and body prefilled.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 249.99 -RemittanceInformation 'Invoice 2026-041' -FilePath invoice-payment.png -ForegroundColor DarkBlue -PixelSize 14 -Show
+New-ImageQRCodeEmail -Email 'support@evotec.pl' -Subject 'Support Request' -Message 'Please describe the issue before sending.' -FilePath support-mail.png -ForegroundColor DarkSlateBlue -PixelSize 14 -Show
 ```
 
-Generates a branded invoice-payment QR code and opens it after creation.
+Generates a support-oriented email QR code and opens the image after creation.
 
 ## PARAMETERS
-
-### -Amount
-Transfer amount.
-
-```yaml
-Type: Decimal
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 3
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: True
-```
 
 ### -BackgroundColor
 Background color of the QR code.
@@ -67,8 +51,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Bic
-BIC of the payee.
+### -Email
+Recipient email address.
 
 ```yaml
 Type: String
@@ -77,7 +61,7 @@ Aliases:
 Possible values: 
 
 Required: True
-Position: 1
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -93,7 +77,7 @@ Aliases:
 Possible values: 
 
 Required: True
-Position: 5
+Position: 3
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -115,8 +99,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Iban
-IBAN of the payee.
+### -Message
+Message body.
 
 ```yaml
 Type: String
@@ -124,23 +108,7 @@ Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Name
-Recipient name.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
+Required: False
 Position: 2
 Default value: None
 Accept pipeline input: False
@@ -163,24 +131,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -RemittanceInformation
-Optional remittance information.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: False
-Position: 4
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Show
-Opens the image after creation.
+Open the image after creation.
 
 ```yaml
 Type: SwitchParameter
@@ -191,6 +143,22 @@ Possible values:
 Required: False
 Position: named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Subject
+Message subject.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```

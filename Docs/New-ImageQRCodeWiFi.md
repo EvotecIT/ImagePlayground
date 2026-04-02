@@ -11,7 +11,7 @@ Creates a WiFi QR code image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,8 +30,8 @@ New-ImageQRCodeWiFi -SSID Test -Password pass123 -FilePath wifi.png
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -62,8 +62,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -94,8 +94,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 

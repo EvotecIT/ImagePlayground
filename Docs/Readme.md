@@ -67,11 +67,17 @@ Creates an image chart from definitions.
 ### [New-ImageChartAnnotation](New-ImageChartAnnotation.md)
 Creates chart annotation data item.
 
+### [New-ImageChartArea](New-ImageChartArea.md)
+Creates area chart data item.
+
 ### [New-ImageChartBar](New-ImageChartBar.md)
 Creates bar chart data item.
 
 ### [New-ImageChartBarOptions](New-ImageChartBarOptions.md)
 Creates bar chart options.
+
+### [New-ImageChartBubble](New-ImageChartBubble.md)
+Creates bubble chart data item.
 
 ### [New-ImageChartHeatmap](New-ImageChartHeatmap.md)
 Creates heatmap chart data item.
@@ -106,6 +112,9 @@ Creates a simple grid-based image.
 ### [New-ImageIcon](New-ImageIcon.md)
 Creates an icon file from an image.
 
+### [New-ImageMosaic](New-ImageMosaic.md)
+Creates a mosaic image from multiple files.
+
 ### [New-ImageQRCode](New-ImageQRCode.md)
 Generates a QR code image from plain text content.
 
@@ -114,6 +123,12 @@ Generates a BezahlCode QR for German payments.
 
 ### [New-ImageQRCodeBitcoin](New-ImageQRCodeBitcoin.md)
 Generates a QR code for Bitcoin-like payments.
+
+### [New-ImageQRCodeCalendar](New-ImageQRCodeCalendar.md)
+Creates a calendar event QR code image.
+
+### [New-ImageQRCodeEmail](New-ImageQRCodeEmail.md)
+Generates a QR code that opens an email draft.
 
 ### [New-ImageQRCodeGeoLocation](New-ImageQRCodeGeoLocation.md)
 Generates a QR code with geolocation data.
@@ -163,6 +178,18 @@ Resizes an image.
 ### [Save-Image](Save-Image.md)
 Saves an image to disk or returns its encoded bytes as a stream.
 
+### [Set-ImageAdjust](Set-ImageAdjust.md)
+Adjusts image properties.
+
+### [Set-ImageBlur](Set-ImageBlur.md)
+Blurs an image.
+
 ### [Set-ImageExif](Set-ImageExif.md)
 Sets an EXIF tag value in an image.
+
+### [Set-ImageRotation](Set-ImageRotation.md)
+Sets image rotation.
+
+### [Set-ImageSharpen](Set-ImageSharpen.md)
+Sharpens an image.
 

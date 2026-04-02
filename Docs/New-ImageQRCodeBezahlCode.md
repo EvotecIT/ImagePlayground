@@ -11,7 +11,7 @@ Generates a BezahlCode QR for German payments.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <PayloadGenerator+BezahlCode+AuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-Iban] <string> [-Bic] <string> [-Reason] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-Iban] <string> [-Bic] <string> [-Reason] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -57,10 +57,10 @@ Payment authority type.
 Possible values: SinglePayment, SinglePaymentSepa, SingleDirectDebit, SingleDirectDebitSepa, PeriodicSinglePayment, PeriodicSinglePaymentSepa, Contact, ContactV2
 
 ```yaml
-Type: AuthorityType
+Type: QrBezahlAuthorityType
 Parameter Sets: __AllParameterSets
 Aliases: 
-Possible values: singlepayment, singlepaymentsepa, singledirectdebit, singledirectdebitsepa, periodicsinglepayment, periodicsinglepaymentsepa, contact, contact_v2
+Possible values: SinglePayment, SinglePaymentSepa, SingleDirectDebit, SingleDirectDebitSepa, PeriodicSinglePayment, PeriodicSinglePaymentSepa, Contact, ContactV2
 
 Required: True
 Position: 0
@@ -73,8 +73,8 @@ Accept wildcard characters: True
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -137,8 +137,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -185,8 +185,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 

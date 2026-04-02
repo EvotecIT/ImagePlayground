@@ -11,7 +11,7 @@ Generates a QR code image from plain text content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-Transparent] [<CommonParameters>]
+New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,8 +35,8 @@ New-ImageQRCode -Content 'text' -FilePath qr.png -Show
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -83,8 +83,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -99,8 +99,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 

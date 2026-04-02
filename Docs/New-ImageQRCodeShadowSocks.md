@@ -11,7 +11,7 @@ Generates a QR code for a Shadowsocks configuration.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeShadowSocks [-Host] <string> [-Port] <int> [-Password] <string> [-Method] <PayloadGenerator+ShadowSocksConfig+Method> [[-Tag] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeShadowSocks [-ServerHost] <string> [-Port] <int> [-Password] <string> [-Method] <QrShadowSocksMethod> [[-Tag] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,8 +39,8 @@ Generates a named client profile QR code and opens it immediately after creation
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -71,8 +71,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -83,29 +83,13 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Host
-{{ Fill Host Description }}
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Method
 Encryption method.
 
 Possible values: Chacha20IetfPoly1305, Aes128Gcm, Aes192Gcm, Aes256Gcm, XChacha20IetfPoly1305, Aes128Cfb, Aes192Cfb, Aes256Cfb, Aes128Ctr, Aes192Ctr, Aes256Ctr, Camellia128Cfb, Camellia192Cfb, Camellia256Cfb, Chacha20Ietf, Aes256Cb, Aes128Ofb, Aes192Ofb, Aes256Ofb, Aes128Cfb1, Aes192Cfb1, Aes256Cfb1, Aes128Cfb8, Aes192Cfb8, Aes256Cfb8, Chacha20, BfCfb, Rc4Md5, Salsa20, DesCfb, IdeaCfb, Rc2Cfb, Cast5Cfb, Salsa20Ctr, Rc4, SeedCfb, Table
 
 ```yaml
-Type: Method
+Type: QrShadowSocksMethod
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: Chacha20IetfPoly1305, Aes128Gcm, Aes192Gcm, Aes256Gcm, XChacha20IetfPoly1305, Aes128Cfb, Aes192Cfb, Aes256Cfb, Aes128Ctr, Aes192Ctr, Aes256Ctr, Camellia128Cfb, Camellia192Cfb, Camellia256Cfb, Chacha20Ietf, Aes256Cb, Aes128Ofb, Aes192Ofb, Aes256Ofb, Aes128Cfb1, Aes192Cfb1, Aes256Cfb1, Aes128Cfb8, Aes192Cfb8, Aes256Cfb8, Chacha20, BfCfb, Rc4Md5, Salsa20, DesCfb, IdeaCfb, Rc2Cfb, Cast5Cfb, Salsa20Ctr, Rc4, SeedCfb, Table
@@ -137,8 +121,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -169,13 +153,13 @@ Accept wildcard characters: True
 Server host name.
 
 ```yaml
-Type: System.String
-Parameter Sets: (All)
+Type: String
+Parameter Sets: __AllParameterSets
 Aliases: Host
 Possible values: 
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

@@ -4,49 +4,49 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# New-ImageQRCodeGirocode
+# New-ImageQRCodeCalendar
 ## SYNOPSIS
-Generates a Girocode QR code.
+Creates a calendar event QR code image.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeCalendar [-Entry] <string> [[-Message] <string>] [[-Location] <string>] [-From] <datetime> [-To] <datetime> [-FilePath] <string> [-AllDayEvent] [-EventEncoding <QrCalendarEncoding>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet to create SEPA payment QR codes for European bank transfers.
+Use this cmdlet to encode meeting or appointment details into a QR code that can be scanned into calendar applications.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 12.34 -FilePath giro.png
+New-ImageQRCodeCalendar -Entry 'Project Sync' -Message 'Weekly delivery review' -Location 'Office' -From (Get-Date) -To (Get-Date).AddHours(1) -FilePath qr.png
 ```
 
-Creates a payment QR code with the core SEPA transfer fields.
+Creates a QR code for a calendar event with explicit start and end times.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 249.99 -RemittanceInformation 'Invoice 2026-041' -FilePath invoice-payment.png -ForegroundColor DarkBlue -PixelSize 14 -Show
+New-ImageQRCodeCalendar -Entry 'Company Offsite' -Location 'Gdansk' -From (Get-Date).Date -To (Get-Date).Date.AddDays(1) -AllDayEvent -EventEncoding ICalComplete -FilePath offsite.png -Show
 ```
 
-Generates a branded invoice-payment QR code and opens it after creation.
+Generates an all-day event payload and opens the QR image after creation.
 
 ## PARAMETERS
 
-### -Amount
-Transfer amount.
+### -AllDayEvent
+Specifies whether the event spans the full day.
 
 ```yaml
-Type: Decimal
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: True
-Position: 3
-Default value: 0
+Required: False
+Position: named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -67,8 +67,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Bic
-BIC of the payee.
+### -Entry
+Event title.
 
 ```yaml
 Type: String
@@ -77,8 +77,26 @@ Aliases:
 Possible values: 
 
 Required: True
-Position: 1
+Position: 0
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -EventEncoding
+Calendar encoding.
+
+Possible values: Universal, ICalComplete
+
+```yaml
+Type: QrCalendarEncoding
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: Universal, ICalComplete
+
+Required: False
+Position: named
+Default value: ICalComplete
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -115,8 +133,24 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Iban
-IBAN of the payee.
+### -From
+Start date.
+
+```yaml
+Type: DateTime
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: True
+Position: 3
+Default value: 0001-01-01 00:00:00
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Location
+Event location.
 
 ```yaml
 Type: String
@@ -124,15 +158,15 @@ Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: True
-Position: 0
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Name
-Recipient name.
+### -Message
+Event description.
 
 ```yaml
 Type: String
@@ -140,8 +174,8 @@ Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: True
-Position: 2
+Required: False
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -163,24 +197,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -RemittanceInformation
-Optional remittance information.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: False
-Position: 4
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Show
-Opens the image after creation.
+Open the image after creation.
 
 ```yaml
 Type: SwitchParameter
@@ -191,6 +209,22 @@ Possible values:
 Required: False
 Position: named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -To
+End date.
+
+```yaml
+Type: DateTime
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: True
+Position: 4
+Default value: 0001-01-01 00:00:00
 Accept pipeline input: False
 Accept wildcard characters: True
 ```

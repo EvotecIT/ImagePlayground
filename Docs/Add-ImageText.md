@@ -15,7 +15,8 @@ Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] 
 ```
 
 ## DESCRIPTION
-Adds text to an image at the provided coordinates and writes the updated image to disk.
+Adds text to an image at the provided coordinates and writes the updated
+image to disk.
 
 ## EXAMPLES
 

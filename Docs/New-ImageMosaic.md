@@ -4,87 +4,30 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# New-ImageQRCodeSkypeCall
+# New-ImageMosaic
 ## SYNOPSIS
-Generates a QR code initiating a Skype call.
+Creates a mosaic image from multiple files.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageMosaic [-FilePaths] <string[]> [-OutputPath] <string> -Columns <int> -Width <int> -Height <int> [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet for legacy Skype calling scenarios where a QR scan should start a call with a specific account.
+Creates a mosaic image from multiple files.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSkypeCall -UserName 'echo123' -FilePath skype.png
+New-ImageMosaic -FilePaths img1.png,img2.png,img3.png,img4.png -OutputPath out.png -Columns 2 -Width 100 -Height 100
 ```
-
-Creates a QR code that opens Skype and targets the selected username for a call.
-
-### EXAMPLE 2
-```powershell
-New-ImageQRCodeSkypeCall -UserName 'evotec.helpdesk' -FilePath skype-helpdesk.png -ForegroundColor MidnightBlue -PixelSize 16 -Show
-```
-
-Generates a branded Skype call QR code and opens the resulting image after creation.
 
 ## PARAMETERS
 
-### -BackgroundColor
-Background color of the QR code.
-
-```yaml
-Type: Color
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: False
-Position: named
-Default value: FFFFFFFF
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -FilePath
-The image format is inferred from the file extension.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
-### -ForegroundColor
-Foreground color of QR modules.
-
-```yaml
-Type: Color
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: False
-Position: named
-Default value: 000000FF
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -PixelSize
-Pixel size for each QR module.
+### -Columns
+Number of columns in the mosaic.
 
 ```yaml
 Type: Int32
@@ -92,15 +35,47 @@ Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: False
+Required: True
 Position: named
-Default value: 20
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Show
-Opens the image after creation.
+### -FilePaths
+Source image paths.
+
+```yaml
+Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Height
+Height of each tile.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: True
+Position: named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Open
+Open the mosaic after creation.
 
 ```yaml
 Type: SwitchParameter
@@ -115,8 +90,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -UserName
-Skype username to call.
+### -OutputPath
+Output file path.
 
 ```yaml
 Type: String
@@ -125,8 +100,24 @@ Aliases:
 Possible values: 
 
 Required: True
-Position: 0
+Position: 1
 Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Width
+Width of each tile.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: True
+Position: named
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: True
 ```

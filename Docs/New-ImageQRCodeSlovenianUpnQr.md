@@ -11,7 +11,7 @@ Generates a Slovenian UPN QR payment code.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeSlovenianUpnQr [-Payload] <SlovenianUpnQrPayload> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,8 +41,8 @@ Creates a styled payment QR code and opens the resulting image after generation.
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -73,8 +73,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -89,7 +89,7 @@ Accept wildcard characters: True
 UPN payment payload.
 
 ```yaml
-Type: SlovenianUpnQr
+Type: SlovenianUpnQrPayload
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
@@ -105,8 +105,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 

@@ -1,6 +1,7 @@
 Import-Module PSPublishModule -Force -ErrorAction Stop
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
+$powerShellProjectPath = Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
 $externalHelpTarget = Join-Path -Path $projectRoot -ChildPath 'en-US\ImagePlayground-help.xml'
 $externalHelpCandidates = @(
     (Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Release\net8.0\ImagePlayground.PowerShell.dll-Help.xml')
@@ -18,7 +19,7 @@ if ($externalHelpCandidates.Count -gt 0) {
     Copy-Item -LiteralPath $externalHelpSource -Destination $externalHelpTarget -Force
 }
 
-Build-Module -ModuleName 'ImagePlayground' {
+Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module

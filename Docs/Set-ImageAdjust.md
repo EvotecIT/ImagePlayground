@@ -4,71 +4,126 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# New-ImageQRCodeGirocode
+# Set-ImageAdjust
 ## SYNOPSIS
-Generates a Girocode QR code.
+Adjusts image properties.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+Set-ImageAdjust [-FilePath] <string> [-OutputPath] <string> [-Brightness <float>] [-Contrast <float>] [-Lightness <float>] [-Opacity <float>] [-Saturation <float>] [-Sepia <float>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet to create SEPA payment QR codes for European bank transfers.
+Applies optional brightness, contrast, lightness, opacity, saturation or sepia adjustments.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 12.34 -FilePath giro.png
+Set-ImageAdjust -FilePath in.png -OutputPath out.png -Brightness 1.2 -Contrast 1.1
 ```
-
-Creates a payment QR code with the core SEPA transfer fields.
-
-### EXAMPLE 2
-```powershell
-New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 249.99 -RemittanceInformation 'Invoice 2026-041' -FilePath invoice-payment.png -ForegroundColor DarkBlue -PixelSize 14 -Show
-```
-
-Generates a branded invoice-payment QR code and opens it after creation.
 
 ## PARAMETERS
 
-### -Amount
-Transfer amount.
+### -Async
+Use asynchronous processing.
 
 ```yaml
-Type: Decimal
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 3
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -BackgroundColor
-Background color of the QR code.
-
-```yaml
-Type: Color
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: FFFFFFFF
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Bic
-BIC of the payee.
+### -Brightness
+Brightness adjustment factor.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Contrast
+Contrast adjustment factor.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FilePath
+The image must exist.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Lightness
+Lightness adjustment factor.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Opacity
+Opacity adjustment factor.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+Supported formats depend on the file extension.
 
 ```yaml
 Type: String
@@ -83,114 +138,34 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -FilePath
-The image format is inferred from the file extension.
+### -Saturation
+Saturation adjustment factor.
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 5
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
-### -ForegroundColor
-Foreground color of QR modules.
-
-```yaml
-Type: Color
+Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: 000000FF
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Iban
-IBAN of the payee.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Name
-Recipient name.
+### -Sepia
+Sepia adjustment factor.
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -PixelSize
-Pixel size for each QR module.
-
-```yaml
-Type: Int32
+Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
 Required: False
 Position: named
-Default value: 20
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -RemittanceInformation
-Optional remittance information.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: False
-Position: 4
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Show
-Opens the image after creation.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
-
-Required: False
-Position: named
-Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
 ```

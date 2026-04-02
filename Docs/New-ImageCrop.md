@@ -25,7 +25,8 @@ New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [
 ```
 
 ## DESCRIPTION
-Creates a cropped version of an image using rectangular, circular or polygonal areas.
+Creates a cropped version of an image using rectangular, circular or
+polygonal areas.
 
 ## EXAMPLES
 

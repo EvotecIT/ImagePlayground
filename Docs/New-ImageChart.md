@@ -9,9 +9,14 @@ schema: 2.0.0
 Creates an image chart from definitions.
 
 ## SYNTAX
-### __AllParameterSets
+### ScriptBlock
 ```powershell
-New-ImageChart [[-ChartsDefinition] <scriptblock>] -FilePath <string> [-Definition <Charts+ChartDefinition[]>] [-AnnotationsDefinition <scriptblock>] [-Annotation <Charts+ChartAnnotation[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [<CommonParameters>]
+New-ImageChart [-ChartsDefinition] <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <ChartAnnotation[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <Color>] [<CommonParameters>]
+```
+
+### Definition
+```powershell
+New-ImageChart -Definition <ChartDefinition[]> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <ChartAnnotation[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <Color>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,7 +54,7 @@ Annotations for the chart.
 
 ```yaml
 Type: ChartAnnotation[]
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -65,7 +70,7 @@ ScriptBlock producing annotations.
 
 ```yaml
 Type: ScriptBlock
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -80,8 +85,8 @@ Accept wildcard characters: True
 Chart background color.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Nullable`1
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -97,11 +102,11 @@ ScriptBlock producing chart definitions.
 
 ```yaml
 Type: ScriptBlock
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock
 Aliases: 
 Possible values: 
 
-Required: False
+Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
@@ -113,11 +118,11 @@ Chart definitions provided directly.
 
 ```yaml
 Type: ChartDefinition[]
-Parameter Sets: __AllParameterSets
+Parameter Sets: Definition
 Aliases: 
 Possible values: 
 
-Required: False
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
@@ -129,14 +134,14 @@ The image format is inferred from the file extension.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
 Required: True
 Position: named
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -145,7 +150,7 @@ Height of the chart.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -161,7 +166,7 @@ Open the image after creation.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -177,7 +182,7 @@ Display grid lines.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -195,7 +200,7 @@ Possible values: Default, Dark, Light
 
 ```yaml
 Type: ChartTheme
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: Default, Dark, Light
 
@@ -211,7 +216,7 @@ Width of the chart.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -227,7 +232,7 @@ X axis title.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 
@@ -243,7 +248,7 @@ Y axis title.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: ScriptBlock, Definition
 Aliases: 
 Possible values: 
 

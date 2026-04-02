@@ -11,7 +11,7 @@ Generates a QR code for one-time-password configuration.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeOtp [-Payload] <PayloadGenerator+OneTimePassword> [-FilePath] <string> [-Show] [<CommonParameters>]
+New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <string> [[-Label] <string>] [[-Issuer] <string>] [-FilePath] <string> [-Algorithm <OtpAlgorithm>] [-Digits <int>] [-Period <int>] [-Counter <int>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,10 +41,10 @@ Hash algorithm.
 Possible values: Sha1, Sha256, Sha512
 
 ```yaml
-Type: CodeGlyphX.OtpAlgorithm
-Parameter Sets: (All)
+Type: OtpAlgorithm
+Parameter Sets: __AllParameterSets
 Aliases: 
-Possible values: 
+Possible values: Sha1, Sha256, Sha512
 
 Required: False
 Position: named
@@ -57,8 +57,8 @@ Accept wildcard characters: True
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -73,8 +73,8 @@ Accept wildcard characters: True
 Counter for HOTP.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -89,8 +89,8 @@ Accept wildcard characters: True
 Number of digits.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -111,7 +111,7 @@ Aliases:
 Possible values: 
 
 Required: True
-Position: 1
+Position: 4
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -121,8 +121,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -137,13 +137,13 @@ Accept wildcard characters: True
 Issuer name.
 
 ```yaml
-Type: System.String
-Parameter Sets: (All)
+Type: String
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
 Required: False
-Position: named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -153,40 +153,24 @@ Accept wildcard characters: True
 Account label.
 
 ```yaml
-Type: System.String
-Parameter Sets: (All)
-Aliases: 
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Payload
-{{ Fill Payload Description }}
-
-```yaml
-Type: OneTimePassword
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: True
-Position: 0
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Period
 Period for TOTP.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -201,8 +185,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -217,13 +201,13 @@ Accept wildcard characters: True
 Base32-encoded secret.
 
 ```yaml
-Type: System.String
-Parameter Sets: (All)
+Type: String
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
-Required: False
-Position: named
+Required: True
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -251,13 +235,13 @@ OTP type.
 Possible values: Totp, Hotp
 
 ```yaml
-Type: CodeGlyphX.OtpAuthType
-Parameter Sets: (All)
+Type: OtpAuthType
+Parameter Sets: __AllParameterSets
 Aliases: 
-Possible values: 
+Possible values: Totp, Hotp
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: Totp
 Accept pipeline input: False
 Accept wildcard characters: True

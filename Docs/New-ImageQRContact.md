@@ -11,7 +11,7 @@ Generates a QR code image containing the provided contact details.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRContact [-FilePath] <string> [-OutputType <PayloadGenerator+ContactData+ContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <PayloadGenerator+ContactData+AddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [<CommonParameters>]
+New-ImageQRContact [-FilePath] <string> [-OutputType <QrContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <QrContactAddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,7 +41,7 @@ Order of address fields in the QR code.
 Possible values: Default, Reversed
 
 ```yaml
-Type: AddressOrder
+Type: QrContactAddressOrder
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: Default, Reversed
@@ -57,8 +57,8 @@ Accept wildcard characters: True
 Background color of the QR code.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -169,8 +169,8 @@ Accept wildcard characters: True
 Foreground color of QR modules.
 
 ```yaml
-Type: SixLabors.ImageSharp.Color
-Parameter Sets: (All)
+Type: Color
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
@@ -299,7 +299,7 @@ Contact output type.
 Possible values: MeCard, VCard21, VCard3, VCard4
 
 ```yaml
-Type: ContactOutputType
+Type: QrContactOutputType
 Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: MeCard, VCard21, VCard3, VCard4
@@ -331,8 +331,8 @@ Accept wildcard characters: True
 Pixel size for each QR module.
 
 ```yaml
-Type: System.Int32
-Parameter Sets: (All)
+Type: Int32
+Parameter Sets: __AllParameterSets
 Aliases: 
 Possible values: 
 
