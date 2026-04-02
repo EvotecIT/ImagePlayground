@@ -3,13 +3,16 @@ using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Saves an image to disk.</summary>
+/// <summary>Saves an image to disk or returns its encoded bytes as a stream.</summary>
+/// <para>Use this cmdlet to persist an <see cref="ImagePlayground.Image"/> instance after applying transformations.</para>
 /// <example>
 ///   <summary>Overwrite the source file</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>Save-Image -Image $img</code>
 /// </example>
 /// <example>
 ///   <summary>Save as JPEG with quality 80</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>Save-Image -Image $img -FilePath out.jpg -Quality 80</code>
 /// </example>
 [Cmdlet(VerbsData.Save, "Image")]
@@ -19,6 +22,7 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     public ImagePlayground.Image Image { get; set; } = null!;
 
     /// <summary>Optional path for the new file.</summary>
+    /// <para>When omitted, the image is saved using the path already associated with the image object.</para>
     [Parameter(ValueFromPipeline = true, Position = 1)]
     public string? FilePath { get; set; }
 
@@ -31,6 +35,7 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     public int? CompressionLevel { get; set; }
 
     /// <summary>Return the image as a stream instead of saving.</summary>
+    /// <para>When used without FilePath, the cmdlet writes a stream object to the pipeline.</para>
     [Parameter]
     public SwitchParameter AsStream { get; set; }
 

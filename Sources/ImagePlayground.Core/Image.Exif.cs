@@ -14,15 +14,23 @@ public partial class Image {
     /// <summary>
     /// Gets all EXIF values from the image.
     /// </summary>
-    /// <returns>List of EXIF values.</returns>
+    /// <returns>List of EXIF values currently attached to the image, or an empty list when no EXIF profile exists.</returns>
     public IReadOnlyList<IExifValue> GetExifValues() =>
         _image.Metadata.ExifProfile?.Values ?? new List<IExifValue>();
 
     /// <summary>
     /// Sets an EXIF value on the image.
     /// </summary>
+    /// <para>
+    /// The supplied <paramref name="value"/> must match the value type declared by the specific
+    /// <paramref name="tag"/>, including specialized ImageSharp EXIF value wrappers such as
+    /// <see cref="Number"/>, <see cref="Rational"/>, or array-based tag payloads.
+    /// </para>
     /// <param name="tag">Tag to set.</param>
     /// <param name="value">Value for the tag.</param>
+    /// <example>
+    ///   <code>image.SetExifValue(ExifTag.Software, "ImagePlayground");</code>
+    /// </example>
     public void SetExifValue(ExifTag tag, object value) {
         _image.Metadata.ExifProfile ??= new ExifProfile();
         if (value is null) {
@@ -72,7 +80,7 @@ public partial class Image {
     /// <summary>
     /// Removes specific EXIF values from the image.
     /// </summary>
-    /// <param name="tags">Tags to remove.</param>
+    /// <param name="tags">Tags to remove from the current EXIF profile.</param>
     public void RemoveExifValues(params ExifTag[] tags) {
         var profile = _image.Metadata.ExifProfile;
         if (profile is null) { return; }
@@ -84,6 +92,7 @@ public partial class Image {
     /// <summary>
     /// Clears all EXIF values from the image.
     /// </summary>
+    /// <para>This removes all values from the existing EXIF profile but keeps the image object loaded and usable.</para>
     public void ClearExifValues() {
         var profile = _image.Metadata.ExifProfile;
         if (profile != null) {

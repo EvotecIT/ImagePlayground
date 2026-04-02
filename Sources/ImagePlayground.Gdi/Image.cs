@@ -7,6 +7,10 @@ using System.Drawing.Text;
 namespace ImagePlayground.Gdi;
 
 /// <summary>Represents a GDI+ backed image with simple drawing helpers.</summary>
+/// <para>
+/// This type provides a lightweight Windows-focused drawing surface for PowerBGInfo-style rendering,
+/// chart composition, annotations, and basic image save/load operations.
+/// </para>
 public sealed class Image : IDisposable {
     private static readonly string[] SupportedExtensions = new[] {
         ".bmp", ".gif", ".jpg", ".jpeg", ".tif", ".tiff", ".ico", ".png"
@@ -25,6 +29,8 @@ public sealed class Image : IDisposable {
     public string FilePath => _filePath;
 
     /// <summary>Loads an image from disk.</summary>
+    /// <param name="filePath">Path to an existing image file.</param>
+    /// <returns>A new <see cref="Image"/> instance backed by a cloned bitmap.</returns>
     public static Image Load(string filePath) {
         if (string.IsNullOrWhiteSpace(filePath)) {
             throw new ArgumentException("File path is required.", nameof(filePath));
@@ -41,6 +47,10 @@ public sealed class Image : IDisposable {
     }
 
     /// <summary>Creates a blank image.</summary>
+    /// <param name="filePath">Optional file path associated with the image for later save operations.</param>
+    /// <param name="width">Image width in pixels.</param>
+    /// <param name="height">Image height in pixels.</param>
+    /// <param name="background">Optional background color. Transparent is used when omitted.</param>
     public void Create(string filePath, int width, int height, Color? background = null) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
@@ -52,6 +62,8 @@ public sealed class Image : IDisposable {
     }
 
     /// <summary>Saves the image to disk.</summary>
+    /// <param name="filePath">Optional destination path. When omitted, the path associated with the image is reused.</param>
+    /// <param name="openImage">When set, opens the saved image using the shell after writing it to disk.</param>
     public void Save(string filePath = "", bool openImage = false) {
         var targetPath = string.IsNullOrWhiteSpace(filePath) ? _filePath : Path.GetFullPath(filePath);
         if (string.IsNullOrWhiteSpace(targetPath)) {
@@ -74,6 +86,8 @@ public sealed class Image : IDisposable {
     }
 
     /// <summary>Saves the image to a stream.</summary>
+    /// <param name="stream">Destination stream that receives the encoded image bytes.</param>
+    /// <param name="format">Optional image format. PNG is used when omitted.</param>
     public void Save(Stream stream, ImageFormat? format = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         _bitmap.Save(stream, format ?? ImageFormat.Png);
@@ -96,6 +110,10 @@ public sealed class Image : IDisposable {
     }
 
     /// <summary>Measures the size of the text using the specified font.</summary>
+    /// <param name="text">Text that should be measured.</param>
+    /// <param name="fontSize">Font size in pixels.</param>
+    /// <param name="fontFamilyName">Preferred font family name.</param>
+    /// <returns>The measured text size for the configured font.</returns>
     public SizeF GetTextSize(string text, float fontSize, string fontFamilyName) {
         using var graphics = Graphics.FromImage(_bitmap);
         ConfigureGraphics(graphics);
@@ -104,6 +122,7 @@ public sealed class Image : IDisposable {
     }
 
     /// <summary>Adds text to the image.</summary>
+    /// <para>This helper supports optional shadow and outline rendering for labels, overlays, and dashboard text.</para>
     public void AddText(float x, float y, string text, Color color, float fontSize = 16f, string fontFamilyName = "Calibri", Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, Color? outlineColor = null, float outlineWidth = 0f) {
         using var graphics = Graphics.FromImage(_bitmap);
         ConfigureGraphics(graphics);
@@ -183,6 +202,7 @@ public sealed class Image : IDisposable {
     }
 
     /// <summary>Provides access to the underlying graphics for custom rendering.</summary>
+    /// <param name="action">Callback that receives a configured <see cref="Graphics"/> instance.</param>
     public void WithGraphics(Action<Graphics> action) {
         if (action is null) throw new ArgumentNullException(nameof(action));
         using var graphics = Graphics.FromImage(_bitmap);

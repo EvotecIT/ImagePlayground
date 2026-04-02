@@ -11,19 +11,32 @@ using CodeGlyphXRgba32 = CodeGlyphX.Rendering.Png.Rgba32;
 
 namespace ImagePlayground;
 /// <summary>
-/// Provides helper methods for generating various QR code payloads and reading QR codes.
+/// Provides helper methods for generating QR codes for common payload types and for decoding QR images.
+/// <para>
+/// The helpers in this class wrap CodeGlyphX payload builders so callers can create QR codes for plain text,
+/// URLs, contacts, payment payloads, OTP secrets, WiFi settings, and similar scenarios without manually
+/// constructing payload strings.
+/// </para>
+/// <para>
+/// Output format is inferred from the destination file extension, and decode methods return a rich
+/// <see cref="BarcodeResult{TPixel}"/> value rather than throwing when no QR code is found.
+/// </para>
 /// </summary>
 public class QrCode {
     /// <summary>
     /// Creates a QR code image from a raw string value.
     /// </summary>
-    /// <param name="content">Content to encode.</param>
-    /// <param name="filePath">Path where the QR image will be saved.</param>
-    /// <param name="transparent">Whether the background should be transparent.</param>
-    /// <param name="eccLevel">Error correction level.</param>
-    /// <param name="foregroundColor">Foreground color of QR modules.</param>
-    /// <param name="backgroundColor">Background color of the QR code.</param>
+    /// <para>Use this overload when the payload is already prepared as plain text.</para>
+    /// <param name="content">Raw content to encode into the QR payload.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
+    /// <param name="transparent">When set, the QR background is rendered transparent instead of using a solid fill.</param>
+    /// <param name="eccLevel">Error correction level used when generating QR modules.</param>
+    /// <param name="foregroundColor">Foreground color used for dark QR modules. Defaults to black.</param>
+    /// <param name="backgroundColor">Background color used for non-transparent output. Defaults to white.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
+    /// <example>
+    ///   <code>QrCode.Generate("https://evotec.xyz", "qr.png");</code>
+    /// </example>
     public static void Generate(string content, string filePath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
         var options = BuildOptions(transparent, eccLevel, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(new QrPayloadData(content), filePath, options);
@@ -31,14 +44,18 @@ public class QrCode {
     /// <summary>
     /// Creates a QR code image from a raw string and overlays a logo at the center.
     /// </summary>
-    /// <param name="content">Content to encode.</param>
-    /// <param name="filePath">Path where the QR image will be saved.</param>
-    /// <param name="logoPath">Path to the logo image to overlay.</param>
-    /// <param name="transparent">Whether the background should be transparent.</param>
-    /// <param name="eccLevel">Error correction level.</param>
-    /// <param name="foregroundColor">Foreground color of QR modules.</param>
-    /// <param name="backgroundColor">Background color of the QR code.</param>
+    /// <para>Use this overload when the QR code should include a small centered logo for branding.</para>
+    /// <param name="content">Raw content to encode into the QR payload.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
+    /// <param name="logoPath">Path to the logo image that should be converted to PNG and placed in the center.</param>
+    /// <param name="transparent">When set, the QR background is rendered transparent instead of using a solid fill.</param>
+    /// <param name="eccLevel">Error correction level used when generating QR modules.</param>
+    /// <param name="foregroundColor">Foreground color used for dark QR modules. Defaults to black.</param>
+    /// <param name="backgroundColor">Background color used for non-transparent output. Defaults to white.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
+    /// <example>
+    ///   <code>QrCode.Generate("https://evotec.xyz", "qr-logo.png", "logo.png");</code>
+    /// </example>
     public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
         var logoBytes = LoadLogoPng(logoPath);
         var options = BuildOptions(transparent, eccLevel, foregroundColor, backgroundColor, pixelSize, logoBytes, drawLogoBackground: false);
@@ -47,13 +64,17 @@ public class QrCode {
     /// <summary>
     /// Creates a QR code containing WiFi configuration information.
     /// </summary>
+    /// <para>The generated QR code uses WPA payload semantics and a higher default correction level for scan reliability.</para>
     /// <param name="ssid">Wireless network SSID.</param>
-    /// <param name="password">Wireless password.</param>
-    /// <param name="filePath">Destination image path.</param>
+    /// <param name="password">Wireless network password.</param>
+    /// <param name="filePath">Destination image path. The image format is inferred from the extension.</param>
     /// <param name="transparent">Whether the QR code should have transparent background.</param>
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
+    /// <example>
+    ///   <code>QrCode.GenerateWiFi("OfficeWiFi", "pass123!", "wifi.png");</code>
+    /// </example>
     public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Wifi(ssid, password, "WPA", false);
         var options = BuildOptions(transparent, QrErrorCorrectionLevel.H, foregroundColor, backgroundColor, pixelSize);
@@ -107,6 +128,7 @@ public class QrCode {
     /// <summary>
     /// Creates a QR code for a calendar event using the iCalendar specification.
     /// </summary>
+    /// <para>This helper creates a calendar payload that can be scanned by calendar-aware mobile applications.</para>
     /// <param name="calendarEntry">Event title.</param>
     /// <param name="calendarMessage">Event description.</param>
     /// <param name="calendarGeoLocation">Event location.</param>
@@ -119,6 +141,9 @@ public class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
+    /// <example>
+    ///   <code>QrCode.GenerateCalendarEvent("Meeting", "Project sync", "Warsaw", DateTime.Today, DateTime.Today.AddHours(1), "meeting.png", false);</code>
+    /// </example>
     public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.CalendarEvent(calendarEntry, calendarMessage, calendarGeoLocation, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
         var options = BuildOptions(transparent, QrErrorCorrectionLevel.Q, foregroundColor, backgroundColor, pixelSize);
@@ -514,6 +539,7 @@ public class QrCode {
     /// <summary>
     /// Reads a QR code image and returns the decoded payload.
     /// </summary>
+    /// <para>The returned result reports whether a QR code was found and includes the decoded payload text when successful.</para>
     /// <param name="filePath">Path to the QR code image.</param>
     /// <returns>Decoded barcode result.</returns>
     /// <example>

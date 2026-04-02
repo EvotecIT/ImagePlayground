@@ -6,8 +6,10 @@ using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Sets an EXIF tag value in an image.</summary>
+/// <para>The value must match the type declared by the selected EXIF tag, including ImageSharp wrapper types such as Number or Rational.</para>
 /// <example>
 ///   <summary>Update DateTimeOriginal tag</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageExif")]
@@ -16,7 +18,8 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>Optional output path. When not specified the file is overwritten.</summary>
+    /// <summary>Optional output path.</summary>
+    /// <para>When not specified the source file is overwritten.</para>
     [Parameter(Position = 1)]
     public string? FilePathOutput { get; set; }
 

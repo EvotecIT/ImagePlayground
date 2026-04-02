@@ -6,8 +6,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates a WiFi QR code image.</summary>
+/// <para>The generated QR code uses a WiFi payload that can be scanned by mobile devices to prefill network settings.</para>
 /// <example>
 ///   <summary>Create WiFi QR</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodeWiFi -SSID Test -Password pass123 -FilePath wifi.png</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeWiFi")]
@@ -22,6 +24,7 @@ public sealed class NewImageQrCodeWiFiCmdlet : PSCmdlet {
     public string Password { get; set; } = string.Empty;
 
     /// <summary>Output path for the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 

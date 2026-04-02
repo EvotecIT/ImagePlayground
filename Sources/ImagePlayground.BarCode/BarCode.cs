@@ -15,6 +15,14 @@ using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 namespace ImagePlayground;
 /// <summary>
 /// Helper methods for generating and reading barcodes.
+/// <para>
+/// This class exposes convenience wrappers around CodeGlyphX for generating 1D and 2D barcodes and for
+/// decoding barcode images back into text.
+/// </para>
+/// <para>
+/// Output format is inferred from the destination file extension, while decode methods return
+/// <see cref="BarcodeResult{TPixel}"/> instances that clearly distinguish found, not found, and error states.
+/// </para>
 /// </summary>
 public class BarCode {
     /// <summary>
@@ -77,10 +85,14 @@ public class BarCode {
     }
 
     /// <summary>Generates a QR code.</summary>
+    /// <para>Use this helper when QR code generation is needed from the barcode-focused API surface.</para>
     /// <param name="content">Value encoded in the QR code.</param>
-    /// <param name="filePath">Destination file path.</param>
-    /// <param name="errorCorrectionLevel">Error correction level.</param>
-    /// <param name="encoding">Optional text encoding override.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
+    /// <param name="errorCorrectionLevel">Error correction level used during QR encoding.</param>
+    /// <param name="encoding">Optional text encoding override for payload serialization.</param>
+    /// <example>
+    ///   <code>BarCode.GenerateQr("https://evotec.xyz", "barcode-qr.png");</code>
+    /// </example>
     public static void GenerateQr(string content, string filePath, QrErrorCorrectionLevel errorCorrectionLevel = QrErrorCorrectionLevel.H, QrTextEncoding? encoding = null) {
         var options = new QrEasyOptions {
             ErrorCorrectionLevel = errorCorrectionLevel
@@ -102,6 +114,9 @@ public class BarCode {
     }
 
     /// <summary>Generates a Code 128 barcode.</summary>
+    /// <param name="content">Value encoded in the barcode.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
+    /// <param name="includeChecksum">Reserved compatibility flag. CodeGlyphX always includes the required checksum.</param>
     public static void GenerateCode128(string content, string filePath, bool includeChecksum = true) {
         if (!includeChecksum) {
             throw new NotSupportedException("Code128 generation via CodeGlyphX always includes the required checksum.");
@@ -149,8 +164,11 @@ public class BarCode {
     }
 
     /// <summary>
-    /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
+     /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
     /// </summary>
+    /// <param name="barcodeType">Barcode symbology to generate.</param>
+    /// <param name="content">Value encoded in the barcode.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
     public static void Generate(BarcodeType barcodeType, string content, string filePath) {
         Action? generator = barcodeType switch {
             BarcodeType.Code128 => () => GenerateCode128(content, filePath),
@@ -173,8 +191,13 @@ public class BarCode {
     /// <summary>
     /// Reads and decodes a barcode from an image asynchronously.
     /// </summary>
+    /// <para>The decoder attempts Data Matrix, PDF417, and standard 1D barcode recognition in sequence.</para>
     /// <param name="filePath">Path to the barcode image.</param>
+    /// <param name="cancellationToken">Cancellation token used to abort image loading or decode work.</param>
     /// <returns>A task containing the decoded barcode result.</returns>
+    /// <example>
+    ///   <code>var result = await BarCode.ReadAsync("code128.png");</code>
+    /// </example>
     public static async Task<BarcodeResult<ImageSharpRgba32>> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
@@ -216,8 +239,12 @@ public class BarCode {
     /// <summary>
     /// Reads and decodes a barcode from an image.
     /// </summary>
+    /// <para>This is the synchronous wrapper over <see cref="ReadAsync(string, CancellationToken)"/>.</para>
     /// <param name="filePath">Path to the barcode image.</param>
     /// <returns>Decoded barcode result.</returns>
+    /// <example>
+    ///   <code>var result = BarCode.Read("code128.png");</code>
+    /// </example>
     public static BarcodeResult<ImageSharpRgba32> Read(string filePath) {
         return ReadAsync(filePath).GetAwaiter().GetResult();
     }

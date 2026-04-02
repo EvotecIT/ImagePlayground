@@ -6,13 +6,16 @@ using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Generates a QR code image.</summary>
+/// <summary>Generates a QR code image from plain text content.</summary>
+/// <para>Use this cmdlet when the QR payload is already available as a raw string.</para>
 /// <example>
 ///   <summary>Create QR code</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr.png</code>
 /// </example>
 /// <example>
 ///   <summary>Show QR code after generation</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCode -Content 'text' -FilePath qr.png -Show</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCode")]
@@ -23,6 +26,7 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
     public string Content { get; set; } = string.Empty;
 
     /// <summary>Output path for the QR code image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
@@ -30,7 +34,7 @@ public sealed class NewImageQrCodeCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Show { get; set; }
 
-    /// <summary>Create QR code with transparent background.</summary>
+    /// <summary>Create the QR code with a transparent background.</summary>
     [Parameter]
     public SwitchParameter Transparent { get; set; }
 

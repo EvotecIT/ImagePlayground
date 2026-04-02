@@ -5,8 +5,10 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Compares two images and optionally saves a difference mask.</summary>
+/// <para>When OutputPath is omitted, the cmdlet writes the comparison result to the pipeline instead of creating a file.</para>
 /// <example>
 ///   <summary>Compare two images</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>Compare-Image -FilePath img1.png -FilePathToCompare img2.png</code>
 /// </example>
 [Cmdlet(VerbsData.Compare, "Image")]
@@ -20,6 +22,7 @@ public sealed class CompareImageCmdlet : PSCmdlet {
     public string FilePathToCompare { get; set; } = string.Empty;
 
     /// <summary>Output path for difference mask.</summary>
+    /// <para>When provided, the cmdlet writes a visual difference image instead of only returning the comparison result.</para>
     [Parameter(Position = 2)]
     public string? OutputPath { get; set; }
 
