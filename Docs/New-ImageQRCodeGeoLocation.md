@@ -1,38 +1,107 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeGeoLocation
-
 ## SYNOPSIS
-Creates a QR code pointing to geographic coordinates.
+New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeGeoLocation [-Latitude] <String> [-Longitude] <String> [-FilePath] <String> [-Show] [<CommonParameters>]
+New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Generates a QR code with geo coordinates that can be opened in a maps application.
+New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageQRCodeGeoLocation -Latitude '52.1' -Longitude '21.0' -FilePath .\geo.png
+New-ImageQRCodeGeoLocation -FilePath 'C:\Path'
 ```
-Creates geo.png containing location information.
 
 ## PARAMETERS
-### -Latitude
-Latitude value.
-### -Longitude
-Longitude value.
+
 ### -FilePath
-Destination path for the image file.
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Latitude
+{{ Fill Latitude Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Longitude
+{{ Fill Longitude Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Show
-Opens the generated file when finished.
+{{ Fill Show Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters.
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None
+

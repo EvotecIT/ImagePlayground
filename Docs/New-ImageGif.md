@@ -1,77 +1,77 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageGif
-
 ## SYNOPSIS
-Creates an animated GIF from image frames.
+New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<CommonParameters>]
 
 ## SYNTAX
-```
-New-ImageGif [-Frames] <String[]> [-FilePath] <String> [-FrameDelay <Int32>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Generates a GIF animation using the provided image files. The frame delay determines how long each frame is displayed.
+New-ImageGif [-Frames] <string[]> [-FilePath] <string> [-FrameDelay <int>] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> $frames = 'frame1.png','frame2.png'
-PS C:\> New-ImageGif -Frames $frames -FilePath .\anim.gif -FrameDelay 50
+New-ImageGif -FilePath 'C:\Path'
 ```
-Creates a GIF from the specified frames.
 
 ## PARAMETERS
 
-### -Frames
-Paths to image files used as frames of the animation.
+### -FilePath
+{{ Fill FilePath Description }}
 
 ```yaml
-Type: String[]
-Parameter Sets: (All)
-Aliases:
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 1
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePath
-Output path for the GIF file.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -FrameDelay
-Time in milliseconds between frames.
+{{ Fill FrameDelay Description }}
 
 ```yaml
 Type: Int32
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
-Default value: 100
+Position: named
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
+```
+
+### -Frames
+{{ Fill Frames Description }}
+
+```yaml
+Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -79,12 +79,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

@@ -1,94 +1,93 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Set-ImageExif
-
 ## SYNOPSIS
-Sets EXIF tag to specific value
+Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
 
 ## SYNTAX
-
-```
-Set-ImageExif [-FilePath] <String> [[-FilePathOutput] <String>] [-ExifTag] <ExifTag> [-Value] <Object>
- [<CommonParameters>]
+### __AllParameterSets
+```powershell
+Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Sets EXIF tag to specific value
+Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
-```
-An example
+### EXAMPLE 1
+```powershell
+Set-ImageExif -FilePath 'C:\Path'
 ```
 
 ## PARAMETERS
 
-### -FilePath
-File path to image to be processed for Exif Tag manipulation.
-If FilePathOutput is not specified, the image will be overwritten.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePathOutput
-File path to output image.
-If not specified, the image will be overwritten.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -ExifTag
-Exif Tag to be set
+{{ Fill ExifTag Description }}
 
 ```yaml
 Type: ExifTag
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FilePath
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -FilePathOutput
+{{ Fill FilePathOutput Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Value
+{{ Fill Value Description }}
+
+```yaml
+Type: Object
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 3
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Value
-Value to be set
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 4
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -96,9 +95,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+- `System.String`
+
 ## OUTPUTS
 
-## NOTES
-General notes
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

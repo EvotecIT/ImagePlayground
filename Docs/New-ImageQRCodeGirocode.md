@@ -1,44 +1,155 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeGirocode
-
 ## SYNOPSIS
-Creates a SEPA Girocode.
+New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeGirocode [-Iban] <String> [-Bic] <String> [-Name] <String> [-Amount] <Decimal> [[-RemittanceInformation] <String>] [-FilePath] <String> [-Show] [<CommonParameters>]
+New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Generates a QR code containing SEPA credit transfer information.
+New-ImageQRCodeGirocode [-Iban] <string> [-Bic] <string> [-Name] <string> [-Amount] <decimal> [[-RemittanceInformation] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageQRCodeGirocode -Iban 'DE123' -Bic 'COBADEFFXXX' -Name 'Test' -Amount 12.34 -FilePath .\giro.png
+New-ImageQRCodeGirocode -FilePath 'C:\Path'
 ```
-Creates giro.png with payment details.
 
 ## PARAMETERS
-### -Iban
-IBAN of the beneficiary.
-### -Bic
-BIC of the beneficiary bank.
-### -Name
-Name of the beneficiary.
+
 ### -Amount
-Amount to transfer.
-### -RemittanceInformation
-Purpose of the payment.
+{{ Fill Amount Description }}
+
+```yaml
+Type: Decimal
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Bic
+{{ Fill Bic Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-Image file path.
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 5
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Iban
+{{ Fill Iban Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Name
+{{ Fill Name Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -RemittanceInformation
+{{ Fill RemittanceInformation Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Show
-Opens the generated file on completion.
+{{ Fill Show Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters.
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None
+

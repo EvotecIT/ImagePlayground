@@ -1,56 +1,91 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeOtp
-
 ## SYNOPSIS
-Creates a QR code for an OTP configuration.
+New-ImageQRCodeOtp [-Payload] <PayloadGenerator+OneTimePassword> [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <String> [[-Label] <String>] [[-Issuer] <String>] [-Algorithm <OtpAlgorithm>] [-Digits <Int32>] [-Period <Int32>] [-Counter <Int32>] [-FilePath] <String> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <Int32>] [<CommonParameters>]
+New-ImageQRCodeOtp [-Payload] <PayloadGenerator+OneTimePassword> [-FilePath] <string> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Encodes the provided OneTimePassword payload into a QR code for use with authenticator apps.
+New-ImageQRCodeOtp [-Payload] <PayloadGenerator+OneTimePassword> [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageQRCodeOtp -Type Totp -SecretBase32 'ABC' -Label 'User' -FilePath .\otp.png
+New-ImageQRCodeOtp -FilePath 'C:\Path'
 ```
-Creates otp.png with OTP configuration.
 
 ## PARAMETERS
-### -Type
-OTP type (Totp or Hotp).
-### -SecretBase32
-Base32-encoded secret.
-### -Label
-Account label.
-### -Issuer
-Issuer name.
-### -Algorithm
-Hash algorithm.
-### -Digits
-Number of digits.
-### -Period
-Period for TOTP.
-### -Counter
-Counter for HOTP.
+
 ### -FilePath
-Output path for the image.
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Payload
+{{ Fill Payload Description }}
+
+```yaml
+Type: OneTimePassword
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Show
-Opens the result.
-### -ForegroundColor
-Foreground color of QR modules.
-### -BackgroundColor
-Background color of the QR code.
-### -PixelSize
-Pixel size for each QR module.
+{{ Fill Show Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters.
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None
+

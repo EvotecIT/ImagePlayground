@@ -1,97 +1,125 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageThumbnail
-
 ## SYNOPSIS
-Creates thumbnails for all images in a directory.
+New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
 
 ## SYNTAX
-```
-New-ImageThumbnail [-DirectoryPath] <String> [-OutputDirectory] <String> [-Width <Int32>] [-Height <Int32>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`New-ImageThumbnail` scans a directory and saves resized copies of each image to the specified output directory.
+New-ImageThumbnail [-DirectoryPath] <string> [-OutputDirectory] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Sampler <Sampler>] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageThumbnail -DirectoryPath .\Images -OutputDirectory .\Thumbs -Width 64 -Height 64 -Sampler Lanczos3
+New-ImageThumbnail -DirectoryPath 'C:\Path'
 ```
-Creates 64x64 thumbnails using the Lanczos3 sampler.
 
 ## PARAMETERS
 
 ### -DirectoryPath
-Directory containing the source images.
+{{ Fill DirectoryPath Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
 Required: True
 Position: 0
-```
-
-### -OutputDirectory
-Directory where thumbnails will be saved.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Required: True
-Position: 1
-```
-
-### -Width
-Thumbnail width in pixels.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-```
-
-### -Height
-Thumbnail height in pixels.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -DontRespectAspectRatio
-If present, forces the thumbnails to stretch to the specified width and height.
+{{ Fill DontRespectAspectRatio Description }}
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
 Required: False
-Position: Named
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Height
+{{ Fill Height Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputDirectory
+{{ Fill OutputDirectory Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -Sampler
-Optional resampling algorithm to use when resizing.
+{{ Fill Sampler Description }}
 
 ```yaml
-Type: Sampler
-Parameter Sets: (All)
-Aliases:
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
 Required: False
-Position: Named
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Width
+{{ Fill Width Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -99,11 +127,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `None`
 
 ## OUTPUTS
 
-### System.IO.FileInfo[]
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

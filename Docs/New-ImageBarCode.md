@@ -1,84 +1,77 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageBarCode
-
 ## SYNOPSIS
-Creates a barcode image.
+New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
 
 ## SYNTAX
-
-```
-New-ImageBarCode [-Type] <BarcodeTypes> [-Value] <String> [-FilePath] <String> [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Generates a barcode in the specified format and saves it to a file.
+New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageBarCode -Type EAN -Value '9012341234571' -FilePath .\barcode.png
+New-ImageBarCode -FilePath 'C:\Path'
 ```
-Creates an EAN-13 barcode saved as barcode.png.
-
-### Example 2
-```powershell
-PS C:\> New-ImageBarCode -Type DataMatrix -Value 'demo' -FilePath .\matrix.png
-```
-Creates a Data Matrix barcode and saves it as matrix.png.
 
 ## PARAMETERS
 
 ### -FilePath
-Path where the barcode image will be written.
+{{ Fill FilePath Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 2
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -Type
-Barcode format to create.
+{{ Fill Type Description }}
 
 ```yaml
-Type: BarcodeTypes
-Parameter Sets: (All)
-Aliases:
-Accepted values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, PDF417
+Type: BarcodeType
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, PDF417
 
 Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Value
-Text value encoded within the barcode.
+{{ Fill Value Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -86,11 +79,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

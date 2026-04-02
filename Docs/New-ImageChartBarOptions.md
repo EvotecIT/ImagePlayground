@@ -1,32 +1,28 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageChartBarOptions
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
 
 ## SYNTAX
-
-```
+### __AllParameterSets
+```powershell
 New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+New-ImageChartBarOptions [-ShowValuesAboveBars] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+New-ImageChartBarOptions -ShowValuesAboveBars
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -35,14 +31,15 @@ PS C:\> {{ Add example code here }}
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -50,11 +47,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `None`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

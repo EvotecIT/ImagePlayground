@@ -4,70 +4,54 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# New-ImageChartBar
+# Export-ImageMetadata
 ## SYNOPSIS
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParameters>]
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+Export-ImageMetadata [-FilePath] <string> [[-OutputPath] <string>] [<CommonParameters>]
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartBar -Name 'Name'
+Export-ImageMetadata -FilePath 'C:\Path'
 ```
 
 ## PARAMETERS
 
-### -Color
-{{ Fill Color Description }}
-
-```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Name
-{{ Fill Name Description }}
+### -FilePath
+{{ Fill FilePath Description }}
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: Label
+Aliases: None
 Possible values: 
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -Value
-{{ Fill Value Description }}
+### -OutputPath
+{{ Fill OutputPath Description }}
 
 ```yaml
-Type: Double[]
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
 
-Required: True
+Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
@@ -79,11 +63,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.String`
 
 ## OUTPUTS
 
-- `System.Object`
+- `System.String`
 
 ## RELATED LINKS
 

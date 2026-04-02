@@ -1,68 +1,315 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Add-ImageTextBox
-
 ## SYNOPSIS
-Adds wrapped text to an image within a defined box.
+Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Add-ImageTextBox [-FilePath] <String> [-OutputPath] <String> [-Text] <String> [-X] <Single> [-Y] <Single> [-Width] <Single> [-Height <Single>] [-Color <Color>] [-FontSize <Single>] [-FontFamily <String>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <Single>] [-ShadowOffsetY <Single>] [-OutlineColor <Color>] [-OutlineWidth <Single>] [<CommonParameters>]
+Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Wraps the provided text to the specified width and draws it on the image. When `Height` is defined, the text is clipped to the given box height.
+Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> Add-ImageTextBox -FilePath .\input.png -OutputPath .\out.png -Text 'Long text that will wrap' -X 10 -Y 10 -Width 150
+Add-ImageTextBox -FilePath 'C:\Path'
 ```
-Draws the text in a 150 pixel wide box starting at (10,10).
-
-### Example 2
-```powershell
-PS C:\> $img = Get-Image -FilePath .\input.png
-PS C:\> $img.AddText(50,50,'Add-Text',[SixLabors.ImageSharp.Color]::Red,32)
-PS C:\> $img.AddTextBox(50,100,'Add-TextBox wraps this very long line of text.',400,[SixLabors.ImageSharp.Color]::Blue,32)
-PS C:\> Save-Image -Image $img -FilePath .\out.png
-```
-Shows both `Add-Text` and `Add-TextBox` on the same image.
-
-### Example 3
-```csharp
-using SixLabors.ImageSharp;
-
-ImageHelper.AddTextBox(
-    "input.png",
-    "out.png",
-    10,
-    10,
-    "Long text that will wrap",
-    150,
-    0f,
-    Color.Blue,
-    fontSize: 20f,
-    horizontalAlignment: SixLabors.Fonts.HorizontalAlignment.Center,
-    verticalAlignment: SixLabors.Fonts.VerticalAlignment.Center);
-```
-Draws centered wrapped text using C#.
-
-### Example 4
-```csharp
-using SixLabors.ImageSharp;
-
-using var image = Image.Load("input.png");
-image.AddText(10, 10, "Example", Color.Green, 24);
-image.AddTextBox(10, 40, "Add-TextBox with narrow width wraps quickly", 150, Color.Orange, 24);
-image.Save("out2.png");
-```
-Demonstrates placing text and wrapped text together using C#.
 
 ## PARAMETERS
-See `Add-ImageText` for details on shared parameters.
+
+### -Color
+{{ Fill Color Description }}
+
+```yaml
+Type: Color
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FilePath
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -FontFamily
+{{ Fill FontFamily Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FontSize
+{{ Fill FontSize Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Height
+{{ Fill Height Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: 6
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -HorizontalAlignment
+{{ Fill HorizontalAlignment Description }}
+
+```yaml
+Type: HorizontalAlignment
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Left, Right, Center
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutlineColor
+{{ Fill OutlineColor Description }}
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutlineWidth
+{{ Fill OutlineWidth Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+{{ Fill OutputPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShadowColor
+{{ Fill ShadowColor Description }}
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShadowOffsetX
+{{ Fill ShadowOffsetX Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShadowOffsetY
+{{ Fill ShadowOffsetY Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Text
+{{ Fill Text Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -VerticalAlignment
+{{ Fill VerticalAlignment Description }}
+
+```yaml
+Type: VerticalAlignment
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Top, Center, Bottom
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Width
+{{ Fill Width Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -X
+{{ Fill X Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Y
+{{ Fill Y Description }}
+
+```yaml
+Type: Single
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None
+

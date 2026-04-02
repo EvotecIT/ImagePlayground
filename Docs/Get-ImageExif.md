@@ -1,61 +1,61 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Get-ImageExif
-
 ## SYNOPSIS
-Gets EXIF data from image
+Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
 
 ## SYNTAX
-
-```
-Get-ImageExif [-FilePath] <String> [-Translate] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Gets EXIF data from image.
+Get-ImageExif [-FilePath] <string> [-Translate] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
-```
-Get-ImageExif -FilePath "C:\Users\przemyslaw.klys\Downloads\IMG_4644.jpeg"
+### EXAMPLE 1
+```powershell
+Get-ImageExif -FilePath 'C:\Path'
 ```
 
 ## PARAMETERS
 
 ### -FilePath
-File path to image to be processed for Exif Tag reading
+{{ Fill FilePath Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
-Position: 1
+Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -Translate
-Returns an object with property names translated from known EXIF tags.
+{{ Fill Translate Description }}
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
-Default value: False
+Position: named
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -63,9 +63,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+- `System.String`
+
 ## OUTPUTS
 
-## NOTES
-General notes
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

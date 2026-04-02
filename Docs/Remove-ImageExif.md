@@ -1,85 +1,44 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Remove-ImageExif
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
+
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<CommonParameters>]
 
 ## SYNTAX
-
-### RemoveExifTag (Default)
-```
-Remove-ImageExif -FilePath <String> -FilePathOutput <String> -ExifTag <ExifTag[]> [<CommonParameters>]
+### Tag (Default)
+```powershell
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
 ```
 
 ### All
-```
-Remove-ImageExif -FilePath <String> -FilePathOutput <String> [-All] [<CommonParameters>]
+```powershell
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
+
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -All [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+Remove-ImageExif -ExifTag @('Value')
 ```
 
-{{ Add example description here }}
+### EXAMPLE 2
+```powershell
+Remove-ImageExif -All
+```
 
 ## PARAMETERS
-
-### -FilePath
-{{ Fill FilePath Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePathOutput
-{{ Fill FilePathOutput Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ExifTag
-{{ Fill ExifTag Description }}
-
-```yaml
-Type: ExifTag[]
-Parameter Sets: RemoveExifTag
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -All
 {{ Fill All Description }}
@@ -87,13 +46,62 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: All
-Aliases:
+Aliases: None
+Possible values: 
 
 Required: True
-Position: Named
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
+```
+
+### -ExifTag
+{{ Fill ExifTag Description }}
+
+```yaml
+Type: ExifTag[]
+Parameter Sets: Tag
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FilePath
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: Tag, All
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -FilePathOutput
+{{ Fill FilePathOutput Description }}
+
+```yaml
+Type: String
+Parameter Sets: Tag, All
+Aliases: None
+Possible values: 
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -101,11 +109,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

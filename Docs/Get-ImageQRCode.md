@@ -1,32 +1,28 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Get-ImageQRCode
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
 
 ## SYNTAX
-
-```
-Get-ImageQRCode [[-FilePath] <String>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+Get-ImageQRCode -FilePath 'C:\Path'
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -35,14 +31,15 @@ PS C:\> {{ Add example code here }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
-Required: False
-Position: 1
+Required: True
+Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -50,11 +47,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

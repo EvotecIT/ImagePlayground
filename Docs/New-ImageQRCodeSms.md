@@ -1,38 +1,107 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeSms
-
 ## SYNOPSIS
-Creates a QR code encoding an SMS message.
+New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeSms [-Number] <String> [[-Message] <String>] [-FilePath] <String> [-Show] [<CommonParameters>]
+New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Generates a QR code that can launch the SMS application with the provided phone number and optional text message.
+New-ImageQRCodeSms [-Number] <string> [[-Message] <string>] [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageQRCodeSms -Number '+123456789' -Message 'Hello' -FilePath .\sms.png
+New-ImageQRCodeSms -FilePath 'C:\Path'
 ```
-Creates sms.png containing an SMS payload.
 
 ## PARAMETERS
-### -Number
-Phone number of the recipient.
-### -Message
-Optional SMS body text.
+
 ### -FilePath
-Path where the QR code image will be saved.
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Message
+{{ Fill Message Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Number
+{{ Fill Number Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Show
-Opens the generated image after creation.
+{{ Fill Show Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters.
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None
+

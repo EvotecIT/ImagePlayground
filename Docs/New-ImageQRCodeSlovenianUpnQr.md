@@ -1,36 +1,91 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeSlovenianUpnQr
-
 ## SYNOPSIS
-Creates a Slovenian UPN QR payment code.
+New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeSlovenianUpnQr [-Payload] <SlovenianUpnQrPayload> [-FilePath] <String> [-Show] [<CommonParameters>]
+New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Encodes the provided SlovenianUpnQr payload into an image file.
+New-ImageQRCodeSlovenianUpnQr [-Payload] <PayloadGenerator+SlovenianUpnQr> [-FilePath] <string> [-Show] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> $upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('P','A','X','R','RA','RC','SI123','Desc',1);New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath .\upn.png
+New-ImageQRCodeSlovenianUpnQr -FilePath 'C:\Path'
 ```
-Creates upn.png.
 
 ## PARAMETERS
-### -Payload
-SlovenianUpnQr payload object.
+
 ### -FilePath
-Destination path for the QR code.
+{{ Fill FilePath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Payload
+{{ Fill Payload Description }}
+
+```yaml
+Type: SlovenianUpnQr
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Show
-Open the image after creation.
+{{ Fill Show Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters.
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None
+

@@ -10,7 +10,7 @@ Build-Module -ModuleName 'ImagePlayground' {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion          = '1.0.0'
+        ModuleVersion          = '2.0.0'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
@@ -80,7 +80,7 @@ Build-Module -ModuleName 'ImagePlayground' {
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
 
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$false -StartClean -UpdateWhenNew -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$true -StartClean -UpdateWhenNew -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf #-ImportRequiredModules
 
@@ -110,7 +110,7 @@ Build-Module -ModuleName 'ImagePlayground' {
         #SeparateFileLibraries             = $true
         DeleteTargetModuleBeforeBuild     = $true
         MergeLibraryDebugging             = $false
-        RefreshPSD1Only                   = $true
+        RefreshPSD1Only                   = $false
         NETHandleRuntimes                 = $true
     }
 

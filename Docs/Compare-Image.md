@@ -1,32 +1,28 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Compare-Image
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] <string>] [<CommonParameters>]
 
 ## SYNTAX
-
-```
-Compare-Image [-FilePath] <String> [-FilePathToCompare] <String> [[-OutputPath] <String>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] <string>] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+Compare-Image -FilePath 'C:\Path'
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -35,14 +31,15 @@ PS C:\> {{ Add example code here }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
-Position: 1
+Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -FilePathToCompare
@@ -50,14 +47,15 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -OutputPath
@@ -65,14 +63,15 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: False
-Position: 3
+Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -80,13 +79,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
 

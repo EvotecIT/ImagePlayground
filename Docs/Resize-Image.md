@@ -1,85 +1,86 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # Resize-Image
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
+
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
 
 ## SYNTAX
-
 ### HeightWidth (Default)
-```
-Resize-Image [-FilePath <String>] [-OutputPath <String>] [-Width <Int32>] [-Height <Int32>]
- [-DontRespectAspectRatio] [<CommonParameters>]
+```powershell
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
 ```
 
 ### Percentage
-```
-Resize-Image [-FilePath <String>] [-OutputPath <String>] [-Percentage <Int32>] [<CommonParameters>]
+```powershell
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
+
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+Resize-Image -FilePath 'C:\Path'
 ```
 
-{{ Add example description here }}
-
 ## PARAMETERS
+
+### -Async
+{{ Fill Async Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: HeightWidth, Percentage
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DontRespectAspectRatio
+{{ Fill DontRespectAspectRatio Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: HeightWidth
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -FilePath
 {{ Fill FilePath Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: HeightWidth, Percentage
+Aliases: None
+Possible values: 
 
-Required: False
-Position: Named
+Required: True
+Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -OutputPath
-{{ Fill OutputPath Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Width
-{{ Fill Width Description }}
-
-```yaml
-Type: Int32
-Parameter Sets: HeightWidth
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -Height
@@ -88,13 +89,30 @@ Accept wildcard characters: False
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases:
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+{{ Fill OutputPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: HeightWidth, Percentage
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -Percentage
@@ -103,28 +121,30 @@ Accept wildcard characters: False
 ```yaml
 Type: Int32
 Parameter Sets: Percentage
-Aliases:
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
-### -DontRespectAspectRatio
-If you want to ignore aspect ratio use this switch. It only affects Width and Height parameters that are used separately.
+### -Width
+{{ Fill Width Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: Int32
 Parameter Sets: HeightWidth
-Aliases:
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
-Default value: False
+Position: named
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -132,11 +152,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

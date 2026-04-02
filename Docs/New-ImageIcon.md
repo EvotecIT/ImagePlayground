@@ -1,32 +1,28 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageIcon
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open] [<CommonParameters>]
 
 ## SYNTAX
-
-```
-New-ImageIcon [-FilePath] <String> [-OutputPath] <String> [-Size <Int32[]>] [-Open] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+New-ImageIcon [-FilePath] <string> [-OutputPath] <string> [-Size <int[]>] [-Open] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+New-ImageIcon -FilePath 'C:\Path'
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -35,41 +31,15 @@ PS C:\> {{ Add example code here }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -OutputPath
-{{ Fill OutputPath Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Size
-{{ Fill Size Description }}
-
-```yaml
-Type: Int32[]
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -Open
@@ -77,27 +47,61 @@ Accept wildcard characters: False
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
 Required: False
-Position: Named
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
+
+### -OutputPath
+{{ Fill OutputPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Size
+{{ Fill Size Description }}
+
+```yaml
+Type: Int32[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### None
-
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
 
-```
+- None
 
-```

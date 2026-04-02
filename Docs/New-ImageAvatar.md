@@ -1,143 +1,150 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageAvatar
-
 ## SYNOPSIS
-Creates a rounded avatar from an existing image.
+New-ImageAvatar [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
+
+New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
 
 ## SYNTAX
-
 ### Path (Default)
-```
-New-ImageAvatar [-FilePath] <String> [-OutputPath] <String> [-Width <Int32>] [-Height <Int32>] [-CornerRadius <Single>] [-Open] [<CommonParameters>]
+```powershell
+New-ImageAvatar [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
 ```
 
 ### Stream
-```
-New-ImageAvatar [-FilePath] <String> [-OutputStream] <Stream> [-Width <Int32>] [-Height <Int32>] [-CornerRadius <Single>] [<CommonParameters>]
+```powershell
+New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Creates a circular or rounded avatar image from the specified picture. The avatar can either be saved to disk or returned as a stream.
+New-ImageAvatar [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
+
+New-ImageAvatar [-FilePath] <string> [-OutputStream] <Stream> [-Width <int>] [-Height <int>] [-CornerRadius <float>] [-Open] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageAvatar -FilePath .\user.jpg -OutputPath .\avatar.png -Open
+New-ImageAvatar -FilePath 'C:\Path'
 ```
-Generates an avatar image saved to avatar.png and opens it after saving.
 
 ## PARAMETERS
 
+### -CornerRadius
+{{ Fill CornerRadius Description }}
+
+```yaml
+Type: Single
+Parameter Sets: Path, Stream
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-Path to the source image.
+{{ Fill FilePath Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: Path, Stream
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Height
+{{ Fill Height Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: Path, Stream
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Open
+{{ Fill Open Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Stream
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+{{ Fill OutputPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -OutputPath
-Destination file path when using the Path parameter set.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases:
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -OutputStream
-Stream that receives the avatar image in the Stream parameter set.
+{{ Fill OutputStream Description }}
 
 ```yaml
 Type: Stream
 Parameter Sets: Stream
-Aliases:
+Aliases: None
+Possible values: 
 
 Required: True
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Width
-Width of the generated avatar in pixels.
+{{ Fill Width Description }}
 
 ```yaml
 Type: Int32
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: Path, Stream
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
-Default value: 200
+Position: named
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Height
-Height of the generated avatar in pixels.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: 200
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -CornerRadius
-Radius in pixels used to round the avatar corners.
-
-```yaml
-Type: Single
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: 20
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Open
-Opens the created avatar file after saving.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Path
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -145,12 +152,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

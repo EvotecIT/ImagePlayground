@@ -1,48 +1,61 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageChartPie
-
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
 
 ## SYNTAX
-
-```
-New-ImageChartPie [[-Name] <String>] [[-Value] <Double>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> {{ Add example code here }}
+New-ImageChartPie -Name 'Name'
 ```
 
-{{ Add example description here }}
-
 ## PARAMETERS
+
+### -Color
+{{ Fill Color Description }}
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Name
 {{ Fill Name Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: Label
+Possible values: 
 
-Required: False
+Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Value
@@ -50,14 +63,15 @@ Accept wildcard characters: False
 
 ```yaml
 Type: Double
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
-Required: False
+Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -65,11 +79,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `None`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

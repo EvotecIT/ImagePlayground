@@ -1,85 +1,109 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageChartLine
-
 ## SYNOPSIS
-Creates a line series definition for chart generation.
+New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
 
 ## SYNTAX
-
-```
-New-ImageChartLine [[-Name] <String>] [[-Value] <Array>] [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Creates an object describing a single line series that can be passed to `New-ImageChart`.
-The object includes optional color information and marker shape.
+New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> New-ImageChartLine -Name 'Series' -Value 1,2,3 -Marker FilledCircle
+New-ImageChartLine -Name 'Name'
 ```
-
-Creates a line series with circular markers.
 
 ## PARAMETERS
 
+### -Color
+{{ Fill Color Description }}
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Marker
+{{ Fill Marker Description }}
+
+```yaml
+Type: MarkerShape
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Name
-Name displayed in chart legend.
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: Label
+Possible values: 
 
-Required: False
+Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Value
-Array of Y values for the line.
-
-### -Color
-Optional line color.
-
-### -Marker
-Shape of markers used on data points.
-
-```yaml
-Type: Array
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Smooth
-Render the line using smooth curves.
+{{ Fill Smooth Description }}
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: False
-Position: Named
-Default value: False
+Position: named
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
+```
+
+### -Value
+{{ Fill Value Description }}
+
+```yaml
+Type: Double[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -87,11 +111,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `None`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

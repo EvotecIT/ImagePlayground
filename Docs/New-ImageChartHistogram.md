@@ -1,47 +1,91 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageChartHistogram
-
 ## SYNOPSIS
-Creates histogram chart data.
+New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [<CommonParameters>]
 
 ## SYNTAX
-```
-New-ImageChartHistogram [[-Name] <String>] [[-Values] <Array>] [-BinSize <Int32>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`New-ImageChartHistogram` prepares values for a histogram chart.
+New-ImageChartHistogram [-Name] <string> [-Values] <double[]> [-BinSize <int>] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-New-ImageChartHistogram -Name 'Sample' -Values 1,2,3,3,4 -BinSize 2
+New-ImageChartHistogram -Name 'Name'
 ```
-Creates histogram data with a bin size of 2.
 
 ## PARAMETERS
-### -Name
-Label for the dataset.
-### -Values
-Array of numeric values.
+
 ### -BinSize
-Optional size of each bin.
+{{ Fill BinSize Description }}
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Name
+{{ Fill Name Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: Label
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Values
+{{ Fill Values Description }}
+
+```yaml
+Type: Double[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### CommonParameters
-This cmdlet supports the common parameters.
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
-None
+
+- `None`
 
 ## OUTPUTS
-System.Object
 
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

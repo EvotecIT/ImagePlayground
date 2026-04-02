@@ -1,82 +1,91 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # ConvertFrom-ImageBase64
-
 ## SYNOPSIS
-Creates an image file from Base64 encoded data.
+ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-ConvertFrom-ImageBase64 [-Base64] <String> [-OutputPath] <String> [-Open] [<CommonParameters>]
+ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`ConvertFrom-ImageBase64` takes a Base64 string and writes the decoded image to
-`OutputPath`. Use the `Open` switch to launch the saved file after it is
-created.
+ConvertFrom-ImageBase64 [-Base64] <string> [-OutputPath] <string> [-Open] [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> ConvertFrom-ImageBase64 -Base64 $data -OutputPath .\picture.png -Open
+ConvertFrom-ImageBase64 -OutputPath 'C:\Path'
 ```
-Saves `$data` as `picture.png` and opens it when finished.
 
 ## PARAMETERS
+
 ### -Base64
-Base64 encoded image data.
+{{ Fill Base64 Description }}
+
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Open
+{{ Fill Open Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+{{ Fill OutputPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
-### -OutputPath
-Path where the decoded image is saved.
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Open
-Opens the saved image after writing it to disk.
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
-None
+
+- `None`
 
 ## OUTPUTS
-None
 
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
 

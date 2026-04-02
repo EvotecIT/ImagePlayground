@@ -4,94 +4,30 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# Merge-Image
+# New-ImageChartAnnotation
 ## SYNOPSIS
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [<CommonParameters>]
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+New-ImageChartAnnotation [-X] <double> [-Y] <double> [-Text] <string> [-Arrow] [<CommonParameters>]
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Merge-Image -FilePath 'C:\Path'
+New-ImageChartAnnotation -Arrow
 ```
 
 ## PARAMETERS
 
-### -FilePath
-{{ Fill FilePath Description }}
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
-### -FilePathOutput
-{{ Fill FilePathOutput Description }}
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -FilePathToMerge
-{{ Fill FilePathToMerge Description }}
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Placement
-{{ Fill Placement Description }}
-
-```yaml
-Type: ImagePlacement
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: Bottom, Right, Top, Left
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ResizeToFit
-{{ Fill ResizeToFit Description }}
+### -Arrow
+{{ Fill Arrow Description }}
 
 ```yaml
 Type: SwitchParameter
@@ -106,12 +42,60 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Text
+{{ Fill Text Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -X
+{{ Fill X Description }}
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Y
+{{ Fill Y Description }}
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `System.String`
+- `None`
 
 ## OUTPUTS
 

@@ -4,24 +4,24 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# Merge-Image
+# Import-ImageMetadata
 ## SYNOPSIS
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath] <string>] [<CommonParameters>]
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath] <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Merge-Image [-FilePath] <string> [-FilePathToMerge] <string> [-FilePathOutput] <string> [-ResizeToFit] [-Placement <ImagePlacement>] [<CommonParameters>]
+Import-ImageMetadata [-FilePath] <string> [-MetadataPath] <string> [[-OutputPath] <string>] [<CommonParameters>]
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Merge-Image -FilePath 'C:\Path'
+Import-ImageMetadata -FilePath 'C:\Path'
 ```
 
 ## PARAMETERS
@@ -42,24 +42,8 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -FilePathOutput
-{{ Fill FilePathOutput Description }}
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -FilePathToMerge
-{{ Fill FilePathToMerge Description }}
+### -MetadataPath
+{{ Fill MetadataPath Description }}
 
 ```yaml
 Type: String
@@ -74,33 +58,17 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Placement
-{{ Fill Placement Description }}
+### -OutputPath
+{{ Fill OutputPath Description }}
 
 ```yaml
-Type: ImagePlacement
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: Bottom, Right, Top, Left
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ResizeToFit
-{{ Fill ResizeToFit Description }}
-
-```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
 
 Required: False
-Position: named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

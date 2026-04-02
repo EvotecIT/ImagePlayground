@@ -1,101 +1,93 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # ConvertTo-Image
-
 ## SYNOPSIS
-Converts an existing image file to another format.
+ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-CompressionLevel <int>] [<CommonParameters>]
 
 ## SYNTAX
-
-```
-ConvertTo-Image [-FilePath] <String> [-OutputPath] <String> [-Quality <Int32>] [-CompressionLevel <Int32>] [<CommonParameters>]
+### __AllParameterSets
+```powershell
+ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-CompressionLevel <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`ConvertTo-Image` reads an image from `FilePath` and writes a new file using the
-extension specified in `OutputPath`. When saving JPEG or WEBP images you can
-set `Quality` to control compression. For PNG files you may specify a
-`CompressionLevel` from `0` (no compression) to `9` (maximum compression).
+ConvertTo-Image [-FilePath] <string> [-OutputPath] <string> [-Quality <int>] [-CompressionLevel <int>] [<CommonParameters>]
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```powershell
-PS C:\> ConvertTo-Image -FilePath .\input.png -OutputPath .\output.jpg
+ConvertTo-Image -FilePath 'C:\Path'
 ```
-Converts the PNG file to JPEG format.
-
-### Example 2
-```powershell
-PS C:\> ConvertTo-Image -FilePath .\input.png -OutputPath .\output.webp -Quality 90
-```
-Creates a WEBP image with 90 percent quality.
 
 ## PARAMETERS
 
+### -CompressionLevel
+{{ Fill CompressionLevel Description }}
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-Path to the source image file.
-The file must exist before running the cmdlet.
+{{ Fill FilePath Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -OutputPath
+{{ Fill OutputPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -OutputPath
-Destination path for the converted image.
-The extension of this path determines the output format.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Quality
-JPEG and WEBP quality level from 0 to 100.
+{{ Fill Quality Description }}
 
 ```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
 Required: False
-Position: Named
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -CompressionLevel
-PNG compression level from 0 (no compression) to 9 (maximum).
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -103,11 +95,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+- `System.String`
 
 ## OUTPUTS
 
-### System.Object
-## NOTES
+- `System.Object`
 
 ## RELATED LINKS
+
+- None
+

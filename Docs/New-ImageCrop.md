@@ -4,34 +4,68 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# Add-ImageText
+# New-ImageCrop
 ## SYNOPSIS
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-Open] [<CommonParameters>]
+
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-CenterY <float>] [-Radius <float>] [-Open] [<CommonParameters>]
+
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
 
 ## SYNTAX
-### __AllParameterSets
+### Rectangle (Default)
 ```powershell
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-Open] [<CommonParameters>]
+```
+
+### Circle
+```powershell
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-CenterY <float>] [-Radius <float>] [-Open] [<CommonParameters>]
+```
+
+### Polygon
+```powershell
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-Open] [<CommonParameters>]
+
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-CenterY <float>] [-Radius <float>] [-Open] [<CommonParameters>]
+
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Add-ImageText -FilePath 'C:\Path'
+New-ImageCrop -FilePath 'C:\Path'
 ```
 
 ## PARAMETERS
 
-### -Color
-{{ Fill Color Description }}
+### -CenterX
+{{ Fill CenterX Description }}
 
 ```yaml
-Type: Color
-Parameter Sets: __AllParameterSets
+Type: Single
+Parameter Sets: Circle
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CenterY
+{{ Fill CenterY Description }}
+
+```yaml
+Type: Single
+Parameter Sets: Circle
 Aliases: None
 Possible values: 
 
@@ -47,7 +81,7 @@ Accept wildcard characters: True
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Rectangle, Circle, Polygon
 Aliases: None
 Possible values: 
 
@@ -58,12 +92,12 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -FontFamily
-{{ Fill FontFamily Description }}
+### -Height
+{{ Fill Height Description }}
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
+Type: Int32
+Parameter Sets: Rectangle
 Aliases: None
 Possible values: 
 
@@ -74,44 +108,12 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -FontSize
-{{ Fill FontSize Description }}
+### -Open
+{{ Fill Open Description }}
 
 ```yaml
-Type: Single
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -OutlineColor
-{{ Fill OutlineColor Description }}
-
-```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -OutlineWidth
-{{ Fill OutlineWidth Description }}
-
-```yaml
-Type: Single
-Parameter Sets: __AllParameterSets
+Type: SwitchParameter
+Parameter Sets: Rectangle, Circle, Polygon
 Aliases: None
 Possible values: 
 
@@ -127,7 +129,7 @@ Accept wildcard characters: True
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Rectangle, Circle, Polygon
 Aliases: None
 Possible values: 
 
@@ -138,12 +140,12 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ShadowColor
-{{ Fill ShadowColor Description }}
+### -Points
+{{ Fill Points Description }}
 
 ```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
+Type: PointF[]
+Parameter Sets: Polygon
 Aliases: None
 Possible values: 
 
@@ -154,12 +156,12 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ShadowOffsetX
-{{ Fill ShadowOffsetX Description }}
+### -Radius
+{{ Fill Radius Description }}
 
 ```yaml
 Type: Single
-Parameter Sets: __AllParameterSets
+Parameter Sets: Circle
 Aliases: None
 Possible values: 
 
@@ -170,33 +172,17 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ShadowOffsetY
-{{ Fill ShadowOffsetY Description }}
+### -Width
+{{ Fill Width Description }}
 
 ```yaml
-Type: Single
-Parameter Sets: __AllParameterSets
+Type: Int32
+Parameter Sets: Rectangle
 Aliases: None
 Possible values: 
 
 Required: False
 Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Text
-{{ Fill Text Description }}
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -206,13 +192,13 @@ Accept wildcard characters: True
 {{ Fill X Description }}
 
 ```yaml
-Type: Single
-Parameter Sets: __AllParameterSets
+Type: Int32
+Parameter Sets: Rectangle
 Aliases: None
 Possible values: 
 
-Required: True
-Position: 3
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -222,13 +208,13 @@ Accept wildcard characters: True
 {{ Fill Y Description }}
 
 ```yaml
-Type: Single
-Parameter Sets: __AllParameterSets
+Type: Int32
+Parameter Sets: Rectangle
 Aliases: None
 Possible values: 
 
-Required: True
-Position: 4
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

@@ -1,54 +1,59 @@
 ---
 external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # ConvertTo-ImageBase64
-
 ## SYNOPSIS
-Converts an image file to a Base64 encoded string.
+ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-ConvertTo-ImageBase64 [-FilePath] <String> [<CommonParameters>]
+ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`ConvertTo-ImageBase64` reads the image located at `FilePath` and returns its
-contents as a Base64 string. This is useful when embedding the image in other
-files or sending it through text-only channels.
+ConvertTo-ImageBase64 [-FilePath] <string> [<CommonParameters>]
 
 ## EXAMPLES
-### Example 1
+
+### EXAMPLE 1
 ```powershell
-PS C:\> ConvertTo-ImageBase64 -FilePath .\logo.png
+ConvertTo-ImageBase64 -FilePath 'C:\Path'
 ```
-Returns a Base64 string representing `logo.png`.
 
 ## PARAMETERS
+
 ### -FilePath
-Path to the image file to convert.
+{{ Fill FilePath Description }}
+
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
 
 Required: True
-Position: 1
+Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
-None
+
+- `System.String`
 
 ## OUTPUTS
-### System.String
 
-## NOTES
+- `System.String`
 
 ## RELATED LINKS
+
+- None
 

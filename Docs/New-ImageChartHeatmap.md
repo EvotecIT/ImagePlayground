@@ -4,39 +4,39 @@ Module Name: ImagePlayground
 online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-# New-ImageChartBar
+# New-ImageChartHeatmap
 ## SYNOPSIS
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>]
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartHeatmap [-Name] <string> [-Matrix] <double[,]> [<CommonParameters>]
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartBar -Name 'Name'
+New-ImageChartHeatmap -Name 'Name'
 ```
 
 ## PARAMETERS
 
-### -Color
-{{ Fill Color Description }}
+### -Matrix
+{{ Fill Matrix Description }}
 
 ```yaml
-Type: Nullable`1
+Type: Double[,]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
 
-Required: False
-Position: named
+Required: True
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -53,22 +53,6 @@ Possible values:
 
 Required: True
 Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Value
-{{ Fill Value Description }}
-
-```yaml
-Type: Double[]
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
