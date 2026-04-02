@@ -265,7 +265,12 @@ public static class ChartRenderer {
 
             var startAngle = -90f;
             foreach (var slice in options.Slices) {
-                var sweep = (float)(slice.Value / total * 360f);
+                var sliceValue = Math.Max(0, slice.Value);
+                if (sliceValue <= 0) {
+                    continue;
+                }
+
+                var sweep = (float)(sliceValue / total * 360f);
                 using var brush = new SolidBrush(slice.Color);
                 graphics.FillPie(brush, Rectangle.Round(rect), startAngle, sweep);
                 startAngle += sweep;
