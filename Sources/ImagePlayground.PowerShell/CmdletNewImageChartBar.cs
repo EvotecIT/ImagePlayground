@@ -4,9 +4,12 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates bar chart data item.</summary>
+/// <para>Use this cmdlet inside <c>New-ImageChart</c> to define one bar series.</para>
 /// <example>
-///   <summary>Create bar data</summary>
-///   <code>New-ImageChartBar -Name 'Jan' -Value 1,2 -Color Blue</code>
+///   <summary>Create bar-series data</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageChartBar -Name 'Revenue' -Value 12,18,25 -Color Blue</code>
+///   <para>Creates a single bar-series definition that can be passed into New-ImageChart.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartBar")]
 public sealed class NewImageChartBarCmdlet : PSCmdlet {

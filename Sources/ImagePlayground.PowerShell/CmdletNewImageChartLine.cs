@@ -4,9 +4,12 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates line chart data item.</summary>
+/// <para>Use this cmdlet inside <c>New-ImageChart</c> to define a line-series dataset.</para>
 /// <example>
-///   <summary>Create line data</summary>
-///   <code>New-ImageChartLine -Name 'Sales' -Value 10,20 -Color Green</code>
+///   <summary>Create line-series data</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageChartLine -Name 'Sales' -Value 10,20,18,24 -Color Green -Smooth</code>
+///   <para>Creates a smoothed line-series definition ready to be rendered by New-ImageChart.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartLine")]
 public sealed class NewImageChartLineCmdlet : PSCmdlet {

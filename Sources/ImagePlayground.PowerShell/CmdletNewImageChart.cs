@@ -5,9 +5,27 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates an image chart from definitions.</summary>
+/// <para>Use this cmdlet to render one or more chart definitions into a final image file.</para>
 /// <example>
-///   <summary>Create a bar chart and save it</summary>
-///   <code>New-ImageChart -ChartsDefinition { New-ImageChartBar -Name 'Jan' -Value @(1,2) } -FilePath chart.png</code>
+///   <summary>Create a simple bar chart and save it</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageChart -ChartsDefinition {
+///     New-ImageChartBar -Name 'Q1' -Value 12,18,25 -Color CornflowerBlue
+///     New-ImageChartBar -Name 'Q2' -Value 14,20,28 -Color Orange
+/// } -FilePath chart.png -XTitle 'Month' -YTitle 'Revenue'</code>
+///   <para>Builds chart definitions inside a script block and renders them into a PNG file.</para>
+/// </example>
+/// <example>
+///   <summary>Create a line chart with annotations and preview it</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$defs = @(
+///     New-ImageChartLine -Name 'CPU' -Value 35,42,58,61,49 -Color LimeGreen -Smooth
+/// )
+/// $ann = @(
+///     New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak' -Arrow
+/// )
+/// New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme Dark -ShowGrid -Show</code>
+///   <para>Renders a themed line chart and overlays an annotation highlighting the peak value.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChart")]
 public sealed class NewImageChartCmdlet : PSCmdlet {
@@ -49,6 +67,7 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
     public string? YTitle { get; set; }
 
     /// <summary>Output file path.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(Mandatory = true, ParameterSetName = ScriptBlockSet)]
     [Parameter(Mandatory = true, ParameterSetName = DefinitionSet)]
     public string FilePath { get; set; } = string.Empty;

@@ -4,9 +4,12 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates chart annotation data item.</summary>
+/// <para>Use this cmdlet with <c>New-ImageChart</c> to highlight notable points on a generated chart.</para>
 /// <example>
-///   <summary>Create annotation</summary>
-///   <code>New-ImageChartAnnotation -X 1 -Y 2 -Text 'Hello' -Arrow</code>
+///   <summary>Create a chart annotation</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak usage' -Arrow</code>
+///   <para>Creates an annotation definition that can be passed to New-ImageChart via -Annotation or -AnnotationsDefinition.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartAnnotation")]
 public sealed class NewImageChartAnnotationCmdlet : PSCmdlet {
