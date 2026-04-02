@@ -528,8 +528,9 @@ public static class ChartRenderer {
 
             var valueText = options.Value.ToString("0.##");
             using var valueFont = new Font(options.Style.FontFamilyName, options.Style.FontSize + 4f, FontStyle.Bold, GraphicsUnit.Pixel);
+            using var valueBrush = new SolidBrush(options.Style.TextColor);
             var valueSize = graphics.MeasureString(valueText, valueFont);
-            graphics.DrawString(valueText, valueFont, new SolidBrush(options.Style.TextColor), center.X - valueSize.Width / 2f, center.Y - valueSize.Height - 10f);
+            graphics.DrawString(valueText, valueFont, valueBrush, center.X - valueSize.Width / 2f, center.Y - valueSize.Height - 10f);
 
             DrawTitle(graphics, layout.TitleArea, options.Title, fonts, options.Style);
         });

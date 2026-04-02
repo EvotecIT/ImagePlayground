@@ -8,6 +8,10 @@ namespace ImagePlayground.Gdi;
 
 /// <summary>Represents a GDI+ backed image with simple drawing helpers.</summary>
 public sealed class Image : IDisposable {
+    private static readonly string[] SupportedExtensions = new[] {
+        ".bmp", ".gif", ".jpg", ".jpeg", ".tif", ".tiff", ".ico", ".png"
+    };
+
     private Bitmap _bitmap = null!;
     private string _filePath = string.Empty;
 
@@ -221,8 +225,9 @@ public sealed class Image : IDisposable {
             case ".ico":
                 return ImageFormat.Icon;
             case ".png":
-            default:
                 return ImageFormat.Png;
+            default:
+                throw new NotSupportedException($"Image format not supported. Supported extensions: {string.Join(", ", SupportedExtensions)}");
         }
     }
 }
