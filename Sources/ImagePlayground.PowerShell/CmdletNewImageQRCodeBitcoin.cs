@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code for Bitcoin-like payments.</summary>
+/// <para>Use this cmdlet to create payment request QR codes for Bitcoin and similar supported cryptocurrencies.</para>
 /// <example>
-///   <summary>Create Bitcoin QR</summary>
+///   <summary>Create a basic Bitcoin payment QR</summary>
+///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.01 -FilePath btc.png</code>
+///   <para>Creates a payment QR code that includes the destination address and requested amount.</para>
+/// </example>
+/// <example>
+///   <summary>Create a crypto donation QR code with label and note</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.005 -Label 'Evotec Donation' -Message 'Thank you for supporting the project' -FilePath donation.png -ForegroundColor DarkOrange -PixelSize 18 -Show</code>
+///   <para>Generates a donation-style payment QR code and opens it after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeBitcoin")]
 public sealed class NewImageQrCodeBitcoinCmdlet : PSCmdlet {
@@ -34,6 +43,7 @@ public sealed class NewImageQrCodeBitcoinCmdlet : PSCmdlet {
     public string? Message { get; set; }
 
     /// <summary>Path to the output image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 5)]
     public string FilePath { get; set; } = string.Empty;
 

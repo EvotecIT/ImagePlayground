@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a BezahlCode QR for German payments.</summary>
+/// <para>Use this cmdlet to render BezahlCode payment payloads for German banking scenarios.</para>
 /// <example>
-///   <summary>Create BezahlCode</summary>
-///   <code>New-ImageQRCodeBezahlCode -Authority SinglePayment -Name 'Tester' -Account '123' -Bnc '10020030' -Iban 'DE123' -Bic 'BIC' -Reason 'Invoice' -FilePath bezahl.png</code>
+///   <summary>Create a basic BezahlCode payment QR</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeBezahlCode -Authority SinglePayment -Name 'Evotec GmbH' -Account '1234567890' -Bnc '10020030' -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Reason 'Invoice 2026-041' -FilePath bezahl.png</code>
+///   <para>Creates a standard payment QR code that can be scanned by BezahlCode-aware banking apps.</para>
+/// </example>
+/// <example>
+///   <summary>Create a branded BezahlCode image</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeBezahlCode -Authority SinglePayment -Name 'Evotec GmbH' -Account '1234567890' -Bnc '10020030' -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Reason 'Consulting Retainer' -FilePath bezahl-brand.png -ForegroundColor Navy -BackgroundColor WhiteSmoke -PixelSize 16 -Show</code>
+///   <para>Produces a payment QR code with custom styling and opens it after generation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeBezahlCode")]
 public sealed class NewImageQrCodeBezahlCodeCmdlet : PSCmdlet {
@@ -42,6 +51,7 @@ public sealed class NewImageQrCodeBezahlCodeCmdlet : PSCmdlet {
     public string Reason { get; set; } = string.Empty;
 
     /// <summary>Output image path.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 7)]
     public string FilePath { get; set; } = string.Empty;
 

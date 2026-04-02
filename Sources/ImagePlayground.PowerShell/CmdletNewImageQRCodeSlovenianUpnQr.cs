@@ -7,9 +7,20 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a Slovenian UPN QR payment code.</summary>
+/// <para>Use this cmdlet when a prepared Slovenian UPN payment payload should be rendered into a scannable QR image.</para>
 /// <example>
-///   <summary>Create UPN QR</summary>
-///   <code>$upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('Payer','Addr','City','Rec','RAddr','RCity','SI123','Desc',1);New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn.png</code>
+///   <summary>Create a Slovenian UPN QR payment code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Invoice 2026-041',19999)
+/// New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn.png</code>
+///   <para>Generates a UPN payment QR code from a complete Slovenian payment payload object.</para>
+/// </example>
+/// <example>
+///   <summary>Create a branded UPN QR code and preview it</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Annual subscription',4900)
+/// New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn-brand.png -ForegroundColor DarkGreen -PixelSize 14 -Show</code>
+///   <para>Creates a styled payment QR code and opens the resulting image after generation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSlovenianUpnQr")]
 public sealed class NewImageQrCodeSlovenianUpnQrCmdlet : PSCmdlet {
@@ -18,6 +29,7 @@ public sealed class NewImageQrCodeSlovenianUpnQrCmdlet : PSCmdlet {
     public SlovenianUpnQrPayload Payload { get; set; } = null!;
 
     /// <summary>Location of the output image.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 

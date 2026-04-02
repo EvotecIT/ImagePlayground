@@ -7,9 +7,18 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a Girocode QR code.</summary>
+/// <para>Use this cmdlet to create SEPA payment QR codes for European bank transfers.</para>
 /// <example>
-///   <summary>Create Girocode</summary>
-///   <code>New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Test' -Amount 12.34 -FilePath giro.png</code>
+///   <summary>Create a basic Girocode payment QR</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 12.34 -FilePath giro.png</code>
+///   <para>Creates a payment QR code with the core SEPA transfer fields.</para>
+/// </example>
+/// <example>
+///   <summary>Create a Girocode for invoice payment</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCodeGirocode -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Name 'Evotec GmbH' -Amount 249.99 -RemittanceInformation 'Invoice 2026-041' -FilePath invoice-payment.png -ForegroundColor DarkBlue -PixelSize 14 -Show</code>
+///   <para>Generates a branded invoice-payment QR code and opens it after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeGirocode")]
 public sealed class NewImageQrCodeGirocodeCmdlet : PSCmdlet {
@@ -34,6 +43,7 @@ public sealed class NewImageQrCodeGirocodeCmdlet : PSCmdlet {
     public string? RemittanceInformation { get; set; }
 
     /// <summary>Path to save the QR code.</summary>
+    /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 5)]
     public string FilePath { get; set; } = string.Empty;
 
