@@ -817,7 +817,7 @@ public static class ChartRenderer {
                 titleHeight += graphics.MeasureString(title.Subtitle, fonts.BaseFont).Height + 2f;
             }
 
-            layout.TitleArea = new RectangleF(plot.Left, plot.Top - titleHeight, plot.Width, titleHeight);
+            layout.TitleArea = new RectangleF(plot.Left, plot.Top, plot.Width, titleHeight);
             plot.Y += titleHeight;
             plot.Height -= titleHeight;
 
