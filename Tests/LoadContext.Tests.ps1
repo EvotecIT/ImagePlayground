@@ -6,9 +6,7 @@ Describe 'Assembly Load Context' {
     }
 
     It 'imports packaged binaries by default when development mode is disabled' -Skip:($PSVersionTable.PSVersion.Major -lt 7) {
-        $modulePath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\ImagePlayground.psd1')).Path
         $moduleScriptPath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\ImagePlayground.psm1')).Path
-        $samplePath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\Sources\ImagePlayground.Tests\Images\QRCode1.png')).Path
         $pwshPath = (Get-Process -Id $PID).Path
         $sanitizedModulePath = @(
             $env:PSModulePath -split [System.IO.Path]::PathSeparator | Where-Object {
@@ -18,14 +16,13 @@ Describe 'Assembly Load Context' {
             }
         ) -join [System.IO.Path]::PathSeparator
         $scriptPath = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ("ImagePlayground.LoadContext.{0}.ps1" -f ([guid]::NewGuid().ToString('N')))
-        $escapedModulePath = $modulePath.Replace("'", "''")
-        $escapedSamplePath = $samplePath.Replace("'", "''")
+        $escapedModuleScriptPath = $moduleScriptPath.Replace("'", "''")
         $escapedModulePathList = $sanitizedModulePath.Replace("'", "''")
         $command = @"
 `$ErrorActionPreference = 'Stop'
 `$env:PSModulePath = '$escapedModulePathList'
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
-Import-Module '$escapedModulePath' -Force -ErrorAction Stop
+Import-Module '$escapedModuleScriptPath' -Force -ErrorAction Stop
 `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
 `$binaryModule = `$module.NestedModules | Where-Object Name -eq 'ImagePlayground.PowerShell' | Select-Object -First 1
 [pscustomobject]@{
