@@ -4,7 +4,7 @@ $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction Silen
 $Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
 $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
 # Get all assemblies
-$AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue -File
+$AssemblyFolders = @(Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue)
 
 # to speed up development locally you can opt into source binaries instead of packaged Lib assets
 $Development = $env:IMAGEPLAYGROUND_DEVELOPMENT -eq '1'
@@ -14,52 +14,6 @@ $DevelopmentFolderDefault = "net472"
 $BinaryModules = @(
     "ImagePlayground.PowerShell.dll"
 )
-
-# Ensure native runtime libraries are discoverable on Windows
-if ($IsWindows) {
-    $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
-    $archFolder = switch ($arch) {
-        'X64' {
-            'win-x64'
-        }
-        'X86' {
-            'win-x86'
-        }
-        'Arm64' {
-            'win-arm64'
-        }
-        'Arm' {
-            'win-arm'
-        }
-        default {
-            'win-x64'
-        }
-    }
-
-    if ($Development) {
-        $baseDir = if ($PSEdition -eq 'Core') {
-            Join-Path $DevelopmentPath $DevelopmentFolderCore
-        } else {
-            Join-Path $DevelopmentPath $DevelopmentFolderDefault
-        }
-    } else {
-        $baseDir = if ($PSEdition -eq 'Core') {
-            Join-Path $PSScriptRoot "Lib/$Framework"
-        } elseif ($FrameworkNet) {
-            Join-Path $PSScriptRoot "Lib/$FrameworkNet"
-        } else {
-            $null
-        }
-    }
-
-    if ($baseDir) {
-        $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
-        if (Test-Path $runtimePath) {
-            Write-Verbose -Message "Adding $runtimePath to PATH"
-            $env:PATH = "$runtimePath;" + $env:PATH
-        }
-    }
-}
 
 # Lets find which libraries we need to load
 $Default = $false
@@ -97,6 +51,52 @@ if ($Standard -and $Core -and $Default) {
     $FrameworkNet = 'Default'
 } else {
     #Write-Error -Message 'No assemblies found'
+}
+
+# Ensure native runtime libraries are discoverable on Windows
+if ($IsWindows) {
+    $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+    $archFolder = switch ($arch) {
+        'X64' {
+            'win-x64'
+        }
+        'X86' {
+            'win-x86'
+        }
+        'Arm64' {
+            'win-arm64'
+        }
+        'Arm' {
+            'win-arm'
+        }
+        default {
+            'win-x64'
+        }
+    }
+
+    if ($Development) {
+        $baseDir = if ($PSEdition -eq 'Core') {
+            Join-Path $DevelopmentPath $DevelopmentFolderCore
+        } else {
+            Join-Path $DevelopmentPath $DevelopmentFolderDefault
+        }
+    } else {
+        $baseDir = if ($PSEdition -eq 'Core' -and $Framework) {
+            Join-Path $PSScriptRoot "Lib/$Framework"
+        } elseif ($FrameworkNet) {
+            Join-Path $PSScriptRoot "Lib/$FrameworkNet"
+        } else {
+            $null
+        }
+    }
+
+    if ($baseDir) {
+        $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
+        if (Test-Path $runtimePath) {
+            Write-Verbose -Message "Adding $runtimePath to PATH"
+            $env:PATH = "$runtimePath;" + $env:PATH
+        }
+    }
 }
 
 $Assembly = @(
