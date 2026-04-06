@@ -26,10 +26,12 @@ Describe 'Assembly Load Context' {
 `$env:PSModulePath = '$escapedModulePathList'
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
 Import-Module '$escapedModulePath' -Force -ErrorAction Stop
-`$image = Get-Image -FilePath '$escapedSamplePath'
+`$module = Get-Module -Name ImagePlayground -ErrorAction Stop
+Get-Command -Name 'Get-Image' -Module ImagePlayground -ErrorAction Stop | Out-Null
+`$image = ImagePlayground\Get-Image -FilePath '$escapedSamplePath'
 try {
     [pscustomobject]@{
-        ImportedModulePath = (Get-Module ImagePlayground).Path
+        ImportedModulePath = `$module.Path
         AssemblyLocation = [ImagePlayground.Image].Assembly.Location
         Width = `$image.Width
     } | ConvertTo-Json -Compress
