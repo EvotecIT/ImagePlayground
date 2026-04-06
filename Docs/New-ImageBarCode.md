@@ -11,7 +11,7 @@ Creates a barcode image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
+New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -25,6 +25,22 @@ New-ImageBarCode -Type EAN -Value 9012341234571 -FilePath barcode.png
 ```
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -FilePath
 Output path for the barcode image.

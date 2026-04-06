@@ -11,7 +11,7 @@ Generates a Swiss QR payment code.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSwiss [-Payload] <SwissQrCodePayload> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeSwiss [-Payload] <SwissQrCodePayload> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Use this cmdlet when a prepared SwissQrCodePayload should be rendered into a pay
 
 ### EXAMPLE 1
 ```powershell
-$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+PS> $swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
             New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png
 ```
 
@@ -29,13 +29,29 @@ Renders a Swiss payment QR code from a previously prepared payment payload objec
 
 ### EXAMPLE 2
 ```powershell
-$swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+PS> $swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
             New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show
 ```
 
 Creates a branded QR image and opens it immediately after generation.
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.

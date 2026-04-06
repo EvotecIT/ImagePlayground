@@ -21,7 +21,7 @@ Use this cmdlet with New-ImageChart to highlight notable points on a generated c
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak usage' -Arrow
+PS> New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak usage' -Arrow
 ```
 
 Creates an annotation definition that can be passed to New-ImageChart via -Annotation or -AnnotationsDefinition.

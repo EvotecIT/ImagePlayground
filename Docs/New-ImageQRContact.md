@@ -11,7 +11,7 @@ Generates a QR code image containing the provided contact details.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRContact [-FilePath] <string> [-OutputType <QrContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <QrContactAddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRContact [-FilePath] <string> [-OutputType <QrContactOutputType>] [-Firstname <string>] [-Lastname <string>] [-Nickname <string>] [-Phone <string>] [-MobilePhone <string>] [-WorkPhone <string>] [-Email <string>] [-Birthday <datetime>] [-Website <string>] [-Street <string>] [-HouseNumber <string>] [-City <string>] [-ZipCode <string>] [-Country <string>] [-Note <string>] [-StateRegion <string>] [-AddressOrder <QrContactAddressOrder>] [-Org <string>] [-OrgTitle <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,14 +21,14 @@ Generates a QR code image containing the provided contact details.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRContact -FilePath contact.png -Firstname John -Lastname Doe -Phone 123456789
+PS> New-ImageQRContact -FilePath contact.png -Firstname John -Lastname Doe -Phone 123456789
 ```
 
 Creates a simple contact QR code that can be scanned into a phone address book.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRContact -FilePath consultant.png -OutputType VCard4 -Firstname John -Lastname Doe -Email john.doe@evotec.pl -MobilePhone '+48 500 600 700' -Org Evotec -OrgTitle Consultant -Street Example -HouseNumber 15A -City Warsaw -ZipCode '00-001' -Country Poland -Website 'https://evotec.pl'
+PS> New-ImageQRContact -FilePath consultant.png -OutputType VCard4 -Firstname John -Lastname Doe -Email john.doe@evotec.pl -MobilePhone '+48 500 600 700' -Org Evotec -OrgTitle Consultant -Street Example -HouseNumber 15A -City Warsaw -ZipCode '00-001' -Country Poland -Website 'https://evotec.pl'
 ```
 
 Generates a business card style QR code with address, organization, and contact metadata.
@@ -51,6 +51,22 @@ Position: named
 Default value: Default
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor

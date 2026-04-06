@@ -11,7 +11,7 @@ Generates a QR code for Bitcoin-like payments.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeBitcoin [-Currency] <QrBitcoinLikeType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBitcoin [-Currency] <QrBitcoinLikeType> [-Address] <string> [[-Amount] <double>] [[-Label] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,14 +21,14 @@ Use this cmdlet to create payment request QR codes for Bitcoin and similar suppo
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.01 -FilePath btc.png
+PS> New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.01 -FilePath btc.png
 ```
 
 Creates a payment QR code that includes the destination address and requested amount.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.005 -Label 'Evotec Donation' -Message 'Thank you for supporting the project' -FilePath donation.png -ForegroundColor DarkOrange -PixelSize 18 -Show
+PS> New-ImageQRCodeBitcoin -Currency Bitcoin -Address '1BoatSLRHtKNngkdXEeobR76b53LETtpyT' -Amount 0.005 -Label 'Evotec Donation' -Message 'Thank you for supporting the project' -FilePath donation.png -ForegroundColor DarkOrange -PixelSize 18 -Show
 ```
 
 Generates a donation-style payment QR code and opens it after creation.
@@ -65,6 +65,22 @@ Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor

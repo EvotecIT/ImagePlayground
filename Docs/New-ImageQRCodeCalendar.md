@@ -11,7 +11,7 @@ Creates a calendar event QR code image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeCalendar [-Entry] <string> [[-Message] <string>] [[-Location] <string>] [-From] <datetime> [-To] <datetime> [-FilePath] <string> [-AllDayEvent] [-EventEncoding <QrCalendarEncoding>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeCalendar [-Entry] <string> [[-Message] <string>] [[-Location] <string>] [-From] <datetime> [-To] <datetime> [-FilePath] <string> [-AllDayEvent] [-EventEncoding <QrCalendarEncoding>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,14 +21,14 @@ Use this cmdlet to encode meeting or appointment details into a QR code that can
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeCalendar -Entry 'Project Sync' -Message 'Weekly delivery review' -Location 'Office' -From (Get-Date) -To (Get-Date).AddHours(1) -FilePath qr.png
+PS> New-ImageQRCodeCalendar -Entry 'Project Sync' -Message 'Weekly delivery review' -Location 'Office' -From (Get-Date) -To (Get-Date).AddHours(1) -FilePath qr.png
 ```
 
 Creates a QR code for a calendar event with explicit start and end times.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeCalendar -Entry 'Company Offsite' -Location 'Gdansk' -From (Get-Date).Date -To (Get-Date).Date.AddDays(1) -AllDayEvent -EventEncoding ICalComplete -FilePath offsite.png -Show
+PS> New-ImageQRCodeCalendar -Entry 'Company Offsite' -Location 'Gdansk' -From (Get-Date).Date -To (Get-Date).Date.AddDays(1) -AllDayEvent -EventEncoding ICalComplete -FilePath offsite.png -Show
 ```
 
 Generates an all-day event payload and opens the QR image after creation.
@@ -49,6 +49,22 @@ Position: named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor

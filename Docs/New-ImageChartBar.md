@@ -21,7 +21,7 @@ Use this cmdlet inside New-ImageChart to define one bar series.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartBar -Name 'Revenue' -Value 12,18,25 -Color Blue
+PS> New-ImageChartBar -Name 'Revenue' -Value 12,18,25 -Color Blue
 ```
 
 Creates a single bar-series definition that can be passed into New-ImageChart.

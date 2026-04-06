@@ -11,7 +11,7 @@ Generates a QR code for a Shadowsocks configuration.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeShadowSocks [-ServerHost] <string> [-Port] <int> [-Password] <string> [-Method] <QrShadowSocksMethod> [[-Tag] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeShadowSocks [-ServerHost] <string> [-Port] <int> [-Password] <string> [-Method] <QrShadowSocksMethod> [[-Tag] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,19 +21,35 @@ Use this cmdlet to share a client-ready Shadowsocks connection string as a scann
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeShadowSocks -Host 'example.com' -Port 8388 -Password 'pwd' -Method Aes256Gcm -FilePath ss.png
+PS> New-ImageQRCodeShadowSocks -Host 'example.com' -Port 8388 -Password 'pwd' -Method Aes256Gcm -FilePath ss.png
 ```
 
 Creates a QR code for importing a Shadowsocks connection into a compatible client.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeShadowSocks -Host 'vpn.evotec.pl' -Port 8388 -Password 'StrongSecret!' -Method Chacha20IetfPoly1305 -Tag 'Warsaw Edge' -FilePath ss-warsaw.png -ForegroundColor Purple -PixelSize 14 -Show
+PS> New-ImageQRCodeShadowSocks -Host 'vpn.evotec.pl' -Port 8388 -Password 'StrongSecret!' -Method Chacha20IetfPoly1305 -Tag 'Warsaw Edge' -FilePath ss-warsaw.png -ForegroundColor Purple -PixelSize 14 -Show
 ```
 
 Generates a named client profile QR code and opens it immediately after creation.
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.
