@@ -27,8 +27,7 @@ Describe 'Assembly Load Context' {
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
 Import-Module '$escapedModulePath' -Force -ErrorAction Stop
 `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-Get-Command -Name 'Get-Image' -Module ImagePlayground -ErrorAction Stop | Out-Null
-`$image = ImagePlayground\Get-Image -FilePath '$escapedSamplePath'
+`$image = [ImagePlayground.Image]::Load('$escapedSamplePath')
 try {
     [pscustomobject]@{
         ImportedModulePath = `$module.Path
