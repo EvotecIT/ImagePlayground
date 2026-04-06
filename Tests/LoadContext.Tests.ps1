@@ -24,11 +24,11 @@ Describe 'Assembly Load Context' {
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
 Import-Module '$escapedModuleScriptPath' -Force -ErrorAction Stop
 `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-`$binaryModule = `$module.NestedModules | Where-Object Name -eq 'ImagePlayground.PowerShell' | Select-Object -First 1
+`$binaryModule = Get-Module -Name ImagePlayground.PowerShell -All | Select-Object -First 1
 [pscustomobject]@{
     ImportedModulePath = `$module.Path
     BinaryModulePath = `$binaryModule.Path
-    ExportedCommandCount = `$module.ExportedCommands.Count
+    ExportedCommandCount = `$binaryModule.ExportedCommands.Count
 } | ConvertTo-Json -Compress
 "@
 
