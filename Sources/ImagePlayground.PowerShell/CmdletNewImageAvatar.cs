@@ -10,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageAvatar -FilePath user.jpg -OutputPath avatar.png -Open</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageAvatar", DefaultParameterSetName = ParameterSetPath)]
-public sealed class NewImageAvatarCmdlet : PSCmdlet {
+public sealed class NewImageAvatarCmdlet : ImageCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetStream = "Stream";
 
@@ -47,11 +47,7 @@ public sealed class NewImageAvatarCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"New-ImageAvatar - File {FilePath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "NewImageAvatarFileNotFound", FilePath);
 
         if (ParameterSetName == ParameterSetStream) {
             ImagePlayground.ImageHelper.Avatar(filePath, OutputStream, Width, Height, CornerRadius);

@@ -15,6 +15,16 @@ describe 'New-ImageQRCodeCalendar cmdlet' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern 'BEGIN:VEVENT'
     }
 
+    It 'creates calendar event QR code asynchronously' {
+        $file = Join-Path -Path $TestDir -ChildPath 'calendar_async.png'
+        if (Test-Path -Path $file) { Remove-Item -Path $file }
+        $from = Get-Date -Date '2024-01-01T12:00:00'
+        $to = $from.AddHours(1)
+        New-ImageQRCodeCalendar -Entry 'Meeting' -Message 'Discuss Async' -Location 'Office' -From $from -To $to -FilePath $file -Async
+        Test-Path -Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern 'BEGIN:VEVENT'
+    }
+
     It 'throws on invalid pixel size' {
         $file = Join-Path -Path $TestDir -ChildPath 'calendar_invalid.png'
         $from = Get-Date -Date '2024-01-01T12:00:00'

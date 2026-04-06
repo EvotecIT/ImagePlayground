@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 
@@ -35,19 +36,18 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously adjusts image properties and saves the result.
     /// </summary>
-    public static async Task AdjustAsync(string filePath, string outFilePath, float? brightness = null, float? contrast = null, float? lightness = null, float? opacity = null, float? saturation = null, float? sepia = null) {
+    public static async Task AdjustAsync(string filePath, string outFilePath, float? brightness = null, float? contrast = null, float? lightness = null, float? opacity = null, float? saturation = null, float? sepia = null, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            if (brightness.HasValue) { img.Brightness(brightness.Value); }
-            if (contrast.HasValue) { img.Contrast(contrast.Value); }
-            if (lightness.HasValue) { img.Lightness(lightness.Value); }
-            if (opacity.HasValue) { img.Opacity(opacity.Value); }
-            if (saturation.HasValue) { img.Saturate(saturation.Value); }
-            if (sepia.HasValue) { img.Sepia(sepia.Value); }
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        if (brightness.HasValue) { img.Brightness(brightness.Value); }
+        if (contrast.HasValue) { img.Contrast(contrast.Value); }
+        if (lightness.HasValue) { img.Lightness(lightness.Value); }
+        if (opacity.HasValue) { img.Opacity(opacity.Value); }
+        if (saturation.HasValue) { img.Saturate(saturation.Value); }
+        if (sepia.HasValue) { img.Sepia(sepia.Value); }
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

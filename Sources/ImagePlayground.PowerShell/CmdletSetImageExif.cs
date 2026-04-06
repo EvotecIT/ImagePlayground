@@ -13,7 +13,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageExif")]
-public sealed class SetImageExifCmdlet : PSCmdlet {
+public sealed class SetImageExifCmdlet : ImageCmdlet {
     /// <summary>Image file to modify.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -33,11 +33,7 @@ public sealed class SetImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Set-ImageExif - File not found: {FilePath}");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "SetImageExifFileNotFound", FilePath);
 
         var value = Value;
         if (value is null) {

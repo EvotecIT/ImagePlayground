@@ -1,7 +1,7 @@
 using System;
 using ImagePlayground;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -14,7 +14,7 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeWiFi")]
 [Alias("New-QRCodeWiFi")]
-public sealed class NewImageQrCodeWiFiCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeWiFiCmdlet : AsyncQrCodeCmdlet {
     /// <summary>WiFi network name.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string SSID { get; set; } = string.Empty;
@@ -44,21 +44,21 @@ public sealed class NewImageQrCodeWiFiCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateWiFiAsync(SSID, Password, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateWiFi(SSID, Password, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeWiFi - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateWiFi(SSID, Password, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

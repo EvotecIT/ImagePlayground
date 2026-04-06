@@ -9,7 +9,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Set-ImageBlur -FilePath in.png -OutputPath out.png -Amount 5</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageBlur")]
-public sealed class SetImageBlurCmdlet : PSCmdlet {
+public sealed class SetImageBlurCmdlet : AsyncImageCmdlet {
         /// <summary>Path to the source image.</summary>
         /// <para>The image must exist.</para>
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -30,15 +30,11 @@ public sealed class SetImageBlurCmdlet : PSCmdlet {
         public SwitchParameter Async { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Set-ImageBlur - File {FilePath} not found. Please check the path.");
-            return;
-        }
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "SetImageBlurFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
         if (Async.IsPresent) {
-            ImagePlayground.ImageHelper.BlurAsync(filePath, output, Amount).GetAwaiter().GetResult();
+            await ImagePlayground.ImageHelper.BlurAsync(filePath, output, Amount, CancelToken).ConfigureAwait(false);
         } else {
             ImagePlayground.ImageHelper.Blur(filePath, output, Amount);
         }

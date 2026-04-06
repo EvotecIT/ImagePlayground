@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Set-ImageRotation -FilePath in.png -OutputPath out.png -RotateMode Rotate180</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageRotation", DefaultParameterSetName = ParameterSetDegrees)]
-public sealed class SetImageRotationCmdlet : PSCmdlet {
+public sealed class SetImageRotationCmdlet : AsyncImageCmdlet {
         private const string ParameterSetDegrees = "Degrees";
         private const string ParameterSetMode = "Mode";
 
@@ -46,23 +46,19 @@ public sealed class SetImageRotationCmdlet : PSCmdlet {
         public SwitchParameter Async { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Set-ImageRotation - File {FilePath} not found. Please check the path.");
-            return;
-        }
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "SetImageRotationFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetDegrees) {
             if (Async.IsPresent) {
-                ImagePlayground.ImageHelper.RotateAsync(filePath, output, Degrees).GetAwaiter().GetResult();
+                await ImagePlayground.ImageHelper.RotateAsync(filePath, output, Degrees, CancelToken).ConfigureAwait(false);
             } else {
                 ImagePlayground.ImageHelper.Rotate(filePath, output, Degrees);
             }
         } else {
             if (Async.IsPresent) {
-                ImagePlayground.ImageHelper.RotateAsync(filePath, output, RotateMode).GetAwaiter().GetResult();
+                await ImagePlayground.ImageHelper.RotateAsync(filePath, output, RotateMode, CancelToken).ConfigureAwait(false);
             } else {
                 ImagePlayground.ImageHelper.Rotate(filePath, output, RotateMode);
             }

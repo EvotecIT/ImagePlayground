@@ -1,8 +1,8 @@
 using System;
 using ImagePlayground;
 using CodeGlyphX.Payloads;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -21,7 +21,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Generates a donation-style payment QR code and opens it after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeBitcoin")]
-public sealed class NewImageQrCodeBitcoinCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeBitcoinCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Type of cryptocurrency.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public QrBitcoinLikeType Currency { get; set; }
@@ -63,21 +63,21 @@ public sealed class NewImageQrCodeBitcoinCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateBitcoinAddressAsync(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateBitcoinAddress(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeBitcoin - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateBitcoinAddress(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

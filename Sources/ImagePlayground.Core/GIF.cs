@@ -33,6 +33,7 @@ public static class Gif {
         }
 
         string output = Helpers.ResolvePath(filePath);
+        Helpers.CreateParentDirectory(output);
 
         using var gif = ImageSharpImage.Load(frames[0]);
         gif.Metadata.GetGifMetadata().RepeatCount = 0;

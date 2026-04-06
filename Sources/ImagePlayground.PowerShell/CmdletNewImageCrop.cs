@@ -18,7 +18,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageCrop -FilePath in.png -OutputPath out.png -CenterX 50 -CenterY 50 -Radius 25</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageCrop", DefaultParameterSetName = ParameterSetRectangle)]
-public sealed class NewImageCropCmdlet : PSCmdlet {
+public sealed class NewImageCropCmdlet : ImageCmdlet {
     private const string ParameterSetRectangle = "Rectangle";
     private const string ParameterSetCircle = "Circle";
     private const string ParameterSetPolygon = "Polygon";
@@ -69,18 +69,15 @@ public sealed class NewImageCropCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"New-ImageCrop - File {FilePath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "NewImageCropFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetCircle) {
             ImageHelper.CropCircle(filePath, output, CenterX, CenterY, Radius);
         } else if (ParameterSetName == ParameterSetPolygon) {
             if (Points.Length < 3) {
-                WriteWarning("New-ImageCrop - At least three points are required for polygon crop.");
+                var exception = new PSArgumentException("At least three points are required for polygon crop.");
+                ThrowTerminatingError(new ErrorRecord(exception, "NewImageCropInsufficientPoints", ErrorCategory.InvalidArgument, Points));
                 return;
             }
             ImageHelper.CropPolygon(filePath, output, Points);

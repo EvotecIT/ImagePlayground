@@ -16,7 +16,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>ConvertTo-Image -FilePath photo.jpg -OutputPath photo.png -CompressionLevel 6</code>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "Image")]
-public sealed class ConvertToImageCmdlet : PSCmdlet {
+public sealed class ConvertToImageCmdlet : ImageCmdlet {
     /// <summary>Path to the source image.</summary>
     /// <para>The file must exist.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -37,12 +37,7 @@ public sealed class ConvertToImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"ConvertTo-Image - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
+        var filePath = ResolveExistingFilePath(FilePath, "ConvertToImageFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
         ImagePlayground.ImageHelper.ConvertTo(filePath, output, Quality, CompressionLevel);
     }

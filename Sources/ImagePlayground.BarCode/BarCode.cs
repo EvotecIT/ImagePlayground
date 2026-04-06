@@ -52,6 +52,56 @@ public class BarCode {
         image.Save(fullPath, Helpers.GetEncoder(extension, null, null));
     }
 
+    /// <summary>
+    /// Saves a PNG buffer to disk asynchronously, converting to the requested file extension.
+    /// </summary>
+    /// <param name="pngBytes">PNG bytes.</param>
+    /// <param name="filePath">Destination file path.</param>
+    /// <param name="cancellationToken">Cancellation token used to abort save operations.</param>
+    private static async Task SaveToFileAsync(byte[] pngBytes, string filePath, CancellationToken cancellationToken = default) {
+        if (pngBytes is null) {
+            throw new ArgumentNullException(nameof(pngBytes));
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        string fullPath = Helpers.ResolvePath(filePath);
+        Helpers.CreateParentDirectory(fullPath);
+        string extension = Path.GetExtension(fullPath).ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(extension)) {
+            throw new UnknownImageFormatException(
+                $"Image format not supported. Supported extensions: {string.Join(", ", Helpers.SupportedExtensions)}");
+        }
+
+        if (extension == ".png") {
+            await WriteAllBytesAsync(fullPath, pngBytes, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        if (extension == ".ico") {
+            string tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
+            try {
+                await WriteAllBytesAsync(tempPath, pngBytes, cancellationToken).ConfigureAwait(false);
+                using var wrappedImage = Image.Load(tempPath);
+                wrappedImage.SaveAsIcon(fullPath);
+            } finally {
+                if (File.Exists(tempPath)) {
+                    File.Delete(tempPath);
+                }
+            }
+            return;
+        }
+
+        using MemoryStream input = new(pngBytes, writable: false);
+        using Image<ImageSharpRgba32> image = await SixLabors.ImageSharp.Image.LoadAsync<ImageSharpRgba32>(input, cancellationToken).ConfigureAwait(false);
+        using FileStream output = File.Create(fullPath);
+        await image.SaveAsync(output, Helpers.GetEncoder(extension, null, null), cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task WriteAllBytesAsync(string filePath, byte[] bytes, CancellationToken cancellationToken) {
+        using FileStream stream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
+        await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
+    }
+
     private static CodeGlyphX.BarcodeType MapType(BarcodeType type) {
         return type switch {
             BarcodeType.Code128 => CodeGlyphX.BarcodeType.Code128,
@@ -104,6 +154,27 @@ public class BarCode {
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
         CodeGlyphX.QrCode.Save(content, fullPath, options);
+    }
+
+    /// <summary>Generates a QR code asynchronously.</summary>
+    /// <para>Uses asynchronous file I/O while keeping the encode step cancellation-aware.</para>
+    /// <param name="content">Value encoded in the QR code.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
+    /// <param name="errorCorrectionLevel">Error correction level used during QR encoding.</param>
+    /// <param name="encoding">Optional text encoding override for payload serialization.</param>
+    /// <param name="cancellationToken">Cancellation token used to abort save operations.</param>
+    public static async Task GenerateQrAsync(string content, string filePath, QrErrorCorrectionLevel errorCorrectionLevel = QrErrorCorrectionLevel.H, QrTextEncoding? encoding = null, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
+        var options = new QrEasyOptions {
+            ErrorCorrectionLevel = errorCorrectionLevel
+        };
+        if (encoding.HasValue) {
+            options.TextEncoding = encoding;
+        }
+
+        byte[] pngBytes = CodeGlyphX.QrCode.Render(content, CodeGlyphX.Rendering.OutputFormat.Png, options).Data;
+        cancellationToken.ThrowIfCancellationRequested();
+        await SaveToFileAsync(pngBytes, filePath, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Generates an EAN barcode.</summary>
@@ -189,6 +260,32 @@ public class BarCode {
     }
 
     /// <summary>
+    /// Dispatches barcode generation asynchronously based on <paramref name="barcodeType"/>.
+    /// </summary>
+    /// <param name="barcodeType">Barcode symbology to generate.</param>
+    /// <param name="content">Value encoded in the barcode.</param>
+    /// <param name="filePath">Destination file path. The image format is inferred from the extension.</param>
+    /// <param name="cancellationToken">Cancellation token used to abort save operations.</param>
+    public static async Task GenerateAsync(BarcodeType barcodeType, string content, string filePath, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
+        byte[] pngBytes = barcodeType switch {
+            BarcodeType.Code128 => Render1DPng(BarcodeType.Code128, content),
+            BarcodeType.Code93 => Render1DPng(Code93Encoder.Encode(content, includeChecksum: true, fullAsciiMode: false)),
+            BarcodeType.Code39 => Render1DPng(Code39Encoder.Encode(content, includeChecksum: true, fullAsciiMode: false)),
+            BarcodeType.KixCode => RenderMatrixPng(BarcodeType.KixCode, content),
+            BarcodeType.UPCA => Render1DPng(BarcodeType.UPCA, content),
+            BarcodeType.UPCE => Render1DPng(UpcEEncoder.Encode(content, UpcENumberSystem.Zero)),
+            BarcodeType.EAN => Render1DPng(BarcodeType.EAN, content),
+            BarcodeType.DataMatrix => RenderMatrixPng(BarcodeType.DataMatrix, content),
+            BarcodeType.PDF417 => RenderMatrixPng(BarcodeType.PDF417, content),
+            _ => throw new ArgumentOutOfRangeException(nameof(barcodeType), barcodeType, "Unsupported barcode type.")
+        };
+
+        cancellationToken.ThrowIfCancellationRequested();
+        await SaveToFileAsync(pngBytes, filePath, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Reads and decodes a barcode from an image asynchronously.
     /// </summary>
     /// <para>The decoder attempts Data Matrix, PDF417, and standard 1D barcode recognition in sequence.</para>
@@ -206,6 +303,7 @@ public class BarCode {
         byte[] pixels = new byte[barcodeImage.Width * barcodeImage.Height * 4];
         barcodeImage.CopyPixelDataTo(pixels);
 
+        cancellationToken.ThrowIfCancellationRequested();
         if (DataMatrixDecoder.TryDecode(pixels, barcodeImage.Width, barcodeImage.Height, barcodeImage.Width * 4, PixelFormat.Rgba32, out var dataMatrix)) {
             return new BarcodeResult<ImageSharpRgba32> {
                 Value = dataMatrix,
@@ -214,6 +312,7 @@ public class BarCode {
             };
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         string pdf417;
         if (Pdf417Decoder.TryDecode(pixels, barcodeImage.Width, barcodeImage.Height, barcodeImage.Width * 4, PixelFormat.Rgba32, out pdf417)) {
             return new BarcodeResult<ImageSharpRgba32> {
@@ -223,6 +322,7 @@ public class BarCode {
             };
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         if (BarcodeDecoder.TryDecode(pixels, barcodeImage.Width, barcodeImage.Height, barcodeImage.Width * 4, PixelFormat.Rgba32, out var decoded)) {
             return new BarcodeResult<ImageSharpRgba32> {
                 Value = decoded.Text,

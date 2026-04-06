@@ -32,4 +32,11 @@ Describe 'Set-ImageBlur' {
         $img.Dispose()
         $orig.Dispose()
     }
+
+    It 'throws when the source file does not exist' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/missing.png'
+        $dest = Join-Path $TestDir 'logo-blur-missing.png'
+
+        { Set-ImageBlur -FilePath $src -OutputPath $dest -Amount 5 -ErrorAction Stop } | Should -Throw
+    }
 }

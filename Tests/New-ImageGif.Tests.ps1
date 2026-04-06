@@ -18,5 +18,20 @@ Describe 'New-ImageGif' {
         New-ImageGif -Frames $frames -FilePath $dest -FrameDelay 50
         Test-Path $dest | Should -BeTrue
     }
+
+    It 'creates parent directory when saving gif output' {
+        $folder = Join-Path $TestDir 'GifFolder'
+        $dest = Join-Path $folder 'anim.gif'
+        if (Test-Path $folder) { Remove-Item $folder -Recurse -Force }
+
+        $frames = @(
+            Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+            Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.jpg'
+        )
+
+        New-ImageGif -Frames $frames -FilePath $dest -FrameDelay 50
+
+        Test-Path $dest | Should -BeTrue
+    }
 }
 

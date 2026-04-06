@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
@@ -147,6 +148,76 @@ public partial class ImagePlayground {
         string file = Path.Combine(_directoryWithTests, "qr_skype.png");
         if (File.Exists(file)) File.Delete(file);
         QrCode.GenerateSkypeCall("echo123", file);
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.SkypeCall("echo123").Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_WhatsAppAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_wa_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GenerateWhatsAppMessageAsync("hello there", file);
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.WhatsAppMessage("hello there").Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_BookmarkAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_bookmark_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GenerateBookmarkAsync("https://example.com", "Example", file);
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.Bookmark("https://example.com", "Example").Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_MmsAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_mms_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GenerateMMSAsync(file, "+1234567890", "subj");
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.Mms("+1234567890", "subj", QrMmsEncoding.Mmsto).Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_GirocodeAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_giro_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GenerateGirocodeAsync("DE12500105170648489890", "COBADEFFXXX", "Test", 1m, file, "Invoice");
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.Girocode("DE12500105170648489890", "COBADEFFXXX", "Test", 1m, "Invoice", QrGirocodeRemittanceType.Unstructured, string.Empty, string.Empty, QrGirocodeVersion.Version1, QrGirocodeEncoding.Iso8859_1).Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_MoneroAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_monero_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GenerateMoneroTransactionAsync("44AFFq5kSiGBoZ", 1f, null, null, null, file);
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.Monero("44AFFq5kSiGBoZ", 1f, null, null, null).Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_PhoneAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_phone_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GeneratePhoneNumberAsync("+123456", file);
+        Assert.True(File.Exists(file));
+        var expected = QrPayloads.Phone("+123456").Text;
+        AssertQrDecoded(file, expected);
+    }
+
+    [Fact]
+    public async Task Test_QRCode_SkypeAsync() {
+        string file = Path.Combine(_directoryWithTests, "qr_skype_async.png");
+        if (File.Exists(file)) File.Delete(file);
+        await QrCode.GenerateSkypeCallAsync("echo123", file);
         Assert.True(File.Exists(file));
         var expected = QrPayloads.SkypeCall("echo123").Text;
         AssertQrDecoded(file, expected);

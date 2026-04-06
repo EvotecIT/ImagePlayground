@@ -1,7 +1,7 @@
 using System;
 using ImagePlayground;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -20,7 +20,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Generates a branded Skype call QR code and opens the resulting image after creation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSkypeCall")]
-public sealed class NewImageQrCodeSkypeCallCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeSkypeCallCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Skype username to call.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string UserName { get; set; } = string.Empty;
@@ -46,21 +46,21 @@ public sealed class NewImageQrCodeSkypeCallCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateSkypeCallAsync(UserName, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateSkypeCall(UserName, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeSkypeCall - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateSkypeCall(UserName, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

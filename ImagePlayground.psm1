@@ -6,8 +6,8 @@ $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyC
 # Get all assemblies
 $AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue -File
 
-# to speed up development adding direct path to binaries, instead of the the Lib folder
-$Development = $true
+# to speed up development locally you can opt into source binaries instead of packaged Lib assets
+$Development = $env:IMAGEPLAYGROUND_DEVELOPMENT -eq '1'
 $DevelopmentPath = "$PSScriptRoot\Sources\ImagePlayground.PowerShell\bin\Debug"
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
@@ -55,7 +55,7 @@ if ($IsWindows) {
     if ($baseDir) {
         $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
         if (Test-Path $runtimePath) {
-            Write-Warning -Message "Adding $runtimePath to PATH"
+            Write-Verbose -Message "Adding $runtimePath to PATH"
             $env:PATH = "$runtimePath;" + $env:PATH
         }
     }
@@ -138,7 +138,7 @@ $BinaryDev = @(
             $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
         }
         $Variable
-        Write-Warning "Development mode: Using binaries from $Variable"
+        Write-Verbose "Development mode: Using binaries from $Variable"
     }
 )
 

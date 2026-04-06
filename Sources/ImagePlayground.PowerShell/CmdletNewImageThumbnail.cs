@@ -10,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageThumbnail -DirectoryPath images -OutputDirectory thumbs -Width 64 -Height 64</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageThumbnail")]
-public sealed class NewImageThumbnailCmdlet : PSCmdlet {
+public sealed class NewImageThumbnailCmdlet : ImageCmdlet {
     /// <summary>Directory containing images.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string DirectoryPath { get; set; } = string.Empty;
@@ -39,11 +39,7 @@ public sealed class NewImageThumbnailCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var dir = Helpers.ResolvePath(DirectoryPath);
-        if (!Directory.Exists(dir)) {
-            WriteWarning($"New-ImageThumbnail - Directory {DirectoryPath} not found. Please check the path.");
-            return;
-        }
+        var dir = ResolveExistingDirectoryPath(DirectoryPath, "NewImageThumbnailDirectoryNotFound", DirectoryPath);
         var output = Helpers.ResolvePath(OutputDirectory);
         ImagePlayground.ImageHelper.GenerateThumbnails(dir, output, Width, Height, !DontRespectAspectRatio.IsPresent, Sampler);
     }

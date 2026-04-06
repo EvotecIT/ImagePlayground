@@ -10,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Add-ImageTextBox -FilePath in.png -OutputPath out.png -Text "Sample text" -X 10 -Y 10 -Width 100</code>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "ImageTextBox")]
-public sealed class AddImageTextBoxCmdlet : PSCmdlet {
+public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
     /// <summary>Source image path.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -81,11 +81,7 @@ public sealed class AddImageTextBoxCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Add-ImageTextBox - File {FilePath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "AddImageTextBoxFileNotFound", FilePath);
 
         var output = Helpers.ResolvePath(OutputPath);
         ImagePlayground.ImageHelper.AddTextBox(

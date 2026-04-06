@@ -10,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Add-ImageWatermark -FilePath photo.png -OutputPath out.png -WatermarkPath logo.png -Placement BottomRight</code>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "ImageWatermark", DefaultParameterSetName = ParameterSetPlacement)]
-public sealed class AddImageWatermarkCmdlet : PSCmdlet {
+public sealed class AddImageWatermarkCmdlet : AsyncImageCmdlet {
     private const string ParameterSetPlacement = "Placement";
     private const string ParameterSetCoordinates = "Coordinates";
 
@@ -70,34 +70,26 @@ public sealed class AddImageWatermarkCmdlet : PSCmdlet {
     public SwitchParameter Async { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Add-ImageWatermark - File {FilePath} not found. Please check the path.");
-            return;
-        }
-        var watermark = Helpers.ResolvePath(WatermarkPath);
-        if (!File.Exists(watermark)) {
-            WriteWarning($"Add-ImageWatermark - Watermark file {WatermarkPath} not found. Please check the path.");
-            return;
-        }
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "AddImageWatermarkFileNotFound", FilePath);
+        var watermark = ResolveExistingFilePath(WatermarkPath, "AddImageWatermarkSourceNotFound", WatermarkPath, "Watermark file");
         var output = Helpers.ResolvePath(OutputPath);
 
         if (Spacing != null) {
             if (Async.IsPresent) {
-                ImagePlayground.ImageHelper.WatermarkImageTiledAsync(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage).GetAwaiter().GetResult();
+                await ImagePlayground.ImageHelper.WatermarkImageTiledAsync(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
             } else {
                 ImagePlayground.ImageHelper.WatermarkImageTiled(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage);
             }
         } else if (ParameterSetName == ParameterSetCoordinates) {
             if (Async.IsPresent) {
-                ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage).GetAwaiter().GetResult();
+                await ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
             } else {
                 ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
             }
         } else {
             if (Async.IsPresent) {
-                ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage).GetAwaiter().GetResult();
+                await ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
             } else {
                 ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
             }
