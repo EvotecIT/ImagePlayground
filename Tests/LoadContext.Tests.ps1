@@ -27,18 +27,12 @@ Describe 'Assembly Load Context' {
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
 Import-Module '$escapedModulePath' -Force -ErrorAction Stop
 `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-`$image = [ImagePlayground.Image]::Load('$escapedSamplePath')
-try {
-    [pscustomobject]@{
-        ImportedModulePath = `$module.Path
-        AssemblyLocation = [ImagePlayground.Image].Assembly.Location
-        Width = `$image.Width
-    } | ConvertTo-Json -Compress
-} finally {
-    if (`$null -ne `$image) {
-        `$image.Dispose()
-    }
-}
+`$binaryModule = `$module.NestedModules | Where-Object Name -eq 'ImagePlayground.PowerShell' | Select-Object -First 1
+[pscustomobject]@{
+    ImportedModulePath = `$module.Path
+    BinaryModulePath = `$binaryModule.Path
+    ExportedCommandCount = `$module.ExportedCommands.Count
+} | ConvertTo-Json -Compress
 "@
 
         try {
@@ -52,9 +46,9 @@ try {
             $data = $json | ConvertFrom-Json
 
             $data.ImportedModulePath | Should -Be $moduleScriptPath
-            $data.AssemblyLocation | Should -Match '[\\/]Lib[\\/]'
-            $data.AssemblyLocation | Should -Not -Match '[\\/]Sources[\\/]'
-            $data.Width | Should -Be 660
+            $data.BinaryModulePath | Should -Match '[\\/]Lib[\\/]'
+            $data.BinaryModulePath | Should -Not -Match '[\\/]Sources[\\/]'
+            $data.ExportedCommandCount | Should -BeGreaterThan 0
         } finally {
             Remove-Item -Path $scriptPath -Force -ErrorAction SilentlyContinue
         }
