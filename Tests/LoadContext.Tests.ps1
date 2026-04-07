@@ -7,7 +7,9 @@ Describe 'Assembly Load Context' {
     }
 
     It 'imports packaged binaries by default when development mode is disabled' -Skip:($PSVersionTable.PSVersion.Major -lt 7) {
-        $moduleScriptPath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\ImagePlayground.psm1')).Path
+        $moduleManifestPath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\ImagePlayground.psd1')).Path
+        $moduleRootPath = Split-Path -Path $moduleManifestPath -Parent
+        $developmentPath = Join-Path -Path $moduleRootPath -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Debug'
         $pwshPath = (Get-Process -Id $PID).Path
         $sanitizedModulePath = @(
             $env:PSModulePath -split [System.IO.Path]::PathSeparator | Where-Object {
@@ -17,27 +19,38 @@ Describe 'Assembly Load Context' {
             }
         ) -join [System.IO.Path]::PathSeparator
         $scriptPath = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ("ImagePlayground.LoadContext.{0}.ps1" -f ([guid]::NewGuid().ToString('N')))
-        $escapedModuleScriptPath = $moduleScriptPath.Replace("'", "''")
+        $escapedModuleManifestPath = $moduleManifestPath.Replace("'", "''")
+        $escapedDevelopmentPath = $developmentPath.Replace("'", "''")
         $escapedModulePathList = $sanitizedModulePath.Replace("'", "''")
         $command = @"
 `$ErrorActionPreference = 'Stop'
-`$VerbosePreference = 'Continue'
 `$env:PSModulePath = '$escapedModulePathList'
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
-`$importOutput = Import-Module '$escapedModuleScriptPath' -Force -Verbose 4>&1
-`$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-`$verboseMessages = [System.Collections.Generic.List[string]]::new()
-foreach (`$record in `$importOutput) {
-    if (`$record -is [System.Management.Automation.VerboseRecord]) {
-        [void] `$verboseMessages.Add(`$record.Message)
+`$developmentPath = '$escapedDevelopmentPath'
+`$hiddenDevelopmentPath = if (Test-Path -LiteralPath `$developmentPath) {
+    `$developmentPath + '.hidden'
+} else {
+    `$null
+}
+
+try {
+    if (`$hiddenDevelopmentPath) {
+        Move-Item -LiteralPath `$developmentPath -Destination `$hiddenDevelopmentPath -Force
+    }
+
+    Import-Module '$escapedModuleManifestPath' -Force -ErrorAction Stop
+    `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
+
+    [pscustomobject]@{
+        ImportedModulePath = `$module.Path
+        ExportedCommandCount = (Get-Command -Module ImagePlayground).Count
+        DevelopmentPathHidden = [bool] `$hiddenDevelopmentPath
+    } | ConvertTo-Json -Compress
+} finally {
+    if (`$hiddenDevelopmentPath -and (Test-Path -LiteralPath `$hiddenDevelopmentPath)) {
+        Move-Item -LiteralPath `$hiddenDevelopmentPath -Destination `$developmentPath -Force
     }
 }
-`$binaryImportMessage = `$verboseMessages | Where-Object { `$_ -like 'Importing binary module from *' } | Select-Object -First 1
-[pscustomobject]@{
-    ImportedModulePath = `$module.Path
-    BinaryImportMessage = `$binaryImportMessage
-    ExportedCommandCount = `$module.ExportedCommands.Count
-} | ConvertTo-Json -Compress
 "@
 
         try {
@@ -50,9 +63,8 @@ foreach (`$record in `$importOutput) {
             $json = $result | Select-Object -Last 1
             $data = $json | ConvertFrom-Json
 
-            $data.ImportedModulePath | Should -Be $moduleScriptPath
-            $data.BinaryImportMessage | Should -Match '[\\/]Lib[\\/]'
-            $data.BinaryImportMessage | Should -Not -Match '[\\/]Sources[\\/]'
+            $data.ImportedModulePath | Should -Match '[\\/]ImagePlayground\.psm1$'
+            $data.DevelopmentPathHidden | Should -BeTrue
             $data.ExportedCommandCount | Should -BeGreaterThan 0
         } finally {
             Remove-Item -Path $scriptPath -Force -ErrorAction SilentlyContinue

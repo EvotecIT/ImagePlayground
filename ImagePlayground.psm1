@@ -131,14 +131,16 @@ $Assembly = @(
 )
 
 $BinaryDev = @(
-    foreach ($BinaryModule in $BinaryModules) {
-        if ($PSEdition -eq 'Core') {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
-        } else {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
+    if ($Development) {
+        foreach ($BinaryModule in $BinaryModules) {
+            if ($PSEdition -eq 'Core') {
+                $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
+            } else {
+                $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
+            }
+            $Variable
+            Write-Verbose "Development mode: Using binaries from $Variable"
         }
-        $Variable
-        Write-Verbose "Development mode: Using binaries from $Variable"
     }
 )
 
@@ -227,3 +229,4 @@ if ($FoundErrors.Count -gt 0) {
 }
 
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'
+
