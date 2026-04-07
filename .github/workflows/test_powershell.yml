@@ -118,11 +118,16 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
       - name: Build .NET solution
         run: |
           dotnet restore Sources/ImagePlayground.sln
           dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Build module layout
+        shell: pwsh
+        run: .\Build\Build-Module.ps1
 
       - name: Run PowerShell tests
         shell: pwsh
@@ -153,11 +158,16 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
       - name: Build .NET solution
         run: |
           dotnet restore Sources/ImagePlayground.sln
           dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Build module layout
+        shell: pwsh
+        run: ./Build/Build-Module.ps1
 
       - name: Run PowerShell tests
         shell: pwsh
@@ -188,11 +198,16 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
       - name: Build .NET solution
         run: |
           dotnet restore Sources/ImagePlayground.sln
           dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Build module layout
+        shell: pwsh
+        run: ./Build/Build-Module.ps1
 
       - name: Run PowerShell tests
         shell: pwsh
