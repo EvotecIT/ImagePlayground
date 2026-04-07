@@ -17,6 +17,7 @@ on:
 env:
   DOTNET_VERSION: '8.x'
   BUILD_CONFIGURATION: 'Debug'
+  PSPUBLISHMODULE_REF: '95e4ca589fbb6f3b4ade6f6fcb0e1b0ae9ead7ab'
 
 jobs:
   refresh-psd1:
@@ -29,10 +30,27 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref }}
 
+      - name: Checkout PSPublishModule
+        uses: actions/checkout@v4
+        with:
+          repository: EvotecIT/PSPublishModule
+          ref: ${{ env.PSPUBLISHMODULE_REF }}
+          path: .dependencies/PSPublishModule
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
       - name: Setup PowerShell modules
         shell: pwsh
         run: |
-          Install-Module PSPublishModule -Force -Scope CurrentUser -AllowClobber
+          Install-Module Pester -Force -Scope CurrentUser -AllowClobber
+
+      - name: Build PSPublishModule
+        shell: pwsh
+        run: .\Build\Build-Module.ps1
+        working-directory: .dependencies/PSPublishModule
 
       - name: Refresh module manifest
         env:
@@ -65,6 +83,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Checkout PSPublishModule
+        uses: actions/checkout@v4
+        with:
+          repository: EvotecIT/PSPublishModule
+          ref: ${{ env.PSPUBLISHMODULE_REF }}
+          path: .dependencies/PSPublishModule
+
       - name: Download manifest
         uses: actions/download-artifact@v4
         with:
@@ -79,7 +104,12 @@ jobs:
       - name: Install PowerShell modules
         shell: pwsh
         run: |
-          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+
+      - name: Build PSPublishModule
+        shell: pwsh
+        run: .\Build\Build-Module.ps1
+        working-directory: .dependencies/PSPublishModule
 
       - name: Build module layout
         shell: pwsh
