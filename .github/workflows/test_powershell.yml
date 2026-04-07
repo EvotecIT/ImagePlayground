@@ -145,7 +145,9 @@ jobs:
 
       - name: Overlay packaged module
         shell: powershell
-        run: Copy-Item -Path .\.packaged-module\* -Destination . -Recurse -Force
+        run: |
+          Copy-Item -Path .\.packaged-module\* -Destination . -Recurse -Force
+          Remove-Item -LiteralPath .\.packaged-module -Recurse -Force
 
       - name: Run PowerShell tests
         shell: powershell
@@ -174,7 +176,9 @@ jobs:
 
       - name: Overlay packaged module
         shell: pwsh
-        run: Copy-Item -Path .\.packaged-module\* -Destination . -Recurse -Force
+        run: |
+          Copy-Item -Path .\.packaged-module\* -Destination . -Recurse -Force
+          Remove-Item -LiteralPath .\.packaged-module -Recurse -Force
 
       - name: Run PowerShell tests
         shell: pwsh
@@ -203,7 +207,9 @@ jobs:
 
       - name: Overlay packaged module
         shell: pwsh
-        run: Copy-Item -Path ./.packaged-module/* -Destination . -Recurse -Force
+        run: |
+          Copy-Item -Path ./.packaged-module/* -Destination . -Recurse -Force
+          Remove-Item -LiteralPath ./.packaged-module -Recurse -Force
 
       - name: Run PowerShell tests
         shell: pwsh
@@ -232,7 +238,9 @@ jobs:
 
       - name: Overlay packaged module
         shell: pwsh
-        run: Copy-Item -Path ./.packaged-module/* -Destination . -Recurse -Force
+        run: |
+          Copy-Item -Path ./.packaged-module/* -Destination . -Recurse -Force
+          Remove-Item -LiteralPath ./.packaged-module -Recurse -Force
 
       - name: Run PowerShell tests
         shell: pwsh
