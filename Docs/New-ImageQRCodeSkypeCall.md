@@ -11,7 +11,7 @@ Generates a QR code initiating a Skype call.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,19 +21,35 @@ Use this cmdlet for legacy Skype calling scenarios where a QR scan should start 
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSkypeCall -UserName 'echo123' -FilePath skype.png
+PS> New-ImageQRCodeSkypeCall -UserName 'echo123' -FilePath skype.png
 ```
 
 Creates a QR code that opens Skype and targets the selected username for a call.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeSkypeCall -UserName 'evotec.helpdesk' -FilePath skype-helpdesk.png -ForegroundColor MidnightBlue -PixelSize 16 -Show
+PS> New-ImageQRCodeSkypeCall -UserName 'evotec.helpdesk' -FilePath skype-helpdesk.png -ForegroundColor MidnightBlue -PixelSize 16 -Show
 ```
 
 Generates a branded Skype call QR code and opens the resulting image after creation.
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.

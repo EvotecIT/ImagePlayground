@@ -10,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Merge-Image -FilePath img1.png -FilePathToMerge img2.png -FilePathOutput out.png</code>
 /// </example>
 [Cmdlet(VerbsData.Merge, "Image")]
-public sealed class MergeImageCmdlet : PSCmdlet {
+public sealed class MergeImageCmdlet : ImageCmdlet {
     /// <summary>Base image path.</summary>
     /// <para>Must exist.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -35,16 +35,8 @@ public sealed class MergeImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Merge-Image - File {FilePath} not found. Please check the path.");
-            return;
-        }
-        var merge = Helpers.ResolvePath(FilePathToMerge);
-        if (!File.Exists(merge)) {
-            WriteWarning($"Merge-Image - File {FilePathToMerge} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "MergeImageSourceNotFound", FilePath);
+        var merge = ResolveExistingFilePath(FilePathToMerge, "MergeImageTargetNotFound", FilePathToMerge);
         var output = Helpers.ResolvePath(FilePathOutput);
 
         ImagePlayground.ImageHelper.Combine(filePath, merge, output, ResizeToFit.IsPresent, Placement);

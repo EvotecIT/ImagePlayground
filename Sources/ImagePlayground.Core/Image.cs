@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Codeuctivity.ImageSharpCompare;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -130,6 +132,24 @@ public partial class Image : IDisposable {
     }
 
     /// <summary>
+    /// Loads an image from the specified path asynchronously.
+    /// </summary>
+    /// <param name="filePath">Path to the image file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Loaded <see cref="Image"/> instance.</returns>
+    public static async Task<Image> LoadAsync(string filePath, CancellationToken cancellationToken = default) {
+        string fullPath = Helpers.ResolvePath(filePath);
+
+        using var stream = System.IO.File.OpenRead(fullPath);
+        Image image = new Image {
+            _filePath = fullPath,
+            _image = await SixLabors.ImageSharp.Image.LoadAsync(stream, cancellationToken).ConfigureAwait(false)
+        };
+
+        return image;
+    }
+
+    /// <summary>
     /// Saves the image to disk.
     /// </summary>
     /// <param name="filePath">Target path or empty to overwrite the original file.</param>
@@ -150,6 +170,31 @@ public partial class Image : IDisposable {
 
         var encoder = Helpers.GetEncoder(System.IO.Path.GetExtension(filePath), quality, compressionLevel);
         _image.Save(filePath, encoder);
+        Helpers.Open(filePath, openImage);
+    }
+
+    /// <summary>
+    /// Saves the image to disk asynchronously.
+    /// </summary>
+    /// <param name="filePath">Target path or empty to overwrite the original file.</param>
+    /// <param name="openImage">Whether to open the saved file.</param>
+    /// <param name="quality">Optional quality for lossy formats.</param>
+    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    public async Task SaveAsync(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null, CancellationToken cancellationToken = default) {
+        if (filePath == "") {
+            filePath = _filePath;
+        } else {
+            filePath = Helpers.ResolvePath(filePath);
+        }
+
+        string? directory = System.IO.Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(directory) && !System.IO.Directory.Exists(directory)) {
+            System.IO.Directory.CreateDirectory(directory);
+        }
+
+        var encoder = Helpers.GetEncoder(System.IO.Path.GetExtension(filePath), quality, compressionLevel);
+        await _image.SaveAsync(filePath, encoder, cancellationToken).ConfigureAwait(false);
         Helpers.Open(filePath, openImage);
     }
 

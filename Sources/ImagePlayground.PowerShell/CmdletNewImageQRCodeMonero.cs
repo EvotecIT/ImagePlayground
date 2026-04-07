@@ -1,7 +1,7 @@
 using System;
 using ImagePlayground;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -11,7 +11,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageQRCodeMonero -Address '44AFFq5kSiGBoZ...'' -Amount 1.0 -FilePath xmr.png</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeMonero")]
-public sealed class NewImageQrCodeMoneroCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeMoneroCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Destination wallet address.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Address { get; set; } = string.Empty;
@@ -52,21 +52,21 @@ public sealed class NewImageQrCodeMoneroCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateMoneroTransactionAsync(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateMoneroTransaction(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeMonero - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateMoneroTransaction(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200</code>
 /// </example>
 [Cmdlet(VerbsCommon.Resize, "Image", DefaultParameterSetName = ParameterSetHeightWidth)]
-public sealed class ResizeImageCmdlet : PSCmdlet {
+public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
         private const string ParameterSetHeightWidth = "HeightWidth";
         private const string ParameterSetPercentage = "Percentage";
 
@@ -56,17 +56,13 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         public SwitchParameter Async { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Resize-Image - File {FilePath} not found. Please check the path.");
-            return;
-        }
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "ResizeImageFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetPercentage) {
             if (Async.IsPresent) {
-                ImagePlayground.ImageHelper.ResizeAsync(filePath, output, Percentage).GetAwaiter().GetResult();
+                await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, Percentage, CancelToken).ConfigureAwait(false);
             } else {
                 ImagePlayground.ImageHelper.Resize(filePath, output, Percentage);
             }
@@ -83,7 +79,8 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         }
 
         if (!widthBound && !heightBound) {
-            WriteWarning("Resize-Image - Please specify Width or Height or Percentage.");
+            var exception = new PSArgumentException("Width or Height or Percentage must be specified.");
+            ThrowTerminatingError(new ErrorRecord(exception, "ResizeImageMissingDimensions", ErrorCategory.InvalidArgument, null));
             return;
         }
 
@@ -92,7 +89,7 @@ public sealed class ResizeImageCmdlet : PSCmdlet {
         bool keepAspect = !DontRespectAspectRatio.IsPresent;
 
         if (Async.IsPresent) {
-            ImagePlayground.ImageHelper.ResizeAsync(filePath, output, width, height, keepAspect).GetAwaiter().GetResult();
+            await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, width, height, keepAspect, cancellationToken: CancelToken).ConfigureAwait(false);
         } else {
             ImagePlayground.ImageHelper.Resize(filePath, output, width, height, keepAspect);
         }

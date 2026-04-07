@@ -11,7 +11,7 @@ Generates a QR code image from plain text content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,15 +21,31 @@ Use this cmdlet when the QR payload is already available as a raw string.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr.png
+PS> New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr.png
 ```
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCode -Content 'text' -FilePath qr.png -Show
+PS> New-ImageQRCode -Content 'text' -FilePath qr.png -Show
 ```
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.

@@ -14,7 +14,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Import-ImageMetadata -FilePath img.jpg -MetadataPath meta.json -OutputPath out.jpg</code>
 /// </example>
 [Cmdlet(VerbsData.Import, "ImageMetadata")]
-public sealed class ImportImageMetadataCmdlet : PSCmdlet {
+public sealed class ImportImageMetadataCmdlet : ImageCmdlet {
     /// <summary>Image to update.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -29,17 +29,8 @@ public sealed class ImportImageMetadataCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Import-ImageMetadata - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
-        var metaPath = Helpers.ResolvePath(MetadataPath);
-        if (!File.Exists(metaPath)) {
-            WriteWarning($"Import-ImageMetadata - Metadata file {MetadataPath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "ImportImageMetadataFileNotFound", FilePath);
+        var metaPath = ResolveExistingFilePath(MetadataPath, "ImportImageMetadataSourceNotFound", MetadataPath, "Metadata file");
 
         var output = string.IsNullOrWhiteSpace(OutputPath) ? filePath : Helpers.ResolvePath(OutputPath!);
         var options = new ImageHelper.ImportMetadataOptions(filePath, metaPath, output);

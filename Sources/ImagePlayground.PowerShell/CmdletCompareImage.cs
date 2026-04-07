@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Compare-Image -FilePath img1.png -FilePathToCompare img2.png</code>
 /// </example>
 [Cmdlet(VerbsData.Compare, "Image")]
-public sealed class CompareImageCmdlet : PSCmdlet {
+public sealed class CompareImageCmdlet : ImageCmdlet {
     /// <summary>First image path.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -28,16 +28,8 @@ public sealed class CompareImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Compare-Image - File {FilePath} not found. Please check the path.");
-            return;
-        }
-        var compare = Helpers.ResolvePath(FilePathToCompare);
-        if (!File.Exists(compare)) {
-            WriteWarning($"Compare-Image - File {FilePathToCompare} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "CompareImageSourceNotFound", FilePath);
+        var compare = ResolveExistingFilePath(FilePathToCompare, "CompareImageTargetNotFound", FilePathToCompare);
 
         var outputPath = OutputPath;
         if (!string.IsNullOrWhiteSpace(outputPath)) {

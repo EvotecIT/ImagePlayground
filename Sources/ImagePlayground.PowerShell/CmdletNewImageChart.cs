@@ -28,9 +28,11 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Renders a themed line chart and overlays an annotation highlighting the peak value.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChart")]
-public sealed class NewImageChartCmdlet : PSCmdlet {
+public sealed class NewImageChartCmdlet : ImageCmdlet {
     private const string ScriptBlockSet = "ScriptBlock";
     private const string DefinitionSet = "Definition";
+    private readonly List<ChartDefinition> _definitions = new();
+    private readonly List<ChartAnnotation> _annotations = new();
 
     /// <summary>ScriptBlock producing chart definitions.</summary>
     [Parameter(Position = 0, Mandatory = true, ParameterSetName = ScriptBlockSet)]
@@ -90,40 +92,45 @@ public sealed class NewImageChartCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var list = new List<ChartDefinition>();
         if (Definition is not null) {
-            list.AddRange(Definition);
+            _definitions.AddRange(Definition);
         }
+
+        if (Annotation is not null) {
+            _annotations.AddRange(Annotation);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing() {
         if (ChartsDefinition != null) {
             var results = ChartsDefinition.Invoke();
             foreach (var o in results) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
                 if (obj is ChartDefinition def) {
-                    list.Add(def);
+                    _definitions.Add(def);
                 }
             }
         }
-        if (list.Count == 0) {
-            WriteWarning("New-ImageChart - No chart definitions specified.");
-            return;
-        }
 
-        var annotations = new List<ChartAnnotation>();
-        if (Annotation is not null) {
-            annotations.AddRange(Annotation);
-        }
         if (AnnotationsDefinition != null) {
             var ares = AnnotationsDefinition.Invoke();
             foreach (var o in ares) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
                 if (obj is ChartAnnotation ann) {
-                    annotations.Add(ann);
+                    _annotations.Add(ann);
                 }
             }
         }
 
+        if (_definitions.Count == 0) {
+            var exception = new PSArgumentException("At least one chart definition must be specified.");
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageChartMissingDefinitions", ErrorCategory.InvalidArgument, null));
+            return;
+        }
+
         var output = Helpers.ResolvePath(FilePath);
-        Charts.Generate(list, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, annotations, Background);
+        Charts.Generate(_definitions, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

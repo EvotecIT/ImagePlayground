@@ -56,6 +56,20 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'creates QR code asynchronously' {
+
+        $file = Join-Path $TestDir 'qr_async.png'
+
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageQRCode -Content 'https://evotec.xyz/async' -FilePath $file -Async
+
+        Test-Path $file | Should -BeTrue
+
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz/async'
+
+    }
+
     It 'creates QR code icon' {
 
         $file = Join-Path $TestDir 'qr.ico'

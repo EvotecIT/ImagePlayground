@@ -21,7 +21,7 @@ The value must match the type declared by the selected EXIF tag, including Image
 
 ### EXAMPLE 1
 ```powershell
-Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)
+PS> Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)
 ```
 
 ## PARAMETERS

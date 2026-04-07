@@ -1,8 +1,8 @@
 using System;
 using ImagePlayground;
 using CodeGlyphX.Payloads;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -21,7 +21,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Creates a location QR for signage, invitations, or venue directions and previews it immediately.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeGeoLocation")]
-public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeGeoLocationCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Latitude value.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Latitude { get; set; } = string.Empty;
@@ -51,21 +51,21 @@ public sealed class NewImageQrCodeGeoLocationCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateGeoLocationAsync(Latitude, Longitude, FilePath, QrGeolocationEncoding.Geo, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateGeoLocation(Latitude, Longitude, FilePath, QrGeolocationEncoding.Geo, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeGeoLocation - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateGeoLocation(Latitude, Longitude, FilePath, QrGeolocationEncoding.Geo, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

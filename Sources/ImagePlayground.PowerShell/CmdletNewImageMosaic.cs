@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageMosaic -FilePaths img1.png,img2.png,img3.png,img4.png -OutputPath out.png -Columns 2 -Width 100 -Height 100</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageMosaic")]
-public sealed class NewImageMosaicCmdlet : PSCmdlet {
+public sealed class NewImageMosaicCmdlet : ImageCmdlet {
     /// <summary>Source image paths.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string[] FilePaths { get; set; } = Array.Empty<string>();
@@ -41,11 +41,7 @@ public sealed class NewImageMosaicCmdlet : PSCmdlet {
     protected override void ProcessRecord() {
         var checkedFiles = new List<string>();
         foreach (var file in FilePaths) {
-            var full = Helpers.ResolvePath(file);
-            if (!File.Exists(full)) {
-                WriteWarning($"New-ImageMosaic - File {file} not found. Please check the path.");
-                return;
-            }
+            var full = ResolveExistingFilePath(file, "NewImageMosaicFileNotFound", file);
             checkedFiles.Add(full);
         }
         var output = Helpers.ResolvePath(OutputPath);

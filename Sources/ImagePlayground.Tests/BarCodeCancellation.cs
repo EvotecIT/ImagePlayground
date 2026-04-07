@@ -18,5 +18,17 @@ public partial class ImagePlayground {
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => BarCode.ReadAsync(filePath, cts.Token));
     }
+
+    [Fact]
+    public async Task Test_BarCodeGenerateAsync_Cancelled() {
+        string filePath = Path.Combine(_directoryWithTests, "BarcodeCancelled.png");
+        File.Delete(filePath);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => BarCode.GenerateAsync(BarcodeType.EAN, "9012341234571", filePath, cts.Token));
+        Assert.False(File.Exists(filePath));
+    }
 }
 

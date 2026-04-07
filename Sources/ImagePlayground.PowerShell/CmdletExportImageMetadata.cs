@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsData.Export, "ImageMetadata")]
 [OutputType(typeof(string))]
-public sealed class ExportImageMetadataCmdlet : PSCmdlet {
+public sealed class ExportImageMetadataCmdlet : ImageCmdlet {
     /// <summary>Source image file.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -26,12 +26,7 @@ public sealed class ExportImageMetadataCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Export-ImageMetadata - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
+        var filePath = ResolveExistingFilePath(FilePath, "ExportImageMetadataFileNotFound", FilePath);
         string json = ImageHelper.ExportMetadata(filePath);
         if (string.IsNullOrWhiteSpace(OutputPath)) {
             WriteObject(json);

@@ -121,4 +121,47 @@ Describe 'New-ImageChart' {
 
         Test-Path -Path $file | Should -BeTrue
     }
+
+    It 'renders identical output for array and pipeline input' -Skip:(-not $IsWindows) {
+        $arrayFile = Join-Path -Path $TestDir -ChildPath 'chart_array_compare.png'
+        $pipeFile = Join-Path -Path $TestDir -ChildPath 'chart_pipe_compare.png'
+        if (Test-Path -Path $arrayFile) {
+            Remove-Item -Path $arrayFile
+        }
+        if (Test-Path -Path $pipeFile) {
+            Remove-Item -Path $pipeFile
+        }
+
+        $defs = @(
+            New-ImageChartBar -Name 'Jan' -Value @(1, 2)
+            New-ImageChartBar -Name 'Feb' -Value @(3, 4)
+        )
+
+        New-ImageChart -Definition $defs -FilePath $arrayFile -Width 200 -Height 150
+        $defs | New-ImageChart -FilePath $pipeFile -Width 200 -Height 150
+
+        $first = [ImagePlayground.Image]::Load($arrayFile)
+        $second = [ImagePlayground.Image]::Load($pipeFile)
+        $comparison = $first.Compare($second)
+
+        $comparison.PixelErrorCount | Should -Be 0
+
+        $first.Dispose()
+        $second.Dispose()
+    }
+
+    It 'creates parent directory when saving a chart' -Skip:(-not $IsWindows) {
+        $folder = Join-Path -Path $TestDir -ChildPath 'NestedChart'
+        $file = Join-Path -Path $folder -ChildPath 'chart.png'
+        if (Test-Path -Path $folder) {
+            Remove-Item -Path $folder -Recurse -Force
+        }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartBar -Name 'Jan' -Value @(1, 2)
+            New-ImageChartBar -Name 'Feb' -Value @(3, 4)
+        } -FilePath $file -Width 200 -Height 150
+
+        Test-Path -Path $file | Should -BeTrue
+    }
 }

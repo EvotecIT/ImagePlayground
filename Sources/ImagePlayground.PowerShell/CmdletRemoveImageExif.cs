@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Remove-ImageExif -FilePath img.jpg -All</code>
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "ImageExif", DefaultParameterSetName = ParameterSetTag)]
-public sealed class RemoveImageExifCmdlet : PSCmdlet {
+public sealed class RemoveImageExifCmdlet : ImageCmdlet {
     private const string ParameterSetTag = "Tag";
     private const string ParameterSetAll = "All";
 
@@ -39,11 +39,7 @@ public sealed class RemoveImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Remove-ImageExif - File not found: {FilePath}");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "RemoveImageExifFileNotFound", FilePath);
 
         using var img = ImagePlayground.Image.Load(filePath);
         if (ParameterSetName == ParameterSetAll) {

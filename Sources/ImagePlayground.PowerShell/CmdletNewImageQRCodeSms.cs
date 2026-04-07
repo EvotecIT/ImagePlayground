@@ -1,8 +1,8 @@
 using System;
 using ImagePlayground;
 using CodeGlyphX.Payloads;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -21,7 +21,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Generates a ready-to-send RSVP QR code for invitations or registration desks.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSms")]
-public sealed class NewImageQrCodeSmsCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeSmsCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Recipient phone number.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Number { get; set; } = string.Empty;
@@ -51,21 +51,21 @@ public sealed class NewImageQrCodeSmsCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateSmsAsync(Number, Message, FilePath, QrSmsEncoding.Sms, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateSms(Number, Message, FilePath, QrSmsEncoding.Sms, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeSms - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateSms(Number, Message, FilePath, QrSmsEncoding.Sms, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

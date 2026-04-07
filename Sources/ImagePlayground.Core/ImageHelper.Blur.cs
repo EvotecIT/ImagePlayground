@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -30,17 +31,17 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously applies a Gaussian blur to an image and saves the result.
     /// </summary>
-    public static async Task BlurAsync(string filePath, string outFilePath, float amount) {
+    public static async Task BlurAsync(string filePath, string outFilePath, float amount, CancellationToken cancellationToken = default) {
         if (amount <= 0) {
             throw new ArgumentOutOfRangeException(nameof(amount));
         }
+
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            img.GaussianBlur(amount);
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.GaussianBlur(amount);
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

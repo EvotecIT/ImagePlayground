@@ -1,8 +1,8 @@
 using System;
 using ImagePlayground;
 using CodeGlyphX.Payloads;
-using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -23,7 +23,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Creates a branded QR image and opens it immediately after generation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSwiss")]
-public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {
+public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Swiss QR payload data.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public SwissQrCodePayload Payload { get; set; } = null!;
@@ -49,21 +49,21 @@ public sealed class NewImageQrCodeSwissCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (PixelSize <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(PixelSize));
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateSwissQrCodeAsync(Payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateSwissQrCode(Payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRCodeSwiss - No file path specified, saving to {FilePath}");
-        }
-
-        ImagePlayground.QrCode.GenerateSwissQrCode(Payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

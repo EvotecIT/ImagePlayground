@@ -1,4 +1,9 @@
-Import-Module PSPublishModule -Force -ErrorAction Stop
+$psPublishModulePath = $Env:PSPUBLISHMODULE_PATH
+if ($psPublishModulePath) {
+    Import-Module -Name $psPublishModulePath -Force -ErrorAction Stop
+} else {
+    Import-Module PSPublishModule -Force -ErrorAction Stop
+}
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $powerShellProjectPath = Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'

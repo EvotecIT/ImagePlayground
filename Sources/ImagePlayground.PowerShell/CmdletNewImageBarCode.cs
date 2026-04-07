@@ -1,5 +1,6 @@
 using ImagePlayground;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -9,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageBarCode -Type EAN -Value 9012341234571 -FilePath barcode.png</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageBarCode")]
-public sealed class NewImageBarCodeCmdlet : PSCmdlet {
+public sealed class NewImageBarCodeCmdlet : AsyncImageCmdlet {
     /// <summary>Barcode type.</summary>
     [Parameter(Mandatory = true, Position = 0)]
 public BarcodeType Type { get; set; }
@@ -22,9 +23,17 @@ public BarcodeType Type { get; set; }
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
+    protected override async Task ProcessRecordAsync() {
         var output = Helpers.ResolvePath(FilePath);
-        BarCode.Generate(Type, Value, output);
+        if (Async.IsPresent) {
+            await BarCode.GenerateAsync(Type, Value, output, CancelToken).ConfigureAwait(false);
+        } else {
+            BarCode.Generate(Type, Value, output);
+        }
     }
 }

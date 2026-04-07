@@ -8,7 +8,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Set-ImageAdjust -FilePath in.png -OutputPath out.png -Brightness 1.2 -Contrast 1.1</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageAdjust")]
-public sealed class SetImageAdjustCmdlet : PSCmdlet {
+public sealed class SetImageAdjustCmdlet : AsyncImageCmdlet {
         /// <summary>Path to the source image.</summary>
         /// <para>The image must exist.</para>
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -48,15 +48,11 @@ public sealed class SetImageAdjustCmdlet : PSCmdlet {
         public SwitchParameter Async { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Set-ImageAdjust - File {FilePath} not found. Please check the path.");
-            return;
-        }
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "SetImageAdjustFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
         if (Async.IsPresent) {
-            ImageHelper.AdjustAsync(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia).GetAwaiter().GetResult();
+            await ImageHelper.AdjustAsync(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia, CancelToken).ConfigureAwait(false);
         } else {
             ImageHelper.Adjust(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia);
         }
