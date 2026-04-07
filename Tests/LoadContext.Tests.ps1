@@ -40,16 +40,16 @@ try {
 
     Import-Module '$escapedModuleManifestPath' -Force -ErrorAction Stop
     `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-    `$imagePlaygroundAssemblies = @(
-        [AppDomain]::CurrentDomain.GetAssemblies() |
-            Where-Object { `$_.GetName().Name -like 'ImagePlayground*' } |
-            ForEach-Object { `$_.Location } |
-            Where-Object { `$_ }
+    `$binaryModulePaths = @(
+        Get-Module -Name ImagePlayground.PowerShell -All -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty Path
     )
 
     [pscustomobject]@{
         ImportedModulePath = `$module.Path
-        AssemblyPaths = `$imagePlaygroundAssemblies
+        BinaryModulePaths = `$binaryModulePaths
+        ExportedCommandCount = @(Get-Command -Module ImagePlayground).Count
+        DevelopmentPathPresent = Test-Path -LiteralPath `$developmentPath
         DevelopmentPathHidden = [bool] `$hiddenDevelopmentPath
     } | ConvertTo-Json -Compress
 } finally {
@@ -70,10 +70,13 @@ try {
             $data = $json | ConvertFrom-Json
 
             $data.ImportedModulePath | Should -Match '[\\/]ImagePlayground\.psm1$'
-            $data.DevelopmentPathHidden | Should -BeTrue
-            $data.AssemblyPaths | Should -Not -BeNullOrEmpty
-            ($data.AssemblyPaths -join [Environment]::NewLine) | Should -Match '[\\/]Lib[\\/]'
-            ($data.AssemblyPaths -join [Environment]::NewLine) | Should -Match 'ImagePlayground\.PowerShell\.dll'
+            if ($data.DevelopmentPathPresent) {
+                $data.DevelopmentPathHidden | Should -BeTrue
+            }
+            $data.BinaryModulePaths | Should -Not -BeNullOrEmpty
+            $data.ExportedCommandCount | Should -BeGreaterThan 0
+            ($data.BinaryModulePaths -join [Environment]::NewLine) | Should -Match '[\\/]Lib[\\/]'
+            ($data.BinaryModulePaths -join [Environment]::NewLine) | Should -Match 'ImagePlayground\.PowerShell\.dll'
         } finally {
             Remove-Item -Path $scriptPath -Force -ErrorAction SilentlyContinue
         }

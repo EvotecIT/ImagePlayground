@@ -3,6 +3,53 @@ Import-Module PSPublishModule -Force -ErrorAction Stop
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $powerShellProjectPath = Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
 
+function Update-ImagePlaygroundPackagedBootstrapper {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string] $ProjectRoot
+    )
+
+    $bootstrapperPath = Join-Path -Path $ProjectRoot -ChildPath 'Artefacts\Unpacked\Modules\ImagePlayground\ImagePlayground.psm1'
+    if (-not (Test-Path -LiteralPath $bootstrapperPath)) {
+        return
+    }
+
+    $content = Get-Content -LiteralPath $bootstrapperPath -Raw
+    if ($content -match 'Ensure native runtime libraries are discoverable on Windows') {
+        return
+    }
+
+    $runtimeBlock = @"
+# Ensure native runtime libraries are discoverable on Windows
+if (`$IsWindows -and `$LibFolder) {
+    `$arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+    `$archFolder = switch (`$arch) {
+        'X64' { 'win-x64' }
+        'X86' { 'win-x86' }
+        'Arm64' { 'win-arm64' }
+        'Arm' { 'win-arm' }
+        default { 'win-x64' }
+    }
+
+    `$runtimePath = Join-Path -Path `$PSScriptRoot -ChildPath ("Lib/{0}/runtimes/{1}/native" -f `$LibFolder, `$archFolder)
+    if (Test-Path -LiteralPath `$runtimePath) {
+        `$env:PATH = "`$runtimePath;`$env:PATH"
+    }
+}
+
+"@
+
+    $marker = 'try {'
+    $insertAt = $content.IndexOf($marker, [System.StringComparison]::Ordinal)
+    if ($insertAt -lt 0) {
+        throw "Unable to update packaged bootstrapper: marker '$marker' not found in $bootstrapperPath."
+    }
+
+    $updatedContent = $content.Insert($insertAt, $runtimeBlock)
+    [System.IO.File]::WriteAllText($bootstrapperPath, $updatedContent, [System.Text.UTF8Encoding]::new($true))
+}
+
 Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
@@ -152,3 +199,5 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     #New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
     #New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
 } -ExitCode
+
+Update-ImagePlaygroundPackagedBootstrapper -ProjectRoot $projectRoot

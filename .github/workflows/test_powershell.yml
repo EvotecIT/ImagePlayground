@@ -57,25 +57,54 @@ jobs:
           name: psd1
           path: ImagePlayground.psd1
 
+  build-packaged-module:
+    needs: refresh-psd1
+    name: 'Build packaged module'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: psd1
+          path: .
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install PowerShell modules
+        shell: pwsh
+        run: |
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+
+      - name: Build module layout
+        shell: pwsh
+        run: .\Build\Build-Module.ps1
+
+      - name: Upload packaged module
+        uses: actions/upload-artifact@v4
+        with:
+          name: packaged-module
+          path: Artefacts/Unpacked/Modules/ImagePlayground
+
   test-windows-ps5:
     #if: false # Temporarily disabled
-    needs: refresh-psd1
+    needs: build-packaged-module
     name: 'Windows PowerShell 5.1'
     runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download manifest
+      - name: Download packaged module
         uses: actions/download-artifact@v4
         with:
-          name: psd1
-          path: .
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          name: packaged-module
+          path: .packaged-module
 
       - name: Install PowerShell modules
         shell: powershell
@@ -84,33 +113,27 @@ jobs:
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
-      - name: Build .NET solution
-        run: |
-          dotnet restore Sources/ImagePlayground.sln
-          dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+      - name: Overlay packaged module
+        shell: powershell
+        run: Copy-Item -Path .\.packaged-module\* -Destination . -Recurse -Force
 
       - name: Run PowerShell tests
         shell: powershell
         run: ./ImagePlayground.Tests.ps1
 
   test-windows-ps7:
-    needs: refresh-psd1
+    needs: build-packaged-module
     name: 'Windows PowerShell 7'
     runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download manifest
+      - name: Download packaged module
         uses: actions/download-artifact@v4
         with:
-          name: psd1
-          path: .
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          name: packaged-module
+          path: .packaged-module
 
       - name: Install PowerShell modules
         shell: pwsh
@@ -118,39 +141,28 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
-          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
-      - name: Build .NET solution
-        run: |
-          dotnet restore Sources/ImagePlayground.sln
-          dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
-
-      - name: Build module layout
+      - name: Overlay packaged module
         shell: pwsh
-        run: .\Build\Build-Module.ps1
+        run: Copy-Item -Path .\.packaged-module\* -Destination . -Recurse -Force
 
       - name: Run PowerShell tests
         shell: pwsh
         run: ./ImagePlayground.Tests.ps1
 
   test-ubuntu:
-    needs: refresh-psd1
+    needs: build-packaged-module
     name: 'Ubuntu PowerShell 7'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download manifest
+      - name: Download packaged module
         uses: actions/download-artifact@v4
         with:
-          name: psd1
-          path: .
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          name: packaged-module
+          path: .packaged-module
 
       - name: Install PowerShell modules
         shell: pwsh
@@ -158,39 +170,28 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
-          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
-      - name: Build .NET solution
-        run: |
-          dotnet restore Sources/ImagePlayground.sln
-          dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
-
-      - name: Build module layout
+      - name: Overlay packaged module
         shell: pwsh
-        run: ./Build/Build-Module.ps1
+        run: Copy-Item -Path ./.packaged-module/* -Destination . -Recurse -Force
 
       - name: Run PowerShell tests
         shell: pwsh
         run: ./ImagePlayground.Tests.ps1
 
   test-macos:
-    needs: refresh-psd1
+    needs: build-packaged-module
     name: 'macOS PowerShell 7'
     runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download manifest
+      - name: Download packaged module
         uses: actions/download-artifact@v4
         with:
-          name: psd1
-          path: .
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          name: packaged-module
+          path: .packaged-module
 
       - name: Install PowerShell modules
         shell: pwsh
@@ -198,16 +199,10 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
-          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
-      - name: Build .NET solution
-        run: |
-          dotnet restore Sources/ImagePlayground.sln
-          dotnet build Sources/ImagePlayground.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
-
-      - name: Build module layout
+      - name: Overlay packaged module
         shell: pwsh
-        run: ./Build/Build-Module.ps1
+        run: Copy-Item -Path ./.packaged-module/* -Destination . -Recurse -Force
 
       - name: Run PowerShell tests
         shell: pwsh
