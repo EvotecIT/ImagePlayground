@@ -40,10 +40,16 @@ try {
 
     Import-Module '$escapedModuleManifestPath' -Force -ErrorAction Stop
     `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
+    `$imagePlaygroundAssemblies = @(
+        [AppDomain]::CurrentDomain.GetAssemblies() |
+            Where-Object { `$_.GetName().Name -like 'ImagePlayground*' } |
+            ForEach-Object { `$_.Location } |
+            Where-Object { `$_ }
+    )
 
     [pscustomobject]@{
         ImportedModulePath = `$module.Path
-        ExportedCommandCount = (Get-Command -Module ImagePlayground).Count
+        AssemblyPaths = `$imagePlaygroundAssemblies
         DevelopmentPathHidden = [bool] `$hiddenDevelopmentPath
     } | ConvertTo-Json -Compress
 } finally {
@@ -65,7 +71,9 @@ try {
 
             $data.ImportedModulePath | Should -Match '[\\/]ImagePlayground\.psm1$'
             $data.DevelopmentPathHidden | Should -BeTrue
-            $data.ExportedCommandCount | Should -BeGreaterThan 0
+            $data.AssemblyPaths | Should -Not -BeNullOrEmpty
+            ($data.AssemblyPaths -join [Environment]::NewLine) | Should -Match '[\\/]Lib[\\/]'
+            ($data.AssemblyPaths -join [Environment]::NewLine) | Should -Match 'ImagePlayground\.PowerShell\.dll'
         } finally {
             Remove-Item -Path $scriptPath -Force -ErrorAction SilentlyContinue
         }
