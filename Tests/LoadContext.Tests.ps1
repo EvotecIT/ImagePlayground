@@ -1,6 +1,7 @@
 Describe 'Assembly Load Context' {
 
     It 'creates a dedicated context on import' -Skip:($PSVersionTable.PSVersion.Major -lt 7) {
+        Import-Module (Join-Path -Path $PSScriptRoot -ChildPath '..\ImagePlayground.psm1') -Force
         $context = [System.Runtime.Loader.AssemblyLoadContext]::All | Where-Object Name -eq 'ImagePlayground'
         $context | Should -Not -BeNullOrEmpty
     }
@@ -20,15 +21,22 @@ Describe 'Assembly Load Context' {
         $escapedModulePathList = $sanitizedModulePath.Replace("'", "''")
         $command = @"
 `$ErrorActionPreference = 'Stop'
+`$VerbosePreference = 'Continue'
 `$env:PSModulePath = '$escapedModulePathList'
 Remove-Item -Path Env:IMAGEPLAYGROUND_DEVELOPMENT -ErrorAction SilentlyContinue
-Import-Module '$escapedModuleScriptPath' -Force -ErrorAction Stop
+`$importOutput = Import-Module '$escapedModuleScriptPath' -Force -Verbose 4>&1
 `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-`$binaryModule = Get-Module -Name ImagePlayground.PowerShell -All | Select-Object -First 1
+`$verboseMessages = [System.Collections.Generic.List[string]]::new()
+foreach (`$record in `$importOutput) {
+    if (`$record -is [System.Management.Automation.VerboseRecord]) {
+        [void] `$verboseMessages.Add(`$record.Message)
+    }
+}
+`$binaryImportMessage = `$verboseMessages | Where-Object { `$_ -like 'Importing binary module from *' } | Select-Object -First 1
 [pscustomobject]@{
     ImportedModulePath = `$module.Path
-    BinaryModulePath = `$binaryModule.Path
-    ExportedCommandCount = `$binaryModule.ExportedCommands.Count
+    BinaryImportMessage = `$binaryImportMessage
+    ExportedCommandCount = `$module.ExportedCommands.Count
 } | ConvertTo-Json -Compress
 "@
 
@@ -43,8 +51,8 @@ Import-Module '$escapedModuleScriptPath' -Force -ErrorAction Stop
             $data = $json | ConvertFrom-Json
 
             $data.ImportedModulePath | Should -Be $moduleScriptPath
-            $data.BinaryModulePath | Should -Match '[\\/]Lib[\\/]'
-            $data.BinaryModulePath | Should -Not -Match '[\\/]Sources[\\/]'
+            $data.BinaryImportMessage | Should -Match '[\\/]Lib[\\/]'
+            $data.BinaryImportMessage | Should -Not -Match '[\\/]Sources[\\/]'
             $data.ExportedCommandCount | Should -BeGreaterThan 0
         } finally {
             Remove-Item -Path $scriptPath -Force -ErrorAction SilentlyContinue

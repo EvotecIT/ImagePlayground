@@ -146,6 +146,7 @@ $FoundErrors = @(
     if ($Development) {
         foreach ($BinaryModule in $BinaryDev) {
             try {
+                Write-Verbose -Message "Importing binary module from $BinaryModule"
                 Import-Module -Name $BinaryModule -Force -ErrorAction Stop
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
@@ -156,10 +157,14 @@ $FoundErrors = @(
         foreach ($BinaryModule in $BinaryModules) {
             try {
                 if ($Framework -and $PSEdition -eq 'Core') {
-                    Import-Module -Name "$PSScriptRoot\Lib\$Framework\$BinaryModule" -Force -ErrorAction Stop
+                    $BinaryModulePath = "$PSScriptRoot\Lib\$Framework\$BinaryModule"
+                    Write-Verbose -Message "Importing binary module from $BinaryModulePath"
+                    Import-Module -Name $BinaryModulePath -Force -ErrorAction Stop
                 }
                 if ($FrameworkNet -and $PSEdition -ne 'Core') {
-                    Import-Module -Name "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule" -Force -ErrorAction Stop
+                    $BinaryModulePath = "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule"
+                    Write-Verbose -Message "Importing binary module from $BinaryModulePath"
+                    Import-Module -Name $BinaryModulePath -Force -ErrorAction Stop
                 }
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
