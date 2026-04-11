@@ -45,18 +45,16 @@ public sealed class RemoveImageExifCmdlet : PSCmdlet {
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(filePath);
-        if (ParameterSetName == ParameterSetAll) {
-            img.ClearExifValues();
-        } else {
-            img.RemoveExifValues(ExifTag);
-        }
-
         var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
         Helpers.CreateParentDirectory(output);
         WriteVerbose($"Saving image to {output}");
-        img.Save(output);
+
+        if (ParameterSetName == ParameterSetAll) {
+            ImagePlayground.Image.ClearExifValues(filePath, output);
+        } else {
+            ImagePlayground.Image.RemoveExifValues(filePath, output, ExifTag);
+        }
+
         WriteVerbose($"Saved image to {output}");
     }
 }
-

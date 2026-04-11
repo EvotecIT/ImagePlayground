@@ -22,6 +22,26 @@ public static partial class Helpers {
         ".tiff",
         ".webp"
     };
+
+    /// <summary>
+    /// Determines whether the extension belongs to a HEIF container.
+    /// </summary>
+    /// <param name="extension">File extension including the leading dot, or a full file path.</param>
+    /// <returns><c>true</c> when the extension is HEIC or HEIF.</returns>
+    public static bool IsHeifExtension(string extension) {
+        if (string.IsNullOrWhiteSpace(extension)) {
+            return false;
+        }
+
+        string fileExtension = Path.GetExtension(extension);
+        if (!string.IsNullOrEmpty(fileExtension)) {
+            extension = fileExtension;
+        }
+
+        return extension.Equals(".heic", StringComparison.OrdinalIgnoreCase) ||
+               extension.Equals(".heif", StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>
     /// Converts a <see cref="SixLabors.ImageSharp.Color"/> to a 6 character hex string.
     /// </summary>
@@ -105,4 +125,4 @@ public static partial class Helpers {
         //file is not locked
         return false;
     }
-}
+}

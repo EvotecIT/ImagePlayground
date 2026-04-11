@@ -34,8 +34,7 @@ public sealed class GetImageExifCmdlet : PSCmdlet {
             return;
         }
 
-        using var img = ImagePlayground.Image.Load(filePath);
-        IReadOnlyList<IExifValue> values = img.GetExifValues();
+        IReadOnlyList<IExifValue> values = ImagePlayground.Image.GetExifValues(filePath);
 
         if (Translate.IsPresent) {
             var obj = new PSObject();
@@ -48,4 +47,3 @@ public sealed class GetImageExifCmdlet : PSCmdlet {
         }
     }
 }
-
