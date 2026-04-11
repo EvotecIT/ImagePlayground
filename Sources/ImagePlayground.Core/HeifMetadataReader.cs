@@ -311,7 +311,8 @@ internal static class HeifMetadataReader {
     }
 
     private static bool TryWriteItemData(byte[] data, IlocItem item, ItemExtent extent, string outputPath, byte[] itemData) {
-        int newOffset = itemData.Length == 0
+        bool isClearingItemData = itemData.Length == 0;
+        int newOffset = isClearingItemData
             ? extent.Offset
             : data.Length;
 
@@ -327,7 +328,7 @@ internal static class HeifMetadataReader {
 
         var output = new byte[data.Length + itemData.Length];
         Buffer.BlockCopy(data, 0, output, 0, data.Length);
-        if (itemData.Length == 0 && extent.Length > 0) {
+        if (isClearingItemData && extent.Length > 0) {
             if (extent.Offset < 0 || extent.Offset > output.Length - extent.Length) {
                 return false;
             }
