@@ -141,6 +141,22 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_RemoveHeifExifValueWithUnreadableExif_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "exif-remove-unreadable.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(Array.Empty<byte>()));
+
+        Assert.Throws<NotSupportedException>(() => PlaygroundImage.RemoveExifValues(filePath, null, ExifTag.Software));
+    }
+
+    [Fact]
+    public void Test_ClearHeifExifValuesWithNonWritableExif_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "exif-clear-idat.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithIdatExif(CreateExifPayload("ImagePlayground")));
+
+        Assert.Throws<NotSupportedException>(() => PlaygroundImage.ClearExifValues(filePath, null));
+    }
+
+    [Fact]
     public void Test_ReadHeifInfo() {
         string filePath = Path.Combine(_directoryWithTests, "info.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageAndExif(320, 240, CreateExifPayload("ImagePlayground")));
@@ -305,6 +321,24 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_RemoveHeifMetadataWithNonWritableExif_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "metadata-remove-idat-exif.heic");
+        string outputPath = Path.Combine(_directoryWithTests, "metadata-remove-idat-exif-output.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithIdatExif(CreateExifPayload("ImagePlayground")));
+
+        Assert.Throws<NotSupportedException>(() => global::ImagePlayground.ImageHelper.RemoveMetadata(filePath, outputPath));
+    }
+
+    [Fact]
+    public void Test_RemoveHeifMetadataWithNonWritableXmp_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "metadata-remove-idat-xmp.heic");
+        string outputPath = Path.Combine(_directoryWithTests, "metadata-remove-idat-xmp-output.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithIdatXmp("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />"));
+
+        Assert.Throws<NotSupportedException>(() => global::ImagePlayground.ImageHelper.RemoveMetadata(filePath, outputPath));
+    }
+
+    [Fact]
     public void Test_SetHeifXmp() {
         string filePath = Path.Combine(_directoryWithTests, "xmp-set.heic");
         string updatedXmp = "<?xpacket begin=\"\"?><x:xmpmeta xmlns:x=\"adobe:ns:meta/\"><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" /></x:xmpmeta>";
@@ -434,6 +468,21 @@ public partial class ImagePlayground {
             Encoding.ASCII.GetBytes("heic"),
             Encoding.ASCII.GetBytes("mif1")));
         byte[] meta = CreateMetaBoxWithIdatXmp(xmpItemData);
+
+        return Combine(ftyp, meta);
+    }
+
+    private static byte[] CreateMinimalHeifWithIdatExif(byte[] tiffPayload) {
+        byte[] exifItemData = Combine(
+            UInt32BigEndian(6),
+            Encoding.ASCII.GetBytes("Exif\0\0"),
+            tiffPayload);
+        byte[] ftyp = Box("ftyp", Combine(
+            Encoding.ASCII.GetBytes("heic"),
+            UInt32BigEndian(0),
+            Encoding.ASCII.GetBytes("heic"),
+            Encoding.ASCII.GetBytes("mif1")));
+        byte[] meta = CreateMetaBoxWithIdatExif(exifItemData);
 
         return Combine(ftyp, meta);
     }
@@ -645,6 +694,29 @@ public partial class ImagePlayground {
             UInt32BigEndian(0),
             UInt32BigEndian((uint)xmpItemData.Length)));
         byte[] idat = Box("idat", xmpItemData);
+
+        return FullBox("meta", 0, Combine(iinf, iloc, idat));
+    }
+
+    private static byte[] CreateMetaBoxWithIdatExif(byte[] exifItemData) {
+        byte[] exifInfe = FullBox("infe", 2, Combine(
+            UInt16BigEndian(1),
+            UInt16BigEndian(0),
+            Encoding.ASCII.GetBytes("Exif"),
+            new byte[] { 0 }));
+        byte[] iinf = FullBox("iinf", 0, Combine(
+            UInt16BigEndian(1),
+            exifInfe));
+        byte[] iloc = FullBox("iloc", 1, Combine(
+            new byte[] { 0x44, 0x00 },
+            UInt16BigEndian(1),
+            UInt16BigEndian(1),
+            UInt16BigEndian(1),
+            UInt16BigEndian(0),
+            UInt16BigEndian(1),
+            UInt32BigEndian(0),
+            UInt32BigEndian((uint)exifItemData.Length)));
+        byte[] idat = Box("idat", exifItemData);
 
         return FullBox("meta", 0, Combine(iinf, iloc, idat));
     }

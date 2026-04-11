@@ -11,6 +11,7 @@ namespace ImagePlayground;
 public partial class Image {
     private static readonly MethodInfo SetExifValueGenericMethod = typeof(Image).GetMethod(nameof(SetExifValueGeneric), BindingFlags.Static | BindingFlags.NonPublic)!;
     private const string HeifExifWriteNotSupportedMessage = "Updating HEIF/HEIC EXIF requires an existing EXIF item with a single writable file extent. Creating a brand-new HEIF EXIF item is not supported yet.";
+    private const string HeifExifReadNotSupportedMessage = "The HEIF/HEIC file declares an EXIF item, but the EXIF payload could not be read.";
 
     /// <summary>
     /// Gets all EXIF values from the image.
@@ -91,9 +92,13 @@ public partial class Image {
             : Helpers.ResolvePath(filePathOutput!);
 
         if (Helpers.IsHeifExtension(fullPath)) {
-            if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? profile) || profile is null) {
+            if (!HeifMetadataReader.HasExifItem(fullPath)) {
                 CopyIfNeeded(fullPath, outputPath);
                 return;
+            }
+
+            if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? profile) || profile is null) {
+                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
             }
 
             foreach (ExifTag tag in tags) {
@@ -127,8 +132,13 @@ public partial class Image {
             : Helpers.ResolvePath(filePathOutput!);
 
         if (Helpers.IsHeifExtension(fullPath)) {
-            if (!HeifMetadataReader.TryWriteExifProfile(fullPath, outputPath, null)) {
+            if (!HeifMetadataReader.HasExifItem(fullPath)) {
                 CopyIfNeeded(fullPath, outputPath);
+                return;
+            }
+
+            if (!HeifMetadataReader.TryWriteExifProfile(fullPath, outputPath, null)) {
+                throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
             }
 
             return;

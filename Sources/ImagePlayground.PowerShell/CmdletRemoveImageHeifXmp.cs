@@ -1,5 +1,4 @@
 using ImagePlayground;
-using System.IO;
 using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
@@ -11,7 +10,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Remove-ImageHeifXmp -FilePath photo.heic</code>
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "ImageHeifXmp")]
-public sealed class RemoveImageHeifXmpCmdlet : PSCmdlet {
+public sealed class RemoveImageHeifXmpCmdlet : ImageCmdlet {
     /// <summary>Path to the HEIF or HEIC file.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -23,12 +22,7 @@ public sealed class RemoveImageHeifXmpCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Remove-ImageHeifXmp - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
+        var filePath = ResolveExistingFilePath(FilePath, "RemoveImageHeifXmpFileNotFound", FilePath);
         var output = string.IsNullOrWhiteSpace(FilePathOutput)
             ? filePath
             : Helpers.ResolvePath(FilePathOutput!);

@@ -1,5 +1,4 @@
 using ImagePlayground;
-using System.IO;
 using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
@@ -12,19 +11,14 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "ImageHeifInfo")]
 [OutputType(typeof(HeifImageInfo))]
-public sealed class GetImageHeifInfoCmdlet : PSCmdlet {
+public sealed class GetImageHeifInfoCmdlet : ImageCmdlet {
     /// <summary>Path to the HEIF or HEIC file.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Get-ImageHeifInfo - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
+        var filePath = ResolveExistingFilePath(FilePath, "GetImageHeifInfoFileNotFound", FilePath);
         WriteObject(ImagePlayground.Image.GetHeifInfo(filePath));
     }
 }

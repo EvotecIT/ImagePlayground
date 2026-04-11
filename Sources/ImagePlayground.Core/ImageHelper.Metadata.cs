@@ -264,19 +264,23 @@ public partial class ImageHelper {
             if (HeifMetadataReader.HasExifItem(currentPath)) {
                 string temporaryPath = GetTemporaryHeifPath(outFullPath);
                 temporaryFiles.Add(temporaryPath);
-                if (HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, null)) {
-                    currentPath = temporaryPath;
-                    wroteMetadata = true;
+                if (!HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, null)) {
+                    throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
                 }
+
+                currentPath = temporaryPath;
+                wroteMetadata = true;
             }
 
             if (HeifMetadataReader.HasXmpItem(currentPath)) {
                 string temporaryPath = GetTemporaryHeifPath(outFullPath);
                 temporaryFiles.Add(temporaryPath);
-                if (HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, null)) {
-                    currentPath = temporaryPath;
-                    wroteMetadata = true;
+                if (!HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, null)) {
+                    throw new NotSupportedException(HeifXmpWriteNotSupportedMessage);
                 }
+
+                currentPath = temporaryPath;
+                wroteMetadata = true;
             }
 
             if (wroteMetadata) {

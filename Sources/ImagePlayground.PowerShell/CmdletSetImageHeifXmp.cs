@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Set-ImageHeifXmp -FilePath photo.heic -XmpPath packet.xmp -FilePathOutput photo-updated.heic</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageHeifXmp", DefaultParameterSetName = ParameterSetXmp)]
-public sealed class SetImageHeifXmpCmdlet : PSCmdlet {
+public sealed class SetImageHeifXmpCmdlet : ImageCmdlet {
     private const string ParameterSetXmp = "Xmp";
     private const string ParameterSetXmpPath = "XmpPath";
 
@@ -40,20 +40,11 @@ public sealed class SetImageHeifXmpCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Set-ImageHeifXmp - File {FilePath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "SetImageHeifXmpFileNotFound", FilePath);
 
         string xmp;
         if (ParameterSetName == ParameterSetXmpPath) {
-            var xmpPath = Helpers.ResolvePath(XmpPath!);
-            if (!File.Exists(xmpPath)) {
-                WriteWarning($"Set-ImageHeifXmp - XMP file {XmpPath} not found. Please check the path.");
-                return;
-            }
-
+            var xmpPath = ResolveExistingFilePath(XmpPath!, "SetImageHeifXmpSourceNotFound", XmpPath!, "XMP file");
             xmp = File.ReadAllText(xmpPath);
         } else {
             xmp = Xmp ?? string.Empty;
