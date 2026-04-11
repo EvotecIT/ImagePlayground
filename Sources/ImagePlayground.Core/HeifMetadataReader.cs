@@ -148,7 +148,12 @@ internal static class HeifMetadataReader {
             return false;
         }
 
-        if (!TryGetTiffPayload(exifItemData!, out byte[]? tiffPayload)) {
+        if (exifItemData!.Length == 0) {
+            profile = null;
+            return true;
+        }
+
+        if (!TryGetTiffPayload(exifItemData, out byte[]? tiffPayload)) {
             return false;
         }
 
@@ -328,8 +333,8 @@ internal static class HeifMetadataReader {
 
         var output = new byte[data.Length + itemData.Length];
         Buffer.BlockCopy(data, 0, output, 0, data.Length);
-        if (isClearingItemData && extent.Length > 0) {
-            if (extent.Offset < 0 || extent.Offset > output.Length - extent.Length) {
+        if (extent.Length > 0) {
+            if (extent.Offset < 0 || extent.Offset > data.Length - extent.Length) {
                 return false;
             }
 

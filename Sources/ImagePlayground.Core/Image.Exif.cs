@@ -34,6 +34,10 @@ public partial class Image {
                     : new List<IExifValue>(heifProfile.Values);
             }
 
+            if (HeifMetadataReader.HasExifItem(fullPath)) {
+                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
+            }
+
             return new List<IExifValue>();
         }
 

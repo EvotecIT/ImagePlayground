@@ -100,6 +100,14 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_ReadHeifExifWithUnreadableExif_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "exif-read-unreadable.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(Array.Empty<byte>()));
+
+        Assert.Throws<NotSupportedException>(() => PlaygroundImage.GetExifValues(filePath));
+    }
+
+    [Fact]
     public void Test_SetHeifExifValue() {
         string filePath = Path.Combine(_directoryWithTests, "exif-set.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(CreateExifPayload("Original")));
@@ -108,6 +116,7 @@ public partial class ImagePlayground {
 
         IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
         Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "Changed");
+        Assert.False(ContainsSequence(File.ReadAllBytes(filePath), Encoding.ASCII.GetBytes("Original")));
     }
 
     [Fact]
@@ -305,8 +314,9 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithTests, "metadata-import.heic");
         string metadataPath = Path.Combine(_directoryWithTests, "metadata-import.json");
         string outputPath = Path.Combine(_directoryWithTests, "metadata-import-output.heic");
+        string originalXmp = "<x:xmpmeta />";
         string updatedXmp = "<?xpacket begin=\"\"?><x:xmpmeta xmlns:x=\"adobe:ns:meta/\"><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description /></rdf:RDF></x:xmpmeta>";
-        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("Original"), "<x:xmpmeta />"));
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("Original"), originalXmp));
         WriteHeifMetadataJson(filePath, metadataPath, CreateExifPayload("Imported"), updatedXmp);
 
         global::ImagePlayground.ImageHelper.ImportMetadata(filePath, metadataPath, outputPath);
@@ -314,6 +324,9 @@ public partial class ImagePlayground {
         IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(outputPath);
         Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "Imported");
         Assert.Equal(updatedXmp, PlaygroundImage.GetHeifXmp(outputPath));
+        byte[] outputBytes = File.ReadAllBytes(outputPath);
+        Assert.False(ContainsSequence(outputBytes, Encoding.ASCII.GetBytes("Original")));
+        Assert.False(ContainsSequence(outputBytes, Encoding.UTF8.GetBytes(originalXmp)));
     }
 
     [Fact]
@@ -351,12 +364,14 @@ public partial class ImagePlayground {
     [Fact]
     public void Test_SetHeifXmp() {
         string filePath = Path.Combine(_directoryWithTests, "xmp-set.heic");
+        string originalXmp = "<x:xmpmeta />";
         string updatedXmp = "<?xpacket begin=\"\"?><x:xmpmeta xmlns:x=\"adobe:ns:meta/\"><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" /></x:xmpmeta>";
-        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), "<x:xmpmeta />"));
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), originalXmp));
 
         PlaygroundImage.SetHeifXmp(filePath, null, updatedXmp);
 
         Assert.Equal(updatedXmp, PlaygroundImage.GetHeifXmp(filePath));
+        Assert.False(ContainsSequence(File.ReadAllBytes(filePath), Encoding.UTF8.GetBytes(originalXmp)));
     }
 
     [Fact]
