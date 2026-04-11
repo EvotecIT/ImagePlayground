@@ -40,5 +40,11 @@ Describe 'Get-Image' {
 
     }
 
+    It 'throws when the file does not exist' {
+        $missing = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/missing.png'
+
+        { Get-Image -FilePath $missing -ErrorAction Stop } | Should -Throw
+    }
+
 }
 

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -32,15 +33,14 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously adds an image watermark at one of the predefined placements.
     /// </summary>
-    public static async Task WatermarkImageAsync(string filePath, string outFilePath, string watermarkFilePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+    public static async Task WatermarkImageAsync(string filePath, string outFilePath, string watermarkFilePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage);
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage);
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -67,15 +67,14 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously adds an image watermark at exact coordinates.
     /// </summary>
-    public static async Task WatermarkImageAsync(string filePath, string outFilePath, string watermarkFilePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+    public static async Task WatermarkImageAsync(string filePath, string outFilePath, string watermarkFilePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -101,14 +100,13 @@ public partial class ImageHelper {
     /// <summary>
     /// Asynchronously tiles the watermark image across the target image.
     /// </summary>
-    public static async Task WatermarkImageTiledAsync(string filePath, string outFilePath, string watermarkFilePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+    public static async Task WatermarkImageTiledAsync(string filePath, string outFilePath, string watermarkFilePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-        await Task.Run(() => {
-            using var img = Image.Load(fullPath);
-            img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
-            img.Save(outFullPath);
-        }).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

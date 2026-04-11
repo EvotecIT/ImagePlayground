@@ -26,7 +26,7 @@ Use this cmdlet to render one or more chart definitions into a final image file.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChart -ChartsDefinition {
+PS> New-ImageChart -ChartsDefinition {
                 New-ImageChartBar -Name 'Q1' -Value 12,18,25 -Color CornflowerBlue
                 New-ImageChartBar -Name 'Q2' -Value 14,20,28 -Color Orange
             } -FilePath chart.png -XTitle 'Month' -YTitle 'Revenue'
@@ -36,7 +36,7 @@ Builds chart definitions inside a script block and renders them into a PNG file.
 
 ### EXAMPLE 2
 ```powershell
-$defs = @(
+PS> $defs = @(
                 New-ImageChartLine -Name 'CPU' -Value 35,42,58,61,49 -Color LimeGreen -Smooth
             )
             $ann = @(

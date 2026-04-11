@@ -1,6 +1,7 @@
 using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -10,21 +11,22 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Get-ImageBarCode -FilePath barcode.png</code>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "ImageBarCode")]
-public sealed class GetImageBarCodeCmdlet : PSCmdlet {
+public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     /// <summary>Path to the image.</summary>
     /// <para>The file must exist.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
-    /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Get-ImageBarCode - File {FilePath} not found. Please check the path.");
-            return;
-        }
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
 
-        var result = ImagePlayground.BarCode.Read(filePath);
+    /// <inheritdoc />
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "GetImageBarCodeFileNotFound", FilePath);
+        var result = Async.IsPresent
+            ? await ImagePlayground.BarCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false)
+            : ImagePlayground.BarCode.Read(filePath);
         WriteObject(result);
     }
 }

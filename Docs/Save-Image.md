@@ -21,12 +21,12 @@ Use this cmdlet to persist an Image instance after applying transformations.
 
 ### EXAMPLE 1
 ```powershell
-Save-Image -Image $img
+PS> Save-Image -Image $img
 ```
 
 ### EXAMPLE 2
 ```powershell
-Save-Image -Image $img -FilePath out.jpg -Quality 80
+PS> Save-Image -Image $img -FilePath out.jpg -Quality 80
 ```
 
 ## PARAMETERS

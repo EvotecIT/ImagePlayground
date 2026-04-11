@@ -241,6 +241,7 @@ public static class Charts {
             }
     
             filePath = Helpers.ResolvePath(filePath);
+            Helpers.CreateParentDirectory(filePath);
             plot.SavePng(filePath, width, height);
         }
     }

@@ -35,6 +35,20 @@ Describe 'New-ImageBarCode' {
         (Get-ImageBarCode -FilePath $file).Message | Should -Be 'MatrixTest'
     }
 
+    It 'creates and reads bar code asynchronously' {
+
+        $file = Join-Path $TestDir 'barcode_async.png'
+
+        if (Test-Path $file) { Remove-Item $file }
+
+        New-ImageBarCode -Type EAN -Value '9012341234571' -FilePath $file -Async
+
+        Test-Path $file | Should -BeTrue
+
+        (Get-ImageBarCode -FilePath $file -Async).Message | Should -Be '9012341234571'
+
+    }
+
     It 'creates and reads pdf417 code' {
 
         $file = Join-Path $TestDir 'pdf417.png'

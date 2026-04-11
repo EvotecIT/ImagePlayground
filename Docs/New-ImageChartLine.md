@@ -21,7 +21,7 @@ Use this cmdlet inside New-ImageChart to define a line-series dataset.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartLine -Name 'Sales' -Value 10,20,18,24 -Color Green -Smooth
+PS> New-ImageChartLine -Name 'Sales' -Value 10,20,18,24 -Color Green -Smooth
 ```
 
 Creates a smoothed line-series definition ready to be rendered by New-ImageChart.

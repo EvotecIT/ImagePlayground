@@ -11,7 +11,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageIcon -FilePath in.png -OutputPath icon.ico -Size 16,32</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageIcon")]
-public sealed class NewImageIconCmdlet : PSCmdlet {
+public sealed class NewImageIconCmdlet : ImageCmdlet {
     /// <summary>Path to the source image.</summary>
     /// <para>The file must exist.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -33,11 +33,7 @@ public sealed class NewImageIconCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"New-ImageIcon - File {FilePath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "NewImageIconFileNotFound", FilePath);
 
         var output = Helpers.ResolvePath(OutputPath);
         using var img = ImagePlayground.Image.Load(filePath);

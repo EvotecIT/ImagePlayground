@@ -11,7 +11,7 @@ Generates a QR code for dialling a phone number.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodePhoneNumber [-Number] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodePhoneNumber [-Number] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,19 +21,35 @@ Use this cmdlet when you want a scan action to immediately open the dialer with 
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodePhoneNumber -Number '+123456' -FilePath phone.png
+PS> New-ImageQRCodePhoneNumber -Number '+123456' -FilePath phone.png
 ```
 
 Generates a QR code that opens the dialer with the selected number.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodePhoneNumber -Number '+48 500 600 700' -FilePath hotline.png -ForegroundColor DarkRed -PixelSize 18 -Show
+PS> New-ImageQRCodePhoneNumber -Number '+48 500 600 700' -FilePath hotline.png -ForegroundColor DarkRed -PixelSize 18 -Show
 ```
 
 Creates a styled call-now QR code suitable for posters, intranet pages, or support desks.
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.

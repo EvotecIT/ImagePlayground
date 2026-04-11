@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>(Get-Image -FilePath sample.png).Width</code>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "Image")]
-public sealed class GetImageCmdlet : PSCmdlet {
+public sealed class GetImageCmdlet : ImageCmdlet {
     /// <summary>Path to the image file.</summary>
     /// <para>The file must exist.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -23,12 +23,7 @@ public sealed class GetImageCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Get-Image - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
+        var filePath = ResolveExistingFilePath(FilePath, "GetImageFileNotFound", FilePath);
         var img = ImagePlayground.Image.Load(filePath);
         WriteObject(img);
     }

@@ -68,11 +68,7 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(file));
         var read = QrCode.Read(file);
-#if NET8_0_OR_GREATER
         Assert.Contains("BEGIN", read.Message);
-#else
-        Assert.Equal(Status.Error, read.Status);
-#endif
     }
 
     [Fact]

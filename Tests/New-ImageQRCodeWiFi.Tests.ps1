@@ -46,6 +46,13 @@ Describe 'New-ImageQRCodeWiFi password quoting' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'WIFI:T:WPA;S:Test;P:pass123;;'
     }
 
+    It 'supports asynchronous generation' {
+        $file = Join-Path $TestDrive 'wifi_async.png'
+        New-ImageQRCodeWiFi -SSID 'Test' -Password 'pass123' -FilePath $file -Async
+        Test-Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'WIFI:T:WPA;S:Test;P:pass123;;'
+    }
+
     It 'throws on invalid pixel size' {
         { New-ImageQRCodeWiFi -SSID 'Test' -Password '12345678' -FilePath (Join-Path $TestDrive 'wifi_invalid.png') -PixelSize 0 } | Should -Throw
     }

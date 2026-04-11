@@ -11,7 +11,7 @@ Creates a WiFi QR code image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeWiFi [-SSID] <string> [-Password] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,10 +21,26 @@ The generated QR code uses a WiFi payload that can be scanned by mobile devices 
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeWiFi -SSID Test -Password pass123 -FilePath wifi.png
+PS> New-ImageQRCodeWiFi -SSID Test -Password pass123 -FilePath wifi.png
 ```
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.

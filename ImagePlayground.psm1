@@ -4,62 +4,16 @@ $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction Silen
 $Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
 $Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
 # Get all assemblies
-$AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue -File
+$AssemblyFolders = @(Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue)
 
-# to speed up development adding direct path to binaries, instead of the the Lib folder
-$Development = $true
+# to speed up development locally you can opt into source binaries instead of packaged Lib assets
+$Development = $env:IMAGEPLAYGROUND_DEVELOPMENT -eq '1'
 $DevelopmentPath = "$PSScriptRoot\Sources\ImagePlayground.PowerShell\bin\Debug"
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
 $BinaryModules = @(
     "ImagePlayground.PowerShell.dll"
 )
-
-# Ensure native runtime libraries are discoverable on Windows
-if ($IsWindows) {
-    $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
-    $archFolder = switch ($arch) {
-        'X64' {
-            'win-x64'
-        }
-        'X86' {
-            'win-x86'
-        }
-        'Arm64' {
-            'win-arm64'
-        }
-        'Arm' {
-            'win-arm'
-        }
-        default {
-            'win-x64'
-        }
-    }
-
-    if ($Development) {
-        $baseDir = if ($PSEdition -eq 'Core') {
-            Join-Path $DevelopmentPath $DevelopmentFolderCore
-        } else {
-            Join-Path $DevelopmentPath $DevelopmentFolderDefault
-        }
-    } else {
-        $baseDir = if ($PSEdition -eq 'Core') {
-            Join-Path $PSScriptRoot "Lib/$Framework"
-        } elseif ($FrameworkNet) {
-            Join-Path $PSScriptRoot "Lib/$FrameworkNet"
-        } else {
-            $null
-        }
-    }
-
-    if ($baseDir) {
-        $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
-        if (Test-Path $runtimePath) {
-            Write-Warning -Message "Adding $runtimePath to PATH"
-            $env:PATH = "$runtimePath;" + $env:PATH
-        }
-    }
-}
 
 # Lets find which libraries we need to load
 $Default = $false
@@ -99,6 +53,52 @@ if ($Standard -and $Core -and $Default) {
     #Write-Error -Message 'No assemblies found'
 }
 
+# Ensure native runtime libraries are discoverable on Windows
+if ($IsWindows) {
+    $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+    $archFolder = switch ($arch) {
+        'X64' {
+            'win-x64'
+        }
+        'X86' {
+            'win-x86'
+        }
+        'Arm64' {
+            'win-arm64'
+        }
+        'Arm' {
+            'win-arm'
+        }
+        default {
+            'win-x64'
+        }
+    }
+
+    if ($Development) {
+        $baseDir = if ($PSEdition -eq 'Core') {
+            Join-Path $DevelopmentPath $DevelopmentFolderCore
+        } else {
+            Join-Path $DevelopmentPath $DevelopmentFolderDefault
+        }
+    } else {
+        $baseDir = if ($PSEdition -eq 'Core' -and $Framework) {
+            Join-Path $PSScriptRoot "Lib/$Framework"
+        } elseif ($FrameworkNet) {
+            Join-Path $PSScriptRoot "Lib/$FrameworkNet"
+        } else {
+            $null
+        }
+    }
+
+    if ($baseDir) {
+        $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
+        if (Test-Path $runtimePath) {
+            Write-Verbose -Message "Adding $runtimePath to PATH"
+            $env:PATH = "$runtimePath;" + $env:PATH
+        }
+    }
+}
+
 $Assembly = @(
     if ($Development) {
         if ($PSEdition -eq 'Core') {
@@ -131,14 +131,16 @@ $Assembly = @(
 )
 
 $BinaryDev = @(
-    foreach ($BinaryModule in $BinaryModules) {
-        if ($PSEdition -eq 'Core') {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
-        } else {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
+    if ($Development) {
+        foreach ($BinaryModule in $BinaryModules) {
+            if ($PSEdition -eq 'Core') {
+                $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
+            } else {
+                $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
+            }
+            $Variable
+            Write-Verbose "Development mode: Using binaries from $Variable"
         }
-        $Variable
-        Write-Warning "Development mode: Using binaries from $Variable"
     }
 )
 
@@ -146,6 +148,7 @@ $FoundErrors = @(
     if ($Development) {
         foreach ($BinaryModule in $BinaryDev) {
             try {
+                Write-Verbose -Message "Importing binary module from $BinaryModule"
                 Import-Module -Name $BinaryModule -Force -ErrorAction Stop
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
@@ -156,10 +159,14 @@ $FoundErrors = @(
         foreach ($BinaryModule in $BinaryModules) {
             try {
                 if ($Framework -and $PSEdition -eq 'Core') {
-                    Import-Module -Name "$PSScriptRoot\Lib\$Framework\$BinaryModule" -Force -ErrorAction Stop
+                    $BinaryModulePath = "$PSScriptRoot\Lib\$Framework\$BinaryModule"
+                    Write-Verbose -Message "Importing binary module from $BinaryModulePath"
+                    Import-Module -Name $BinaryModulePath -Force -ErrorAction Stop
                 }
                 if ($FrameworkNet -and $PSEdition -ne 'Core') {
-                    Import-Module -Name "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule" -Force -ErrorAction Stop
+                    $BinaryModulePath = "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule"
+                    Write-Verbose -Message "Importing binary module from $BinaryModulePath"
+                    Import-Module -Name $BinaryModulePath -Force -ErrorAction Stop
                 }
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
@@ -222,3 +229,4 @@ if ($FoundErrors.Count -gt 0) {
 }
 
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'
+

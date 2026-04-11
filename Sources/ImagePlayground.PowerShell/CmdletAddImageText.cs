@@ -23,7 +23,7 @@ namespace ImagePlayground.PowerShell;
 /// </code>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "ImageText")]
-public sealed class AddImageTextCmdlet : PSCmdlet {
+public sealed class AddImageTextCmdlet : ImageCmdlet {
     /// <summary>Source image path.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     [ValidateNotNullOrEmpty]
@@ -83,11 +83,7 @@ public sealed class AddImageTextCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Add-ImageText - File {FilePath} not found. Please check the path.");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "AddImageTextFileNotFound", FilePath);
 
         using (var img = ImagePlayground.Image.Load(filePath)) {
             if (X >= img.Width || Y >= img.Height) {

@@ -17,7 +17,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Get-ImageExif -FilePath img.jpg -Translate</code>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "ImageExif")]
-public sealed class GetImageExifCmdlet : PSCmdlet {
+public sealed class GetImageExifCmdlet : ImageCmdlet {
     /// <summary>Path to the image file.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
@@ -28,11 +28,7 @@ public sealed class GetImageExifCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Get-ImageExif - File not found: {FilePath}");
-            return;
-        }
+        var filePath = ResolveExistingFilePath(FilePath, "GetImageExifFileNotFound", FilePath);
 
         IReadOnlyList<IExifValue> values = ImagePlayground.Image.GetExifValues(filePath);
 
@@ -41,6 +37,7 @@ public sealed class GetImageExifCmdlet : PSCmdlet {
             foreach (IExifValue v in values) {
                 obj.Properties.Add(new PSNoteProperty(v.Tag.ToString(), v.GetValue()));
             }
+
             WriteObject(obj);
         } else {
             WriteObject(values, true);

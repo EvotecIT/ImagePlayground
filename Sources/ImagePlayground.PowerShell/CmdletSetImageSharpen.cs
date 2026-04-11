@@ -9,7 +9,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Set-ImageSharpen -FilePath in.png -OutputPath out.png -Amount 2</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageSharpen")]
-public sealed class SetImageSharpenCmdlet : PSCmdlet {
+public sealed class SetImageSharpenCmdlet : AsyncImageCmdlet {
         /// <summary>Path to the source image.</summary>
         /// <para>The image must exist.</para>
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -30,15 +30,11 @@ public sealed class SetImageSharpenCmdlet : PSCmdlet {
         public SwitchParameter Async { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"Set-ImageSharpen - File {FilePath} not found. Please check the path.");
-            return;
-        }
+    protected override async Task ProcessRecordAsync() {
+        var filePath = ResolveExistingFilePath(FilePath, "SetImageSharpenFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
         if (Async.IsPresent) {
-            ImagePlayground.ImageHelper.SharpenAsync(filePath, output, Amount).GetAwaiter().GetResult();
+            await ImagePlayground.ImageHelper.SharpenAsync(filePath, output, Amount, CancelToken).ConfigureAwait(false);
         } else {
             ImagePlayground.ImageHelper.Sharpen(filePath, output, Amount);
         }

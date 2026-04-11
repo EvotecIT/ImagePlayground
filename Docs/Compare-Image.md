@@ -21,7 +21,7 @@ When OutputPath is omitted, the cmdlet writes the comparison result to the pipel
 
 ### EXAMPLE 1
 ```powershell
-Compare-Image -FilePath img1.png -FilePathToCompare img2.png
+PS> Compare-Image -FilePath img1.png -FilePathToCompare img2.png
 ```
 
 ## PARAMETERS

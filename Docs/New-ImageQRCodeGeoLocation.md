@@ -11,7 +11,7 @@ Generates a QR code with geolocation data.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeGeoLocation [-Latitude] <string> [-Longitude] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,19 +21,35 @@ Use this cmdlet to create location QR codes that open map applications at a spec
 
 ### EXAMPLE 1
 ```powershell
-New-ImageQRCodeGeoLocation -Latitude '52.2297' -Longitude '21.0122' -FilePath geo.png
+PS> New-ImageQRCodeGeoLocation -Latitude '52.2297' -Longitude '21.0122' -FilePath geo.png
 ```
 
 Generates a QR code that opens the target coordinates in compatible map applications.
 
 ### EXAMPLE 2
 ```powershell
-New-ImageQRCodeGeoLocation -Latitude '51.1079' -Longitude '17.0385' -FilePath venue.png -ForegroundColor DarkGreen -PixelSize 16 -Show
+PS> New-ImageQRCodeGeoLocation -Latitude '51.1079' -Longitude '17.0385' -FilePath venue.png -ForegroundColor DarkGreen -PixelSize 16 -Show
 ```
 
 Creates a location QR for signage, invitations, or venue directions and previews it immediately.
 
 ## PARAMETERS
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: 
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -BackgroundColor
 Background color of the QR code.

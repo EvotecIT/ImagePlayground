@@ -17,19 +17,14 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "ImageBase64")]
 [OutputType(typeof(string))]
-public sealed class ConvertToImageBase64Cmdlet : PSCmdlet {
+public sealed class ConvertToImageBase64Cmdlet : ImageCmdlet {
     /// <summary>Path to the image to convert.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var filePath = Helpers.ResolvePath(FilePath);
-        if (!File.Exists(filePath)) {
-            WriteWarning($"ConvertTo-ImageBase64 - File {FilePath} not found. Please check the path.");
-            return;
-        }
-
+        var filePath = ResolveExistingFilePath(FilePath, "ConvertToImageBase64FileNotFound", FilePath);
         var result = ImageHelper.ConvertToBase64(filePath);
         WriteObject(result);
     }

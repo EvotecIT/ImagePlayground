@@ -14,5 +14,13 @@ Describe 'Get-ImageBarCode' {
 
     }
 
+    It 'reads bar code asynchronously from file' {
+
+        $file = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/BarcodeEAN13.png'
+
+        (Get-ImageBarCode -FilePath $file -Async).Message | Should -Be '9012341234571'
+
+    }
+
 }
 

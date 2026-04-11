@@ -2,6 +2,7 @@ using ImagePlayground;
 using System;
 using System.Management.Automation;
 using CodeGlyphX.Payloads;
+using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
@@ -21,7 +22,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Generates a business card style QR code with address, organization, and contact metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRContact")]
-public sealed class NewImageQrContactCmdlet : PSCmdlet {
+public sealed class NewImageQrContactCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Output file path.</summary>
     /// <para>The image format is inferred from the file extension.</para>
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
@@ -122,17 +123,21 @@ public sealed class NewImageQrContactCmdlet : PSCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
+    /// <summary>Use asynchronous processing.</summary>
+    [Parameter]
+    public SwitchParameter Async { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        if (string.IsNullOrWhiteSpace(FilePath)) {
-            FilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName().Split('.')[0] + ".png");
-            WriteWarning($"New-ImageQRContact - No file path specified, saving to {FilePath}");
+    protected override async Task ProcessRecordAsync() {
+        ValidatePixelSize(PixelSize);
+        FilePath = EnsureQrOutputPath(FilePath);
+
+        if (Async.IsPresent) {
+            await ImagePlayground.QrCode.GenerateContactAsync(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false, ForegroundColor, BackgroundColor, PixelSize, QrContactAddressType.HomePreferred, CancelToken).ConfigureAwait(false);
+        } else {
+            ImagePlayground.QrCode.GenerateContact(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false, ForegroundColor, BackgroundColor, PixelSize);
         }
 
-        ImagePlayground.QrCode.GenerateContact(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false, ForegroundColor, BackgroundColor, PixelSize);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(Helpers.ResolvePath(FilePath), true);
-        }
+        ShowGeneratedQrCode(FilePath, Show);
     }
 }

@@ -12,7 +12,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageGif -Frames img1.png,img2.png -FilePath out.gif -FrameDelay 100</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageGif")]
-public sealed class NewImageGifCmdlet : PSCmdlet {
+public sealed class NewImageGifCmdlet : ImageCmdlet {
     /// <summary>Source image paths used as frames.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string[] Frames { get; set; } = Array.Empty<string>();
@@ -29,11 +29,7 @@ public sealed class NewImageGifCmdlet : PSCmdlet {
     protected override void ProcessRecord() {
         var checkedFrames = new List<string>();
         foreach (var frame in Frames) {
-            var full = Helpers.ResolvePath(frame);
-            if (!File.Exists(full)) {
-                WriteWarning($"New-ImageGif - File {frame} not found. Please check the path.");
-                return;
-            }
+            var full = ResolveExistingFilePath(frame, "NewImageGifFrameNotFound", frame);
             checkedFrames.Add(full);
         }
 

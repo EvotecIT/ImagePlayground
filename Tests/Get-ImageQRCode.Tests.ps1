@@ -26,5 +26,13 @@ Describe 'Get-ImageQRCode' {
 
     }
 
+    It 'reads QR code asynchronously' {
+
+        $file = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
+
+        (Get-ImageQRCode -FilePath $file -Async).Message | Should -Match '.+'
+
+    }
+
 }
 
