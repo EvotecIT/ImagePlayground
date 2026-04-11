@@ -59,9 +59,16 @@ public partial class Image {
         }
 
         if (Helpers.IsHeifExtension(fullPath)) {
-            ExifProfile profile = HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile) && heifProfile is not null
-                ? heifProfile
-                : new ExifProfile();
+            ExifProfile profile;
+            if (HeifMetadataReader.HasExifItem(fullPath)) {
+                if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile) || heifProfile is null) {
+                    throw new NotSupportedException(HeifExifReadNotSupportedMessage);
+                }
+
+                profile = heifProfile;
+            } else {
+                profile = new ExifProfile();
+            }
 
             if (!TrySetExifValue(profile, tag, value)) {
                 throw new ArgumentException($"Value of type '{value.GetType()}' does not match tag type '{tag.GetType()}'.", nameof(value));

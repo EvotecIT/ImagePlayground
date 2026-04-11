@@ -327,6 +327,14 @@ internal static class HeifMetadataReader {
 
         var output = new byte[data.Length + itemData.Length];
         Buffer.BlockCopy(data, 0, output, 0, data.Length);
+        if (itemData.Length == 0 && extent.Length > 0) {
+            if (extent.Offset < 0 || extent.Offset > output.Length - extent.Length) {
+                return false;
+            }
+
+            Array.Clear(output, extent.Offset, extent.Length);
+        }
+
         WriteVariableUInt(output, extent.OffsetPosition, extent.OffsetSize, extentOffset);
         WriteVariableUInt(output, extent.LengthPosition, extent.LengthSize, (ulong)itemData.Length);
 

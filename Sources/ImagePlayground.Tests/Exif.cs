@@ -141,6 +141,14 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_SetHeifExifValueWithUnreadableExif_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "exif-set-unreadable.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(Array.Empty<byte>()));
+
+        Assert.Throws<NotSupportedException>(() => PlaygroundImage.SetExifValue(filePath, null, ExifTag.Software, "ImagePlayground"));
+    }
+
+    [Fact]
     public void Test_RemoveHeifExifValueWithUnreadableExif_Throws() {
         string filePath = Path.Combine(_directoryWithTests, "exif-remove-unreadable.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(Array.Empty<byte>()));
@@ -312,12 +320,14 @@ public partial class ImagePlayground {
     public void Test_RemoveHeifMetadataClearsExistingExifAndXmp() {
         string filePath = Path.Combine(_directoryWithTests, "metadata-remove.heic");
         string outputPath = Path.Combine(_directoryWithTests, "metadata-remove-output.heic");
-        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), "<x:xmpmeta />"));
+        string xmp = "<x:xmpmeta />";
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), xmp));
 
         global::ImagePlayground.ImageHelper.RemoveMetadata(filePath, outputPath);
 
         Assert.Empty(PlaygroundImage.GetExifValues(outputPath));
         Assert.Equal(string.Empty, PlaygroundImage.GetHeifXmp(outputPath));
+        Assert.False(ContainsSequence(File.ReadAllBytes(outputPath), Encoding.UTF8.GetBytes(xmp)));
     }
 
     [Fact]
@@ -352,11 +362,13 @@ public partial class ImagePlayground {
     [Fact]
     public void Test_RemoveHeifXmp() {
         string filePath = Path.Combine(_directoryWithTests, "xmp-remove.heic");
-        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), "<x:xmpmeta />"));
+        string xmp = "<x:xmpmeta />";
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), xmp));
 
         PlaygroundImage.RemoveHeifXmp(filePath, null);
 
         Assert.Equal(string.Empty, PlaygroundImage.GetHeifXmp(filePath));
+        Assert.False(ContainsSequence(File.ReadAllBytes(filePath), Encoding.UTF8.GetBytes(xmp)));
     }
 
     [Fact]
@@ -810,6 +822,28 @@ public partial class ImagePlayground {
             (byte)(value >> 8),
             (byte)value
         };
+
+    private static bool ContainsSequence(byte[] data, byte[] sequence) {
+        if (sequence.Length == 0) {
+            return true;
+        }
+
+        for (int dataIndex = 0; dataIndex <= data.Length - sequence.Length; dataIndex++) {
+            bool matched = true;
+            for (int sequenceIndex = 0; sequenceIndex < sequence.Length; sequenceIndex++) {
+                if (data[dataIndex + sequenceIndex] != sequence[sequenceIndex]) {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private static byte[] Combine(params byte[][] arrays) {
         var result = new byte[arrays.Sum(static a => a.Length)];
