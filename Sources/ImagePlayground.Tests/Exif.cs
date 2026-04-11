@@ -296,6 +296,22 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_ReadHeifXmpWithUnreadableXmp_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "xmp-read-unreadable.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithUnlocatedXmp());
+
+        Assert.Throws<NotSupportedException>(() => PlaygroundImage.GetHeifXmp(filePath));
+    }
+
+    [Fact]
+    public void Test_ExportHeifMetadataWithUnreadableXmp_Throws() {
+        string filePath = Path.Combine(_directoryWithTests, "metadata-export-unreadable-xmp.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithUnlocatedXmp());
+
+        Assert.Throws<NotSupportedException>(() => global::ImagePlayground.ImageHelper.ExportMetadata(filePath));
+    }
+
+    [Fact]
     public void Test_ReadHeifInfoWithAuxiliaryImage() {
         string filePath = Path.Combine(_directoryWithTests, "info-auxiliary.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithAuxiliaryImage());
@@ -495,6 +511,17 @@ public partial class ImagePlayground {
             Encoding.ASCII.GetBytes("heic"),
             Encoding.ASCII.GetBytes("mif1")));
         byte[] meta = CreateMetaBoxWithIdatXmp(xmpItemData);
+
+        return Combine(ftyp, meta);
+    }
+
+    private static byte[] CreateMinimalHeifWithUnlocatedXmp() {
+        byte[] ftyp = Box("ftyp", Combine(
+            Encoding.ASCII.GetBytes("heic"),
+            UInt32BigEndian(0),
+            Encoding.ASCII.GetBytes("heic"),
+            Encoding.ASCII.GetBytes("mif1")));
+        byte[] meta = CreateMetaBoxWithUnlocatedXmp();
 
         return Combine(ftyp, meta);
     }
@@ -723,6 +750,23 @@ public partial class ImagePlayground {
         byte[] idat = Box("idat", xmpItemData);
 
         return FullBox("meta", 0, Combine(iinf, iloc, idat));
+    }
+
+    private static byte[] CreateMetaBoxWithUnlocatedXmp() {
+        byte[] xmpInfe = FullBoxWithFlags("infe", 2, 1, Combine(
+            UInt16BigEndian(1),
+            UInt16BigEndian(0),
+            Encoding.ASCII.GetBytes("mime"),
+            new byte[] { 0 },
+            Encoding.ASCII.GetBytes("application/rdf+xml"),
+            new byte[] { 0 },
+            Encoding.ASCII.GetBytes("utf-8"),
+            new byte[] { 0 }));
+        byte[] iinf = FullBox("iinf", 0, Combine(
+            UInt16BigEndian(1),
+            xmpInfe));
+
+        return FullBox("meta", 0, iinf);
     }
 
     private static byte[] CreateMetaBoxWithIdatExif(byte[] exifItemData) {

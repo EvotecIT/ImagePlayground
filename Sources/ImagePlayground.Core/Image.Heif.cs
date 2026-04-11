@@ -6,6 +6,7 @@ namespace ImagePlayground;
 /// Provides HEIF container metadata operations.
 /// </summary>
 public partial class Image {
+    private const string HeifXmpReadNotSupportedMessage = "The HEIF/HEIC file declares an XMP item, but the XMP payload could not be read.";
     private const string HeifXmpWriteNotSupportedMessage = "Updating HEIF/HEIC XMP requires an existing XMP item with a single writable file extent. Creating a brand-new HEIF XMP item is not supported yet.";
 
     /// <summary>
@@ -45,9 +46,15 @@ public partial class Image {
             throw new FileNotFoundException("HEIF file was not found.", fullPath);
         }
 
-        return HeifMetadataReader.TryReadXmp(fullPath, out string? xmp)
-            ? xmp
-            : null;
+        if (HeifMetadataReader.TryReadXmp(fullPath, out string? xmp)) {
+            return xmp;
+        }
+
+        if (HeifMetadataReader.HasXmpItem(fullPath)) {
+            throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
+        }
+
+        return null;
     }
 
     /// <summary>

@@ -12,7 +12,9 @@ namespace ImagePlayground;
 /// Provides helper methods for image manipulation.
 /// </summary>
 public partial class ImageHelper {
+    private const string HeifExifReadNotSupportedMessage = "The HEIF/HEIC file declares an EXIF item, but the EXIF payload could not be read.";
     private const string HeifExifWriteNotSupportedMessage = "Updating HEIF/HEIC EXIF requires an existing EXIF item with a single writable file extent. Creating a brand-new HEIF EXIF item is not supported yet.";
+    private const string HeifXmpReadNotSupportedMessage = "The HEIF/HEIC file declares an XMP item, but the XMP payload could not be read.";
     private const string HeifXmpWriteNotSupportedMessage = "Updating HEIF/HEIC XMP requires an existing XMP item with a single writable file extent. Creating a brand-new HEIF XMP item is not supported yet.";
 
     /// <summary>
@@ -70,13 +72,23 @@ public partial class ImageHelper {
     public static string ExportMetadata(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
         if (Helpers.IsHeifExtension(fullPath)) {
+            byte[]? exifProfile = null;
+            if (HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
+                exifProfile = heifProfile?.ToByteArray();
+            } else if (HeifMetadataReader.HasExifItem(fullPath)) {
+                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
+            }
+
+            byte[]? xmpProfile = null;
+            if (HeifMetadataReader.TryReadXmp(fullPath, out string? heifXmp) && heifXmp is not null) {
+                xmpProfile = Encoding.UTF8.GetBytes(heifXmp);
+            } else if (HeifMetadataReader.HasXmpItem(fullPath)) {
+                throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
+            }
+
             var heifData = new SerializedImageMetadata {
-                ExifProfile = HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)
-                    ? heifProfile?.ToByteArray()
-                    : null,
-                XmpProfile = HeifMetadataReader.TryReadXmp(fullPath, out string? heifXmp) && heifXmp is not null
-                    ? Encoding.UTF8.GetBytes(heifXmp)
-                    : null
+                ExifProfile = exifProfile,
+                XmpProfile = xmpProfile
             };
             return JsonSerializer.Serialize(heifData, new JsonSerializerOptions { WriteIndented = true });
         }
