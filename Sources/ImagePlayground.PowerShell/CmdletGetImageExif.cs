@@ -30,18 +30,17 @@ public sealed class GetImageExifCmdlet : ImageCmdlet {
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageExifFileNotFound", FilePath);
 
-        using var img = ImagePlayground.Image.Load(filePath);
-        IReadOnlyList<IExifValue> values = img.GetExifValues();
+        IReadOnlyList<IExifValue> values = ImagePlayground.Image.GetExifValues(filePath);
 
         if (Translate.IsPresent) {
             var obj = new PSObject();
             foreach (IExifValue v in values) {
                 obj.Properties.Add(new PSNoteProperty(v.Tag.ToString(), v.GetValue()));
             }
+
             WriteObject(obj);
         } else {
             WriteObject(values, true);
         }
     }
 }
-

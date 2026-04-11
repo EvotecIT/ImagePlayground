@@ -12,6 +12,11 @@ namespace ImagePlayground;
 /// Provides helper methods for image manipulation.
 /// </summary>
 public partial class ImageHelper {
+    private const string HeifExifReadNotSupportedMessage = "The HEIF/HEIC file declares an EXIF item, but the EXIF payload could not be read.";
+    private const string HeifExifWriteNotSupportedMessage = "Updating HEIF/HEIC EXIF requires an existing EXIF item with a single writable file extent. Creating a brand-new HEIF EXIF item is not supported yet.";
+    private const string HeifXmpReadNotSupportedMessage = "The HEIF/HEIC file declares an XMP item, but the XMP payload could not be read.";
+    private const string HeifXmpWriteNotSupportedMessage = "Updating HEIF/HEIC XMP requires an existing XMP item with a single writable file extent. Creating a brand-new HEIF XMP item is not supported yet.";
+
     /// <summary>
     /// Serialization model for image metadata.
     /// </summary>
@@ -66,6 +71,28 @@ public partial class ImageHelper {
     /// <returns>Serialized metadata.</returns>
     public static string ExportMetadata(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
+        if (Helpers.IsHeifExtension(fullPath)) {
+            byte[]? exifProfile = null;
+            if (HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
+                exifProfile = heifProfile?.ToByteArray();
+            } else if (HeifMetadataReader.HasExifItem(fullPath)) {
+                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
+            }
+
+            byte[]? xmpProfile = null;
+            if (HeifMetadataReader.TryReadXmp(fullPath, out string? heifXmp) && heifXmp is not null) {
+                xmpProfile = Encoding.UTF8.GetBytes(heifXmp);
+            } else if (HeifMetadataReader.HasXmpItem(fullPath)) {
+                throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
+            }
+
+            var heifData = new SerializedImageMetadata {
+                ExifProfile = exifProfile,
+                XmpProfile = xmpProfile
+            };
+            return JsonSerializer.Serialize(heifData, new JsonSerializerOptions { WriteIndented = true });
+        }
+
         using var img = Image.Load(fullPath);
         var meta = img.Metadata;
         var data = new SerializedImageMetadata {
@@ -156,6 +183,11 @@ public partial class ImageHelper {
             throw new InvalidDataException("Metadata file is invalid");
         }
 
+        if (Helpers.IsHeifExtension(fullPath)) {
+            ImportHeifMetadata(fullPath, outFullPath, data);
+            return;
+        }
+
         using var img = Image.Load(fullPath);
         img.Metadata.HorizontalResolution = data.HorizontalResolution;
         img.Metadata.VerticalResolution = data.VerticalResolution;
@@ -177,6 +209,11 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
 
+        if (Helpers.IsHeifExtension(fullPath)) {
+            RemoveHeifMetadata(fullPath, outFullPath);
+            return;
+        }
+
         using var img = Image.Load(fullPath);
         var meta = img.Metadata;
         meta.ExifProfile = null;
@@ -184,5 +221,106 @@ public partial class ImageHelper {
         meta.IccProfile = null;
         meta.IptcProfile = null;
         img.Save(outFullPath);
+    }
+
+    private static void ImportHeifMetadata(string fullPath, string outFullPath, SerializedImageMetadata data) {
+        string currentPath = fullPath;
+        bool wroteMetadata = false;
+        var temporaryFiles = new List<string>();
+
+        try {
+            if (data.ExifProfile is not null || HeifMetadataReader.HasExifItem(currentPath)) {
+                ExifProfile? heifProfile = data.ExifProfile != null
+                    ? new ExifProfile(data.ExifProfile)
+                    : null;
+                string temporaryPath = GetTemporaryHeifPath(outFullPath);
+                temporaryFiles.Add(temporaryPath);
+                if (!HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, heifProfile)) {
+                    throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
+                }
+
+                currentPath = temporaryPath;
+                wroteMetadata = true;
+            }
+
+            if (data.XmpProfile is not null || HeifMetadataReader.HasXmpItem(currentPath)) {
+                string? xmp = data.XmpProfile != null
+                    ? Encoding.UTF8.GetString(data.XmpProfile)
+                    : null;
+                string temporaryPath = GetTemporaryHeifPath(outFullPath);
+                temporaryFiles.Add(temporaryPath);
+                if (!HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, xmp)) {
+                    throw new NotSupportedException(HeifXmpWriteNotSupportedMessage);
+                }
+
+                currentPath = temporaryPath;
+                wroteMetadata = true;
+            }
+
+            if (wroteMetadata) {
+                File.Copy(currentPath, outFullPath, true);
+            } else {
+                CopyIfDifferent(fullPath, outFullPath);
+            }
+        } finally {
+            DeleteTemporaryFiles(temporaryFiles);
+        }
+    }
+
+    private static void RemoveHeifMetadata(string fullPath, string outFullPath) {
+        string currentPath = fullPath;
+        bool wroteMetadata = false;
+        var temporaryFiles = new List<string>();
+
+        try {
+            if (HeifMetadataReader.HasExifItem(currentPath)) {
+                string temporaryPath = GetTemporaryHeifPath(outFullPath);
+                temporaryFiles.Add(temporaryPath);
+                if (!HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, null)) {
+                    throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
+                }
+
+                currentPath = temporaryPath;
+                wroteMetadata = true;
+            }
+
+            if (HeifMetadataReader.HasXmpItem(currentPath)) {
+                string temporaryPath = GetTemporaryHeifPath(outFullPath);
+                temporaryFiles.Add(temporaryPath);
+                if (!HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, null)) {
+                    throw new NotSupportedException(HeifXmpWriteNotSupportedMessage);
+                }
+
+                currentPath = temporaryPath;
+                wroteMetadata = true;
+            }
+
+            if (wroteMetadata) {
+                File.Copy(currentPath, outFullPath, true);
+            } else {
+                CopyIfDifferent(fullPath, outFullPath);
+            }
+        } finally {
+            DeleteTemporaryFiles(temporaryFiles);
+        }
+    }
+
+    private static string GetTemporaryHeifPath(string outFullPath) =>
+        Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(outFullPath)}");
+
+    private static void DeleteTemporaryFiles(List<string> temporaryFiles) {
+        foreach (string temporaryFile in temporaryFiles) {
+            if (File.Exists(temporaryFile)) {
+                File.Delete(temporaryFile);
+            }
+        }
+    }
+
+    private static void CopyIfDifferent(string fullPath, string outFullPath) {
+        if (fullPath.Equals(outFullPath, StringComparison.OrdinalIgnoreCase)) {
+            return;
+        }
+
+        File.Copy(fullPath, outFullPath, true);
     }
 }

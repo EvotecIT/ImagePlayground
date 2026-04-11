@@ -46,6 +46,12 @@ Reads barcode information from an image file.
 ### [Get-ImageExif](Get-ImageExif.md)
 Gets EXIF metadata from an image.
 
+### [Get-ImageHeifInfo](Get-ImageHeifInfo.md)
+Gets HEIF container metadata without decoding image pixels.
+
+### [Get-ImageHeifXmp](Get-ImageHeifXmp.md)
+Gets the XMP metadata packet from a HEIF or HEIC file.
+
 ### [Get-ImageQRCode](Get-ImageQRCode.md)
 Reads QR code information from an image file.
 
@@ -172,6 +178,9 @@ Creates thumbnails for all images in a directory.
 ### [Remove-ImageExif](Remove-ImageExif.md)
 Removes EXIF metadata from an image.
 
+### [Remove-ImageHeifXmp](Remove-ImageHeifXmp.md)
+Removes the XMP metadata packet from a HEIF or HEIC file.
+
 ### [Resize-Image](Resize-Image.md)
 Resizes an image.
 
@@ -186,6 +195,9 @@ Blurs an image.
 
 ### [Set-ImageExif](Set-ImageExif.md)
 Sets an EXIF tag value in an image.
+
+### [Set-ImageHeifXmp](Set-ImageHeifXmp.md)
+Sets the XMP metadata packet in a HEIF or HEIC file.
 
 ### [Set-ImageRotation](Set-ImageRotation.md)
 Sets image rotation.
