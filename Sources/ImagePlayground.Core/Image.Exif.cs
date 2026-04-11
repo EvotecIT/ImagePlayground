@@ -65,11 +65,11 @@ public partial class Image {
         if (Helpers.IsHeifExtension(fullPath)) {
             ExifProfile profile;
             if (HeifMetadataReader.HasExifItem(fullPath)) {
-                if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile) || heifProfile is null) {
+                if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
                     throw new NotSupportedException(HeifExifReadNotSupportedMessage);
                 }
 
-                profile = heifProfile;
+                profile = heifProfile ?? new ExifProfile();
             } else {
                 profile = new ExifProfile();
             }

@@ -142,6 +142,18 @@ public partial class ImagePlayground {
     }
 
     [Fact]
+    public void Test_SetHeifExifValueAfterClear() {
+        string filePath = Path.Combine(_directoryWithTests, "exif-set-after-clear.heic");
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(CreateExifPayload("ImagePlayground")));
+
+        PlaygroundImage.ClearExifValues(filePath, null);
+        PlaygroundImage.SetExifValue(filePath, null, ExifTag.Software, "Recreated");
+
+        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "Recreated");
+    }
+
+    [Fact]
     public void Test_SetHeifExifValueWithoutExistingExif_Throws() {
         string filePath = Path.Combine(_directoryWithTests, "exif-set-empty.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithoutExif());
