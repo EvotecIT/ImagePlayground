@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Company>Evotec</Company>
     <Authors>Przemyslaw Klys</Authors>
-    <VersionPrefix>2.0.1</VersionPrefix>
+    <VersionPrefix>2.0.2</VersionPrefix>
     <TargetFrameworks>net472;net8.0-windows;net10.0-windows</TargetFrameworks>
     <AssemblyName>ImagePlayground.Gdi</AssemblyName>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
