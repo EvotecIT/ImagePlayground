@@ -36,8 +36,8 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
   Supports standard QR codes, contact cards, WiFi details, SMS, phone numbers, OTP, Bitcoin, Monero, BezahlCode, Girocode, Swiss, Slovenian UPN, ShadowSocks, SkypeCall, GeoLocation and more.
 - ☑️ **Barcode generation and reading**  
   Supports Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix and PDF417.
-- ☑️ **Chart creation**  
-  Create bar, pie, line, scatter, polar, radial, heatmap and histogram charts.
+- ☑️ **Chart creation**
+  Create bar, pie, line, scatter, polar, radial, heatmap, histogram, donut, gauge, circle, progress, pictorial and word-cloud charts using ChartForgeX.
 - ☑️ **Image manipulation**  
   Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert, sepia, kodachrome, lomograph, histogram equalization, vignette, skew, watermark (text or image) and add text.
 - ☑️ **Avatar, icon, thumbnail and grid generation**
@@ -322,6 +322,27 @@ New-ImageChart {
     New-ImageChartPictorial -Name 'Disabled' -Value 2 -Color Gray
 } -Options (New-ImageChartOptions -PictorialSymbol Person -PictorialColumns 10) -Show -FilePath $PSScriptRoot\Output\ChartsPictorial.png
 ```
+
+#### Transparent charts and export formats
+
+`New-ImageChart` can write PNG, SVG and HTML from the same definition. Use `New-ImageChartOptions -Transparent -NoCard -NoPlotBackground` when the chart should be composited over another image and only the chart ink, labels, grid and legend should remain visible.
+
+```powershell
+$definitions = @(
+    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker Square -Smooth
+)
+
+$options = New-ImageChartOptions -Transparent -NoCard -NoPlotBackground -ShowLegend -LegendPosition Bottom -ShowDataLabels
+
+New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath $PSScriptRoot\Samples\ChartsChartForgeXTransparent.png -Width 760 -Height 420
+New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath $PSScriptRoot\Samples\ChartsChartForgeXTrend.svg -Width 760 -Height 420
+New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath $PSScriptRoot\Samples\ChartsChartForgeXTrend.html -Width 760 -Height 420
+```
+
+![ChartForgeX transparent overlay](Examples/Samples/ChartsChartForgeXOverlay.png)
+
+The repository script `Examples\Charts.ChartForgeX.Showcase.ps1` generates the transparent overlay plus focused donut, progress, pictorial and word-cloud examples.
 
 ### Reading bar codes
 

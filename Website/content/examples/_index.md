@@ -24,4 +24,9 @@ These examples are selected from the ImagePlayground repository because they sho
     <h3>Create and read barcodes</h3>
     <p>Create EAN barcodes and read them back in the same workflow.</p>
   </a>
+  <a class="ev-example-card" href="./chartforgex-showcase/">
+    <span class="ev-example-card__eyebrow">Charts</span>
+    <h3>Create ChartForgeX charts</h3>
+    <p>Generate PNG, SVG, HTML and transparent chart overlays from one chart definition.</p>
+  </a>
 </div>
