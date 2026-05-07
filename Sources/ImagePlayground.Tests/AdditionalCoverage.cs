@@ -146,7 +146,7 @@ public partial class ImagePlayground {
                     "First",
                     new List<double>{1,2,3},
                     null,
-                    ScottPlot.MarkerShape.FilledCircle,
+                    ChartMarkerShape.Circle,
                     5)
             };
         Charts.Generate(defs, file, 300, 200);
@@ -189,6 +189,57 @@ public partial class ImagePlayground {
         Charts.Generate(radials, radial, 300, 200);
         Assert.True(File.Exists(radial));
         using var streamRadial = File.Open(radial, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+    }
+
+    [Fact]
+    public void Test_ChartForgeXOnlyChartFamilies() {
+        var options = new ChartRenderOptions {
+            ShowLegend = true,
+            ShowPointLegend = true,
+            LegendPosition = ChartLegendPosition.Right,
+            ShowDataLabels = true,
+            DonutCenterValue = "3",
+            DonutCenterLabel = "Total",
+            ProgressMaximum = 100,
+            PictorialSymbol = ChartPictorialSymbol.Person,
+            PictorialColumns = 10,
+            WordCloudMaximumTerms = 4
+        };
+
+        var donut = Path.Combine(_directoryWithTests, "chart_donut.png");
+        Charts.Generate(new ChartDefinition[] {
+            new ChartDonut("A", 1),
+            new ChartDonut("B", 2)
+        }, donut, 320, 220, null, null, null, false, ChartTheme.Default, null, null, options);
+        Assert.True(File.Exists(donut));
+
+        var gauge = Path.Combine(_directoryWithTests, "chart_gauge.png");
+        Charts.Generate(new ChartDefinition[] {
+            new ChartGauge("CPU", 72, 0, 100)
+        }, gauge, 260, 180, null, null, null, false, ChartTheme.Default, null, null, options);
+        Assert.True(File.Exists(gauge));
+
+        var progress = Path.Combine(_directoryWithTests, "chart_progress.png");
+        Charts.Generate(new ChartDefinition[] {
+            new ChartProgress("CPU", 72),
+            new ChartProgress("Memory", 61)
+        }, progress, 340, 180, null, null, null, false, ChartTheme.Default, null, null, options);
+        Assert.True(File.Exists(progress));
+
+        var pictorial = Path.Combine(_directoryWithTests, "chart_pictorial.png");
+        Charts.Generate(new ChartDefinition[] {
+            new ChartPictorial("Enabled", 7),
+            new ChartPictorial("Disabled", 3)
+        }, pictorial, 360, 180, null, null, null, false, ChartTheme.Default, null, null, options);
+        Assert.True(File.Exists(pictorial));
+
+        var wordCloud = Path.Combine(_directoryWithTests, "chart_wordcloud.png");
+        Charts.Generate(new ChartDefinition[] {
+            new ChartWordCloud("ChartForgeX", 10),
+            new ChartWordCloud("ImagePlayground", 7),
+            new ChartWordCloud("PowerBGInfo", 5)
+        }, wordCloud, 360, 220, null, null, null, false, ChartTheme.Default, null, null, options);
+        Assert.True(File.Exists(wordCloud));
     }
 
     [Fact]

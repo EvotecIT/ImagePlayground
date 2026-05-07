@@ -5,7 +5,7 @@ namespace ImagePlayground;
 /// </summary>
 public enum ChartTheme
 {
-    /// <summary>Use the default ScottPlot style.</summary>
+    /// <summary>Use the default ChartForgeX report style.</summary>
     Default,
     /// <summary>Apply the dark theme.</summary>
     Dark,

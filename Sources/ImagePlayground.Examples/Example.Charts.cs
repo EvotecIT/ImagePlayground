@@ -34,17 +34,17 @@ internal partial class Example {
                 new ChartLine(
                     "C#",
                     new List<double> { 5, 10, 12, 18, 10, 13 },
-                    markerShape: ScottPlot.MarkerShape.FilledCircle,
+                    markerShape: ChartMarkerShape.Circle,
                     markerSize: 7),
                 new ChartLine(
                     "C++",
                     new List<double> { 10, 15, 30, 40, 50, 60 },
-                    markerShape: ScottPlot.MarkerShape.FilledSquare,
+                    markerShape: ChartMarkerShape.Square,
                     markerSize: 7),
                 new ChartLine(
                     "PowerShell",
                     new List<double> { 10, 5, 12, 18, 30, 60 },
-                    markerShape: ScottPlot.MarkerShape.OpenCircle,
+                    markerShape: ChartMarkerShape.Circle,
                     markerSize: 7)
             };
         Charts.Generate(lines, line, 500, 500);

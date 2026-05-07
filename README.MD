@@ -69,13 +69,20 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageChartAnnotation` - Creates chart annotation data item.
 - `New-ImageChartBar` - Creates bar chart data item.
 - `New-ImageChartBarOptions` - Creates bar chart options.
+- `New-ImageChartCircle` - Creates circle status chart data item.
+- `New-ImageChartDonut` - Creates donut chart data item.
+- `New-ImageChartGauge` - Creates gauge chart data item.
 - `New-ImageChartHeatmap` - Creates heatmap chart data item.
 - `New-ImageChartHistogram` - Creates histogram chart data item.
 - `New-ImageChartLine` - Creates line chart data item.
+- `New-ImageChartOptions` - Creates shared ChartForgeX renderer options.
 - `New-ImageChartPie` - Creates pie chart data item.
+- `New-ImageChartPictorial` - Creates pictorial chart data item.
 - `New-ImageChartPolar` - Creates polar chart data item.
+- `New-ImageChartProgress` - Creates progress-bar chart data item.
 - `New-ImageChartRadial` - Creates radial gauge chart data item.
 - `New-ImageChartScatter` - Creates scatter chart data item.
+- `New-ImageChartWordCloud` - Creates word cloud chart data item.
 - `New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
 - `New-ImageGif` - Creates an animated GIF from existing images.
 - `New-ImageGrid` - Creates a simple grid-based image.
@@ -139,15 +146,16 @@ New-ImageQRCodeGirocode -Name 'Evotec Sp. z o.o.' -IBAN 'DE23100000001234567890'
 
 ```powershell
 $definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker FilledCircle -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker FilledSquare
+    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker Square
 )
 
 $annotations = @(
     New-ImageChartAnnotation -X 4 -Y 67 -Text 'Peak CPU' -Arrow
 )
 
-New-ImageChart -Definition $definitions -Annotation $annotations -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -FilePath "$PSScriptRoot\Output\SystemUsage.png"
+$options = New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels
+New-ImageChart -Definition $definitions -Annotation $annotations -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath "$PSScriptRoot\Output\SystemUsage.png"
 ```
 
 ### Update EXIF metadata before publishing an image
@@ -223,9 +231,9 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart {
-    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker FilledCircle -Smooth
-    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker FilledSquare
-    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker OpenCircle
+    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker Circle -Smooth
+    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker Square
+    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker Diamond
 } -Show -FilePath $PSScriptRoot\Output\ChartsLine1.png
 ```
 
@@ -288,10 +296,31 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart -ChartsDefinition {
-    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker FilledCircle
+    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker Circle
 } -AnnotationsDefinition {
     New-ImageChartAnnotation -X 3 -Y 5 -Text 'Peak' -Arrow
 } -Show -FilePath $PSScriptRoot\Samples\ChartsAnnotated.png -Width 500 -Height 300
+```
+
+#### ChartForgeX chart families and options
+
+```powershell
+$options = New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -DonutCenterValue '100%' -DonutCenterLabel 'Capacity'
+
+New-ImageChart {
+    New-ImageChartDonut -Name 'Used' -Value 72 -Color Crimson
+    New-ImageChartDonut -Name 'Free' -Value 28 -Color MediumSeaGreen
+} -Options $options -Show -FilePath $PSScriptRoot\Output\ChartsDonut.png -Width 500 -Height 360
+
+New-ImageChart {
+    New-ImageChartProgress -Name 'CPU' -Value 64 -Color Orange
+    New-ImageChartProgress -Name 'Memory' -Value 71 -Color DeepSkyBlue
+} -Options (New-ImageChartOptions -ProgressMaximum 100 -NoProgressHandles) -Show -FilePath $PSScriptRoot\Output\ChartsProgress.png
+
+New-ImageChart {
+    New-ImageChartPictorial -Name 'Enabled' -Value 8 -Color MediumSeaGreen
+    New-ImageChartPictorial -Name 'Disabled' -Value 2 -Color Gray
+} -Options (New-ImageChartOptions -PictorialSymbol Person -PictorialColumns 10) -Show -FilePath $PSScriptRoot\Output\ChartsPictorial.png
 ```
 
 ### Reading bar codes
@@ -502,7 +531,7 @@ Get-ImageExif -FilePath $PSScriptRoot\Output\IMG_46442.jpeg | Format-Table
 
 #### Current libraries and their licenses:
 - CodeGlyphX (in-repo, QR/Barcode generation + decoding)
-- [ScottPlot](https://github.com/ScottPlot/ScottPlot) - licensed MIT
+- ChartForgeX (in-repo/workspace, SVG/HTML/PNG chart rendering)
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) - licensed Apache 2.0
 - [Codeuctivity.ImageSharpCompare](https://github.com/Codeuctivity/ImageSharp.Compare) - licensed Apache 2.0
 

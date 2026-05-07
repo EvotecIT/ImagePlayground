@@ -28,7 +28,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <summary>Shape of markers placed on data points.</summary>
     [Parameter]
-    public ScottPlot.MarkerShape Marker { get; set; } = ScottPlot.MarkerShape.None;
+    public ChartMarkerShape Marker { get; set; } = ChartMarkerShape.None;
 
     /// <summary>Render the line using a smooth curve.</summary>
     [Parameter]

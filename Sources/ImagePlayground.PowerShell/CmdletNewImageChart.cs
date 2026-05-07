@@ -90,6 +90,10 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter]
     public SixLabors.ImageSharp.Color? Background { get; set; }
 
+    /// <summary>Renderer options created by New-ImageChartOptions.</summary>
+    [Parameter]
+    public ChartRenderOptions? Options { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (Definition is not null) {
@@ -130,7 +134,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        Charts.Generate(_definitions, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background);
+        Charts.Generate(_definitions, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background, Options);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

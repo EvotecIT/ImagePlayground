@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ScottPlot;
 using ImageColor = SixLabors.ImageSharp.Color;
 
 namespace ImagePlayground;
@@ -13,7 +12,7 @@ public sealed class ChartLine : ChartDefinition {
     public ImageColor? Color { get; }
 
     /// <summary>Shape of markers used for data points.</summary>
-    public MarkerShape MarkerShape { get; }
+    public ChartMarkerShape MarkerShape { get; }
 
     /// <summary>Optional size of the markers.</summary>
     public float? MarkerSize { get; }
@@ -32,7 +31,7 @@ public sealed class ChartLine : ChartDefinition {
         string name,
         IList<double> value,
         ImageColor? color = null,
-        MarkerShape markerShape = MarkerShape.None,
+        ChartMarkerShape markerShape = ChartMarkerShape.None,
         float? markerSize = null,
         bool smooth = false) : base(ChartDefinitionType.Line, name) {
         Value = value;
@@ -42,4 +41,3 @@ public sealed class ChartLine : ChartDefinition {
         Smooth = smooth;
     }
 }
-

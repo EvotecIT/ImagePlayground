@@ -11,7 +11,7 @@ Creates line chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
+New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <ChartMarkerShape>] [-Smooth] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,13 +47,13 @@ Accept wildcard characters: True
 ### -Marker
 Shape of markers placed on data points.
 
-Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight
+Possible values: None, Circle, Square, Diamond
 
 ```yaml
-Type: MarkerShape
+Type: ChartMarkerShape
 Parameter Sets: __AllParameterSets
 Aliases: 
-Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight
+Possible values: None, Circle, Square, Diamond
 
 Required: False
 Position: named
