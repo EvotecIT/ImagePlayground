@@ -158,6 +158,21 @@ $options = New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabe
 New-ImageChart -Definition $definitions -Annotation $annotations -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath "$PSScriptRoot\Output\SystemUsage.png"
 ```
 
+### Render a native ChartForgeX chart
+
+```powershell
+$chart = [ChartForgeX.Core.Chart]::Create().WithSize(640, 360).WithTitle('Daily Requests')
+$points = [ChartForgeX.Primitives.ChartPoint[]] @(
+    [ChartForgeX.Primitives.ChartPoint]::new(1, 120)
+    [ChartForgeX.Primitives.ChartPoint]::new(2, 148)
+    [ChartForgeX.Primitives.ChartPoint]::new(3, 136)
+)
+
+[void] $chart.AddBar('Requests', $points, [ChartForgeX.Primitives.ChartColor]::FromHex('#2563EB'))
+
+New-ImageChart -Chart $chart -FilePath "$PSScriptRoot\Output\Requests.png"
+```
+
 ### Update EXIF metadata before publishing an image
 
 ```powershell

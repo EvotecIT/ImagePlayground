@@ -20,7 +20,31 @@ using CfxWordCloudItem = ChartForgeX.Core.ChartWordCloudItem;
 namespace ImagePlayground;
 
 /// <summary>Chart generation helpers.</summary>
-public static class Charts {
+internal static class Charts {
+    /// <summary>Create a ChartForgeX chart with ImagePlayground render settings applied.</summary>
+    public static CfxChart Create(
+        int width = 600,
+        int height = 400,
+        string? xTitle = null,
+        string? yTitle = null,
+        bool showGrid = false,
+        ChartTheme theme = ChartTheme.Default,
+        ChartColor? background = null,
+        ChartRenderOptions? options = null) {
+        var chart = CfxChart.Create()
+            .WithSize(width, height)
+            .WithTheme(CreateTheme(theme, background))
+            .WithGrid(showGrid);
+
+        ApplySettings(chart, xTitle, yTitle, background, options);
+        return chart;
+    }
+
+    /// <summary>Save a ChartForgeX chart to SVG, HTML, or PNG based on the file extension.</summary>
+    public static void Save(CfxChart chart, string filePath) {
+        if (chart is null) throw new ArgumentNullException(nameof(chart));
+        SaveChart(chart, filePath);
+    }
 
     /// <summary>Generate a chart based on provided definitions.</summary>
     public static void Generate(
@@ -45,24 +69,7 @@ public static class Charts {
             throw new ArgumentException("Mixed chart definition types provided. All chart definitions must have the same ChartDefinitionType.", nameof(definitions));
         }
 
-        var chart = CfxChart.Create()
-            .WithSize(width, height)
-            .WithTheme(CreateTheme(theme, background))
-            .WithGrid(showGrid);
-
-        if (background.HasValue) {
-            chart.WithTransparentBackground(false);
-        }
-
-        if (!string.IsNullOrEmpty(xTitle)) {
-            chart.WithXAxis(xTitle!);
-        }
-
-        if (!string.IsNullOrEmpty(yTitle)) {
-            chart.WithYAxis(yTitle!);
-        }
-
-        ApplyRenderOptions(chart, options);
+        var chart = Create(width, height, xTitle, yTitle, showGrid, theme, background, options);
 
         switch (type) {
             case ChartDefinitionType.Bar:
@@ -168,6 +175,25 @@ public static class Charts {
         }
 
         SaveChart(chart, filePath);
+    }
+
+    /// <summary>Apply ImagePlayground render settings to an existing ChartForgeX chart.</summary>
+    public static void ApplySettings(CfxChart chart, string? xTitle = null, string? yTitle = null, ChartColor? background = null, ChartRenderOptions? options = null) {
+        if (chart is null) throw new ArgumentNullException(nameof(chart));
+
+        if (background.HasValue) {
+            chart.WithTransparentBackground(false);
+        }
+
+        if (!string.IsNullOrEmpty(xTitle)) {
+            chart.WithXAxis(xTitle!);
+        }
+
+        if (!string.IsNullOrEmpty(yTitle)) {
+            chart.WithYAxis(yTitle!);
+        }
+
+        ApplyRenderOptions(chart, options);
     }
 
     private static CfxTheme CreateTheme(ChartTheme theme, ChartColor? background) {

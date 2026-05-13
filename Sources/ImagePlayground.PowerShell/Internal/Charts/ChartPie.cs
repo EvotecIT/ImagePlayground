@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Pie chart definition.</summary>
-public sealed class ChartPie : ChartDefinition {
+internal sealed class ChartPie : ChartDefinition {
     /// <summary>Slice value.</summary>
     public double Value { get; }
 

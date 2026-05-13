@@ -1,7 +1,7 @@
 namespace ImagePlayground;
 
 /// <summary>Histogram chart definition.</summary>
-public sealed class ChartHistogram : ChartDefinition {
+internal sealed class ChartHistogram : ChartDefinition {
     /// <summary>Values for the histogram.</summary>
     public double[] Values { get; }
 

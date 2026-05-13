@@ -3,7 +3,7 @@ namespace ImagePlayground;
 /// <summary>
 /// Type of chart definition.
 /// </summary>
-public enum ChartDefinitionType {
+internal enum ChartDefinitionType {
     /// <summary>Bar chart.</summary>
     Bar,
     /// <summary>Line chart.</summary>

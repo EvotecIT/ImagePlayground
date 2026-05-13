@@ -4,7 +4,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Bar chart definition.</summary>
-public sealed class ChartBar : ChartDefinition {
+internal sealed class ChartBar : ChartDefinition {
     /// <summary>Bar values.</summary>
     public IList<double> Value { get; }
 

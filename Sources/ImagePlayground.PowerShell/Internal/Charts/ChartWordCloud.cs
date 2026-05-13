@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Word cloud term definition.</summary>
-public sealed class ChartWordCloud : ChartDefinition {
+internal sealed class ChartWordCloud : ChartDefinition {
     /// <summary>Term weight.</summary>
     public double Weight { get; }
 

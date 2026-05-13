@@ -4,7 +4,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Area chart definition.</summary>
-public sealed class ChartArea : ChartDefinition {
+internal sealed class ChartArea : ChartDefinition {
     /// <summary>Area values.</summary>
     public IList<double> Value { get; }
 

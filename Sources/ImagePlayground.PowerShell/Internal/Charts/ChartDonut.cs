@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Donut chart slice definition.</summary>
-public sealed class ChartDonut : ChartDefinition {
+internal sealed class ChartDonut : ChartDefinition {
     /// <summary>Slice value.</summary>
     public double Value { get; }
 

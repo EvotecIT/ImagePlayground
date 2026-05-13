@@ -1,7 +1,7 @@
 namespace ImagePlayground;
 
 /// <summary>Chart annotation definition.</summary>
-public sealed class ChartAnnotation {
+internal sealed class ChartAnnotation {
     /// <summary>X coordinate of the annotation.</summary>
     public double X { get; }
 

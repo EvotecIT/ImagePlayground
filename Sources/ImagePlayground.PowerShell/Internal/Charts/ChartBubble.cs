@@ -4,7 +4,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Bubble chart definition.</summary>
-public sealed class ChartBubble : ChartDefinition {
+internal sealed class ChartBubble : ChartDefinition {
     /// <summary>X values.</summary>
     public IList<double> X { get; }
 

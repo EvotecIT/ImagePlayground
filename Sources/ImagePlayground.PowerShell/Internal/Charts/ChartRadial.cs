@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Radial gauge chart definition.</summary>
-public sealed class ChartRadial : ChartDefinition {
+internal sealed class ChartRadial : ChartDefinition {
     /// <summary>Gauge value.</summary>
     public double Value { get; }
 

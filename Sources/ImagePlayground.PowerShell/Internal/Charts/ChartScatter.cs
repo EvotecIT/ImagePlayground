@@ -4,7 +4,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Scatter chart definition.</summary>
-public sealed class ChartScatter : ChartDefinition {
+internal sealed class ChartScatter : ChartDefinition {
     /// <summary>X values.</summary>
     public IList<double> X { get; }
 

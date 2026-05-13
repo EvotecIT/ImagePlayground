@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Pictorial chart row definition.</summary>
-public sealed class ChartPictorial : ChartDefinition {
+internal sealed class ChartPictorial : ChartDefinition {
     /// <summary>Pictorial value.</summary>
     public double Value { get; }
 

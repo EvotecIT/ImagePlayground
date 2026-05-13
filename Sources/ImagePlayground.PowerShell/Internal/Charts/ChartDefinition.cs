@@ -1,7 +1,7 @@
 namespace ImagePlayground;
 
 /// <summary>Base class for chart definitions.</summary>
-public abstract class ChartDefinition {
+internal abstract class ChartDefinition {
     /// <summary>Chart type.</summary>
     public ChartDefinitionType Type { get; }
 

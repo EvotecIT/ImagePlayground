@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -9,7 +10,8 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageChartOptionsCmdlet : PSCmdlet {
     /// <summary>Palette colors used by series and point-based charts.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color[]? Palette { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor[]? Palette { get; set; }
 
     /// <summary>Show the legend.</summary>
     [Parameter]

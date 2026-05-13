@@ -4,7 +4,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Polar plot definition.</summary>
-public sealed class ChartPolar : ChartDefinition {
+internal sealed class ChartPolar : ChartDefinition {
     /// <summary>Angle values.</summary>
     public IList<double> Angle { get; }
 

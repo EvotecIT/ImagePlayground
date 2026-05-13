@@ -5,6 +5,10 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace ImagePlayground.PowerShell;
 
 internal static class ChartColorConverter {
+    public static ChartColor? Convert(ChartColor? color) => color;
+
+    public static ChartColor[] Convert(ChartColor[] colors) => colors;
+
     public static ChartColor? Convert(Color? color) {
         if (!color.HasValue) {
             return null;

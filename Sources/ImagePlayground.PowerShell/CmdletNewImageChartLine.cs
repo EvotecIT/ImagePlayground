@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -24,7 +25,8 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <summary>Line color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? Color { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
 
     /// <summary>Shape of markers placed on data points.</summary>
     [Parameter]

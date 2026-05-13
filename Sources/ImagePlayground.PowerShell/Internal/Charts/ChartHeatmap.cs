@@ -1,7 +1,7 @@
 namespace ImagePlayground;
 
 /// <summary>Heatmap chart definition.</summary>
-public sealed class ChartHeatmap : ChartDefinition {
+internal sealed class ChartHeatmap : ChartDefinition {
     /// <summary>Values of the heatmap.</summary>
     public double[,] Data { get; }
 

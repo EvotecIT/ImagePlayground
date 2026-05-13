@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Progress-bar chart row definition.</summary>
-public sealed class ChartProgress : ChartDefinition {
+internal sealed class ChartProgress : ChartDefinition {
     /// <summary>Progress value.</summary>
     public double Value { get; }
 

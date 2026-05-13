@@ -4,7 +4,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Line chart definition.</summary>
-public sealed class ChartLine : ChartDefinition {
+internal sealed class ChartLine : ChartDefinition {
     /// <summary>Line values.</summary>
     public IList<double> Value { get; }
 

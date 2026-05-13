@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Circle status chart definition.</summary>
-public sealed class ChartCircle : ChartDefinition {
+internal sealed class ChartCircle : ChartDefinition {
     /// <summary>Circle value.</summary>
     public double Value { get; }
 

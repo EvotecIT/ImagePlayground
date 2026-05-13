@@ -3,7 +3,7 @@ using ChartForgeX.Primitives;
 namespace ImagePlayground;
 
 /// <summary>Gauge chart definition.</summary>
-public sealed class ChartGauge : ChartDefinition {
+internal sealed class ChartGauge : ChartDefinition {
     /// <summary>Gauge value.</summary>
     public double Value { get; }
 
