@@ -53,7 +53,7 @@ public partial class ImagePlayground {
         var defs = new List<ChartDefinition> {
                 new ChartBar("A", new List<double> {1,2})
             };
-        Charts.Generate(defs, file, 200, 150, null, null, null, false, ChartTheme.Default, null, ChartColors.Aqua);
+        Charts.Generate(defs, file, 200, 150, null, null, null, false, ChartTheme.Default, null, ChartColor.FromRgb(0, 255, 255));
         Assert.True(File.Exists(file));
         using var streamBg = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }

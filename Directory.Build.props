@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ChartForgeXVersion>0.1.0</ChartForgeXVersion>
-    <CodeGlyphXVersion>1.4.0</CodeGlyphXVersion>
+    <CodeGlyphXVersion>1.5.0</CodeGlyphXVersion>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj')">true</UseLocalCodeGlyphXProject>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
