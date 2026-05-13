@@ -9,8 +9,9 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>Image processing, QR code generation, barcode generation, chart rendering, EXIF metadata, and image comparison APIs for .NET.</Description>
-    <PackageTags>images;image-processing;qr;qrcode;barcode;charts;exif;imagesharp;dotnet</PackageTags>
+    <Description>Main ImagePlayground package for image processing, QR code generation, barcode generation, ChartForgeX-backed chart rendering, EXIF metadata, and image comparison APIs for .NET.</Description>
+    <PackageTags>images;image-processing;qr;qrcode;barcode;charts;chartforgex;codeglyphx;exif;imagesharp;dotnet</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,10 @@
     <ProjectReference Include="..\\ImagePlayground.Chart\\ImagePlayground.Chart.csproj" />
     <ProjectReference Include="..\\ImagePlayground.BarCode\\ImagePlayground.BarCode.csproj" />
     <ProjectReference Include="..\\ImagePlayground.QRCode\\ImagePlayground.QRCode.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

@@ -8,12 +8,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>
     <PackageProjectUrl>https://github.com/EvotecIT/ImagePlayground</PackageProjectUrl>
-    <PackageReadmeFile>README.MD</PackageReadmeFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'ImagePlayground.Tests' and '$(MSBuildProjectName)' != 'ImagePlayground.Examples'">
-    <None Include="$(MSBuildThisFileDirectory)README.MD" Pack="true" PackagePath="\" Visible="false" Link="README.MD" />
-  </ItemGroup>
 </Project>

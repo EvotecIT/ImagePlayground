@@ -9,8 +9,10 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>Chart rendering APIs for ImagePlayground, powered by ChartForgeX.</Description>
-    <PackageTags>charts;chartforgex;plotting;heatmap;histogram;line;pie;scatter;dotnet</PackageTags>
+    <Description>Compatibility package for ImagePlayground chart APIs, powered by ChartForgeX. New projects should reference ImagePlayground or ChartForgeX directly.</Description>
+    <PackageTags>charts;chartforgex;plotting;heatmap;histogram;line;pie;scatter;dotnet;compatibility</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>This package remains available as a compatibility surface. New ImagePlayground users should reference ImagePlayground; direct chart engine users should reference ChartForgeX.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,6 +43,10 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

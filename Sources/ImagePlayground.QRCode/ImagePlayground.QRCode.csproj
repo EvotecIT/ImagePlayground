@@ -9,8 +9,10 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>QR code generation and reading APIs for ImagePlayground, powered by CodeGlyphX.</Description>
-    <PackageTags>qr;qrcode;otp;wifi;payments;girocode;swiss;codeglyphx;dotnet</PackageTags>
+    <Description>Compatibility package for ImagePlayground QR code APIs, powered by CodeGlyphX. New projects should reference ImagePlayground or CodeGlyphX directly.</Description>
+    <PackageTags>qr;qrcode;otp;wifi;payments;girocode;swiss;codeglyphx;dotnet;compatibility</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>This package remains available as a compatibility surface. New ImagePlayground users should reference ImagePlayground; direct QR engine users should reference CodeGlyphX.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,6 +43,10 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

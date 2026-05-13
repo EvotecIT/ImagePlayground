@@ -9,8 +9,10 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>Core image processing, EXIF metadata, image comparison, and utility APIs for the ImagePlayground package family.</Description>
-    <PackageTags>images;image-processing;exif;metadata;compare;imagesharp;dotnet</PackageTags>
+    <Description>Compatibility package for ImagePlayground core image processing APIs. New projects should reference the main ImagePlayground package.</Description>
+    <PackageTags>images;image-processing;exif;metadata;compare;imagesharp;dotnet;compatibility</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>This package remains available as a compatibility surface. New projects should reference ImagePlayground unless they intentionally need this split assembly.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +48,10 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
