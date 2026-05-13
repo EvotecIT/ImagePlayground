@@ -134,7 +134,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        Charts.Generate(_definitions, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background, Options);
+        Charts.Generate(_definitions, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, ChartColorConverter.Convert(Background), Options);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);

@@ -33,6 +33,6 @@ public sealed class NewImageChartPolarCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartPolar(Name, Angle, Value, Color));
+        WriteObject(new ChartPolar(Name, Angle, Value, ChartColorConverter.Convert(Color)));
     }
 }

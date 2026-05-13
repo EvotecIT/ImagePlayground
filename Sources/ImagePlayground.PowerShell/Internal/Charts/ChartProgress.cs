@@ -1,4 +1,4 @@
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -8,13 +8,13 @@ public sealed class ChartProgress : ChartDefinition {
     public double Value { get; }
 
     /// <summary>Progress color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a progress-bar row definition.</summary>
     /// <param name="name">Progress label.</param>
     /// <param name="value">Progress value.</param>
     /// <param name="color">Optional progress color.</param>
-    public ChartProgress(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.ProgressBar, name) {
+    public ChartProgress(string name, double value, ChartColor? color = null) : base(ChartDefinitionType.ProgressBar, name) {
         Value = value;
         Color = color;
     }

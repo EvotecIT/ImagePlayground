@@ -25,6 +25,6 @@ public sealed class NewImageChartPieCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartPie(Name, Value, Color));
+        WriteObject(new ChartPie(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

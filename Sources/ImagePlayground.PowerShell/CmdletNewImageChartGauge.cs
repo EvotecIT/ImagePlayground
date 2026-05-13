@@ -29,6 +29,6 @@ public sealed class NewImageChartGaugeCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartGauge(Name, Value, Minimum, Maximum, Color));
+        WriteObject(new ChartGauge(Name, Value, Minimum, Maximum, ChartColorConverter.Convert(Color)));
     }
 }

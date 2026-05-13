@@ -10,7 +10,8 @@ public enum ChartDefinitionType {
     Line,
     /// <summary>Scatter chart.</summary>
     Scatter,
-    /// <summary>Bubble chart.</summary>
+    /// <summary>Bubble chart.</summary>
+
     Bubble,
     /// <summary>Polar plot.</summary>
     Polar,

@@ -21,6 +21,6 @@ public sealed class NewImageChartWordCloudCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartWordCloud(Text, Weight, Color));
+        WriteObject(new ChartWordCloud(Text, Weight, ChartColorConverter.Convert(Color)));
     }
 }

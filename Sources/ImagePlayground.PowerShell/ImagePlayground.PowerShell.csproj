@@ -41,7 +41,11 @@
         <ProjectReference Include="$(ChartForgeXProjectPath)" Condition="'$(ChartForgeXProjectPath)' != ''" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true'">
+    <ItemGroup Condition="'$(CodeGlyphXProjectPath)' != ''">
+        <ProjectReference Include="$(CodeGlyphXProjectPath)" Condition="'$(CodeGlyphXProjectPath)' != ''" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true' And '$(CodeGlyphXProjectPath)' == ''">
         <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
     </ItemGroup>
 
@@ -49,7 +53,7 @@
         <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" Condition="'$(ChartForgeXProjectPath)' == ''" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true'">
+    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
         <PackageReference Include="CodeGlyphX" Version="$(CodeGlyphXVersion)" />
     </ItemGroup>
 

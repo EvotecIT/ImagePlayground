@@ -36,6 +36,6 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartLine(Name, Value, Color, Marker, null, Smooth.IsPresent));
+        WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), Marker, null, Smooth.IsPresent));
     }
 }

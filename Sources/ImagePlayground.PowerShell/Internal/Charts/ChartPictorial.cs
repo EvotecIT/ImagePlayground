@@ -1,4 +1,4 @@
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -8,13 +8,13 @@ public sealed class ChartPictorial : ChartDefinition {
     public double Value { get; }
 
     /// <summary>Pictorial color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a pictorial chart row definition.</summary>
     /// <param name="name">Pictorial label.</param>
     /// <param name="value">Pictorial value.</param>
     /// <param name="color">Optional pictorial color.</param>
-    public ChartPictorial(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Pictorial, name) {
+    public ChartPictorial(string name, double value, ChartColor? color = null) : base(ChartDefinitionType.Pictorial, name) {
         Value = value;
         Color = color;
     }

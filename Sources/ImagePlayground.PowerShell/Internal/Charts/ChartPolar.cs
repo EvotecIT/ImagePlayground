@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -12,17 +12,16 @@ public sealed class ChartPolar : ChartDefinition {
     public IList<double> Value { get; }
 
     /// <summary>Line color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a polar chart definition.</summary>
     /// <param name="name">Series name.</param>
     /// <param name="angle">Angle values.</param>
     /// <param name="value">Radius values.</param>
     /// <param name="color">Optional line color.</param>
-    public ChartPolar(string name, IList<double> angle, IList<double> value, ImageColor? color = null) : base(ChartDefinitionType.Polar, name) {
+    public ChartPolar(string name, IList<double> angle, IList<double> value, ChartColor? color = null) : base(ChartDefinitionType.Polar, name) {
         Angle = angle;
         Value = value;
         Color = color;
     }
 }
-

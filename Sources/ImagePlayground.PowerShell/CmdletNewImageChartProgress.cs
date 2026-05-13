@@ -21,6 +21,6 @@ public sealed class NewImageChartProgressCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartProgress(Name, Value, Color));
+        WriteObject(new ChartProgress(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

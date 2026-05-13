@@ -1,4 +1,4 @@
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -14,7 +14,7 @@ public sealed class ChartGauge : ChartDefinition {
     public double Maximum { get; }
 
     /// <summary>Gauge color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a gauge chart definition.</summary>
     /// <param name="name">Gauge label.</param>
@@ -22,7 +22,7 @@ public sealed class ChartGauge : ChartDefinition {
     /// <param name="minimum">Gauge minimum.</param>
     /// <param name="maximum">Gauge maximum.</param>
     /// <param name="color">Optional gauge color.</param>
-    public ChartGauge(string name, double value, double minimum = 0, double maximum = 100, ImageColor? color = null) : base(ChartDefinitionType.Gauge, name) {
+    public ChartGauge(string name, double value, double minimum = 0, double maximum = 100, ChartColor? color = null) : base(ChartDefinitionType.Gauge, name) {
         Value = value;
         Minimum = minimum;
         Maximum = maximum;

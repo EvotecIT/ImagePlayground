@@ -28,6 +28,6 @@ public sealed class NewImageChartBarCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartBar(Name, Value, Color));
+        WriteObject(new ChartBar(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

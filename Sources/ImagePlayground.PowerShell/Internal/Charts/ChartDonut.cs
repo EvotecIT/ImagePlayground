@@ -1,4 +1,4 @@
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -8,13 +8,13 @@ public sealed class ChartDonut : ChartDefinition {
     public double Value { get; }
 
     /// <summary>Slice color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a donut slice definition.</summary>
     /// <param name="name">Slice label.</param>
     /// <param name="value">Slice value.</param>
     /// <param name="color">Optional slice color.</param>
-    public ChartDonut(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Donut, name) {
+    public ChartDonut(string name, double value, ChartColor? color = null) : base(ChartDefinitionType.Donut, name) {
         Value = value;
         Color = color;
     }

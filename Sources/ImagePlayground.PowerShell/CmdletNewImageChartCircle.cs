@@ -29,6 +29,6 @@ public sealed class NewImageChartCircleCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartCircle(Name, Value, Minimum, Maximum, Color));
+        WriteObject(new ChartCircle(Name, Value, Minimum, Maximum, ChartColorConverter.Convert(Color)));
     }
 }

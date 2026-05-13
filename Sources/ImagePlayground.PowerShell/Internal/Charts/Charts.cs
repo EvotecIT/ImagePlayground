@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using ChartForgeX;
 using ChartForgeX.Primitives;
-using SixLabors.ImageSharp.PixelFormats;
 using CfxChart = ChartForgeX.Core.Chart;
 using CfxHeatmapScale = ChartForgeX.Core.ChartHeatmapScale;
 using CfxLegendPosition = ChartForgeX.Core.ChartLegendPosition;
@@ -17,7 +16,6 @@ using CfxProgressItem = ChartForgeX.Core.ChartProgressItem;
 using CfxTheme = ChartForgeX.Themes.ChartTheme;
 using CfxBubble = ChartForgeX.Core.ChartBubble;
 using CfxWordCloudItem = ChartForgeX.Core.ChartWordCloudItem;
-using ImageColor = SixLabors.ImageSharp.Color;
 
 namespace ImagePlayground;
 
@@ -36,7 +34,7 @@ public static class Charts {
         bool showGrid = false,
         ChartTheme theme = ChartTheme.Default,
         IEnumerable<ChartAnnotation>? annotations = null,
-        ImageColor? background = null,
+        ChartColor? background = null,
         ChartRenderOptions? options = null) {
         if (definitions is null) throw new ArgumentNullException(nameof(definitions));
         var list = definitions.ToList();
@@ -69,7 +67,7 @@ public static class Charts {
         switch (type) {
             case ChartDefinitionType.Bar:
                 foreach (var bar in list.Cast<ChartBar>()) {
-                    chart.AddBar(bar.Name, BuildIndexedPoints(bar.Value), ToChartColor(bar.Color));
+                    chart.AddBar(bar.Name, BuildIndexedPoints(bar.Value), bar.Color);
                 }
                 if (barOptions?.ShowValuesAboveBars == true) {
                     chart.WithDataLabels();
@@ -79,9 +77,9 @@ public static class Charts {
                 foreach (var line in list.Cast<ChartLine>()) {
                     var points = BuildIndexedPoints(line.Value);
                     if (line.Smooth) {
-                        chart.AddSmoothLine(line.Name, points, ToChartColor(line.Color));
+                        chart.AddSmoothLine(line.Name, points, line.Color);
                     } else {
-                        chart.AddLine(line.Name, points, ToChartColor(line.Color));
+                        chart.AddLine(line.Name, points, line.Color);
                     }
 
                     if (line.MarkerShape != ChartMarkerShape.None && line.MarkerSize.HasValue) {
@@ -91,22 +89,22 @@ public static class Charts {
                 break;
             case ChartDefinitionType.Area:
                 foreach (var area in list.Cast<ChartArea>()) {
-                    chart.AddSmoothArea(area.Name, BuildIndexedPoints(area.Value), ToChartColor(area.Color));
+                    chart.AddSmoothArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
                 }
                 break;
             case ChartDefinitionType.Scatter:
                 foreach (var scatter in list.Cast<ChartScatter>()) {
-                    chart.AddScatter(scatter.Name, BuildXYPoints(scatter.X, scatter.Y), ToChartColor(scatter.Color));
+                    chart.AddScatter(scatter.Name, BuildXYPoints(scatter.X, scatter.Y), scatter.Color);
                 }
                 break;
             case ChartDefinitionType.Bubble:
                 foreach (var bubble in list.Cast<ChartBubble>()) {
-                    chart.AddBubble(bubble.Name, BuildBubbles(bubble.X, bubble.Y, bubble.Size), ToChartColor(bubble.Color));
+                    chart.AddBubble(bubble.Name, BuildBubbles(bubble.X, bubble.Y, bubble.Size), bubble.Color);
                 }
                 break;
             case ChartDefinitionType.Polar:
                 foreach (var polar in list.Cast<ChartPolar>()) {
-                    chart.AddRadar(polar.Name, BuildXYPoints(polar.Angle, polar.Value), ToChartColor(polar.Color));
+                    chart.AddRadar(polar.Name, BuildXYPoints(polar.Angle, polar.Value), polar.Color);
                 }
                 break;
             case ChartDefinitionType.PolarArea:
@@ -130,20 +128,20 @@ public static class Charts {
                 break;
             case ChartDefinitionType.Gauge:
                 var gauge = RequireSingle<ChartGauge>(list, type);
-                chart.AddGauge(gauge.Name, gauge.Value, gauge.Minimum, gauge.Maximum, ToChartColor(gauge.Color));
+                chart.AddGauge(gauge.Name, gauge.Value, gauge.Minimum, gauge.Maximum, gauge.Color);
                 break;
             case ChartDefinitionType.Circle:
                 var circle = RequireSingle<ChartCircle>(list, type);
-                chart.AddCircle(circle.Name, circle.Value, circle.Minimum, circle.Maximum, ToChartColor(circle.Color));
+                chart.AddCircle(circle.Name, circle.Value, circle.Minimum, circle.Maximum, circle.Color);
                 break;
             case ChartDefinitionType.ProgressBar:
-                chart.AddProgressBars("Values", list.Cast<ChartProgress>().Select(progress => new CfxProgressItem(progress.Name, progress.Value, ToChartColor(progress.Color))), options?.ProgressMaximum ?? 100);
+                chart.AddProgressBars("Values", list.Cast<ChartProgress>().Select(progress => new CfxProgressItem(progress.Name, progress.Value, progress.Color)), options?.ProgressMaximum ?? 100);
                 break;
             case ChartDefinitionType.Pictorial:
-                chart.AddPictorial("Values", list.Cast<ChartPictorial>().Select(item => new CfxPictorialItem(item.Name, item.Value, ToChartColor(item.Color))), ResolvePictorialShape(options?.PictorialSymbol));
+                chart.AddPictorial("Values", list.Cast<ChartPictorial>().Select(item => new CfxPictorialItem(item.Name, item.Value, item.Color)), ResolvePictorialShape(options?.PictorialSymbol));
                 break;
             case ChartDefinitionType.WordCloud:
-                chart.AddWordCloud("Values", list.Cast<ChartWordCloud>().Select(item => new CfxWordCloudItem(item.Name, item.Weight, ToChartColor(item.Color))));
+                chart.AddWordCloud("Values", list.Cast<ChartWordCloud>().Select(item => new CfxWordCloudItem(item.Name, item.Weight, item.Color)));
                 break;
             case ChartDefinitionType.Heatmap:
                 foreach (var map in list.Cast<ChartHeatmap>()) {
@@ -163,15 +161,19 @@ public static class Charts {
             }
         }
 
-        filePath = Helpers.ResolvePath(filePath);
-        Helpers.CreateParentDirectory(filePath);
+        filePath = Path.GetFullPath(filePath);
+        var directory = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(directory)) {
+            Directory.CreateDirectory(directory);
+        }
+
         SaveChart(chart, filePath);
     }
 
-    private static CfxTheme CreateTheme(ChartTheme theme, ImageColor? background) {
+    private static CfxTheme CreateTheme(ChartTheme theme, ChartColor? background) {
         var chartTheme = theme == ChartTheme.Dark ? CfxTheme.ReportDark() : CfxTheme.ReportLight();
         if (background.HasValue) {
-            var color = ToChartColor(background.Value);
+            var color = background.Value;
             chartTheme.Background = color;
             chartTheme.CardBackground = color;
             chartTheme.PlotBackground = WithAlpha(color, color.A);
@@ -186,7 +188,7 @@ public static class Charts {
         }
 
         if (options.Palette != null && options.Palette.Count > 0) {
-            chart.WithPalette(options.Palette.Select(ToChartColor).ToArray());
+            chart.WithPalette(options.Palette.ToArray());
         }
         if (options.ShowLegend.HasValue) chart.WithLegend(options.ShowLegend.Value);
         if (options.ShowPointLegend.HasValue) chart.WithPointLegend(options.ShowPointLegend.Value);
@@ -266,13 +268,13 @@ public static class Charts {
         }
     }
 
-    private static void ApplyPointColors(CfxChart chart, ImageColor?[] colors) {
+    private static void ApplyPointColors(CfxChart chart, ChartColor?[] colors) {
         if (chart.Series.Count == 0) {
             return;
         }
 
         for (var i = 0; i < colors.Length; i++) {
-            var color = ToChartColor(colors[i]);
+            var color = colors[i];
             if (color.HasValue) {
                 chart.Series[0].WithPointColor(i, color.Value);
             }
@@ -364,19 +366,6 @@ public static class Charts {
         } else {
             chart.SavePng(filePath);
         }
-    }
-
-    private static ChartColor? ToChartColor(ImageColor? color) {
-        if (!color.HasValue) {
-            return null;
-        }
-
-        return ToChartColor(color.Value);
-    }
-
-    private static ChartColor ToChartColor(ImageColor color) {
-        var pixel = color.ToPixel<Rgba32>();
-        return ChartColor.FromRgba(pixel.R, pixel.G, pixel.B, pixel.A);
     }
 
     private static ChartColor WithAlpha(ChartColor color, byte alpha) => ChartColor.FromRgba(color.R, color.G, color.B, alpha);

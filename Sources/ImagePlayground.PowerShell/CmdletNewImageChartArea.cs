@@ -25,6 +25,6 @@ public sealed class NewImageChartAreaCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartArea(Name, Value, Color));
+        WriteObject(new ChartArea(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

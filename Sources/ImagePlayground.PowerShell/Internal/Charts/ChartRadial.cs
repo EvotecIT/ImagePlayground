@@ -1,4 +1,4 @@
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -8,15 +8,14 @@ public sealed class ChartRadial : ChartDefinition {
     public double Value { get; }
 
     /// <summary>Gauge color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a radial gauge definition.</summary>
     /// <param name="name">Gauge label.</param>
     /// <param name="value">Gauge value.</param>
     /// <param name="color">Optional gauge color.</param>
-    public ChartRadial(string name, double value, ImageColor? color = null) : base(ChartDefinitionType.Radial, name) {
+    public ChartRadial(string name, double value, ChartColor? color = null) : base(ChartDefinitionType.Radial, name) {
         Value = value;
         Color = color;
     }
 }
-

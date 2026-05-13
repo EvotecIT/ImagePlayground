@@ -1,4 +1,5 @@
 using ImagePlayground;
+using CodeGlyphX;
 using System.Management.Automation;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageBarCodeCmdlet : AsyncImageCmdlet {
     /// <summary>Barcode type.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-public BarcodeType Type { get; set; }
+    public BarcodeType Type { get; set; }
 
     /// <summary>Value encoded in the barcode.</summary>
     [Parameter(Mandatory = true, Position = 1)]

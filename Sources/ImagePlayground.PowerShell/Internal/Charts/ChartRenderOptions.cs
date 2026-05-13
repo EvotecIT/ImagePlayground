@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
 /// <summary>Renderer-neutral chart options exposed by ImagePlayground.</summary>
 public sealed class ChartRenderOptions {
     /// <summary>Optional color palette used by series and point-based charts.</summary>
-    public IList<ImageColor>? Palette { get; set; }
+    public IList<ChartColor>? Palette { get; set; }
 
     /// <summary>Whether to render the legend.</summary>
     public bool? ShowLegend { get; set; }

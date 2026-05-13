@@ -21,6 +21,6 @@ public sealed class NewImageChartPictorialCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartPictorial(Name, Value, Color));
+        WriteObject(new ChartPictorial(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

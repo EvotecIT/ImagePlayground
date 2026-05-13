@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -12,17 +12,16 @@ public sealed class ChartScatter : ChartDefinition {
     public IList<double> Y { get; }
 
     /// <summary>Point color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a scatter chart definition.</summary>
     /// <param name="name">Series name.</param>
     /// <param name="x">X data points.</param>
     /// <param name="y">Y data points.</param>
     /// <param name="color">Optional point color.</param>
-    public ChartScatter(string name, IList<double> x, IList<double> y, ImageColor? color = null) : base(ChartDefinitionType.Scatter, name) {
+    public ChartScatter(string name, IList<double> x, IList<double> y, ChartColor? color = null) : base(ChartDefinitionType.Scatter, name) {
         X = x;
         Y = y;
         Color = color;
     }
 }
-

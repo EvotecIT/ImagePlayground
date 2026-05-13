@@ -1,4 +1,4 @@
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -14,7 +14,7 @@ public sealed class ChartCircle : ChartDefinition {
     public double Maximum { get; }
 
     /// <summary>Circle color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a circle status chart definition.</summary>
     /// <param name="name">Circle label.</param>
@@ -22,7 +22,7 @@ public sealed class ChartCircle : ChartDefinition {
     /// <param name="minimum">Circle minimum.</param>
     /// <param name="maximum">Circle maximum.</param>
     /// <param name="color">Optional circle color.</param>
-    public ChartCircle(string name, double value, double minimum = 0, double maximum = 100, ImageColor? color = null) : base(ChartDefinitionType.Circle, name) {
+    public ChartCircle(string name, double value, double minimum = 0, double maximum = 100, ChartColor? color = null) : base(ChartDefinitionType.Circle, name) {
         Value = value;
         Minimum = minimum;
         Maximum = maximum;

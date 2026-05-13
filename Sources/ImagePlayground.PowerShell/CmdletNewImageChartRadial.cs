@@ -25,6 +25,6 @@ public sealed class NewImageChartRadialCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartRadial(Name, Value, Color));
+        WriteObject(new ChartRadial(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

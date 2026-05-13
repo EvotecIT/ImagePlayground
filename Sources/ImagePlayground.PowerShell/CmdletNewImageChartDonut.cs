@@ -21,6 +21,6 @@ public sealed class NewImageChartDonutCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartDonut(Name, Value, Color));
+        WriteObject(new ChartDonut(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

@@ -29,6 +29,6 @@ public sealed class NewImageChartScatterCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartScatter(Name, X, Y, Color));
+        WriteObject(new ChartScatter(Name, X, Y, ChartColorConverter.Convert(Color)));
     }
 }

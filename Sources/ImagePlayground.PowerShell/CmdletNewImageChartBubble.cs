@@ -33,6 +33,6 @@ public sealed class NewImageChartBubbleCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartBubble(Name, X, Y, Size, Color));
+        WriteObject(new ChartBubble(Name, X, Y, Size, ChartColorConverter.Convert(Color)));
     }
 }

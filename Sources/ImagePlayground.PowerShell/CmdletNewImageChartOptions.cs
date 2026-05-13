@@ -98,7 +98,7 @@ public sealed class NewImageChartOptionsCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void EndProcessing() {
         var options = new ChartRenderOptions();
-        if (Palette != null && Palette.Length > 0) options.Palette = Palette;
+        if (Palette != null && Palette.Length > 0) options.Palette = ChartColorConverter.Convert(Palette);
         if (IsBound(nameof(ShowLegend))) options.ShowLegend = ShowLegend.IsPresent;
         if (IsBound(nameof(NoLegend))) options.ShowLegend = !NoLegend.IsPresent;
         if (IsBound(nameof(ShowPointLegend))) options.ShowPointLegend = ShowPointLegend.IsPresent;

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -9,7 +9,7 @@ public sealed class ChartLine : ChartDefinition {
     public IList<double> Value { get; }
 
     /// <summary>Line color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Shape of markers used for data points.</summary>
     public ChartMarkerShape MarkerShape { get; }
@@ -30,7 +30,7 @@ public sealed class ChartLine : ChartDefinition {
     public ChartLine(
         string name,
         IList<double> value,
-        ImageColor? color = null,
+        ChartColor? color = null,
         ChartMarkerShape markerShape = ChartMarkerShape.None,
         float? markerSize = null,
         bool smooth = false) : base(ChartDefinitionType.Line, name) {

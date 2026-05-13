@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ImageColor = SixLabors.ImageSharp.Color;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
@@ -15,7 +15,7 @@ public sealed class ChartBubble : ChartDefinition {
     public IList<double> Size { get; }
 
     /// <summary>Bubble color.</summary>
-    public ImageColor? Color { get; }
+    public ChartColor? Color { get; }
 
     /// <summary>Create a bubble chart definition.</summary>
     /// <param name="name">Series name.</param>
@@ -23,7 +23,7 @@ public sealed class ChartBubble : ChartDefinition {
     /// <param name="y">Y data points.</param>
     /// <param name="size">Bubble sizes.</param>
     /// <param name="color">Optional bubble color.</param>
-    public ChartBubble(string name, IList<double> x, IList<double> y, IList<double> size, ImageColor? color = null) : base(ChartDefinitionType.Bubble, name) {
+    public ChartBubble(string name, IList<double> x, IList<double> y, IList<double> size, ChartColor? color = null) : base(ChartDefinitionType.Bubble, name) {
         X = x;
         Y = y;
         Size = size;
