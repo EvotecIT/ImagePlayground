@@ -6,17 +6,16 @@
     <VersionPrefix>2.0.2</VersionPrefix>
     <TargetFrameworks>netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
     <AssemblyName>ImagePlayground.Chart</AssemblyName>
+    <IsPackable>false</IsPackable>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>Compatibility package for ImagePlayground chart APIs, powered by ChartForgeX. New projects should reference ImagePlayground or ChartForgeX directly.</Description>
+    <Description>Internal ImagePlayground PowerShell chart wrapper APIs, powered by ChartForgeX.</Description>
     <PackageTags>charts;chartforgex;plotting;heatmap;histogram;line;pie;scatter;dotnet;compatibility</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>This package remains available as a compatibility surface. New ImagePlayground users should reference ImagePlayground; direct chart engine users should reference ChartForgeX.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
+    <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
@@ -44,9 +43,4 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
 </Project>

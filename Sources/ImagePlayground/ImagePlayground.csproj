@@ -9,16 +9,44 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>Main ImagePlayground package for image processing, QR code generation, barcode generation, ChartForgeX-backed chart rendering, EXIF metadata, and image comparison APIs for .NET.</Description>
-    <PackageTags>images;image-processing;qr;qrcode;barcode;charts;chartforgex;codeglyphx;exif;imagesharp;dotnet</PackageTags>
+    <Description>ImageSharp-based image processing, EXIF metadata, image comparison, text, watermarking, thumbnails, icons, grids, mosaics, GIF, and conversion APIs for .NET.</Description>
+    <PackageTags>images;image-processing;exif;metadata;compare;text;watermark;imagesharp;dotnet</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\\ImagePlayground.Core\\ImagePlayground.Core.csproj" />
-    <ProjectReference Include="..\\ImagePlayground.Chart\\ImagePlayground.Chart.csproj" />
-    <ProjectReference Include="..\\ImagePlayground.BarCode\\ImagePlayground.BarCode.csproj" />
-    <ProjectReference Include="..\\ImagePlayground.QRCode\\ImagePlayground.QRCode.csproj" />
+    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+    <PackageReference Include="System.Memory" Version="4.6.3" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Image.Filters.cs;Image.Drawing.cs;Image.Transforms.cs" />
+    <Compile Include="Image.Filters.cs" />
+    <Compile Include="Image.Drawing.cs" />
+    <Compile Include="Image.Transforms.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Collections" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Collections.Concurrent" />
+    <Using Include="System.Threading" />
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Text" />
+    <Using Include="System.IO" />
+    <Using Include="System.Net" />
+    <Using Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

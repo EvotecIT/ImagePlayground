@@ -6,17 +6,16 @@
     <VersionPrefix>2.0.2</VersionPrefix>
     <TargetFrameworks>netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
     <AssemblyName>ImagePlayground.QRCode</AssemblyName>
+    <IsPackable>false</IsPackable>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>Compatibility package for ImagePlayground QR code APIs, powered by CodeGlyphX. New projects should reference ImagePlayground or CodeGlyphX directly.</Description>
+    <Description>Internal ImagePlayground PowerShell QR code wrapper APIs, powered by CodeGlyphX.</Description>
     <PackageTags>qr;qrcode;otp;wifi;payments;girocode;swiss;codeglyphx;dotnet;compatibility</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>This package remains available as a compatibility surface. New ImagePlayground users should reference ImagePlayground; direct QR engine users should reference CodeGlyphX.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
+    <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true'">
@@ -44,9 +43,4 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
 </Project>
