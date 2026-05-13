@@ -35,9 +35,22 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
-        <ProjectReference Include="..\ImagePlayground.Chart\ImagePlayground.Chart.csproj" />
-        <ProjectReference Include="..\ImagePlayground.BarCode\ImagePlayground.BarCode.csproj" />
-        <ProjectReference Include="..\ImagePlayground.QRCode\ImagePlayground.QRCode.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
+        <ProjectReference Include="$(ChartForgeXProjectPath)" Condition="'$(ChartForgeXProjectPath)' != ''" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true'">
+        <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(ChartForgeXProjectPath)' == ''">
+        <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" Condition="'$(ChartForgeXProjectPath)' == ''" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true'">
+        <PackageReference Include="CodeGlyphX" Version="$(CodeGlyphXVersion)" />
     </ItemGroup>
 
     <ItemGroup>
@@ -57,6 +70,10 @@
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
         <DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
     </PropertyGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
 
     <Target Name="CopyDocumentationToPublishFolder" AfterTargets="GenerateDocumentationFile;Publish">
         <!-- This is needed for XmlDoc2CmdletDoc to copy a PowerShell documentation file to Publish

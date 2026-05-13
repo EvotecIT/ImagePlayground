@@ -285,6 +285,7 @@ public class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
+    /// <param name="addressType">Address type used in the contact payload.</param>
     /// <example>
     ///   <code>QrCode.GenerateContact("contact.png", QrContactOutputType.MeCard, "John", "Doe");</code>
     /// </example>
