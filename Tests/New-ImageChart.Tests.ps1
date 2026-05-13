@@ -70,7 +70,7 @@ Describe 'New-ImageChart' {
         }
 
         New-ImageChart -ChartsDefinition {
-            New-ImageChartPolar -Name 'S1' -Angle @(0,1) -Value @(1,2)
+            New-ImageChartPolar -Name 'S1' -Angle @(0, 1, 2) -Value @(1, 2, 1)
         } -FilePath $file -Width 200 -Height 150
 
         Test-Path -Path $file | Should -BeTrue
