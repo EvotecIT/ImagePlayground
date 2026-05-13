@@ -13,14 +13,15 @@
     <PackageTags>charts;chartforgex;plotting;heatmap;histogram;line;pie;scatter;dotnet</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <ChartForgeXProjectPath Condition="'$(ChartForgeXProjectPath)' == '' and Exists('..\..\..\ChartForgeX-overlay-raster\ChartForgeX\ChartForgeX.csproj')">..\..\..\ChartForgeX-overlay-raster\ChartForgeX\ChartForgeX.csproj</ChartForgeXProjectPath>
-    <ChartForgeXProjectPath Condition="'$(ChartForgeXProjectPath)' == '' and Exists('..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj')">..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj</ChartForgeXProjectPath>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
     <ProjectReference Include="$(ChartForgeXProjectPath)" Condition="'$(ChartForgeXProjectPath)' != ''" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(ChartForgeXProjectPath)' == ''">
     <PackageReference Include="ChartForgeX" Version="0.1.0" Condition="'$(ChartForgeXProjectPath)' == ''" />
   </ItemGroup>
 
