@@ -37,7 +37,7 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ **Barcode generation and reading**  
   Supports Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix and PDF417.
 - ☑️ **Chart creation**
-  Create bar, pie, line, scatter, polar, radial, heatmap, histogram, donut, gauge, circle, progress, pictorial and word-cloud charts using ChartForgeX.
+  Create bar, horizontal bar, line, step line, area, step area, stacked area, lollipop, scatter, bubble, range, box plot, slope, pie, donut, radial, gauge, circle, bullet, waterfall, funnel, treemap, heatmap, histogram, progress, pictorial and word-cloud charts using ChartForgeX.
 - ☑️ **Image manipulation**  
   Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert, sepia, kodachrome, lomograph, histogram equalization, vignette, skew, watermark (text or image) and add text.
 - ☑️ **Avatar, icon, thumbnail and grid generation**
@@ -69,19 +69,32 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageChartAnnotation` - Creates chart annotation data item.
 - `New-ImageChartBar` - Creates bar chart data item.
 - `New-ImageChartBarOptions` - Creates bar chart options.
+- `New-ImageChartBoxPlot` - Creates box-plot chart data item.
+- `New-ImageChartBullet` - Creates bullet chart data item.
 - `New-ImageChartCircle` - Creates circle status chart data item.
 - `New-ImageChartDonut` - Creates donut chart data item.
+- `New-ImageChartFunnel` - Creates funnel chart item.
 - `New-ImageChartGauge` - Creates gauge chart data item.
 - `New-ImageChartHeatmap` - Creates heatmap chart data item.
 - `New-ImageChartHistogram` - Creates histogram chart data item.
+- `New-ImageChartHorizontalBar` - Creates horizontal bar chart data item.
 - `New-ImageChartLine` - Creates line chart data item.
+- `New-ImageChartLollipop` - Creates lollipop chart data item.
 - `New-ImageChartOptions` - Creates shared ChartForgeX renderer options.
 - `New-ImageChartPie` - Creates pie chart data item.
 - `New-ImageChartPictorial` - Creates pictorial chart data item.
 - `New-ImageChartPolar` - Creates polar chart data item.
 - `New-ImageChartProgress` - Creates progress-bar chart data item.
+- `New-ImageChartRangeBand` - Creates range-band chart data item.
+- `New-ImageChartRangeBar` - Creates range-bar chart data item.
 - `New-ImageChartRadial` - Creates radial gauge chart data item.
 - `New-ImageChartScatter` - Creates scatter chart data item.
+- `New-ImageChartSlope` - Creates slope chart data item.
+- `New-ImageChartStackedArea` - Creates stacked-area chart data item.
+- `New-ImageChartStepArea` - Creates step-area chart data item.
+- `New-ImageChartStepLine` - Creates step-line chart data item.
+- `New-ImageChartTreemap` - Creates treemap chart item.
+- `New-ImageChartWaterfall` - Creates waterfall chart data item.
 - `New-ImageChartWordCloud` - Creates word cloud chart data item.
 - `New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
 - `New-ImageGif` - Creates an animated GIF from existing images.
@@ -336,6 +349,25 @@ New-ImageChart {
     New-ImageChartPictorial -Name 'Enabled' -Value 8 -Color MediumSeaGreen
     New-ImageChartPictorial -Name 'Disabled' -Value 2 -Color Gray
 } -Options (New-ImageChartOptions -PictorialSymbol Person -PictorialColumns 10) -Show -FilePath $PSScriptRoot\Output\ChartsPictorial.png
+```
+
+#### Additional ChartForgeX DSL charts
+
+```powershell
+New-ImageChart {
+    New-ImageChartHorizontalBar -Name 'Disk' -Value 72,28 -Color DeepSkyBlue
+} -Options (New-ImageChartOptions -ShowLegend -NoCard -NoPlotBackground) -Show -FilePath $PSScriptRoot\Output\ChartsHorizontalBar.png
+
+New-ImageChart {
+    New-ImageChartBullet -Name 'Servers patched' -Value 92 -Target 95 -RangeEnds 70,85 -Color MediumSeaGreen
+    New-ImageChartBullet -Name 'Workstations patched' -Value 86 -Target 90 -RangeEnds 70,85 -Color Orange
+} -Options (New-ImageChartOptions -NoCard -NoPlotBackground) -Show -FilePath $PSScriptRoot\Output\ChartsBullet.png -Width 700 -Height 320
+
+New-ImageChart {
+    New-ImageChartTreemap -Name 'Servers' -Value 42 -Color DeepSkyBlue
+    New-ImageChartTreemap -Name 'Workstations' -Value 120 -Color MediumSeaGreen
+    New-ImageChartTreemap -Name 'Laptops' -Value 80 -Color Orange
+} -Options (New-ImageChartOptions -ShowPointLegend) -Show -FilePath $PSScriptRoot\Output\ChartsTreemap.png -Width 700 -Height 420
 ```
 
 #### Transparent charts and export formats

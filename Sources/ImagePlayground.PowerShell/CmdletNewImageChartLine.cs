@@ -38,6 +38,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), Marker, null, Smooth.IsPresent));
+        float? markerSize = Marker == ChartMarkerShape.None ? null : 6;
+        WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), markerSize, Smooth.IsPresent));
     }
 }

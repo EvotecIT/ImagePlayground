@@ -1,5 +1,6 @@
 using System.Management.Automation;
 using ImagePlayground;
+using ChartAnnotationDefinition = ChartForgeX.Simple.ChartAnnotationDefinition;
 
 namespace ImagePlayground.PowerShell;
 
@@ -31,6 +32,6 @@ public sealed class NewImageChartAnnotationCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartAnnotation(X, Y, Text, Arrow.IsPresent));
+        WriteObject(new ChartAnnotationDefinition(X, Y, Text, Arrow.IsPresent));
     }
 }

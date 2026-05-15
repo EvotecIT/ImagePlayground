@@ -146,7 +146,6 @@ public partial class ImagePlayground {
                     "First",
                     new List<double>{1,2,3},
                     null,
-                    ChartMarkerShape.Circle,
                     5)
             };
         Charts.Generate(defs, file, 300, 200);

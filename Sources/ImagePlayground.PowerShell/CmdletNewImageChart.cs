@@ -3,6 +3,8 @@ using System.Management.Automation;
 using ChartForgeX.Core;
 using ChartForgeX.Primitives;
 using ImagePlayground;
+using ChartDefinition = ChartForgeX.Simple.ChartDefinition;
+using ChartAnnotationDefinition = ChartForgeX.Simple.ChartAnnotationDefinition;
 
 namespace ImagePlayground.PowerShell;
 
@@ -36,7 +38,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     private const string ChartSet = "Chart";
     private const string ChartScriptSet = "ChartScript";
     private readonly List<ChartDefinition> _definitions = new();
-    private readonly List<ChartAnnotation> _annotations = new();
+    private readonly List<ChartAnnotationDefinition> _annotations = new();
     private readonly List<Chart> _charts = new();
 
     /// <summary>ScriptBlock producing chart definitions.</summary>
@@ -174,7 +176,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
             var ares = AnnotationsDefinition.Invoke();
             foreach (var o in ares) {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
-                if (obj is ChartAnnotation ann) {
+                if (obj is ChartAnnotationDefinition ann) {
                     _annotations.Add(ann);
                 }
             }
@@ -219,7 +221,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     private void AddAnnotations(IEnumerable<object> annotations) {
         foreach (var item in annotations) {
             var obj = item is PSObject ps ? ps.BaseObject : item;
-            if (obj is ChartAnnotation annotation) {
+            if (obj is ChartAnnotationDefinition annotation) {
                 _annotations.Add(annotation);
                 continue;
             }
