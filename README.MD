@@ -159,8 +159,8 @@ New-ImageQRCodeGirocode -Name 'Evotec Sp. z o.o.' -IBAN 'DE23100000001234567890'
 
 ```powershell
 $definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker Circle -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker Square
+    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker
 )
 
 $annotations = @(
@@ -259,9 +259,9 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart {
-    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker Circle -Smooth
-    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker Square
-    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker Diamond
+    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker -Smooth
+    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker
+    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker
 } -Show -FilePath $PSScriptRoot\Output\ChartsLine1.png
 ```
 
@@ -324,7 +324,7 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart -ChartsDefinition {
-    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker Circle
+    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker
 } -AnnotationsDefinition {
     New-ImageChartAnnotation -X 3 -Y 5 -Text 'Peak' -Arrow
 } -Show -FilePath $PSScriptRoot\Samples\ChartsAnnotated.png -Width 500 -Height 300
@@ -376,8 +376,8 @@ New-ImageChart {
 
 ```powershell
 $definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker Circle -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker Square -Smooth
+    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker -Smooth
 )
 
 $options = New-ImageChartOptions -Transparent -NoCard -NoPlotBackground -ShowLegend -LegendPosition Bottom -ShowDataLabels

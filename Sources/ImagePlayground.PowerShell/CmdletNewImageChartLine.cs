@@ -30,7 +30,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <summary>Circle markers placed on data points.</summary>
     [Parameter]
-    public ChartMarkerShape Marker { get; set; } = ChartMarkerShape.None;
+    public SwitchParameter Marker { get; set; }
 
     /// <summary>Render the line using a smooth curve.</summary>
     [Parameter]
@@ -38,7 +38,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        float? markerSize = Marker == ChartMarkerShape.None ? null : 6;
+        float? markerSize = Marker.IsPresent ? 6 : null;
         WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), markerSize, Smooth.IsPresent));
     }
 }
