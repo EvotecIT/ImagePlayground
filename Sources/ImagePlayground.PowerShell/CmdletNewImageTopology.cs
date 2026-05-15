@@ -33,7 +33,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     public ScriptBlock? TopologyDefinition { get; set; }
 
     /// <para>Topology objects provided directly or from the pipeline.</para>
-    [Parameter(ValueFromPipeline = true, Mandatory = true, ParameterSetName = DefinitionSet)]
+    [Parameter(ValueFromPipeline = true, ParameterSetName = DefinitionSet)]
     public object[]? Definition { get; set; }
 
     /// <para>Topology chart provided directly.</para>
@@ -146,15 +146,19 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
+    protected override void BeginProcessing() {
         if (Chart != null) {
             _chart = Chart;
         }
 
-        AddDefinitions(Definition);
         AddDefinitions(Group);
         AddDefinitions(Node);
         AddDefinitions(Edge);
+    }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord() {
+        AddDefinitions(Definition);
     }
 
     /// <inheritdoc />
@@ -176,8 +180,11 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             chart.SaveSvg(output, options);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
             chart.SaveHtml(output, options);
-        } else {
+        } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
             chart.SavePng(output, options);
+        } else {
+            var exception = new PSArgumentException("Topology output supports only .png, .svg, .html, or .htm file extensions.");
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageTopologyUnsupportedExtension", ErrorCategory.InvalidArgument, output));
         }
 
         if (Show.IsPresent) {
@@ -227,22 +234,38 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     }
 
     private TopologyChart BuildChart() {
+        var chartWasProvided = _chart != null;
         var chart = _chart ?? TopologyChart.Create();
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(Title))) {
+        if (IsParameterBound(nameof(Title))) {
             chart.Title = Title;
         } else if (string.IsNullOrWhiteSpace(chart.Title)) {
             chart.Title = null;
         }
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(Subtitle))) {
+        if (IsParameterBound(nameof(Subtitle))) {
             chart.Subtitle = Subtitle;
         }
 
-        chart.LayoutMode = Layout;
-        chart.LayoutDirection = Direction;
-        chart.Viewport.Width = Width;
-        chart.Viewport.Height = Height;
-        chart.Viewport.Padding = Padding;
-        chart.Theme = CreateTheme();
+        if (!chartWasProvided || IsParameterBound(nameof(Layout))) {
+            chart.LayoutMode = Layout;
+        }
+        if (!chartWasProvided || IsParameterBound(nameof(Direction))) {
+            chart.LayoutDirection = Direction;
+        }
+        if (!chartWasProvided || IsParameterBound(nameof(Width))) {
+            chart.Viewport.Width = Width;
+        }
+        if (!chartWasProvided || IsParameterBound(nameof(Height))) {
+            chart.Viewport.Height = Height;
+        }
+        if (!chartWasProvided || IsParameterBound(nameof(Padding))) {
+            chart.Viewport.Padding = Padding;
+        }
+        if (!chartWasProvided || IsParameterBound(nameof(Theme))) {
+            chart.Theme = CreateTheme();
+        } else if (Transparent.IsPresent) {
+            chart.Theme ??= TopologyTheme.Light();
+            chart.Theme.Background = "#FFFFFF00";
+        }
 
         foreach (var group in _groups) {
             chart.Groups.Add(group);
@@ -290,4 +313,6 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
 
         return theme;
     }
+
+    private bool IsParameterBound(string parameterName) => MyInvocation.BoundParameters.ContainsKey(parameterName);
 }

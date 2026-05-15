@@ -1,5 +1,6 @@
 using ChartForgeX.Topology;
 using System.Management.Automation;
+using System.Threading;
 
 namespace ImagePlayground.PowerShell;
 
@@ -14,7 +15,9 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageTopologyEdge")]
 [OutputType(typeof(TopologyEdge))]
 public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
-    /// <para>Stable edge identifier. When omitted, one is derived from source and target node ids.</para>
+    private static int s_generatedId;
+
+    /// <para>Stable edge identifier. When omitted, a unique identifier is derived from source and target node ids.</para>
     [Parameter]
     public string Id { get; set; } = string.Empty;
 
@@ -101,7 +104,7 @@ public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
     /// <summary>Emits a topology edge definition.</summary>
     protected override void ProcessRecord() {
         var edge = new TopologyEdge {
-            Id = string.IsNullOrWhiteSpace(Id) ? SourceNodeId + "-" + TargetNodeId : Id,
+            Id = string.IsNullOrWhiteSpace(Id) ? SourceNodeId + "-" + TargetNodeId + "-" + Interlocked.Increment(ref s_generatedId) : Id,
             SourceNodeId = SourceNodeId,
             TargetNodeId = TargetNodeId,
             Kind = Kind,

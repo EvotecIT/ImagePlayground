@@ -43,4 +43,73 @@ Describe 'New-ImageTopology' {
         $topology.Nodes[0].Id | Should -Be 'api'
         Test-Path -Path $file | Should -BeTrue
     }
+
+    It 'accepts a direct topology chart without a Definition argument and preserves chart layout' {
+        $file = Join-Path -Path $TestDir -ChildPath 'topology-chart-input.svg'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        $chart = [ChartForgeX.Topology.TopologyChart]::Create()
+        $chart.LayoutMode = [ChartForgeX.Topology.TopologyLayoutMode]::Manual
+        $chart.LayoutDirection = [ChartForgeX.Topology.TopologyLayoutDirection]::RightToLeft
+        $chart.Viewport.Width = 640
+        $chart.Viewport.Height = 360
+        $chart.Viewport.Padding = 12
+
+        $node = [ChartForgeX.Topology.TopologyNode]::new()
+        $node.Id = 'api'
+        $node.Label = 'API'
+        $chart.Nodes.Add($node)
+
+        $topology = New-ImageTopology -Chart $chart -FilePath $file -NoTitle -PassThru
+
+        $topology.LayoutMode | Should -Be ([ChartForgeX.Topology.TopologyLayoutMode]::Manual)
+        $topology.LayoutDirection | Should -Be ([ChartForgeX.Topology.TopologyLayoutDirection]::RightToLeft)
+        $topology.Viewport.Width | Should -Be 640
+        $topology.Viewport.Height | Should -Be 360
+        $topology.Viewport.Padding | Should -Be 12
+        Test-Path -Path $file | Should -BeTrue
+    }
+
+    It 'adds named inputs only once when pipeline input is also used' {
+        $file = Join-Path -Path $TestDir -ChildPath 'topology-pipeline.svg'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        $nodes = @(
+            New-ImageTopologyNode -Id 'api' -Label 'API'
+            New-ImageTopologyNode -Id 'db' -Label 'Database'
+        )
+        $edges = @(
+            New-ImageTopologyEdge -SourceNodeId 'api' -TargetNodeId 'db' -Label 'primary'
+            New-ImageTopologyEdge -SourceNodeId 'db' -TargetNodeId 'api' -Label 'reply'
+        )
+
+        $topology = $edges | New-ImageTopology -Node $nodes -FilePath $file -NoTitle -PassThru
+
+        $topology.Nodes.Count | Should -Be 2
+        $topology.Edges.Count | Should -Be 2
+        Test-Path -Path $file | Should -BeTrue
+    }
+
+    It 'rejects unsupported output extensions' {
+        $file = Join-Path -Path $TestDir -ChildPath 'topology.jpg'
+
+        {
+            New-ImageTopology -TopologyDefinition {
+                New-ImageTopologyNode -Id 'api' -Label 'API'
+            } -FilePath $file
+        } | Should -Throw
+    }
+
+    It 'generates unique default edge identifiers for parallel edges' {
+        $first = New-ImageTopologyEdge -SourceNodeId 'api' -TargetNodeId 'db'
+        $second = New-ImageTopologyEdge -SourceNodeId 'api' -TargetNodeId 'db'
+
+        $first.Id | Should -Not -Be $second.Id
+        $first.Id | Should -Match '^api-db-\d+$'
+        $second.Id | Should -Match '^api-db-\d+$'
+    }
 }
