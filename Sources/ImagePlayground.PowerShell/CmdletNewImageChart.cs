@@ -31,7 +31,7 @@ namespace ImagePlayground.PowerShell;
 /// New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme Dark -ShowGrid -Show</code>
 ///   <para>Renders a themed line chart and overlays an annotation highlighting the peak value.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "ImageChart")]
+[Cmdlet(VerbsCommon.New, "ImageChart", DefaultParameterSetName = ScriptBlockSet)]
 public sealed class NewImageChartCmdlet : ImageCmdlet {
     private const string ScriptBlockSet = "ScriptBlock";
     private const string DefinitionSet = "Definition";
@@ -47,7 +47,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
 
     /// <summary>ScriptBlock that receives and configures a ChartForgeX chart.</summary>
     /// <para>The script block receives the chart as its first argument and can mutate it directly or return a replacement chart.</para>
-    [Parameter(Position = 0, Mandatory = true, ParameterSetName = ChartScriptSet)]
+    [Parameter(Mandatory = true, ParameterSetName = ChartScriptSet)]
     public ScriptBlock? ChartScript { get; set; }
 
     /// <summary>ChartForgeX chart object to render.</summary>
@@ -130,6 +130,8 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
 
     /// <inheritdoc />
     protected override void EndProcessing() {
+        AddAnnotationsFromScriptBlock();
+
         if (ChartScript != null) {
             var chart = Charts.Create(Width, Height, XTitle, YTitle, ShowGrid.IsPresent, Theme, Background, Options);
             var results = ChartScript.Invoke(chart);
@@ -141,6 +143,8 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
                 }
             }
 
+            ApplyChartSettings(chart);
+            ApplyAnnotations(chart);
             SaveChart(chart);
             return;
         }
@@ -153,11 +157,8 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
             }
 
             var chart = _charts[0];
-            if (MyInvocation.BoundParameters.ContainsKey(nameof(Width)) || MyInvocation.BoundParameters.ContainsKey(nameof(Height))) {
-                chart.WithSize(Width, Height);
-            }
-
-            Charts.ApplySettings(chart, XTitle, YTitle, Background, Options);
+            ApplyChartSettings(chart);
+            ApplyAnnotations(chart);
             SaveChart(chart);
             return;
         }
@@ -168,16 +169,6 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
                 var obj = o is PSObject ps ? ps.BaseObject : o;
                 if (obj is ChartDefinition def) {
                     _definitions.Add(def);
-                }
-            }
-        }
-
-        if (AnnotationsDefinition != null) {
-            var ares = AnnotationsDefinition.Invoke();
-            foreach (var o in ares) {
-                var obj = o is PSObject ps ? ps.BaseObject : o;
-                if (obj is ChartAnnotationDefinition ann) {
-                    _annotations.Add(ann);
                 }
             }
         }
@@ -203,6 +194,89 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
         }
+    }
+
+    private void AddAnnotationsFromScriptBlock() {
+        if (AnnotationsDefinition == null) {
+            return;
+        }
+
+        var results = AnnotationsDefinition.Invoke();
+        foreach (var o in results) {
+            var obj = o is PSObject ps ? ps.BaseObject : o;
+            if (obj is ChartAnnotationDefinition annotation) {
+                _annotations.Add(annotation);
+            }
+        }
+    }
+
+    private void ApplyChartSettings(Chart chart) {
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Width)) || MyInvocation.BoundParameters.ContainsKey(nameof(Height))) {
+            var size = chart.Options.Size;
+            var width = MyInvocation.BoundParameters.ContainsKey(nameof(Width)) ? Width : size.Width;
+            var height = MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ? Height : size.Height;
+            chart.WithSize(width, height);
+        }
+
+        var showGrid = MyInvocation.BoundParameters.ContainsKey(nameof(ShowGrid)) ? ShowGrid.IsPresent : (bool?)null;
+        var theme = MyInvocation.BoundParameters.ContainsKey(nameof(Theme)) ? Theme : (ChartTheme?)null;
+        Charts.ApplySettings(chart, XTitle, YTitle, Background, Options, showGrid, theme);
+    }
+
+    private void ApplyAnnotations(Chart chart) {
+        if (_annotations.Count == 0) {
+            return;
+        }
+
+        foreach (var annotation in _annotations) {
+            if (annotation.Arrow) {
+                if (HasExclusiveSeries(chart)) {
+                    var exception = new PSArgumentException("Point-callout annotations cannot be used with exclusive chart kinds because they add a scatter series.");
+                    ThrowTerminatingError(new ErrorRecord(exception, "NewImageChartAnnotationUnsupported", ErrorCategory.InvalidArgument, annotation));
+                    return;
+                }
+
+                chart.AddPointCallout(annotation.Text, annotation.X, annotation.Y);
+            } else {
+                chart.AddVerticalLine(annotation.X, annotation.Text);
+            }
+        }
+    }
+
+    private static bool HasExclusiveSeries(Chart chart) {
+        foreach (var series in chart.Series) {
+            switch (series.Kind) {
+                case ChartSeriesKind.Heatmap:
+                case ChartSeriesKind.HexbinHeatmap:
+                case ChartSeriesKind.CalendarHeatmap:
+                case ChartSeriesKind.DottedMap:
+                case ChartSeriesKind.TileMap:
+                case ChartSeriesKind.RegionMap:
+                case ChartSeriesKind.Gauge:
+                case ChartSeriesKind.Circle:
+                case ChartSeriesKind.RadialBar:
+                case ChartSeriesKind.LayeredRadial:
+                case ChartSeriesKind.Bullet:
+                case ChartSeriesKind.Waterfall:
+                case ChartSeriesKind.Radar:
+                case ChartSeriesKind.Funnel:
+                case ChartSeriesKind.Treemap:
+                case ChartSeriesKind.Timeline:
+                case ChartSeriesKind.Gantt:
+                case ChartSeriesKind.Sankey:
+                case ChartSeriesKind.Tree:
+                case ChartSeriesKind.Sunburst:
+                case ChartSeriesKind.Pictorial:
+                case ChartSeriesKind.ProgressBar:
+                case ChartSeriesKind.WordCloud:
+                case ChartSeriesKind.Pie:
+                case ChartSeriesKind.Donut:
+                case ChartSeriesKind.PolarArea:
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private void AddDefinitions(IEnumerable<object> definitions) {

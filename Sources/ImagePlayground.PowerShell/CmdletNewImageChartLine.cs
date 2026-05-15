@@ -28,7 +28,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
     [ChartColorArgumentTransformation]
     public ChartColor? Color { get; set; }
 
-    /// <summary>Shape of markers placed on data points.</summary>
+    /// <summary>Circle markers placed on data points.</summary>
     [Parameter]
     public ChartMarkerShape Marker { get; set; } = ChartMarkerShape.None;
 

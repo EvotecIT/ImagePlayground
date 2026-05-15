@@ -5,9 +5,5 @@ public enum ChartMarkerShape {
     /// <summary>No marker.</summary>
     None,
     /// <summary>Circle marker.</summary>
-    Circle,
-    /// <summary>Square marker.</summary>
-    Square,
-    /// <summary>Diamond marker.</summary>
-    Diamond
+    Circle
 }

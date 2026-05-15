@@ -57,7 +57,15 @@ internal static class Charts {
     }
 
     /// <summary>Apply ImagePlayground render settings to an existing ChartForgeX chart.</summary>
-    public static void ApplySettings(CfxChart chart, string? xTitle = null, string? yTitle = null, ChartColor? background = null, ChartRenderOptions? options = null) {
+    public static void ApplySettings(CfxChart chart, string? xTitle = null, string? yTitle = null, ChartColor? background = null, ChartRenderOptions? options = null, bool? showGrid = null, ChartTheme? theme = null) {
+        if (theme.HasValue) {
+            chart.WithTheme(ResolveTheme(theme.Value));
+        }
+
+        if (showGrid.HasValue) {
+            chart.WithGrid(showGrid.Value);
+        }
+
         SimpleChart.ApplySettings(chart, xTitle, yTitle, background, ConvertOptions(options));
     }
 
