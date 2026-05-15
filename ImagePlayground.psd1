@@ -17,7 +17,7 @@
             LicenseUri                 = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
             ProjectUri                 = 'https://github.com/EvotecIT/ImagePlayground'
             RequireLicenseAcceptance   = $false
-            Tags                       = @('windows', 'image', 'charts', 'topology', 'diagrams', 'qrcodes', 'barcodes')
+            Tags                       = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
             ExternalModuleDependencies = @()
         }
     }
