@@ -2,8 +2,11 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeGlyphXVersion>1.4.0</CodeGlyphXVersion>
+    <ChartForgeXVersion>0.1.1</ChartForgeXVersion>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj')">true</UseLocalCodeGlyphXProject>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
+    <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\ChartForgeX\ChartForgeX\ChartForgeX.csproj')">true</UseLocalChartForgeXProject>
+    <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == ''">false</UseLocalChartForgeXProject>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>

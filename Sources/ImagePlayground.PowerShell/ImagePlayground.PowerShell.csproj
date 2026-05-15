@@ -39,6 +39,14 @@
         <ProjectReference Include="..\ImagePlayground.QRCode\ImagePlayground.QRCode.csproj" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true'">
+        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true'">
+        <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" />
+    </ItemGroup>
+
     <ItemGroup>
         <!-- This is needed for XmlDoc2CmdletDoc to generate a PowerShell documentation. DLL itself
         will be removed/hidden -->
