@@ -109,6 +109,7 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
         NETProjectName                    = 'ImagePlayground.PowerShell'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
+        NETAssemblyLoadContext            = $true
         NETBinaryModuleDocumentation      = $true
         #NETExcludeMainLibrary             = $true
         NETExcludeLibraryFilter           = @(
