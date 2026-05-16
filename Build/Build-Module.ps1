@@ -112,6 +112,14 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
         NETAssemblyLoadContext            = $true
         NETAssemblyTypeAcceleratorMode    = 'AllowList'
         NETAssemblyTypeAccelerators       = @(
+            'ChartForgeX.Core.Chart'
+            'ChartForgeX.Core.ChartLegendPosition'
+            'ChartForgeX.Core.ChartPoints'
+            'ChartForgeX.Core.ChartSeriesKind'
+            'ChartForgeX.Primitives.ChartColor'
+            'ChartForgeX.Primitives.ChartColors'
+            'ChartForgeX.Primitives.ChartPoint'
+            'ChartForgeX.Primitives.ChartSize'
             'ChartForgeX.Topology.TopologyChart'
             'ChartForgeX.Topology.TopologyLayoutDirection'
             'ChartForgeX.Topology.TopologyLayoutMode'

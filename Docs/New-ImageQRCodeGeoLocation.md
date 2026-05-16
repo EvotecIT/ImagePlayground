@@ -41,8 +41,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -57,8 +57,8 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -73,8 +73,8 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -89,8 +89,8 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -105,8 +105,8 @@ Latitude value.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -121,8 +121,8 @@ Longitude value.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -137,8 +137,8 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -153,8 +153,8 @@ Open image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -177,4 +177,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

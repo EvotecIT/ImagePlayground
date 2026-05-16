@@ -9,8 +9,9 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <UseSystemDrawing>true</UseSystemDrawing>
-    <Description>Windows-focused GDI and chart helpers for ImagePlayground and PowerBGInfo-style scenarios.</Description>
-    <PackageTags>gdi;system.drawing;windows;charts;powerbginfo;dotnet</PackageTags>
+    <Description>Windows-focused GDI+ composition, text drawing, image overlay, and legacy chart helpers for ImagePlayground and PowerBGInfo-style scenarios.</Description>
+    <PackageTags>gdi;system.drawing;windows;composition;text;overlay;charts;powerbginfo;dotnet</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,5 +28,9 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

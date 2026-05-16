@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -29,10 +30,11 @@ public sealed class NewImageChartBubbleCmdlet : PSCmdlet {
 
     /// <summary>Series color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? Color { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartBubble(Name, X, Y, Size, Color));
+        WriteObject(new ChartBubbleSeries(Name, X, Y, Size, ChartColorConverter.Convert(Color)));
     }
 }

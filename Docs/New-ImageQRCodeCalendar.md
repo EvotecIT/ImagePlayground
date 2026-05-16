@@ -41,8 +41,8 @@ Specifies whether the event spans the full day.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -57,8 +57,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -73,8 +73,8 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -89,8 +89,8 @@ Event title.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -107,7 +107,7 @@ Possible values: Universal, ICalComplete
 ```yaml
 Type: QrCalendarEncoding
 Parameter Sets: __AllParameterSets
-Aliases: 
+Aliases:
 Possible values: Universal, ICalComplete
 
 Required: False
@@ -123,8 +123,8 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 5
@@ -139,8 +139,8 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -155,8 +155,8 @@ Start date.
 ```yaml
 Type: DateTime
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 3
@@ -171,8 +171,8 @@ Event location.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 2
@@ -187,8 +187,8 @@ Event description.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 1
@@ -203,8 +203,8 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -219,8 +219,8 @@ Open the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -235,8 +235,8 @@ End date.
 ```yaml
 Type: DateTime
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 4
@@ -259,4 +259,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

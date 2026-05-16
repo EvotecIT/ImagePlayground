@@ -24,6 +24,7 @@ The generated QR code uses a WiFi payload that can be scanned by mobile devices 
 PS> New-ImageQRCodeWiFi -SSID Test -Password pass123 -FilePath wifi.png
 ```
 
+
 ## PARAMETERS
 
 ### -Async
@@ -32,8 +33,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -48,8 +49,8 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -64,8 +65,8 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -80,8 +81,8 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -96,8 +97,8 @@ WiFi password.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -112,8 +113,8 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -128,8 +129,8 @@ Open the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -144,8 +145,8 @@ WiFi network name.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -168,4 +169,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

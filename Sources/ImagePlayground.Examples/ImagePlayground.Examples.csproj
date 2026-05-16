@@ -3,13 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
-    <ProjectReference Include="..\ImagePlayground.Chart\ImagePlayground.Chart.csproj" />
-    <ProjectReference Include="..\ImagePlayground.BarCode\ImagePlayground.BarCode.csproj" />
-    <ProjectReference Include="..\ImagePlayground.QRCode\ImagePlayground.QRCode.csproj" />
+    <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
+    <ProjectReference Include="..\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj" />
   </ItemGroup>
 
   <ItemGroup>

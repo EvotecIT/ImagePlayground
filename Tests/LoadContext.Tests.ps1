@@ -7,9 +7,15 @@ Describe 'Assembly Load Context' {
     }
 
     It 'imports packaged binaries by default when development mode is disabled' -Skip:($PSVersionTable.PSVersion.Major -lt 7) {
-        $moduleManifestPath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\ImagePlayground.psd1')).Path
-        $moduleRootPath = Split-Path -Path $moduleManifestPath -Parent
-        $developmentPath = Join-Path -Path $moduleRootPath -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Debug'
+        $sourceRootPath = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath '..')).Path
+        $packagedManifestPath = Join-Path -Path $sourceRootPath -ChildPath 'Artefacts\Unpacked\Modules\ImagePlayground\ImagePlayground.psd1'
+        if (Test-Path -LiteralPath $packagedManifestPath) {
+            $moduleManifestPath = (Resolve-Path -Path $packagedManifestPath).Path
+        } else {
+            $moduleManifestPath = (Resolve-Path -Path (Join-Path -Path $sourceRootPath -ChildPath 'ImagePlayground.psd1')).Path
+        }
+
+        $developmentPath = Join-Path -Path $sourceRootPath -ChildPath 'Sources\ImagePlayground.PowerShell\bin\Debug'
         $pwshPath = (Get-Process -Id $PID).Path
         $sanitizedModulePath = @(
             $env:PSModulePath -split [System.IO.Path]::PathSeparator | Where-Object {

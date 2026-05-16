@@ -24,10 +24,12 @@ Converts an image file into a Base64 encoded string.
 ConvertTo-ImageBase64 -FilePath in.png
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 $b64 = ConvertTo-ImageBase64 -FilePath photo.jpg; Invoke-RestMethod -Uri https://example/upload -Body $b64
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ Path to the image to convert.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -61,4 +63,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

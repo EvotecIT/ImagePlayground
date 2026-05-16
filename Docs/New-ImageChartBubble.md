@@ -11,7 +11,7 @@ Creates bubble chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartBubble [-Name] <string> [-X] <double[]> [-Y] <double[]> [-Size] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartBubble [-Name] <string> [-X] <double[]> [-Y] <double[]> [-Size] <double[]> [-Color <ChartColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,6 +24,7 @@ Creates bubble chart data item.
 New-ImageChartBubble -Name 'Series1' -X 1,2,3 -Y 4,5,6 -Size 10,20,30 -Color Blue
 ```
 
+
 ## PARAMETERS
 
 ### -Color
@@ -32,8 +33,8 @@ Series color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -49,7 +50,7 @@ Label for the bubble series.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -64,8 +65,8 @@ Bubble sizes.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 3
@@ -80,8 +81,8 @@ X values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -96,8 +97,8 @@ Y values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -120,4 +121,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

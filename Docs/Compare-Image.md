@@ -24,6 +24,7 @@ When OutputPath is omitted, the cmdlet writes the comparison result to the pipel
 PS> Compare-Image -FilePath img1.png -FilePathToCompare img2.png
 ```
 
+
 ## PARAMETERS
 
 ### -FilePath
@@ -32,8 +33,8 @@ First image path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -48,8 +49,8 @@ Second image path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -64,8 +65,8 @@ When provided, the cmdlet writes a visual difference image instead of only retur
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 2
@@ -88,4 +89,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

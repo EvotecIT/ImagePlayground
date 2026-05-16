@@ -24,10 +24,12 @@ Exports metadata from an image.
 Export-ImageMetadata -FilePath in.jpg
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 Export-ImageMetadata -FilePath in.jpg -OutputPath meta.json
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ Source image file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -53,8 +55,8 @@ Optional path to write metadata JSON.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 1
@@ -77,4 +79,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

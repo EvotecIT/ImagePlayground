@@ -76,8 +76,8 @@ Account number.
 ```yaml
 Type: String
 Parameter Sets: ContactAccount, NonSepaPayment, NonSepaDirectDebit, NonSepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -92,8 +92,8 @@ Payment amount for payment authorities.
 ```yaml
 Type: Nullable`1
 Parameter Sets: NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -108,8 +108,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -126,7 +126,7 @@ Possible values: SinglePayment, SinglePaymentSepa, SingleDirectDebit, SingleDire
 ```yaml
 Type: QrBezahlAuthorityType
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
+Aliases:
 Possible values: SinglePayment, SinglePaymentSepa, SingleDirectDebit, SingleDirectDebitSepa, PeriodicSinglePayment, PeriodicSinglePaymentSepa, Contact, ContactV2
 
 Required: True
@@ -142,8 +142,8 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -158,8 +158,8 @@ BIC/SWIFT code.
 ```yaml
 Type: String
 Parameter Sets: ContactSepa, SepaPayment, SepaDirectDebit, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 3
@@ -174,8 +174,8 @@ Bank number code.
 ```yaml
 Type: String
 Parameter Sets: ContactAccount, NonSepaPayment, NonSepaDirectDebit, NonSepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 3
@@ -190,8 +190,8 @@ Creditor identifier for direct-debit authorities.
 ```yaml
 Type: String
 Parameter Sets: NonSepaDirectDebit, SepaDirectDebit
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -206,8 +206,8 @@ Currency code for payment authorities.
 ```yaml
 Type: String
 Parameter Sets: NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -222,8 +222,8 @@ Mandate signature date for direct-debit authorities.
 ```yaml
 Type: Nullable`1
 Parameter Sets: NonSepaDirectDebit, SepaDirectDebit
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -238,8 +238,8 @@ Execution date for single-payment and direct-debit authorities.
 ```yaml
 Type: Nullable`1
 Parameter Sets: NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -254,8 +254,8 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 4
@@ -270,8 +270,8 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -286,8 +286,8 @@ International bank account number.
 ```yaml
 Type: String
 Parameter Sets: ContactSepa, SepaPayment, SepaDirectDebit, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -302,8 +302,8 @@ Mandate identifier for direct-debit authorities.
 ```yaml
 Type: String
 Parameter Sets: NonSepaDirectDebit, SepaDirectDebit
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -318,8 +318,8 @@ Payer or payee name.
 ```yaml
 Type: String
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -334,8 +334,8 @@ First execution date for periodic-payment authorities.
 ```yaml
 Type: Nullable`1
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -350,8 +350,8 @@ Last execution date for periodic-payment authorities.
 ```yaml
 Type: Nullable`1
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -366,7 +366,7 @@ Periodic unit for periodic-payment authorities.
 ```yaml
 Type: QrBezahlPeriodicUnit
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
+Aliases:
 Possible values: Weekly, Monthly
 
 Required: False
@@ -382,8 +382,8 @@ Periodic unit rotation for periodic-payment authorities.
 ```yaml
 Type: Nullable`1
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -398,8 +398,8 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -414,8 +414,8 @@ Posting key for non-SEPA payment authorities.
 ```yaml
 Type: String
 Parameter Sets: NonSepaPayment, NonSepaDirectDebit, NonSepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -430,8 +430,8 @@ Reason for payment.
 ```yaml
 Type: String
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -446,8 +446,8 @@ SEPA reference for SEPA payment authorities.
 ```yaml
 Type: String
 Parameter Sets: SepaPayment, SepaDirectDebit, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -462,8 +462,8 @@ Opens the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -486,4 +486,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

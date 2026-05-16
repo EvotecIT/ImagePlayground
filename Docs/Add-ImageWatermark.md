@@ -29,6 +29,7 @@ Adds a watermark image to another image.
 Add-ImageWatermark -FilePath photo.png -OutputPath out.png -WatermarkPath logo.png -Placement BottomRight
 ```
 
+
 ## PARAMETERS
 
 ### -Async
@@ -37,8 +38,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -53,8 +54,8 @@ Path to the source image.
 ```yaml
 Type: String
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -71,7 +72,7 @@ Possible values: None, Horizontal, Vertical
 ```yaml
 Type: FlipMode
 Parameter Sets: Placement, Coordinates
-Aliases: 
+Aliases:
 Possible values: None, Horizontal, Vertical
 
 Required: False
@@ -87,8 +88,8 @@ Opacity of the watermark.
 ```yaml
 Type: Single
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -103,8 +104,8 @@ Destination path for the watermarked image.
 ```yaml
 Type: String
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -119,8 +120,8 @@ Padding around the watermark.
 ```yaml
 Type: Single
 Parameter Sets: Placement
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -137,7 +138,7 @@ Possible values: TopLeft, TopRight, BottomLeft, BottomRight, Middle
 ```yaml
 Type: WatermarkPlacement
 Parameter Sets: Placement
-Aliases: 
+Aliases:
 Possible values: TopLeft, TopRight, BottomLeft, BottomRight, Middle
 
 Required: False
@@ -153,8 +154,8 @@ Rotation angle in degrees.
 ```yaml
 Type: Int32
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -169,8 +170,8 @@ Tile watermark across the image with given spacing.
 ```yaml
 Type: Nullable`1
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -185,8 +186,8 @@ Image used as the watermark.
 ```yaml
 Type: String
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -201,8 +202,8 @@ Scale of the watermark relative to the image.
 ```yaml
 Type: Int32
 Parameter Sets: Placement, Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -217,8 +218,8 @@ X coordinate for custom placement.
 ```yaml
 Type: Int32
 Parameter Sets: Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -233,8 +234,8 @@ Y coordinate for custom placement.
 ```yaml
 Type: Int32
 Parameter Sets: Coordinates
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -257,4 +258,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

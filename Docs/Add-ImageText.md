@@ -25,6 +25,7 @@ image to disk.
 Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 using SixLabors.ImageSharp;
@@ -34,6 +35,7 @@ img.AddText(10, 10, "Sample", Color.Black, 24);
 img.Save("out.png");
 ```
 
+
 ## PARAMETERS
 
 ### -Color
@@ -42,8 +44,8 @@ Text color.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -58,8 +60,8 @@ Source image path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -74,8 +76,8 @@ Font family.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -90,8 +92,8 @@ Font size.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -106,8 +108,8 @@ Outline color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -122,8 +124,8 @@ Outline width.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -138,8 +140,8 @@ Destination image path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -154,8 +156,8 @@ Color of shadow.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -170,8 +172,8 @@ X offset for shadow.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -186,8 +188,8 @@ Y offset for shadow.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -202,8 +204,8 @@ Text to add.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -218,8 +220,8 @@ X coordinate.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 3
@@ -234,8 +236,8 @@ Y coordinate.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 4
@@ -258,4 +260,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

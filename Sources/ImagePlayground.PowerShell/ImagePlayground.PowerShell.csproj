@@ -10,6 +10,7 @@
         <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,18 +34,31 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ImagePlayground.Core\ImagePlayground.Core.csproj" />
-        <ProjectReference Include="..\ImagePlayground.Chart\ImagePlayground.Chart.csproj" />
-        <ProjectReference Include="..\ImagePlayground.BarCode\ImagePlayground.BarCode.csproj" />
-        <ProjectReference Include="..\ImagePlayground.QRCode\ImagePlayground.QRCode.csproj" />
+        <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true'">
+    <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
+        <ProjectReference Include="$(ChartForgeXProjectPath)" Condition="'$(ChartForgeXProjectPath)' != ''" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(CodeGlyphXProjectPath)' != ''">
+        <ProjectReference Include="$(CodeGlyphXProjectPath)" Condition="'$(CodeGlyphXProjectPath)' != ''" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">
         <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true'">
+    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true' And '$(CodeGlyphXProjectPath)' == ''">
+        <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
         <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
+        <PackageReference Include="CodeGlyphX" Version="$(CodeGlyphXVersion)" />
     </ItemGroup>
 
     <ItemGroup>
@@ -65,6 +79,10 @@
         <DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
     </PropertyGroup>
 
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
+
     <Target Name="CopyDocumentationToPublishFolder" AfterTargets="GenerateDocumentationFile;Publish">
         <!-- This is needed for XmlDoc2CmdletDoc to copy a PowerShell documentation file to Publish
         folder -->
@@ -76,5 +94,9 @@
 
     <ItemGroup>
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>

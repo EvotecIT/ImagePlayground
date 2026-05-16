@@ -24,10 +24,12 @@ Use this cmdlet to persist an Image instance after applying transformations.
 PS> Save-Image -Image $img
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 PS> Save-Image -Image $img -FilePath out.jpg -Quality 80
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ When used without FilePath, the cmdlet writes a stream object to the pipeline.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -53,8 +55,8 @@ Compression level for PNG images.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -69,8 +71,8 @@ When omitted, the image is saved using the path already associated with the imag
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 1
@@ -85,8 +87,8 @@ Image object to save.
 ```yaml
 Type: Image
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -101,8 +103,8 @@ Open file after saving.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -117,8 +119,8 @@ Quality for JPEG or WEBP images.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -141,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

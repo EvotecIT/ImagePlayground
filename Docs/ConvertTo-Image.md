@@ -26,10 +26,12 @@ When OutputPath ends with .ico, the file is only copied if the source file is al
 ConvertTo-Image -FilePath image.png -OutputPath image.jpg -Quality 85
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 ConvertTo-Image -FilePath photo.jpg -OutputPath photo.png -CompressionLevel 6
 ```
+
 
 ## PARAMETERS
 
@@ -39,8 +41,8 @@ Compression level for PNG images.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -55,8 +57,8 @@ The file must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -71,8 +73,8 @@ The extension determines the output format.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -87,8 +89,8 @@ Quality for JPEG or WEBP images.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -111,4 +113,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

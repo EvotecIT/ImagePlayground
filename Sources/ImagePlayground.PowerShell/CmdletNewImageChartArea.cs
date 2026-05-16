@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -21,10 +22,11 @@ public sealed class NewImageChartAreaCmdlet : PSCmdlet {
 
     /// <summary>Fill color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? Color { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartArea(Name, Value, Color));
+        WriteObject(new ChartArea(Name, Value, ChartColorConverter.Convert(Color)));
     }
 }

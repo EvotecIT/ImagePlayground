@@ -11,7 +11,7 @@ Creates line chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <Color>] [-Marker <MarkerShape>] [-Smooth] [<CommonParameters>]
+New-ImageChartLine [-Name] <string> [-Value] <double[]> [-Color <ChartColor>] [-Marker <ChartMarkerShape>] [-Smooth] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,8 +34,8 @@ Line color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -50,10 +50,10 @@ Shape of markers placed on data points.
 Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight
 
 ```yaml
-Type: MarkerShape
+Type: ChartMarkerShape
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight
+Aliases:
+Possible values: None, Circle, Square, Diamond
 
 Required: False
 Position: named
@@ -69,7 +69,7 @@ Label for the line.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -84,8 +84,8 @@ Render the line using a smooth curve.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -100,8 +100,8 @@ Y values for the line.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -124,4 +124,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

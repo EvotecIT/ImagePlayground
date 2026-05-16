@@ -24,10 +24,12 @@ Converts a Base64 encoded string into an image file.
 ConvertFrom-ImageBase64 -Base64 $content -OutputPath out.png
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 ConvertFrom-ImageBase64 -Base64 $content -OutputPath out.png -Open
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ Base64 encoded image data.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -53,8 +55,8 @@ Open the newly created file after saving.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -69,8 +71,8 @@ Path where the image will be written.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -93,4 +95,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

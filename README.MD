@@ -37,7 +37,7 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - ☑️ **Barcode generation and reading**  
   Supports Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix and PDF417.
 - ☑️ **Chart creation**
-  Create bar, pie, line, scatter, polar, radial, heatmap and histogram charts.
+  Create bar, horizontal bar, line, step line, area, step area, stacked area, lollipop, scatter, bubble, range, box plot, slope, pie, donut, radial, gauge, circle, bullet, waterfall, funnel, treemap, heatmap, histogram, progress, pictorial and word-cloud charts using ChartForgeX.
 - ☑️ **Topology diagram creation**
   Create ChartForgeX-backed topology diagrams as PNG, SVG or HTML with groups, nodes, edges, automatic layouts and transparent canvas support.
 - ☑️ **Image manipulation**  
@@ -71,13 +71,33 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageChartAnnotation` - Creates chart annotation data item.
 - `New-ImageChartBar` - Creates bar chart data item.
 - `New-ImageChartBarOptions` - Creates bar chart options.
+- `New-ImageChartBoxPlot` - Creates box-plot chart data item.
+- `New-ImageChartBullet` - Creates bullet chart data item.
+- `New-ImageChartCircle` - Creates circle status chart data item.
+- `New-ImageChartDonut` - Creates donut chart data item.
+- `New-ImageChartFunnel` - Creates funnel chart item.
+- `New-ImageChartGauge` - Creates gauge chart data item.
 - `New-ImageChartHeatmap` - Creates heatmap chart data item.
 - `New-ImageChartHistogram` - Creates histogram chart data item.
+- `New-ImageChartHorizontalBar` - Creates horizontal bar chart data item.
 - `New-ImageChartLine` - Creates line chart data item.
+- `New-ImageChartLollipop` - Creates lollipop chart data item.
+- `New-ImageChartOptions` - Creates shared ChartForgeX renderer options.
 - `New-ImageChartPie` - Creates pie chart data item.
+- `New-ImageChartPictorial` - Creates pictorial chart data item.
 - `New-ImageChartPolar` - Creates polar chart data item.
+- `New-ImageChartProgress` - Creates progress-bar chart data item.
+- `New-ImageChartRangeBand` - Creates range-band chart data item.
+- `New-ImageChartRangeBar` - Creates range-bar chart data item.
 - `New-ImageChartRadial` - Creates radial gauge chart data item.
 - `New-ImageChartScatter` - Creates scatter chart data item.
+- `New-ImageChartSlope` - Creates slope chart data item.
+- `New-ImageChartStackedArea` - Creates stacked-area chart data item.
+- `New-ImageChartStepArea` - Creates step-area chart data item.
+- `New-ImageChartStepLine` - Creates step-line chart data item.
+- `New-ImageChartTreemap` - Creates treemap chart item.
+- `New-ImageChartWaterfall` - Creates waterfall chart data item.
+- `New-ImageChartWordCloud` - Creates word cloud chart data item.
 - `New-ImageTopology` - Creates a topology diagram as PNG, SVG or HTML.
 - `New-ImageTopologyEdge` - Creates topology edge data item.
 - `New-ImageTopologyGroup` - Creates topology group data item.
@@ -145,15 +165,31 @@ New-ImageQRCodeGirocode -Name 'Evotec Sp. z o.o.' -IBAN 'DE23100000001234567890'
 
 ```powershell
 $definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker FilledCircle -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker FilledSquare
+    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker Circle
 )
 
 $annotations = @(
     New-ImageChartAnnotation -X 4 -Y 67 -Text 'Peak CPU' -Arrow
 )
 
-New-ImageChart -Definition $definitions -Annotation $annotations -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -FilePath "$PSScriptRoot\Output\SystemUsage.png"
+$options = New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels
+New-ImageChart -Definition $definitions -Annotation $annotations -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath "$PSScriptRoot\Output\SystemUsage.png"
+```
+
+### Render a native ChartForgeX chart
+
+```powershell
+$chart = [ChartForgeX.Core.Chart]::Create().WithSize(640, 360).WithTitle('Daily Requests')
+$points = [ChartForgeX.Primitives.ChartPoint[]] @(
+    [ChartForgeX.Primitives.ChartPoint]::new(1, 120)
+    [ChartForgeX.Primitives.ChartPoint]::new(2, 148)
+    [ChartForgeX.Primitives.ChartPoint]::new(3, 136)
+)
+
+[void] $chart.AddBar('Requests', $points, [ChartForgeX.Primitives.ChartColor]::FromHex('#2563EB'))
+
+New-ImageChart -Chart $chart -FilePath "$PSScriptRoot\Output\Requests.png"
 ```
 
 ### Build a transparent topology diagram
@@ -242,9 +278,9 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart {
-    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker FilledCircle -Smooth
-    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker FilledSquare
-    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker OpenCircle
+    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker Circle -Smooth
+    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker Circle
+    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker Circle
 } -Show -FilePath $PSScriptRoot\Output\ChartsLine1.png
 ```
 
@@ -322,11 +358,72 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart -ChartsDefinition {
-    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker FilledCircle
+    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker Circle
 } -AnnotationsDefinition {
     New-ImageChartAnnotation -X 3 -Y 5 -Text 'Peak' -Arrow
 } -Show -FilePath $PSScriptRoot\Samples\ChartsAnnotated.png -Width 500 -Height 300
 ```
+
+#### ChartForgeX chart families and options
+
+```powershell
+$options = New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -DonutCenterValue '100%' -DonutCenterLabel 'Capacity'
+
+New-ImageChart {
+    New-ImageChartDonut -Name 'Used' -Value 72 -Color Crimson
+    New-ImageChartDonut -Name 'Free' -Value 28 -Color MediumSeaGreen
+} -Options $options -Show -FilePath $PSScriptRoot\Output\ChartsDonut.png -Width 500 -Height 360
+
+New-ImageChart {
+    New-ImageChartProgress -Name 'CPU' -Value 64 -Color Orange
+    New-ImageChartProgress -Name 'Memory' -Value 71 -Color DeepSkyBlue
+} -Options (New-ImageChartOptions -ProgressMaximum 100 -NoProgressHandles) -Show -FilePath $PSScriptRoot\Output\ChartsProgress.png
+
+New-ImageChart {
+    New-ImageChartPictorial -Name 'Enabled' -Value 8 -Color MediumSeaGreen
+    New-ImageChartPictorial -Name 'Disabled' -Value 2 -Color Gray
+} -Options (New-ImageChartOptions -PictorialSymbol Person -PictorialColumns 10) -Show -FilePath $PSScriptRoot\Output\ChartsPictorial.png
+```
+
+#### Additional ChartForgeX DSL charts
+
+```powershell
+New-ImageChart {
+    New-ImageChartHorizontalBar -Name 'Disk' -Value 72,28 -Color DeepSkyBlue
+} -Options (New-ImageChartOptions -ShowLegend -NoCard -NoPlotBackground) -Show -FilePath $PSScriptRoot\Output\ChartsHorizontalBar.png
+
+New-ImageChart {
+    New-ImageChartBullet -Name 'Servers patched' -Value 92 -Target 95 -RangeEnds 70,85 -Color MediumSeaGreen
+    New-ImageChartBullet -Name 'Workstations patched' -Value 86 -Target 90 -RangeEnds 70,85 -Color Orange
+} -Options (New-ImageChartOptions -NoCard -NoPlotBackground) -Show -FilePath $PSScriptRoot\Output\ChartsBullet.png -Width 700 -Height 320
+
+New-ImageChart {
+    New-ImageChartTreemap -Name 'Servers' -Value 42 -Color DeepSkyBlue
+    New-ImageChartTreemap -Name 'Workstations' -Value 120 -Color MediumSeaGreen
+    New-ImageChartTreemap -Name 'Laptops' -Value 80 -Color Orange
+} -Options (New-ImageChartOptions -ShowPointLegend) -Show -FilePath $PSScriptRoot\Output\ChartsTreemap.png -Width 700 -Height 420
+```
+
+#### Transparent charts and export formats
+
+`New-ImageChart` can write PNG, SVG and HTML from the same definition. Use `New-ImageChartOptions -Transparent -NoCard -NoPlotBackground` when the chart should be composited over another image and only the chart ink, labels, grid and legend should remain visible.
+
+```powershell
+$definitions = @(
+    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker Circle -Smooth
+)
+
+$options = New-ImageChartOptions -Transparent -NoCard -NoPlotBackground -ShowLegend -LegendPosition Bottom -ShowDataLabels
+
+New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath $PSScriptRoot\Samples\ChartsChartForgeXTransparent.png -Width 760 -Height 420
+New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath $PSScriptRoot\Samples\ChartsChartForgeXTrend.svg -Width 760 -Height 420
+New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath $PSScriptRoot\Samples\ChartsChartForgeXTrend.html -Width 760 -Height 420
+```
+
+![ChartForgeX transparent overlay](Examples/Samples/ChartsChartForgeXOverlay.png)
+
+The repository script `Examples\Charts.ChartForgeX.Showcase.ps1` generates the transparent overlay plus focused donut, progress, pictorial and word-cloud examples.
 
 ### Reading bar codes
 
@@ -536,7 +633,7 @@ Get-ImageExif -FilePath $PSScriptRoot\Output\IMG_46442.jpeg | Format-Table
 
 #### Current libraries and their licenses:
 - CodeGlyphX (in-repo, QR/Barcode generation + decoding)
-- [ScottPlot](https://github.com/ScottPlot/ScottPlot) - licensed MIT
+- ChartForgeX (in-repo/workspace, SVG/HTML/PNG chart rendering)
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) - licensed Apache 2.0
 - [Codeuctivity.ImageSharpCompare](https://github.com/Codeuctivity/ImageSharp.Compare) - licensed Apache 2.0
 

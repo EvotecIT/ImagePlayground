@@ -3026,9 +3026,9 @@
         <!-- Parameter: Marker -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>Marker</maml:name>
-          <command:parameterValue required="true">MarkerShape</command:parameterValue>
+          <command:parameterValue required="true">ChartMarkerShape</command:parameterValue>
           <dev:type>
-            <maml:name>ScottPlot.MarkerShape</maml:name>
+            <maml:name>ImagePlayground.ChartMarkerShape</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -3118,9 +3118,9 @@
           <maml:para>Shape of markers placed on data points.</maml:para>
           <maml:para>Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight</maml:para>
         </maml:description>
-        <command:parameterValue required="true">MarkerShape</command:parameterValue>
+        <command:parameterValue required="true">ChartMarkerShape</command:parameterValue>
         <dev:type>
-          <maml:name>ScottPlot.MarkerShape</maml:name>
+          <maml:name>ImagePlayground.ChartMarkerShape</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>

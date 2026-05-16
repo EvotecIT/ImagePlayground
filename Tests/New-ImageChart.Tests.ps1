@@ -70,7 +70,7 @@ Describe 'New-ImageChart' {
         }
 
         New-ImageChart -ChartsDefinition {
-            New-ImageChartPolar -Name 'S1' -Angle @(0,1) -Value @(1,2)
+            New-ImageChartPolar -Name 'S1' -Angle @(0, 1, 2) -Value @(1, 2, 1)
         } -FilePath $file -Width 200 -Height 150
 
         Test-Path -Path $file | Should -BeTrue
@@ -118,6 +118,60 @@ Describe 'New-ImageChart' {
         )
 
         $defs | New-ImageChart -FilePath $file -Width 200 -Height 150
+
+        Test-Path -Path $file | Should -BeTrue
+    }
+
+    It 'renders a ChartForgeX chart object' -Skip:(-not $IsWindows) {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_object.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        $points = [ChartForgeX.Primitives.ChartPoint[]] @(
+            [ChartForgeX.Primitives.ChartPoint]::new(1, 10)
+            [ChartForgeX.Primitives.ChartPoint]::new(2, 14)
+            [ChartForgeX.Primitives.ChartPoint]::new(3, 9)
+        )
+        $chart = [ChartForgeX.Core.Chart]::Create().WithSize(200, 150)
+        [void] $chart.AddLine('Latency', $points, [ChartForgeX.Primitives.ChartColor]::FromHex('#2563EB'))
+
+        New-ImageChart -Chart $chart -FilePath $file
+
+        Test-Path -Path $file | Should -BeTrue
+    }
+
+    It 'renders a ChartForgeX chart script' -Skip:(-not $IsWindows) {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_script.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        New-ImageChart -ChartScript {
+            param($Chart)
+
+            $points = [ChartForgeX.Primitives.ChartPoint[]] @(
+                [ChartForgeX.Primitives.ChartPoint]::new(1, 4)
+                [ChartForgeX.Primitives.ChartPoint]::new(2, 8)
+                [ChartForgeX.Primitives.ChartPoint]::new(3, 6)
+            )
+            [void] $Chart.AddBar('Requests', $points, [ChartForgeX.Primitives.ChartColor]::FromHex('#14B8A6'))
+        } -FilePath $file -Width 200 -Height 150 -XTitle 'Minute' -YTitle 'Count'
+
+        Test-Path -Path $file | Should -BeTrue
+    }
+
+    It 'accepts ChartForgeX-style color names and hex values' -Skip:(-not $IsWindows) {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_colors.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        $options = New-ImageChartOptions -Palette '#2563EB', 'Orange' -Transparent -NoCard -NoPlotBackground
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartBar -Name 'Jan' -Value @(1, 2, 3) -Color '#2563EB'
+            New-ImageChartBar -Name 'Feb' -Value @(3, 2, 1) -Color Orange
+        } -FilePath $file -Width 200 -Height 150 -Options $options
 
         Test-Path -Path $file | Should -BeTrue
     }

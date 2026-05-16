@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -6,7 +7,7 @@ namespace ImagePlayground.PowerShell;
 /// <summary>Creates polar chart data item.</summary>
 /// <example>
 ///   <summary>Create polar data</summary>
-///   <code>New-ImageChartPolar -Name 'Series1' -Angle 0,1.57 -Value 1,2 -Color Blue</code>
+///   <code>New-ImageChartPolar -Name 'Series1' -Angle 0,1.57,3.14 -Value 1,2,1 -Color Blue</code>
 /// </example>
 /// <example>
 ///   <summary>Create advanced polar data</summary>
@@ -29,10 +30,11 @@ public sealed class NewImageChartPolarCmdlet : PSCmdlet {
 
     /// <summary>Series color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? Color { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartPolar(Name, Angle, Value, Color));
+        WriteObject(new ChartRadar(Name, Angle, Value, ChartColorConverter.Convert(Color)));
     }
 }

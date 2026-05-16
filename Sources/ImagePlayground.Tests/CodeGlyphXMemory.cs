@@ -46,8 +46,8 @@ public partial class ImagePlayground {
         }
 
         long after = CollectMemory();
-        long firstGrowth = Math.Abs(middle - before);
-        long secondGrowth = Math.Abs(after - middle);
+        long firstGrowth = Math.Max(0, middle - before);
+        long secondGrowth = Math.Max(0, after - middle);
         Assert.True(secondGrowth < allowedGrowthBytes, $"Expected steady-state memory growth below {allowedGrowthBytes} bytes, but got {secondGrowth} bytes after an initial growth of {firstGrowth} bytes.");
     }
 

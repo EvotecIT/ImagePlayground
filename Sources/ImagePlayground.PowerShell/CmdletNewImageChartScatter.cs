@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -25,10 +26,11 @@ public sealed class NewImageChartScatterCmdlet : PSCmdlet {
 
     /// <summary>Series color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? Color { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartScatter(Name, X, Y, Color));
+        WriteObject(new ChartScatter(Name, X, Y, ChartColorConverter.Convert(Color)));
     }
 }

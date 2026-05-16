@@ -15,9 +15,7 @@ Remove-ImageHeifXmp [-FilePath] <string> [[-FilePathOutput] <string>] [<CommonPa
 ```
 
 ## DESCRIPTION
-Clears the XMP packet from a HEIF or HEIC file by setting the existing XMP item extent length to zero.
-
-This command does not decode HEIC image pixels and does not require native HEIF codecs. Updating requires an existing HEIF XMP item with a single writable file extent.
+Requires an existing HEIF XMP item with a single writable file extent.
 
 ## EXAMPLES
 
@@ -26,14 +24,6 @@ This command does not decode HEIC image pixels and does not require native HEIF 
 Remove-ImageHeifXmp -FilePath photo.heic
 ```
 
-Clears the XMP packet from `photo.heic`.
-
-### EXAMPLE 2
-```powershell
-Remove-ImageHeifXmp -FilePath photo.heic -FilePathOutput photo-clean.heic
-```
-
-Writes a copy of `photo.heic` with the XMP packet cleared to `photo-clean.heic`.
 
 ## PARAMETERS
 
@@ -43,7 +33,7 @@ Path to the HEIF or HEIC file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -54,19 +44,19 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathOutput
-Optional output path. When omitted, the source file is overwritten.
+When not specified the source file is overwritten.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -78,7 +68,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- None
+- `System.Object`
 
 ## RELATED LINKS
 

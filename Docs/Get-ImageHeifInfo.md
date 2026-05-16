@@ -15,19 +15,7 @@ Get-ImageHeifInfo [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Gets basic HEIF or HEIC container metadata such as brands, primary item information, item types, EXIF/XMP presence, item references, auxiliary image types, dimensions, rotation, mirror state, pixel aspect ratio spacing, pixel bit depths, and color information declared by HEIF item properties.
-
-The returned object includes convenience properties such as `Width`, `Height`, `RotationDegrees`, `IsMirrored`, `PixelAspectRatioHorizontalSpacing`, `PixelAspectRatioVerticalSpacing`, `PixelBitDepths`, `ColorType`, `ColorPrimaries`, `TransferCharacteristics`, `MatrixCoefficients`, `FullRangeFlag`, `CodecConfigurationType`, `CodecConfigurationBytes`, `HasExif`, `HasXmp`, `PrimaryItem`, `ExifItem`, `XmpItem`, `Items`, and `References`.
-
-Individual entries in `Items` can also include item-specific fields such as `ItemProtectionIndex`, `IsHidden`, `ContentEncoding`, `Location`, `PropertyAssociations`, `AuxiliaryType`, and `AuxiliarySubtypes` when those values are declared by the HEIF item metadata.
-
-The `Location` property describes `iloc` storage metadata, including construction method, data reference index, resolved extents, `IsFileBacked`, `IsItemDataBoxBacked`, and `CanWriteSingleFileExtent` for the safe single-extent update case.
-
-The `PropertyAssociations` property describes `ipma` metadata, including the one-based item property index, four-character property type, and essential flag.
-
-Codec configuration metadata is exposed as raw property payload bytes for diagnostic use. This command does not parse or decode HEVC, AV1, or AVC bitstreams.
-
-This command does not decode HEIC image pixels and does not require native HEIF codecs.
+Returns brands, primary item information, item types, EXIF presence, and image dimensions when declared by HEIF item properties.
 
 ## EXAMPLES
 
@@ -36,7 +24,6 @@ This command does not decode HEIC image pixels and does not require native HEIF 
 Get-ImageHeifInfo -FilePath photo.heic
 ```
 
-Returns the HEIF container metadata for `photo.heic`.
 
 ## PARAMETERS
 
@@ -46,7 +33,7 @@ Path to the HEIF or HEIC file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True

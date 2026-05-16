@@ -24,6 +24,7 @@ Reads barcode information from an image file.
 Get-ImageBarCode -FilePath barcode.png
 ```
 
+
 ## PARAMETERS
 
 ### -Async
@@ -32,8 +33,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -48,8 +49,8 @@ The file must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -72,4 +73,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

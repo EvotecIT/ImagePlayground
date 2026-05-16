@@ -29,6 +29,7 @@ Creates a rounded avatar image.
 New-ImageAvatar -FilePath user.jpg -OutputPath avatar.png -Open
 ```
 
+
 ## PARAMETERS
 
 ### -CornerRadius
@@ -37,8 +38,8 @@ Corner radius for rounding.
 ```yaml
 Type: Single
 Parameter Sets: Path, Stream
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -53,8 +54,8 @@ Path to the input image.
 ```yaml
 Type: String
 Parameter Sets: Path, Stream
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -69,8 +70,8 @@ Height of the avatar.
 ```yaml
 Type: Int32
 Parameter Sets: Path, Stream
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -85,8 +86,8 @@ Open the avatar after saving.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Path, Stream
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -101,8 +102,8 @@ Destination path when saving to disk.
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -117,8 +118,8 @@ Stream that receives the avatar image.
 ```yaml
 Type: Stream
 Parameter Sets: Stream
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -133,8 +134,8 @@ Width of the avatar.
 ```yaml
 Type: Int32
 Parameter Sets: Path, Stream
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -157,4 +158,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

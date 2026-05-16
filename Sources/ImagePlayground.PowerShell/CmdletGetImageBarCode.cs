@@ -25,8 +25,8 @@ public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageBarCodeFileNotFound", FilePath);
         var result = Async.IsPresent
-            ? await ImagePlayground.BarCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false)
-            : ImagePlayground.BarCode.Read(filePath);
+            ? await BarCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false)
+            : BarCode.Read(filePath);
         WriteObject(result);
     }
 }

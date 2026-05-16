@@ -24,6 +24,7 @@ Creates a barcode image.
 New-ImageBarCode -Type EAN -Value 9012341234571 -FilePath barcode.png
 ```
 
+
 ## PARAMETERS
 
 ### -Async
@@ -32,8 +33,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -48,8 +49,8 @@ Output path for the barcode image.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -66,8 +67,8 @@ Possible values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, 
 ```yaml
 Type: BarcodeType
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: Code128, Code93, Code39, KixCode, UPCE, UPCA, EAN, DataMatrix, PDF417
+Aliases:
+Possible values: Code128, GS1_128, Code39, Code93, EAN, UPCA, UPCE, ITF14, ITF, Industrial2of5, Matrix2of5, IATA2of5, PatchCode, Codabar, MSI, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, GS1DataBarTruncated, GS1DataBarOmni, GS1DataBarStacked, GS1DataBarExpanded, GS1DataBarExpandedStacked, UspsImb, KixCode, DataMatrix, PDF417, MicroPDF417
 
 Required: True
 Position: 0
@@ -82,8 +83,8 @@ Value encoded in the barcode.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -106,4 +107,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

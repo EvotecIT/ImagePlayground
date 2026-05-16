@@ -11,7 +11,7 @@ Creates bar chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <ChartColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,8 +34,8 @@ Bar color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -51,7 +51,7 @@ Label for the bar data.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -66,8 +66,8 @@ Values for the bar.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -90,4 +90,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

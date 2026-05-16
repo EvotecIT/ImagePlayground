@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using ChartForgeX.Primitives;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -24,11 +25,13 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <summary>Line color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? Color { get; set; }
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
 
-    /// <summary>Shape of markers placed on data points.</summary>
+    /// <summary>Markers placed on data points.</summary>
+    /// <para>ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.</para>
     [Parameter]
-    public ScottPlot.MarkerShape Marker { get; set; } = ScottPlot.MarkerShape.None;
+    public ChartMarkerShape Marker { get; set; } = ChartMarkerShape.None;
 
     /// <summary>Render the line using a smooth curve.</summary>
     [Parameter]
@@ -36,6 +39,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ChartLine(Name, Value, Color, Marker, null, Smooth.IsPresent));
+        float? markerSize = Marker == ChartMarkerShape.None ? null : 6;
+        WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), markerSize, Smooth.IsPresent));
     }
 }
