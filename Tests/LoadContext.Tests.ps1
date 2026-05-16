@@ -40,14 +40,20 @@ try {
 
     Import-Module '$escapedModuleManifestPath' -Force -ErrorAction Stop
     `$module = Get-Module -Name ImagePlayground -ErrorAction Stop
-    `$binaryModulePaths = @(
-        Get-Module -Name ImagePlayground.PowerShell -All -ErrorAction SilentlyContinue |
-            Select-Object -ExpandProperty Path
+    `$loadContext = [System.Runtime.Loader.AssemblyLoadContext]::All |
+        Where-Object { `$_.Name -eq 'ImagePlayground' } |
+        Select-Object -First 1
+    `$loadContextAssemblyPaths = @(
+        if (`$loadContext) {
+            `$loadContext.Assemblies |
+                Where-Object { -not [string]::IsNullOrWhiteSpace(`$_.Location) } |
+                Select-Object -ExpandProperty Location
+        }
     )
 
     [pscustomobject]@{
         ImportedModulePath = `$module.Path
-        BinaryModulePaths = `$binaryModulePaths
+        LoadContextAssemblyPaths = `$loadContextAssemblyPaths
         ExportedCommandCount = @(Get-Command -Module ImagePlayground).Count
         DevelopmentPathPresent = Test-Path -LiteralPath `$developmentPath
         DevelopmentPathHidden = [bool] `$hiddenDevelopmentPath
@@ -73,10 +79,10 @@ try {
             if ($data.DevelopmentPathPresent) {
                 $data.DevelopmentPathHidden | Should -BeTrue
             }
-            $data.BinaryModulePaths | Should -Not -BeNullOrEmpty
+            $data.LoadContextAssemblyPaths | Should -Not -BeNullOrEmpty
             $data.ExportedCommandCount | Should -BeGreaterThan 0
-            ($data.BinaryModulePaths -join [Environment]::NewLine) | Should -Match '[\\/]Lib[\\/]'
-            ($data.BinaryModulePaths -join [Environment]::NewLine) | Should -Match 'ImagePlayground\.PowerShell\.dll'
+            ($data.LoadContextAssemblyPaths -join [Environment]::NewLine) | Should -Match '[\\/]Lib[\\/]'
+            ($data.LoadContextAssemblyPaths -join [Environment]::NewLine) | Should -Match 'ImagePlayground\.PowerShell\.dll'
         } finally {
             Remove-Item -Path $scriptPath -Force -ErrorAction SilentlyContinue
         }

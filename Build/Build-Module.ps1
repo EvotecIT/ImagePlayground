@@ -110,6 +110,27 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
         NETAssemblyLoadContext            = $true
+        NETAssemblyTypeAcceleratorMode    = 'AllowList'
+        NETAssemblyTypeAccelerators       = @(
+            'ChartForgeX.Topology.TopologyChart'
+            'ChartForgeX.Topology.TopologyLayoutDirection'
+            'ChartForgeX.Topology.TopologyLayoutMode'
+            'ChartForgeX.Topology.TopologyNode'
+            'CodeGlyphX.Payloads.QrSwissCurrency'
+            'CodeGlyphX.Payloads.SlovenianUpnQrPayload'
+            'CodeGlyphX.Payloads.SwissQrCodePayload'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Contact'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
+            'ImagePlayground.Image'
+            'ImagePlayground.ImageHelper'
+            'ImagePlayground.Status'
+            'ImagePlayground.WatermarkPlacement'
+            'SixLabors.ImageSharp.Color'
+            'SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag'
+        )
         NETBinaryModuleDocumentation      = $true
         #NETExcludeMainLibrary             = $true
         NETExcludeLibraryFilter           = @(

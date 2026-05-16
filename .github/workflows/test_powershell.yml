@@ -17,7 +17,7 @@ on:
 env:
   DOTNET_VERSION: '8.x'
   BUILD_CONFIGURATION: 'Debug'
-  PSPUBLISHMODULE_REF: '386618eb021e351fa2f695ff7f177482c0bcc099'
+  PSPUBLISHMODULE_REF: '511b2a93d0fc2cc7dd0a2c8cde3eda9d66d0eef8'
 
 jobs:
   refresh-psd1:
