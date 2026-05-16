@@ -24,6 +24,7 @@ Creates heatmap chart data item.
 New-ImageChartHeatmap -Name 'Matrix' -Matrix ((1,2),(3,4))
 ```
 
+
 ## PARAMETERS
 
 ### -Matrix
@@ -32,8 +33,8 @@ Matrix data for the heatmap.
 ```yaml
 Type: Double[,]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -49,7 +50,7 @@ Label for the heatmap.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -72,4 +73,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

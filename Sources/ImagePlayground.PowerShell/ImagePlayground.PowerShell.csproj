@@ -45,12 +45,16 @@
         <ProjectReference Include="$(CodeGlyphXProjectPath)" Condition="'$(CodeGlyphXProjectPath)' != ''" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">
+        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true' And '$(CodeGlyphXProjectPath)' == ''">
         <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(ChartForgeXProjectPath)' == ''">
-        <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" Condition="'$(ChartForgeXProjectPath)' == ''" />
+    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
+        <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">

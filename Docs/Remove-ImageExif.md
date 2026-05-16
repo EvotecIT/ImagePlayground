@@ -29,10 +29,12 @@ Removes EXIF metadata from an image.
 Remove-ImageExif -FilePath img.jpg -ExifTag ExifIFD.DateTimeOriginal
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 Remove-ImageExif -FilePath img.jpg -All
 ```
+
 
 ## PARAMETERS
 
@@ -42,8 +44,8 @@ Remove all tags.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: All
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -58,8 +60,8 @@ Tags to remove.
 ```yaml
 Type: ExifTag[]
 Parameter Sets: Tag
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: named
@@ -74,8 +76,8 @@ Path to the image file.
 ```yaml
 Type: String
 Parameter Sets: Tag, All
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -90,8 +92,8 @@ Optional output path.
 ```yaml
 Type: String
 Parameter Sets: Tag, All
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 1
@@ -114,4 +116,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

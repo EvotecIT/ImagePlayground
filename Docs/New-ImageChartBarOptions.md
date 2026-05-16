@@ -24,6 +24,7 @@ Creates bar chart options.
 New-ImageChartBarOptions -ShowValuesAboveBars
 ```
 
+
 ## PARAMETERS
 
 ### -ShowValuesAboveBars
@@ -32,8 +33,8 @@ Display values above bars.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -56,4 +57,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

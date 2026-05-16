@@ -24,6 +24,7 @@ Creates thumbnails for all images in a directory.
 New-ImageThumbnail -DirectoryPath images -OutputDirectory thumbs -Width 64 -Height 64
 ```
 
+
 ## PARAMETERS
 
 ### -DirectoryPath
@@ -32,8 +33,8 @@ Directory containing images.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -48,8 +49,8 @@ Ignore aspect ratio.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -64,8 +65,8 @@ Thumbnail height.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -80,8 +81,8 @@ Destination directory for thumbnails.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -98,8 +99,8 @@ Possible values: NearestNeighbor, Box, Triangle, Hermite, Lanczos2, Lanczos3, La
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -114,8 +115,8 @@ Thumbnail width.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -138,4 +139,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

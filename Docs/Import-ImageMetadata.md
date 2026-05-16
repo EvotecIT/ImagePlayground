@@ -24,10 +24,12 @@ Imports metadata into an image.
 Import-ImageMetadata -FilePath img.jpg -MetadataPath meta.json
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 Import-ImageMetadata -FilePath img.jpg -MetadataPath meta.json -OutputPath out.jpg
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ Image to update.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -53,8 +55,8 @@ JSON metadata file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -69,8 +71,8 @@ Destination image path. Defaults to FilePath.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 2
@@ -93,4 +95,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

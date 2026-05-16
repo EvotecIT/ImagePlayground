@@ -24,6 +24,7 @@ Applies a Gaussian sharpen filter with the specified Amount.
 Set-ImageSharpen -FilePath in.png -OutputPath out.png -Amount 2
 ```
 
+
 ## PARAMETERS
 
 ### -Amount
@@ -32,8 +33,8 @@ Specifies the strength of the sharpen filter.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -48,8 +49,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -64,8 +65,8 @@ The image must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -80,8 +81,8 @@ Supported formats depend on the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -104,4 +105,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

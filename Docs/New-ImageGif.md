@@ -24,6 +24,7 @@ Creates an animated GIF from existing images.
 New-ImageGif -Frames img1.png,img2.png -FilePath out.gif -FrameDelay 100
 ```
 
+
 ## PARAMETERS
 
 ### -FilePath
@@ -32,8 +33,8 @@ Output path for the GIF animation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -48,8 +49,8 @@ Delay between frames in milliseconds.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -64,8 +65,8 @@ Source image paths used as frames.
 ```yaml
 Type: String[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -88,4 +89,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

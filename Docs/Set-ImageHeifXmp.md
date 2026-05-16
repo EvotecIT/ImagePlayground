@@ -9,7 +9,7 @@ schema: 2.0.0
 Sets the XMP metadata packet in a HEIF or HEIC file.
 
 ## SYNTAX
-### Xmp
+### Xmp (Default)
 ```powershell
 Set-ImageHeifXmp [-FilePath] <string> [[-FilePathOutput] <string>] [-Xmp] <string> [<CommonParameters>]
 ```
@@ -20,9 +20,7 @@ Set-ImageHeifXmp [-FilePath] <string> [[-FilePathOutput] <string>] [-XmpPath] <s
 ```
 
 ## DESCRIPTION
-Sets the UTF-8 XMP packet in a HEIF or HEIC file.
-
-This command does not decode HEIC image pixels and does not require native HEIF codecs. Updating requires an existing HEIF XMP item with a single writable file extent. Creating a brand-new HEIF XMP item is not supported.
+Requires an existing HEIF XMP item with a single writable file extent.
 
 ## EXAMPLES
 
@@ -31,14 +29,12 @@ This command does not decode HEIC image pixels and does not require native HEIF 
 Set-ImageHeifXmp -FilePath photo.heic -Xmp $packet
 ```
 
-Writes the XMP packet stored in `$packet` to `photo.heic`.
 
 ### EXAMPLE 2
 ```powershell
 Set-ImageHeifXmp -FilePath photo.heic -XmpPath packet.xmp -FilePathOutput photo-updated.heic
 ```
 
-Writes the XMP packet from `packet.xmp` to `photo-updated.heic`.
 
 ## PARAMETERS
 
@@ -48,7 +44,7 @@ Path to the HEIF or HEIC file.
 ```yaml
 Type: String
 Parameter Sets: Xmp, XmpPath
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -59,19 +55,19 @@ Accept wildcard characters: True
 ```
 
 ### -FilePathOutput
-Optional output path. When omitted, the source file is overwritten.
+When not specified the source file is overwritten.
 
 ```yaml
 Type: String
 Parameter Sets: Xmp, XmpPath
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Xmp
@@ -80,14 +76,14 @@ XMP metadata packet to write.
 ```yaml
 Type: String
 Parameter Sets: Xmp
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -XmpPath
@@ -96,14 +92,14 @@ Path to a UTF-8 XMP metadata packet file.
 ```yaml
 Type: String
 Parameter Sets: XmpPath
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -115,7 +111,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- None
+- `System.Object`
 
 ## RELATED LINKS
 

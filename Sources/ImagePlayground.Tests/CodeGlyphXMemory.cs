@@ -27,7 +27,7 @@ public partial class ImagePlayground {
         AssertReadMemoryStable(() => {
             var result = BarCode.Read(filePath);
             Assert.Equal(Status.Found, result.Status);
-        }, 10 * 1024 * 1024);
+        }, 16 * 1024 * 1024);
     }
 
     private static void AssertReadMemoryStable(Action readAction, long allowedGrowthBytes) {

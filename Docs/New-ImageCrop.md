@@ -35,10 +35,12 @@ polygonal areas.
 New-ImageCrop -FilePath in.png -OutputPath out.png -X 10 -Y 10 -Width 100 -Height 100
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 New-ImageCrop -FilePath in.png -OutputPath out.png -CenterX 50 -CenterY 50 -Radius 25
 ```
+
 
 ## PARAMETERS
 
@@ -48,8 +50,8 @@ X coordinate of the circle center.
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -64,8 +66,8 @@ Y coordinate of the circle center.
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -80,8 +82,8 @@ Path to the image being cropped.
 ```yaml
 Type: String
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -96,8 +98,8 @@ Height of the rectangle.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -112,8 +114,8 @@ Open the cropped file after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -128,8 +130,8 @@ Where to save the cropped image.
 ```yaml
 Type: String
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -144,8 +146,8 @@ Points describing a polygon.
 ```yaml
 Type: PointF[]
 Parameter Sets: Polygon
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -160,8 +162,8 @@ Radius of the circle.
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -176,8 +178,8 @@ Width of the rectangle.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -192,8 +194,8 @@ X coordinate for rectangle cropping.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -208,8 +210,8 @@ Y coordinate for rectangle cropping.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -232,4 +234,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

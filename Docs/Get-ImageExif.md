@@ -24,10 +24,12 @@ Gets EXIF metadata from an image.
 Get-ImageExif -FilePath img.jpg
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 Get-ImageExif -FilePath img.jpg -Translate
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ Path to the image file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -53,8 +55,8 @@ Return dictionary with tag names and values.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -77,4 +79,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

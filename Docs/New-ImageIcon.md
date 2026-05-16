@@ -24,6 +24,7 @@ Generates multiple icon sizes using Size.
 New-ImageIcon -FilePath in.png -OutputPath icon.ico -Size 16,32
 ```
 
+
 ## PARAMETERS
 
 ### -FilePath
@@ -32,8 +33,8 @@ The file must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -48,8 +49,8 @@ Open the icon after saving.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -64,8 +65,8 @@ Destination icon file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -80,8 +81,8 @@ Defaults to common icon sizes when empty.
 ```yaml
 Type: Int32[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -104,4 +105,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

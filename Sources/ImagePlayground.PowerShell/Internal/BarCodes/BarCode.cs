@@ -29,11 +29,11 @@ public class BarCode {
     }
 
     /// <summary>Generates a QR code asynchronously.</summary>
-    public static Task GenerateQrAsync(string content, string filePath, QrErrorCorrectionLevel errorCorrectionLevel = QrErrorCorrectionLevel.H, QrTextEncoding? encoding = null, CancellationToken cancellationToken = default) {
-        cancellationToken.ThrowIfCancellationRequested();
-        GenerateQr(content, filePath, errorCorrectionLevel, encoding);
-        return Task.CompletedTask;
-    }
+    public static Task GenerateQrAsync(string content, string filePath, QrErrorCorrectionLevel errorCorrectionLevel = QrErrorCorrectionLevel.H, QrTextEncoding? encoding = null, CancellationToken cancellationToken = default)
+        => Task.Run(() => {
+            cancellationToken.ThrowIfCancellationRequested();
+            GenerateQr(content, filePath, errorCorrectionLevel, encoding);
+        }, cancellationToken);
 
     /// <summary>Generates an EAN barcode.</summary>
     public static void GenerateEan(string content, string filePath) {
@@ -108,11 +108,11 @@ public class BarCode {
     /// <summary>
     /// Dispatches barcode generation asynchronously based on <paramref name="barcodeType"/>.
     /// </summary>
-    public static Task GenerateAsync(BarcodeType barcodeType, string content, string filePath, CancellationToken cancellationToken = default) {
-        cancellationToken.ThrowIfCancellationRequested();
-        Generate(barcodeType, content, filePath);
-        return Task.CompletedTask;
-    }
+    public static Task GenerateAsync(BarcodeType barcodeType, string content, string filePath, CancellationToken cancellationToken = default)
+        => Task.Run(() => {
+            cancellationToken.ThrowIfCancellationRequested();
+            Generate(barcodeType, content, filePath);
+        }, cancellationToken);
 
     /// <summary>
     /// Reads and decodes a barcode from an image asynchronously.

@@ -11,7 +11,7 @@ Creates pie chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
+New-ImageChartPie [-Name] <string> [-Value] <double> [-Color <ChartColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,6 +24,7 @@ Creates pie chart data item.
 New-ImageChartPie -Name 'Chrome' -Value 60 -Color Red
 ```
 
+
 ## PARAMETERS
 
 ### -Color
@@ -32,8 +33,8 @@ Slice color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -49,7 +50,7 @@ Label for the slice.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -64,8 +65,8 @@ Value for the slice.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -88,4 +89,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -24,6 +24,7 @@ Creates histogram chart data item.
 New-ImageChartHistogram -Name 'Data' -Values @(1,2,3) -BinSize 2
 ```
 
+
 ## PARAMETERS
 
 ### -BinSize
@@ -32,8 +33,8 @@ Optional bin size.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -49,7 +50,7 @@ Label for the histogram.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -64,8 +65,8 @@ Data values.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -88,4 +89,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -28,9 +28,10 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
     [ChartColorArgumentTransformation]
     public ChartColor? Color { get; set; }
 
-    /// <summary>Circle markers placed on data points.</summary>
+    /// <summary>Markers placed on data points.</summary>
+    /// <para>ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.</para>
     [Parameter]
-    public SwitchParameter Marker { get; set; }
+    public ChartMarkerShape Marker { get; set; } = ChartMarkerShape.None;
 
     /// <summary>Render the line using a smooth curve.</summary>
     [Parameter]
@@ -38,7 +39,7 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        float? markerSize = Marker.IsPresent ? 6 : null;
+        float? markerSize = Marker == ChartMarkerShape.None ? null : 6;
         WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), markerSize, Smooth.IsPresent));
     }
 }

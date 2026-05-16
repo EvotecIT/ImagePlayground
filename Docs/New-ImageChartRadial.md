@@ -11,7 +11,7 @@ Creates radial gauge chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartRadial [-Name] <string> [-Value] <double> [-Color <Color>] [<CommonParameters>]
+New-ImageChartRadial [-Name] <string> [-Value] <double> [-Color <ChartColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,6 +24,7 @@ Creates radial gauge chart data item.
 New-ImageChartRadial -Name 'CPU' -Value 75 -Color Orange
 ```
 
+
 ## PARAMETERS
 
 ### -Color
@@ -32,8 +33,8 @@ Gauge color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -49,7 +50,7 @@ Label for the gauge.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -64,8 +65,8 @@ Value for the gauge.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -88,4 +89,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

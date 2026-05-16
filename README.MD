@@ -38,6 +38,8 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
   Supports Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix and PDF417.
 - ☑️ **Chart creation**
   Create bar, horizontal bar, line, step line, area, step area, stacked area, lollipop, scatter, bubble, range, box plot, slope, pie, donut, radial, gauge, circle, bullet, waterfall, funnel, treemap, heatmap, histogram, progress, pictorial and word-cloud charts using ChartForgeX.
+- ☑️ **Topology diagram creation**
+  Create ChartForgeX-backed topology diagrams as PNG, SVG or HTML with groups, nodes, edges, automatic layouts and transparent canvas support.
 - ☑️ **Image manipulation**  
   Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert, sepia, kodachrome, lomograph, histogram equalization, vignette, skew, watermark (text or image) and add text.
 - ☑️ **Avatar, icon, thumbnail and grid generation**
@@ -96,6 +98,10 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageChartTreemap` - Creates treemap chart item.
 - `New-ImageChartWaterfall` - Creates waterfall chart data item.
 - `New-ImageChartWordCloud` - Creates word cloud chart data item.
+- `New-ImageTopology` - Creates a topology diagram as PNG, SVG or HTML.
+- `New-ImageTopologyEdge` - Creates topology edge data item.
+- `New-ImageTopologyGroup` - Creates topology group data item.
+- `New-ImageTopologyNode` - Creates topology node data item.
 - `New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
 - `New-ImageGif` - Creates an animated GIF from existing images.
 - `New-ImageGrid` - Creates a simple grid-based image.
@@ -159,8 +165,8 @@ New-ImageQRCodeGirocode -Name 'Evotec Sp. z o.o.' -IBAN 'DE23100000001234567890'
 
 ```powershell
 $definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker
+    New-ImageChartLine -Name 'CPU' -Value 31,42,58,67,53 -Color LimeGreen -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60 -Color DeepSkyBlue -Marker Circle
 )
 
 $annotations = @(
@@ -184,6 +190,19 @@ $points = [ChartForgeX.Primitives.ChartPoint[]] @(
 [void] $chart.AddBar('Requests', $points, [ChartForgeX.Primitives.ChartColor]::FromHex('#2563EB'))
 
 New-ImageChart -Chart $chart -FilePath "$PSScriptRoot\Output\Requests.png"
+```
+
+### Build a transparent topology diagram
+
+```powershell
+New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyGroup -Id 'site-a' -Label 'Site A' -Status Healthy -Symbol region
+    New-ImageTopologyNode -Id 'gateway' -Label 'Gateway' -Kind Network -Status Healthy -GroupId 'site-a' -Symbol GW
+    New-ImageTopologyNode -Id 'api' -Label 'App API' -Kind Service -Status Healthy -GroupId 'site-a' -Symbol API
+    New-ImageTopologyNode -Id 'database' -Label 'Database' -Kind Database -Status Warning -GroupId 'site-a' -Symbol SQL
+    New-ImageTopologyEdge -SourceNodeId 'gateway' -TargetNodeId 'api' -Label 'HTTPS' -Kind Connectivity -Status Healthy -Direction Forward
+    New-ImageTopologyEdge -SourceNodeId 'api' -TargetNodeId 'database' -Label '32 ms' -Kind Dependency -Status Warning -Direction Forward
+} -Title 'Service topology' -Layout Layered -Direction LeftToRight -Theme Dark -Transparent -Width 900 -Height 480 -FilePath "$PSScriptRoot\Output\ServiceTopology.png"
 ```
 
 ### Update EXIF metadata before publishing an image
@@ -259,13 +278,28 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart {
-    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker -Smooth
-    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker
-    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker
+    New-ImageChartLine -Value 5, 10, 12, 18, 10, 13 -Name "C#" -Marker Circle -Smooth
+    New-ImageChartLine -Value 10,15,30,40,50,60 -Name "C++" -Marker Circle
+    New-ImageChartLine -Value 10,5,12,18,30,60 -Name "PowerShell" -Marker Circle
 } -Show -FilePath $PSScriptRoot\Output\ChartsLine1.png
 ```
 
 ![ChartsLine.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsLine.png)
+
+### Creating topology diagrams
+
+Topology diagrams are rendered by ChartForgeX and can be saved as PNG, SVG or HTML by changing the output file extension. Use `-Transparent` when the diagram should be composited onto another image or wallpaper without an opaque canvas.
+
+```powershell
+New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyGroup -Id 'lab' -Label 'Lab Network' -Status Healthy -Symbol region
+    New-ImageTopologyNode -Id 'client' -Label 'Client' -Kind Endpoint -Status Healthy -GroupId 'lab' -Symbol PC
+    New-ImageTopologyNode -Id 'dc' -Label 'Domain Controller' -Kind Server -Status Healthy -GroupId 'lab' -Symbol DC
+    New-ImageTopologyNode -Id 'files' -Label 'File Server' -Kind Storage -Status Warning -GroupId 'lab' -Symbol FS
+    New-ImageTopologyEdge -SourceNodeId 'client' -TargetNodeId 'dc' -Label 'LDAP/Kerberos' -Kind AuthenticationPath -Status Healthy -Direction Forward
+    New-ImageTopologyEdge -SourceNodeId 'client' -TargetNodeId 'files' -Label 'SMB' -Kind Connectivity -Status Warning -Direction Forward
+} -Title 'Lab topology' -Layout Layered -Direction LeftToRight -Theme Dark -Transparent -FilePath "$PSScriptRoot\Output\LabTopology.png"
+```
 
 #### Scatter charts
 
@@ -324,7 +358,7 @@ New-ImageChart {
 
 ```powershell
 New-ImageChart -ChartsDefinition {
-    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker
+    New-ImageChartLine -Name 'Sample' -Value 1,3,2,5 -Marker Circle
 } -AnnotationsDefinition {
     New-ImageChartAnnotation -X 3 -Y 5 -Text 'Peak' -Arrow
 } -Show -FilePath $PSScriptRoot\Samples\ChartsAnnotated.png -Width 500 -Height 300
@@ -376,8 +410,8 @@ New-ImageChart {
 
 ```powershell
 $definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker -Smooth
+    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker Circle -Smooth
 )
 
 $options = New-ImageChartOptions -Transparent -NoCard -NoPlotBackground -ShowLegend -LegendPosition Bottom -ShowDataLabels

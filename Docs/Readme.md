@@ -82,8 +82,26 @@ Creates bar chart data item.
 ### [New-ImageChartBarOptions](New-ImageChartBarOptions.md)
 Creates bar chart options.
 
+### [New-ImageChartBoxPlot](New-ImageChartBoxPlot.md)
+Creates box-plot chart data item.
+
 ### [New-ImageChartBubble](New-ImageChartBubble.md)
 Creates bubble chart data item.
+
+### [New-ImageChartBullet](New-ImageChartBullet.md)
+Creates bullet chart data item.
+
+### [New-ImageChartCircle](New-ImageChartCircle.md)
+Creates circle status chart data item.
+
+### [New-ImageChartDonut](New-ImageChartDonut.md)
+Creates donut chart data item.
+
+### [New-ImageChartFunnel](New-ImageChartFunnel.md)
+Creates funnel chart item.
+
+### [New-ImageChartGauge](New-ImageChartGauge.md)
+Creates gauge chart data item.
 
 ### [New-ImageChartHeatmap](New-ImageChartHeatmap.md)
 Creates heatmap chart data item.
@@ -91,8 +109,20 @@ Creates heatmap chart data item.
 ### [New-ImageChartHistogram](New-ImageChartHistogram.md)
 Creates histogram chart data item.
 
+### [New-ImageChartHorizontalBar](New-ImageChartHorizontalBar.md)
+Creates horizontal bar chart data item.
+
 ### [New-ImageChartLine](New-ImageChartLine.md)
 Creates line chart data item.
+
+### [New-ImageChartLollipop](New-ImageChartLollipop.md)
+Creates lollipop chart data item.
+
+### [New-ImageChartOptions](New-ImageChartOptions.md)
+Creates renderer options for New-ImageChart.
+
+### [New-ImageChartPictorial](New-ImageChartPictorial.md)
+Creates pictorial chart row.
 
 ### [New-ImageChartPie](New-ImageChartPie.md)
 Creates pie chart data item.
@@ -100,11 +130,41 @@ Creates pie chart data item.
 ### [New-ImageChartPolar](New-ImageChartPolar.md)
 Creates polar chart data item.
 
+### [New-ImageChartProgress](New-ImageChartProgress.md)
+Creates progress-bar chart row.
+
 ### [New-ImageChartRadial](New-ImageChartRadial.md)
 Creates radial gauge chart data item.
 
+### [New-ImageChartRangeBand](New-ImageChartRangeBand.md)
+Creates range-band chart data item.
+
+### [New-ImageChartRangeBar](New-ImageChartRangeBar.md)
+Creates range-bar chart data item.
+
 ### [New-ImageChartScatter](New-ImageChartScatter.md)
 Creates scatter chart data item.
+
+### [New-ImageChartSlope](New-ImageChartSlope.md)
+Creates slope chart data item.
+
+### [New-ImageChartStackedArea](New-ImageChartStackedArea.md)
+Creates stacked-area chart data item.
+
+### [New-ImageChartStepArea](New-ImageChartStepArea.md)
+Creates step-area chart data item.
+
+### [New-ImageChartStepLine](New-ImageChartStepLine.md)
+Creates step-line chart data item.
+
+### [New-ImageChartTreemap](New-ImageChartTreemap.md)
+Creates treemap chart item.
+
+### [New-ImageChartWaterfall](New-ImageChartWaterfall.md)
+Creates waterfall chart data item.
+
+### [New-ImageChartWordCloud](New-ImageChartWordCloud.md)
+Creates word cloud chart term.
 
 ### [New-ImageCrop](New-ImageCrop.md)
 Creates a cropped version of an image using rectangular, circular or polygonal areas.
@@ -175,6 +235,18 @@ Generates a QR code image containing the provided contact details.
 ### [New-ImageThumbnail](New-ImageThumbnail.md)
 Creates thumbnails for all images in a directory.
 
+### [New-ImageTopology](New-ImageTopology.md)
+Creates a topology diagram image.
+
+### [New-ImageTopologyEdge](New-ImageTopologyEdge.md)
+Creates a topology edge definition.
+
+### [New-ImageTopologyGroup](New-ImageTopologyGroup.md)
+Creates a topology group definition.
+
+### [New-ImageTopologyNode](New-ImageTopologyNode.md)
+Creates a topology node definition.
+
 ### [Remove-ImageExif](Remove-ImageExif.md)
 Removes EXIF metadata from an image.
 
@@ -204,4 +276,3 @@ Sets image rotation.
 
 ### [Set-ImageSharpen](Set-ImageSharpen.md)
 Sharpens an image.
-

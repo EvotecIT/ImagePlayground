@@ -11,7 +11,7 @@ Creates polar chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartPolar [-Name] <string> [-Angle] <double[]> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartPolar [-Name] <string> [-Angle] <double[]> [-Value] <double[]> [-Color <ChartColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,10 +24,12 @@ Creates polar chart data item.
 New-ImageChartPolar -Name 'Series1' -Angle 0,1.57 -Value 1,2 -Color Blue
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 New-ImageChartPolar -Name 'Advanced' -Angle 0,1.57,3.14 -Value 1,2,1 -Color Red
 ```
+
 
 ## PARAMETERS
 
@@ -37,8 +39,8 @@ Angle values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -53,8 +55,8 @@ Series color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -70,7 +72,7 @@ Label for the series.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -85,8 +87,8 @@ Radius values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -109,4 +111,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

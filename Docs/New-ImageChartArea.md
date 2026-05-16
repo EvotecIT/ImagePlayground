@@ -11,7 +11,7 @@ Creates area chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartArea [-Name] <string> [-Value] <double[]> [-Color <Color>] [<CommonParameters>]
+New-ImageChartArea [-Name] <string> [-Value] <double[]> [-Color <ChartColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,6 +24,7 @@ Creates area chart data item.
 New-ImageChartArea -Name 'Sales' -Value 10,20 -Color Green
 ```
 
+
 ## PARAMETERS
 
 ### -Color
@@ -32,8 +33,8 @@ Fill color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -49,7 +50,7 @@ Label for the area.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Label
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -64,8 +65,8 @@ Y values for the area.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -88,4 +89,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

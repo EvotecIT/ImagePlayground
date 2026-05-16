@@ -41,8 +41,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -57,8 +57,8 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -73,8 +73,8 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 5
@@ -89,8 +89,8 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -107,7 +107,7 @@ Possible values: Chacha20IetfPoly1305, Aes128Gcm, Aes192Gcm, Aes256Gcm, XChacha2
 ```yaml
 Type: QrShadowSocksMethod
 Parameter Sets: __AllParameterSets
-Aliases: 
+Aliases:
 Possible values: Chacha20IetfPoly1305, Aes128Gcm, Aes192Gcm, Aes256Gcm, XChacha20IetfPoly1305, Aes128Cfb, Aes192Cfb, Aes256Cfb, Aes128Ctr, Aes192Ctr, Aes256Ctr, Camellia128Cfb, Camellia192Cfb, Camellia256Cfb, Chacha20Ietf, Aes256Cb, Aes128Ofb, Aes192Ofb, Aes256Ofb, Aes128Cfb1, Aes192Cfb1, Aes256Cfb1, Aes128Cfb8, Aes192Cfb8, Aes256Cfb8, Chacha20, BfCfb, Rc4Md5, Salsa20, DesCfb, IdeaCfb, Rc2Cfb, Cast5Cfb, Salsa20Ctr, Rc4, SeedCfb, Table
 
 Required: True
@@ -123,8 +123,8 @@ Password for the server.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -139,8 +139,8 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -155,8 +155,8 @@ Server port.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -172,7 +172,7 @@ Server host name.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Host
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -187,8 +187,8 @@ Opens the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -203,8 +203,8 @@ Optional tag.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: 4
@@ -227,4 +227,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

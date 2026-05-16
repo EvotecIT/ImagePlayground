@@ -29,10 +29,12 @@ Use width/height parameters or Percentage.
 Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100
 ```
 
+
 ### EXAMPLE 2
 ```powershell
 Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200
 ```
+
 
 ## PARAMETERS
 
@@ -42,8 +44,8 @@ Use asynchronous processing.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: HeightWidth, Percentage
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -58,8 +60,8 @@ Only valid when resizing by width or height.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: HeightWidth
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -74,8 +76,8 @@ The image must exist.
 ```yaml
 Type: String
 Parameter Sets: HeightWidth, Percentage
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -90,8 +92,8 @@ Used with Width when not using .
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -106,8 +108,8 @@ Supported formats depend on the file extension.
 ```yaml
 Type: String
 Parameter Sets: HeightWidth, Percentage
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -122,8 +124,8 @@ Applies uniform scaling relative to the original size.
 ```yaml
 Type: Int32
 Parameter Sets: Percentage
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -138,8 +140,8 @@ Used with Height when not using .
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -162,4 +164,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

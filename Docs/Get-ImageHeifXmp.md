@@ -15,9 +15,7 @@ Get-ImageHeifXmp [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Gets the UTF-8 XMP packet from a HEIF or HEIC file when the container declares an XMP MIME metadata item.
-
-This command does not decode HEIC image pixels and does not require native HEIF codecs.
+Returns the UTF-8 XMP packet when the container declares an XMP MIME metadata item.
 
 ## EXAMPLES
 
@@ -26,7 +24,6 @@ This command does not decode HEIC image pixels and does not require native HEIF 
 Get-ImageHeifXmp -FilePath photo.heic
 ```
 
-Returns the XMP metadata packet for `photo.heic` when present.
 
 ## PARAMETERS
 
@@ -36,7 +33,7 @@ Path to the HEIF or HEIC file.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True

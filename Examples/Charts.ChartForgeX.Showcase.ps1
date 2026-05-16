@@ -16,8 +16,8 @@ $pictorialPng = Join-Path -Path $samplesPath -ChildPath 'ChartsChartForgeXPictor
 $wordCloudPng = Join-Path -Path $samplesPath -ChildPath 'ChartsChartForgeXWordCloud.png'
 
 $trendDefinitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker -Smooth
+    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker Circle -Smooth
+    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker Circle -Smooth
 )
 
 $trendOptions = New-ImageChartOptions -ShowLegend -LegendPosition Bottom -ShowDataLabels -TickCount 4

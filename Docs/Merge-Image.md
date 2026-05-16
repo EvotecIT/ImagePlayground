@@ -24,6 +24,7 @@ Merges two images and saves the result.
 Merge-Image -FilePath img1.png -FilePathToMerge img2.png -FilePathOutput out.png
 ```
 
+
 ## PARAMETERS
 
 ### -FilePath
@@ -32,8 +33,8 @@ Must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 0
@@ -48,8 +49,8 @@ Output file path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 2
@@ -64,8 +65,8 @@ Must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: True
 Position: 1
@@ -82,7 +83,7 @@ Possible values: Bottom, Right, Top, Left
 ```yaml
 Type: ImagePlacement
 Parameter Sets: __AllParameterSets
-Aliases: 
+Aliases:
 Possible values: Bottom, Right, Top, Left
 
 Required: False
@@ -98,8 +99,8 @@ Resize images to fit before merging.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: 
-Possible values: 
+Aliases:
+Possible values:
 
 Required: False
 Position: named
@@ -122,4 +123,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

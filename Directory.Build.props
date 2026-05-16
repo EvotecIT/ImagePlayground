@@ -5,6 +5,8 @@
     <CodeGlyphXVersion>1.5.0</CodeGlyphXVersion>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj')">true</UseLocalCodeGlyphXProject>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
+    <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\ChartForgeX\ChartForgeX\ChartForgeX.csproj')">true</UseLocalChartForgeXProject>
+    <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == ''">false</UseLocalChartForgeXProject>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>
