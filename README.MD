@@ -36,8 +36,10 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
   Supports standard QR codes, contact cards, WiFi details, SMS, phone numbers, OTP, Bitcoin, Monero, BezahlCode, Girocode, Swiss, Slovenian UPN, ShadowSocks, SkypeCall, GeoLocation and more.
 - ☑️ **Barcode generation and reading**  
   Supports Code128, Code93, Code39, Kix Code, UPC-A, UPC-E, EAN, Data Matrix and PDF417.
-- ☑️ **Chart creation**  
+- ☑️ **Chart creation**
   Create bar, pie, line, scatter, polar, radial, heatmap and histogram charts.
+- ☑️ **Topology diagram creation**
+  Create ChartForgeX-backed topology diagrams as PNG, SVG or HTML with groups, nodes, edges, automatic layouts and transparent canvas support.
 - ☑️ **Image manipulation**  
   Combine, merge, resize, crop, rotate, flip, grayscale, blur, sharpen, pixelate, polaroid, bokeh blur, oil paint, contrast, brightness, hue, saturation, lightness, opacity, invert, sepia, kodachrome, lomograph, histogram equalization, vignette, skew, watermark (text or image) and add text.
 - ☑️ **Avatar, icon, thumbnail and grid generation**
@@ -76,6 +78,10 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageChartPolar` - Creates polar chart data item.
 - `New-ImageChartRadial` - Creates radial gauge chart data item.
 - `New-ImageChartScatter` - Creates scatter chart data item.
+- `New-ImageTopology` - Creates a topology diagram as PNG, SVG or HTML.
+- `New-ImageTopologyEdge` - Creates topology edge data item.
+- `New-ImageTopologyGroup` - Creates topology group data item.
+- `New-ImageTopologyNode` - Creates topology node data item.
 - `New-ImageCrop` - Creates a cropped version of an image using rectangular, circular or polygonal areas.
 - `New-ImageGif` - Creates an animated GIF from existing images.
 - `New-ImageGrid` - Creates a simple grid-based image.
@@ -148,6 +154,19 @@ $annotations = @(
 )
 
 New-ImageChart -Definition $definitions -Annotation $annotations -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -FilePath "$PSScriptRoot\Output\SystemUsage.png"
+```
+
+### Build a transparent topology diagram
+
+```powershell
+New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyGroup -Id 'site-a' -Label 'Site A' -Status Healthy -Symbol region
+    New-ImageTopologyNode -Id 'gateway' -Label 'Gateway' -Kind Network -Status Healthy -GroupId 'site-a' -Symbol GW
+    New-ImageTopologyNode -Id 'api' -Label 'App API' -Kind Service -Status Healthy -GroupId 'site-a' -Symbol API
+    New-ImageTopologyNode -Id 'database' -Label 'Database' -Kind Database -Status Warning -GroupId 'site-a' -Symbol SQL
+    New-ImageTopologyEdge -SourceNodeId 'gateway' -TargetNodeId 'api' -Label 'HTTPS' -Kind Connectivity -Status Healthy -Direction Forward
+    New-ImageTopologyEdge -SourceNodeId 'api' -TargetNodeId 'database' -Label '32 ms' -Kind Dependency -Status Warning -Direction Forward
+} -Title 'Service topology' -Layout Layered -Direction LeftToRight -Theme Dark -Transparent -Width 900 -Height 480 -FilePath "$PSScriptRoot\Output\ServiceTopology.png"
 ```
 
 ### Update EXIF metadata before publishing an image
@@ -230,6 +249,21 @@ New-ImageChart {
 ```
 
 ![ChartsLine.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/ChartsLine.png)
+
+### Creating topology diagrams
+
+Topology diagrams are rendered by ChartForgeX and can be saved as PNG, SVG or HTML by changing the output file extension. Use `-Transparent` when the diagram should be composited onto another image or wallpaper without an opaque canvas.
+
+```powershell
+New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyGroup -Id 'lab' -Label 'Lab Network' -Status Healthy -Symbol region
+    New-ImageTopologyNode -Id 'client' -Label 'Client' -Kind Endpoint -Status Healthy -GroupId 'lab' -Symbol PC
+    New-ImageTopologyNode -Id 'dc' -Label 'Domain Controller' -Kind Server -Status Healthy -GroupId 'lab' -Symbol DC
+    New-ImageTopologyNode -Id 'files' -Label 'File Server' -Kind Storage -Status Warning -GroupId 'lab' -Symbol FS
+    New-ImageTopologyEdge -SourceNodeId 'client' -TargetNodeId 'dc' -Label 'LDAP/Kerberos' -Kind AuthenticationPath -Status Healthy -Direction Forward
+    New-ImageTopologyEdge -SourceNodeId 'client' -TargetNodeId 'files' -Label 'SMB' -Kind Connectivity -Status Warning -Direction Forward
+} -Title 'Lab topology' -Layout Layered -Direction LeftToRight -Theme Dark -Transparent -FilePath "$PSScriptRoot\Output\LabTopology.png"
+```
 
 #### Scatter charts
 
