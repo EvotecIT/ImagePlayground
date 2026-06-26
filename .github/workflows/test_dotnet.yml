@@ -15,7 +15,6 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: '8.x'
   BUILD_CONFIGURATION: 'Release'
 
 jobs:
@@ -29,7 +28,9 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: |
+            8.x
+            10.x
 
       - name: Restore dependencies
         run: dotnet restore Sources/ImagePlayground.sln
@@ -69,7 +70,9 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: |
+            8.x
+            10.x
 
       - name: Restore dependencies
         run: dotnet restore Sources/ImagePlayground.sln
@@ -109,7 +112,9 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: |
+            8.x
+            10.x
 
       - name: Restore dependencies
         run: dotnet restore Sources/ImagePlayground.sln

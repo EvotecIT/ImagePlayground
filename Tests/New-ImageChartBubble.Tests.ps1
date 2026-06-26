@@ -7,7 +7,7 @@ Describe 'New-ImageChartBubble' {
         }
     }
 
-    It 'creates a bubble chart' -Skip:(-not $IsWindows) {
+    It 'creates a bubble chart' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_bubble.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file

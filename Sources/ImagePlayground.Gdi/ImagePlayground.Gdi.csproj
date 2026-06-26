@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Company>Evotec</Company>
-    <Authors>Przemyslaw Klys</Authors>
-    <VersionPrefix>2.0.2</VersionPrefix>
+    <VersionPrefix>$(ImagePlaygroundPackageVersion)</VersionPrefix>
     <TargetFrameworks>net472;net8.0-windows;net10.0-windows</TargetFrameworks>
     <AssemblyName>ImagePlayground.Gdi</AssemblyName>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
@@ -23,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net472' ">
-    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="$(SystemDrawingCommonVersion)" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">

@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Company>Evotec</Company>
-    <Authors>Przemyslaw Klys</Authors>
-    <VersionPrefix>2.0.2</VersionPrefix>
+    <VersionPrefix>$(ImagePlaygroundPackageVersion)</VersionPrefix>
     <TargetFrameworks>netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
     <AssemblyName>ImagePlayground</AssemblyName>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
@@ -15,20 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
-    <PackageReference Include="System.Memory" Version="4.6.3" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Image.Filters.cs;Image.Drawing.cs;Image.Transforms.cs" />
-    <Compile Include="Image.Filters.cs" />
-    <Compile Include="Image.Drawing.cs" />
-    <Compile Include="Image.Transforms.cs" />
+    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="$(CodeuctivityImageSharpCompareVersion)" />
+    <PackageReference Include="SixLabors.Fonts" Version="$(SixLaborsFontsVersion)" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="$(SixLaborsImageSharpVersion)" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="$(SixLaborsImageSharpDrawingVersion)" />
+    <PackageReference Include="System.Memory" Version="$(SystemMemoryVersion)" />
+    <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharpVersion)" />
+    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
   </ItemGroup>
 
   <ItemGroup>
