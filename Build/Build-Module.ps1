@@ -1,3 +1,12 @@
+param(
+    [ValidateSet('Manifest', 'Build', 'Publish')]
+    [string] $ConfigurationGateMode = 'Build',
+
+    [string] $PowerShellGalleryApiKeyPath = 'C:\Support\Important\PowerShellGalleryAPI.txt',
+
+    [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
+)
+
 $psPublishModulePath = $Env:PSPUBLISHMODULE_PATH
 if ($psPublishModulePath) {
     Import-Module -Name $psPublishModulePath -Force -ErrorAction Stop
@@ -88,7 +97,7 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
 
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$true -StartClean -UpdateWhenNew -SkipExternalHelp -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$true -SkipExternalHelp -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf #-ImportRequiredModules
 
@@ -155,6 +164,9 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
 
     New-ConfigurationBuild @newConfigurationBuildSplat #-DotSourceLibraries -DotSourceClasses -MergeModuleOnBuild -Enable -SignModule -DeleteTargetModuleBeforeBuild -CertificateThumbprint '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703' -MergeFunctionsFromApprovedModules
 
+    New-ConfigurationProjectBuild -Name 'ImagePlayground' -ConfigPath 'Build\project.build.json' -Enabled:$false -BuildBeforeModule -UseAsReleaseVersionSource -ProvideLocalNuGetFeed -PublishNuget -PublishGitHub
+    New-ConfigurationRelease -StageRoot 'Artefacts\UploadReady' -VersionSource ProjectBuild -PrimaryProject 'ImagePlayground' -BuildOrder 'Packages', 'Module' -PublishOrder 'NuGet', 'PowerShellGallery', 'GitHub'
+
     $newConfigurationArtefactSplat = @{
         Type                = 'Unpacked'
         Enable              = $true
@@ -184,6 +196,8 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     #New-ConfigurationTest -TestsPath "$PSScriptRoot\..\Tests" -Enable
 
     # global options for publishing to github/psgallery
-    #New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
-    #New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
+    New-ConfigurationPublish -Type PowerShellGallery -FilePath $PowerShellGalleryApiKeyPath -Enabled:$false -UseAsDependencyVersionSource
+    New-ConfigurationPublish -Type GitHub -FilePath $GitHubApiKeyPath -UserName 'EvotecIT' -Enabled:$false -RepositoryName 'ImagePlayground' -OverwriteTagName 'ImagePlayground-PowerShellModule.<TagModuleVersionWithPreRelease>'
+
+    New-ConfigurationGate -Mode $ConfigurationGateMode
 } -ExitCode
