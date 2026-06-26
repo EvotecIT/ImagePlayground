@@ -122,14 +122,11 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
         NETAssemblyTypeAcceleratorMode    = 'AllowList'
         NETAssemblyTypeAccelerators       = @(
             'ChartForgeX.Core.Chart'
-            'ChartForgeX.Core.ChartLegendPosition'
-            'ChartForgeX.Core.ChartPoints'
-            'ChartForgeX.Core.ChartSeriesKind'
             'ChartForgeX.Primitives.ChartColor'
-            'ChartForgeX.Primitives.ChartColors'
             'ChartForgeX.Primitives.ChartPoint'
-            'ChartForgeX.Primitives.ChartSize'
             'ChartForgeX.Topology.TopologyChart'
+            'ChartForgeX.Topology.TopologyEdge'
+            'ChartForgeX.Topology.TopologyGroup'
             'ChartForgeX.Topology.TopologyLayoutDirection'
             'ChartForgeX.Topology.TopologyLayoutMode'
             'ChartForgeX.Topology.TopologyNode'
@@ -142,11 +139,13 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
             'ImagePlayground.Image'
-            'ImagePlayground.ImageHelper'
             'ImagePlayground.Status'
             'ImagePlayground.WatermarkPlacement'
             'SixLabors.ImageSharp.Color'
             'SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag'
+            'SixLabors.ImageSharp.Processing.FlipMode'
+            'SixLabors.ImageSharp.Rational'
+            'SixLabors.ImageSharp.Rectangle'
         )
         NETBinaryModuleDocumentation      = $true
         #NETExcludeMainLibrary             = $true

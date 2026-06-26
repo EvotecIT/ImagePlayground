@@ -106,7 +106,7 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageGif` - Creates an animated GIF from existing images.
 - `New-ImageGrid` - Creates a simple grid-based image.
 - `New-ImageIcon` - Creates an icon file from an image.
-- `New-ImageQRCode` - Generates a QR code image.
+- `New-ImageQRCode` - Generates a QR code image, optionally with a centered logo.
 - `New-ImageQRCodeBezahlCode` - Generates a BezahlCode QR for German payments.
 - `New-ImageQRCodeBitcoin` - Generates a QR code for Bitcoin-like payments.
 - `New-ImageQRCodeGeoLocation` - Generates a QR code with geolocation data.
@@ -122,6 +122,7 @@ It works fine when running in PowerShell 5.1 console, or ISE (shrug!).
 - `New-ImageQRCodeWiFi` - Creates a WiFi QR code image.
 - `New-ImageQRContact` - Generates a QR code image containing the provided contact details.
 - `New-ImageThumbnail` - Creates thumbnails for all images in a directory.
+- `Remove-ImageMetadata` - Saves an image copy without metadata.
 - `Clear-ImageThumbnailCache` - Removes cached thumbnails.
 - `Remove-ImageExif` - Removes EXIF metadata from an image.
 - `Resize-Image` - Resizes an image.
@@ -226,6 +227,12 @@ New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\Q
 ```
 
 ![QRCode.png](https://github.com/EvotecIT/ImagePlayground/blob/feb33319f00df1933f53a4df89d65aa498278e41/Examples/Samples/QRCode.png)
+
+Creating a branded QR code with a centered logo:
+
+```powershell
+New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\QRCodeWithLogo.png" -LogoPath "$PSScriptRoot\Samples\LogoEvotec.png"
+```
 
 Creating QR codes and reading them back is as easy as:
 
@@ -481,8 +488,8 @@ Resize            Method     void Resize(System.Nullable[int] width, System.Null
 Rotate            Method     void Rotate(SixLabors.ImageSharp.Processing.RotateMode rotateMode), void Rotate(float degrees)
 RotateFlip        Method     void RotateFlip(SixLabors.ImageSharp.Processing.RotateMode rotateMode, SixLabors.ImageSharp.Processing.FlipMode flipMode)
 Saturate          Method     void Saturate(float amount)
-Watermark         Method     void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18), void Watermark(string text, ImagePlayground.Image+WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", fl…
-WatermarkImage    Method     void WatermarkImage(string filePath, ImagePlayground.Image+WatermarkPlacement placement, float opacity = 1, float padding = 18, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
+Watermark         Method     void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18), void Watermark(string text, ImagePlayground.WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", fl…
+WatermarkImage    Method     void WatermarkImage(string filePath, ImagePlayground.WatermarkPlacement placement, float opacity = 1, float padding = 18, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
 WatermarkImageTiled Method     void WatermarkImageTiled(string filePath, int spacing, float opacity = 1, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
 ```
 
@@ -522,9 +529,9 @@ Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndK
 
 # Add watermark
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
-$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.Image+WatermarkPlacement]::Middle, 0.5, 0.5)
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.WatermarkPlacement]::Middle, 0.5, 0.5)
 # Add watermark with rotation 90 degrees
-$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.Image+WatermarkPlacement]::TopLeft, 1, 18, 90)
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png",[ImagePlayground.WatermarkPlacement]::TopLeft, 1, 18, 90)
 # Tile watermark across the image with spacing 100
 $Image.WatermarkImageTiled("$PSScriptRoot\Samples\LogoEvotec.png", 100)
 # Use cmdlet for a quick overlay
@@ -543,17 +550,17 @@ Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndK
 ```powershell
 # Add watermark
 $Image = Get-Image -FilePath $PSScriptRoot\Samples\PrzemyslawKlysAndKulkozaurr.jpg
-# void WatermarkImage(string filePath, ImagePlayground.Image+WatermarkPlacement placement, float opacity = 1, float padding = 18, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
-$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.Image+WatermarkPlacement]::Middle, 0.5, 0.5)
+# void WatermarkImage(string filePath, ImagePlayground.WatermarkPlacement placement, float opacity = 1, float padding = 18, int rotate = 0, SixLabors.ImageSharp.Processing.FlipMode flipMode = SixLabors.ImageSharp.Processing.FlipMode.None, int watermarkPercentage = 20)
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.WatermarkPlacement]::Middle, 0.5, 0.5)
 # Add watermark with rotation 90 degrees
-$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.Image+WatermarkPlacement]::TopLeft, 1, 18, 90)
+$Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.WatermarkPlacement]::TopLeft, 1, 18, 90)
 # Tile watermark across the image with spacing 100
 $Image.WatermarkImageTiled("$PSScriptRoot\Samples\LogoEvotec.png", 100)
 # Add watermark with text
 # There are 2 methods to add watermark with text
 #void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
-#void Watermark(string text, ImagePlayground.Image+WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
-$Image.Watermark("Evotec", [ImagePlayground.Image+WatermarkPlacement]::TopRight, [SixLabors.ImageSharp.Color]::Blue, 50, "Calibri")
+#void Watermark(string text, ImagePlayground.WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
+$Image.Watermark("Evotec", [ImagePlayground.WatermarkPlacement]::TopRight, [SixLabors.ImageSharp.Color]::Blue, 50, "Calibri")
 
 Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg -Quality 80
 ```

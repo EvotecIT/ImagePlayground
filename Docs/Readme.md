@@ -253,6 +253,9 @@ Removes EXIF metadata from an image.
 ### [Remove-ImageHeifXmp](Remove-ImageHeifXmp.md)
 Removes the XMP metadata packet from a HEIF or HEIC file.
 
+### [Remove-ImageMetadata](Remove-ImageMetadata.md)
+Removes metadata from an image.
+
 ### [Resize-Image](Resize-Image.md)
 Resizes an image.
 

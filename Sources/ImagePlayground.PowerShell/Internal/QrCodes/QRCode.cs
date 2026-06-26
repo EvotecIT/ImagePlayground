@@ -1139,6 +1139,7 @@ public class QrCode {
     private static void RenderToFileWithCenteredLogo(QrPayloadData payload, string filePath, string logoPath, QrEasyOptions options) {
         string fullPath = Helpers.ResolvePath(filePath);
         string extension = Path.GetExtension(fullPath);
+        Helpers.CreateParentDirectory(fullPath);
 
         if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
             string tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
@@ -1162,6 +1163,7 @@ public class QrCode {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         string extension = Path.GetExtension(fullPath);
+        Helpers.CreateParentDirectory(fullPath);
 
         if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
             string tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
@@ -1203,8 +1205,8 @@ public class QrCode {
         try {
             using (Image<Rgba32> qrImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullQrPath))
             using (Image<Rgba32> logoImage = SixLabors.ImageSharp.Image.Load<Rgba32>(fullLogoPath)) {
-                int maxLogoWidth = Math.Max(1, qrImage.Width / 5);
-                int maxLogoHeight = Math.Max(1, qrImage.Height / 5);
+                int maxLogoWidth = Math.Max(1, qrImage.Width / 8);
+                int maxLogoHeight = Math.Max(1, qrImage.Height / 8);
                 double widthRatio = maxLogoWidth / (double)logoImage.Width;
                 double heightRatio = maxLogoHeight / (double)logoImage.Height;
                 double scale = Math.Min(widthRatio, heightRatio);
@@ -1248,8 +1250,8 @@ public class QrCode {
             using (Image<Rgba32> qrImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(fullQrPath, cancellationToken).ConfigureAwait(false))
             using (Image<Rgba32> logoImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(fullLogoPath, cancellationToken).ConfigureAwait(false)) {
                 cancellationToken.ThrowIfCancellationRequested();
-                int maxLogoWidth = Math.Max(1, qrImage.Width / 5);
-                int maxLogoHeight = Math.Max(1, qrImage.Height / 5);
+                int maxLogoWidth = Math.Max(1, qrImage.Width / 8);
+                int maxLogoHeight = Math.Max(1, qrImage.Height / 8);
                 double widthRatio = maxLogoWidth / (double)logoImage.Width;
                 double heightRatio = maxLogoHeight / (double)logoImage.Height;
                 double scale = Math.Min(widthRatio, heightRatio);
@@ -1288,8 +1290,8 @@ public class QrCode {
                     graphics.DrawImage(sourceBitmap, 0, 0, sourceBitmap.Width, sourceBitmap.Height);
                 }
 
-                int maxLogoWidth = Math.Max(1, qrBitmap.Width / 5);
-                int maxLogoHeight = Math.Max(1, qrBitmap.Height / 5);
+                int maxLogoWidth = Math.Max(1, qrBitmap.Width / 8);
+                int maxLogoHeight = Math.Max(1, qrBitmap.Height / 8);
                 double widthRatio = maxLogoWidth / (double)logoBitmap.Width;
                 double heightRatio = maxLogoHeight / (double)logoBitmap.Height;
                 double scale = Math.Min(widthRatio, heightRatio);
@@ -1406,8 +1408,10 @@ public class QrCode {
         if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
             string tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
             try {
-                using FileStream tempOutput = File.Create(tempPath);
-                await image.SaveAsPngAsync(tempOutput, cancellationToken).ConfigureAwait(false);
+                using (FileStream tempOutput = File.Create(tempPath)) {
+                    await image.SaveAsPngAsync(tempOutput, cancellationToken).ConfigureAwait(false);
+                }
+
                 using var wrappedImage = Image.Load(tempPath);
                 wrappedImage.SaveAsIcon(filePath);
             } finally {

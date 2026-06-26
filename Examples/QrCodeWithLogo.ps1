@@ -1,3 +1,3 @@
 Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
-[ImagePlayground.QrCode]::Generate('https://evotec.xyz', "$PSScriptRoot\Samples\QRCodeWithLogo.png", "$PSScriptRoot\Samples\LogoEvotec.png")
+New-ImageQRCode -Content 'https://evotec.xyz' -FilePath "$PSScriptRoot\Samples\QRCodeWithLogo.png" -LogoPath "$PSScriptRoot\Samples\LogoEvotec.png"
