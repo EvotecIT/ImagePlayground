@@ -7,7 +7,7 @@ Describe 'New-ImageChart' {
         }
     }
 
-    It 'creates a bar chart' -Skip:(-not $IsWindows) {
+    It 'creates a bar chart' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -21,7 +21,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates a bar chart with axis titles' -Skip:(-not $IsWindows) {
+    It 'creates a bar chart with axis titles' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_titles.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -35,7 +35,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates a bar chart with grid lines' -Skip:(-not $IsWindows) {
+    It 'creates a bar chart with grid lines' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_grid.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -49,7 +49,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates a bar chart with background color' -Skip:(-not $IsWindows) {
+    It 'creates a bar chart with background color' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_background.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -63,7 +63,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates a polar chart' -Skip:(-not $IsWindows) {
+    It 'creates a polar chart' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_polar.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -76,7 +76,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates an area chart' -Skip:(-not $IsWindows) {
+    It 'creates an area chart' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_area.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -90,7 +90,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates a bar chart from definitions' -Skip:(-not $IsWindows) {
+    It 'creates a bar chart from definitions' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_defs.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -106,7 +106,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'creates a bar chart from pipeline input' -Skip:(-not $IsWindows) {
+    It 'creates a bar chart from pipeline input' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_pipe.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -122,7 +122,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'renders a ChartForgeX chart object' -Skip:(-not $IsWindows) {
+    It 'renders a ChartForgeX chart object' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_object.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -141,7 +141,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'renders a ChartForgeX chart script' -Skip:(-not $IsWindows) {
+    It 'renders a ChartForgeX chart script' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_script.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -161,7 +161,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'accepts ChartForgeX-style color names and hex values' -Skip:(-not $IsWindows) {
+    It 'accepts ChartForgeX-style color names and hex values' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_colors.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -176,7 +176,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'renders identical output for array and pipeline input' -Skip:(-not $IsWindows) {
+    It 'renders identical output for array and pipeline input' {
         $arrayFile = Join-Path -Path $TestDir -ChildPath 'chart_array_compare.png'
         $pipeFile = Join-Path -Path $TestDir -ChildPath 'chart_pipe_compare.png'
         if (Test-Path -Path $arrayFile) {
@@ -204,7 +204,7 @@ Describe 'New-ImageChart' {
         $second.Dispose()
     }
 
-    It 'creates parent directory when saving a chart' -Skip:(-not $IsWindows) {
+    It 'creates parent directory when saving a chart' {
         $folder = Join-Path -Path $TestDir -ChildPath 'NestedChart'
         $file = Join-Path -Path $folder -ChildPath 'chart.png'
         if (Test-Path -Path $folder) {

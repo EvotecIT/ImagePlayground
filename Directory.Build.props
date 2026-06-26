@@ -1,8 +1,30 @@
 <Project>
   <PropertyGroup>
+    <Company>Evotec</Company>
+    <Authors>Przemyslaw Klys</Authors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ChartForgeXVersion>0.1.1</ChartForgeXVersion>
+    <ImagePlaygroundPackageVersion>2.0.2</ImagePlaygroundPackageVersion>
+    <ImagePlaygroundPowerShellPackageVersion>2.0.0</ImagePlaygroundPowerShellPackageVersion>
+
+    <CodeuctivityImageSharpCompareVersion>2.0.182</CodeuctivityImageSharpCompareVersion>
+    <!-- Keep the ImageSharp stack on this license line unless the project owner explicitly approves a newer license. -->
+    <SixLaborsFontsVersion>1.0.1</SixLaborsFontsVersion>
+    <SixLaborsImageSharpVersion>2.1.13</SixLaborsImageSharpVersion>
+    <SixLaborsImageSharpDrawingVersion>1.0.0</SixLaborsImageSharpDrawingVersion>
+    <SystemDrawingCommonVersion>8.0.0</SystemDrawingCommonVersion>
+    <SystemMemoryVersion>4.6.3</SystemMemoryVersion>
+    <SystemTextJsonVersion>8.0.6</SystemTextJsonVersion>
+    <MicrosoftCSharpVersion>4.7.0</MicrosoftCSharpVersion>
+
+    <ChartForgeXVersion>0.1.8</ChartForgeXVersion>
     <CodeGlyphXVersion>1.5.0</CodeGlyphXVersion>
+    <PowerShellStandardLibraryVersion>5.1.1</PowerShellStandardLibraryVersion>
+    <XmlDoc2CmdletDocVersion>0.7.0</XmlDoc2CmdletDocVersion>
+    <MicrosoftNETTestSdkVersion>17.14.1</MicrosoftNETTestSdkVersion>
+    <XunitVersion>2.9.3</XunitVersion>
+    <XunitRunnerVisualStudioVersion>3.1.5</XunitRunnerVisualStudioVersion>
+    <CoverletCollectorVersion>6.0.4</CoverletCollectorVersion>
+
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj')">true</UseLocalCodeGlyphXProject>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
     <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\ChartForgeX\ChartForgeX\ChartForgeX.csproj')">true</UseLocalChartForgeXProject>
