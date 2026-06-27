@@ -18,6 +18,11 @@ namespace ImagePlayground.PowerShell;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCode -Content 'text' -FilePath qr.png -Show</code>
 /// </example>
+/// <example>
+///   <summary>Create branded QR code</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPath logo.png</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCode")]
 [Alias("New-QRCode")]
 public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
@@ -33,6 +38,10 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Open the image after creation.</summary>
     [Parameter]
     public SwitchParameter Show { get; set; }
+
+    /// <summary>Optional logo image to place at the center of the QR code.</summary>
+    [Parameter]
+    public string? LogoPath { get; set; }
 
     /// <summary>Create the QR code with a transparent background.</summary>
     [Parameter]
@@ -59,12 +68,33 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
         ValidatePixelSize(PixelSize);
         FilePath = EnsureQrOutputPath(FilePath);
 
+        string? logoPath = string.IsNullOrWhiteSpace(LogoPath) ? null : LogoPath;
+        if (logoPath is not null) {
+            logoPath = ResolveExistingFilePath(logoPath, "NewImageQrCodeLogoFileNotFound", logoPath);
+            ValidateLogoImage(logoPath);
+        }
+
         if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
+            if (logoPath is null) {
+                await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+            } else {
+                await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, logoPath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
+            }
+        } else if (logoPath is null) {
             ImagePlayground.QrCode.Generate(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
+        } else {
+            ImagePlayground.QrCode.Generate(Content, FilePath, logoPath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
         }
 
         ShowGeneratedQrCode(FilePath, Show);
+    }
+
+    private void ValidateLogoImage(string logoPath) {
+        try {
+            using var _ = SixLabors.ImageSharp.Image.Load(logoPath);
+        } catch (Exception ex) {
+            var exception = new InvalidDataException($"Logo file is not a readable image: {logoPath}", ex);
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageQrCodeLogoFileInvalid", ErrorCategory.InvalidData, LogoPath));
+        }
     }
 }

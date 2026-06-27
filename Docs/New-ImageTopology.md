@@ -27,10 +27,10 @@ Renders ChartForgeX topology definitions to PNG, SVG, or HTML output.
 ### EXAMPLE 1
 ```powershell
 PS> New-ImageTopology -TopologyDefinition {
-                New-ImageTopologyNode -Id api -Label API -Kind Service -Status Healthy -Symbol API
-                New-ImageTopologyNode -Id db -Label Database -Kind Database -Status Warning -Symbol SQL
-                New-ImageTopologyEdge -SourceNodeId api -TargetNodeId db -Label '32 ms' -Kind Dependency -Status Warning -Direction Forward
-            } -Title 'Service map' -Layout Layered -Direction LeftToRight -FilePath service-map.png
+    New-ImageTopologyNode -Id api -Label API -Kind Service -Status Healthy -Symbol API
+    New-ImageTopologyNode -Id db -Label Database -Kind Database -Status Warning -Symbol SQL
+    New-ImageTopologyEdge -SourceNodeId api -TargetNodeId db -Label '32 ms' -Kind Dependency -Status Warning -Direction Forward
+} -Title 'Service map' -Layout Layered -Direction LeftToRight -FilePath service-map.png
 ```
 
 Creates a transparent-ready PNG topology diagram from a PowerShell DSL.
@@ -204,7 +204,7 @@ Topology layout mode.
 Type: TopologyLayoutMode
 Parameter Sets: ScriptBlock, Definition
 Aliases: None
-Possible values: Manual, GroupGrid, HubAndSpoke, Layered, Matrix, DenseGrouped, Geographic, ForceDirected
+Possible values: Manual, GroupGrid, HubAndSpoke, Layered, Matrix, DenseGrouped, Geographic, ForceDirected, RelationshipRadial, MindMap
 
 Required: False
 Position: named

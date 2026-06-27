@@ -11,7 +11,7 @@ Generates a QR code image from plain text content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
+New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-LogoPath <string>] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,11 @@ PS> New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr.png
 ### EXAMPLE 2
 ```powershell
 PS> New-ImageQRCode -Content 'text' -FilePath qr.png -Show
+```
+
+### EXAMPLE 3
+```powershell
+PS> New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPath logo.png
 ```
 
 
@@ -111,6 +116,22 @@ Position: named
 Default value: 000000FF
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -LogoPath
+Optional logo image to place at the center of the QR code.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### -PixelSize

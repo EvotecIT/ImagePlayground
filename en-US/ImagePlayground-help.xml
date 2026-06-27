@@ -463,6 +463,86 @@
       </command:example>
     </command:examples>
   </command:command>
+  <!-- Cmdlet: Remove-ImageMetadata -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>Remove-ImageMetadata</command:name>
+      <command:verb>Remove</command:verb>
+      <command:noun>ImageMetadata</command:noun>
+      <maml:description>
+        <maml:para>Removes metadata from an image.</maml:para>
+      </maml:description>
+    </command:details>
+    <command:syntax>
+      <!-- Parameter set: __AllParameterSets -->
+      <command:syntaxItem>
+        <maml:name>Remove-ImageMetadata</maml:name>
+        <!-- Parameter: FilePath -->
+        <command:parameter required="true" globbing="false" pipelineInput="true (ByValue)" position="0">
+          <maml:name>FilePath</maml:name>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue></dev:defaultValue>
+        </command:parameter>
+        <!-- Parameter: OutputPath -->
+        <command:parameter required="true" globbing="false" pipelineInput="false" position="1">
+          <maml:name>OutputPath</maml:name>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue></dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <!-- Parameter: FilePath -->
+      <command:parameter required="true" globbing="false" pipelineInput="true (ByValue)" position="0">
+        <maml:name>FilePath</maml:name>
+        <maml:description>
+          <maml:para>Source image file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue></dev:defaultValue>
+      </command:parameter>
+      <!-- Parameter: OutputPath -->
+      <command:parameter required="true" globbing="false" pipelineInput="false" position="1">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Destination image path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue></dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues />
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Save a copy without metadata  ----------</maml:title>
+        <dev:code>Remove-ImageMetadata -FilePath in.jpg -OutputPath out.jpg</dev:code>
+      </command:example>
+    </command:examples>
+  </command:command>
   <!-- Cmdlet: Resize-Image -->
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
     <command:details>
@@ -5159,6 +5239,16 @@
           </dev:type>
           <dev:defaultValue></dev:defaultValue>
         </command:parameter>
+        <!-- Parameter: Async -->
+        <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Async</maml:name>
+          <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <!-- Parameter: BackgroundColor -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>BackgroundColor</maml:name>
@@ -5178,6 +5268,15 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>000000FF</dev:defaultValue>
+        </command:parameter>
+        <!-- Parameter: LogoPath -->
+        <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>LogoPath</maml:name>
+          <command:parameterValue required="true">string</command:parameterValue>
+          <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+          </dev:type>
         </command:parameter>
         <!-- Parameter: PixelSize -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -5251,6 +5350,18 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
+      <!-- Parameter: LogoPath -->
+      <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>LogoPath</maml:name>
+        <maml:description>
+          <maml:para>Optional logo image to place at the center of the QR code.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">string</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+      </command:parameter>
       <!-- Parameter: Transparent -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
         <maml:name>Transparent</maml:name>
@@ -5303,6 +5414,19 @@
         </dev:type>
         <dev:defaultValue>20</dev:defaultValue>
       </command:parameter>
+      <!-- Parameter: Async -->
+      <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>Async</maml:name>
+        <maml:description>
+          <maml:para>Use asynchronous processing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -5327,6 +5451,13 @@
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-ImageQRCode -Content 'text' -FilePath qr.png -Show</dev:code>
+      </command:example>
+      <command:example>
+        <maml:title>----------  Example 3: Create branded QR code  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPath logo.png</dev:code>
       </command:example>
     </command:examples>
   </command:command>

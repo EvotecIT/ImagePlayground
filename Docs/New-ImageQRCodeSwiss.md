@@ -22,7 +22,7 @@ Use this cmdlet when a prepared SwissQrCodePayload should be rendered into a pay
 ### EXAMPLE 1
 ```powershell
 PS> $swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
-            New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png
+New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png
 ```
 
 Renders a Swiss payment QR code from a previously prepared payment payload object.
@@ -30,7 +30,7 @@ Renders a Swiss payment QR code from a previously prepared payment payload objec
 ### EXAMPLE 2
 ```powershell
 PS> $swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
-            New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show
+New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show
 ```
 
 Creates a branded QR image and opens it immediately after generation.
