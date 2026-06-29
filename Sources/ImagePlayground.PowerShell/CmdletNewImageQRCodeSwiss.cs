@@ -42,11 +42,11 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public SwissQrCodePayload.Contact.AddressType CreditorAddressType { get; set; } = SwissQrCodePayload.Contact.AddressType.StructuredAddress;
 
-    /// <summary>Creditor street for structured addresses.</summary>
+    /// <summary>Optional creditor street for structured addresses.</summary>
     [Parameter(Position = 2)]
     public string? CreditorStreet { get; set; }
 
-    /// <summary>Creditor house number for structured addresses.</summary>
+    /// <summary>Optional creditor house number for structured addresses.</summary>
     [Parameter(Position = 3)]
     public string? CreditorHouseNumber { get; set; }
 
@@ -110,11 +110,11 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public SwissQrCodePayload.Contact.AddressType DebtorAddressType { get; set; } = SwissQrCodePayload.Contact.AddressType.StructuredAddress;
 
-    /// <summary>Debtor street for structured addresses.</summary>
+    /// <summary>Optional debtor street for structured addresses.</summary>
     [Parameter]
     public string? DebtorStreet { get; set; }
 
-    /// <summary>Debtor house number for structured addresses.</summary>
+    /// <summary>Optional debtor house number for structured addresses.</summary>
     [Parameter]
     public string? DebtorHouseNumber { get; set; }
 
@@ -137,42 +137,6 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Debtor two-letter country code.</summary>
     [Parameter]
     public string DebtorCountry { get; set; } = "CH";
-
-    /// <summary>Ultimate creditor name.</summary>
-    [Parameter]
-    public string? UltimateCreditorName { get; set; }
-
-    /// <summary>Ultimate creditor address type.</summary>
-    [Parameter]
-    public SwissQrCodePayload.Contact.AddressType UltimateCreditorAddressType { get; set; } = SwissQrCodePayload.Contact.AddressType.StructuredAddress;
-
-    /// <summary>Ultimate creditor street for structured addresses.</summary>
-    [Parameter]
-    public string? UltimateCreditorStreet { get; set; }
-
-    /// <summary>Ultimate creditor house number for structured addresses.</summary>
-    [Parameter]
-    public string? UltimateCreditorHouseNumber { get; set; }
-
-    /// <summary>Ultimate creditor postal code for structured addresses.</summary>
-    [Parameter]
-    public string? UltimateCreditorPostalCode { get; set; }
-
-    /// <summary>Ultimate creditor city for structured addresses.</summary>
-    [Parameter]
-    public string? UltimateCreditorCity { get; set; }
-
-    /// <summary>Ultimate creditor first address line for combined addresses.</summary>
-    [Parameter]
-    public string? UltimateCreditorAddressLine1 { get; set; }
-
-    /// <summary>Ultimate creditor second address line for combined addresses.</summary>
-    [Parameter]
-    public string? UltimateCreditorAddressLine2 { get; set; }
-
-    /// <summary>Ultimate creditor two-letter country code.</summary>
-    [Parameter]
-    public string UltimateCreditorCountry { get; set; } = "CH";
 
     /// <summary>Path for the generated image.</summary>
     /// <para>The image format is inferred from the file extension.</para>
@@ -241,19 +205,7 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
             DebtorAddressLine1,
             DebtorAddressLine2,
             DebtorCountry);
-        var ultimateCreditor = TryCreateOptionalContact(
-            nameof(UltimateCreditorName),
-            UltimateCreditorName,
-            UltimateCreditorAddressType,
-            UltimateCreditorStreet,
-            UltimateCreditorHouseNumber,
-            UltimateCreditorPostalCode,
-            UltimateCreditorCity,
-            UltimateCreditorAddressLine1,
-            UltimateCreditorAddressLine2,
-            UltimateCreditorCountry);
-
-        return new SwissQrCodePayload(iban, Currency, creditor, reference, additionalInformation, debtor, Amount, ultimateCreditor, AlternativeProcedure1, AlternativeProcedure2);
+        return new SwissQrCodePayload(iban, Currency, creditor, reference, additionalInformation, debtor, Amount, null, AlternativeProcedure1, AlternativeProcedure2);
     }
 
     private SwissQrCodePayload.Reference BuildReference() {
@@ -307,8 +259,8 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
 
         return SwissQrCodePayload.Contact.CreateStructured(
             requiredName,
-            RequireValue(street, nameParameter.Replace("Name", "Street")),
-            RequireValue(houseNumber, nameParameter.Replace("Name", "HouseNumber")),
+            street ?? string.Empty,
+            houseNumber ?? string.Empty,
             RequireValue(postalCode, nameParameter.Replace("Name", "PostalCode")),
             RequireValue(city, nameParameter.Replace("Name", "City")),
             country);

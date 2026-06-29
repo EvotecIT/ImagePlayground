@@ -25,12 +25,8 @@ New-ImageQRCodeSwiss -Iban <String> -CreditorName <String> -FilePath <String>
     [-DebtorName <String>] [-DebtorAddressType <AddressType>] [-DebtorStreet <String>]
     [-DebtorHouseNumber <String>] [-DebtorPostalCode <String>] [-DebtorCity <String>]
     [-DebtorAddressLine1 <String>] [-DebtorAddressLine2 <String>] [-DebtorCountry <String>]
-    [-UltimateCreditorName <String>] [-UltimateCreditorAddressType <AddressType>]
-    [-UltimateCreditorStreet <String>] [-UltimateCreditorHouseNumber <String>]
-    [-UltimateCreditorPostalCode <String>] [-UltimateCreditorCity <String>]
-    [-UltimateCreditorAddressLine1 <String>] [-UltimateCreditorAddressLine2 <String>]
-    [-UltimateCreditorCountry <String>] [-Show] [-ForegroundColor <Color>]
-    [-BackgroundColor <Color>] [-PixelSize <Int32>] [-Async] [<CommonParameters>]
+    [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>]
+    [-PixelSize <Int32>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,7 +34,7 @@ New-ImageQRCodeSwiss -Iban <String> -CreditorName <String> -FilePath <String>
 `New-ImageQRCodeSwiss` renders Swiss QR bill payment details into a QR image.
 The cmdlet accepts payment fields directly and creates the required payment model internally.
 
-Use structured address parameters such as `-CreditorStreet`, `-CreditorHouseNumber`, `-CreditorPostalCode`, and `-CreditorCity` for the default `StructuredAddress` mode.
+Use structured address parameters such as `-CreditorPostalCode` and `-CreditorCity` for the default `StructuredAddress` mode. `-CreditorStreet` and `-CreditorHouseNumber` are optional for addresses such as PO boxes or street values that do not split cleanly.
 Use `-CreditorAddressType CombinedAddress` with `-CreditorAddressLine1` and `-CreditorAddressLine2` when the address should be encoded as combined address lines.
 
 ## EXAMPLES
@@ -84,8 +80,8 @@ Creates a styled Swiss QR payment image and opens it after generation.
 | `-Currency` | Payment currency. Defaults to `CHF`. |
 | `-CreditorName` | Creditor name. |
 | `-CreditorAddressType` | Creditor address format. Use `StructuredAddress` or `CombinedAddress`. |
-| `-CreditorStreet` | Creditor street for structured addresses. |
-| `-CreditorHouseNumber` | Creditor house number for structured addresses. |
+| `-CreditorStreet` | Optional creditor street for structured addresses. |
+| `-CreditorHouseNumber` | Optional creditor house number for structured addresses. |
 | `-CreditorPostalCode` | Creditor postal code for structured addresses. |
 | `-CreditorCity` | Creditor city for structured addresses. |
 | `-CreditorAddressLine1` | First creditor address line for combined addresses. |
@@ -101,22 +97,13 @@ Creates a styled Swiss QR payment image and opens it after generation.
 | `-AlternativeProcedure2` | Optional second alternative procedure block. |
 | `-DebtorName` | Optional debtor name. |
 | `-DebtorAddressType` | Optional debtor address format. |
-| `-DebtorStreet` | Debtor street for structured addresses. |
-| `-DebtorHouseNumber` | Debtor house number for structured addresses. |
+| `-DebtorStreet` | Optional debtor street for structured addresses. |
+| `-DebtorHouseNumber` | Optional debtor house number for structured addresses. |
 | `-DebtorPostalCode` | Debtor postal code for structured addresses. |
 | `-DebtorCity` | Debtor city for structured addresses. |
 | `-DebtorAddressLine1` | First debtor address line for combined addresses. |
 | `-DebtorAddressLine2` | Second debtor address line for combined addresses. |
 | `-DebtorCountry` | Debtor two-letter country code. Defaults to `CH`. |
-| `-UltimateCreditorName` | Optional ultimate creditor name. |
-| `-UltimateCreditorAddressType` | Optional ultimate creditor address format. |
-| `-UltimateCreditorStreet` | Ultimate creditor street for structured addresses. |
-| `-UltimateCreditorHouseNumber` | Ultimate creditor house number for structured addresses. |
-| `-UltimateCreditorPostalCode` | Ultimate creditor postal code for structured addresses. |
-| `-UltimateCreditorCity` | Ultimate creditor city for structured addresses. |
-| `-UltimateCreditorAddressLine1` | First ultimate creditor address line for combined addresses. |
-| `-UltimateCreditorAddressLine2` | Second ultimate creditor address line for combined addresses. |
-| `-UltimateCreditorCountry` | Ultimate creditor two-letter country code. Defaults to `CH`. |
 | `-FilePath` | Output image path. The image format is inferred from the file extension. |
 | `-Show` | Opens the image after creation. |
 | `-ForegroundColor` | Foreground color of QR modules. Defaults to black. |

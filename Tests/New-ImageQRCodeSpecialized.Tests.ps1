@@ -109,6 +109,14 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
 
+    It 'creates Swiss QR code with structured creditor postal address only' {
+        $file = Join-Path $TestDir 'swiss_postal_address.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        Test-Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
+    }
+
     It 'creates Slovenian UPN QR code' {
         $file = Join-Path $TestDir 'upn.png'
         if (Test-Path $file) { Remove-Item $file }
@@ -167,5 +175,9 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'does not expose legacy Swiss or Slovenian payload parameters' {
         (Get-Command New-ImageQRCodeSwiss).Parameters.Keys | Should -Not -Contain 'Payload'
         (Get-Command New-ImageQRCodeSlovenianUpnQr).Parameters.Keys | Should -Not -Contain 'Payload'
+    }
+
+    It 'does not expose unsupported Swiss ultimate creditor parameters' {
+        (Get-Command New-ImageQRCodeSwiss).Parameters.Keys -like 'UltimateCreditor*' | Should -BeNullOrEmpty
     }
 }
