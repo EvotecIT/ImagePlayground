@@ -15,14 +15,14 @@ Creates a Swiss QR payment code image.
 
 ```powershell
 New-ImageQRCodeSwiss -Iban <String> -CreditorName <String> -FilePath <String>
-    [-IbanType <IbanType>] [-Currency <QrSwissCurrency>]
-    [-CreditorAddressType <AddressType>] [-CreditorStreet <String>] [-CreditorHouseNumber <String>]
+    [-IbanType <SwissQrIbanType>] [-Currency <SwissQrCurrency>]
+    [-CreditorAddressType <SwissQrAddressType>] [-CreditorStreet <String>] [-CreditorHouseNumber <String>]
     [-CreditorPostalCode <String>] [-CreditorCity <String>] [-CreditorAddressLine1 <String>]
     [-CreditorAddressLine2 <String>] [-CreditorCountry <String>]
-    [-ReferenceType <ReferenceType>] [-Reference <String>] [-ReferenceTextType <ReferenceTextType>]
+    [-ReferenceType <SwissQrReferenceType>] [-Reference <String>]
     [-Amount <Decimal>] [-UnstructuredMessage <String>] [-BillInformation <String>]
     [-AlternativeProcedure1 <String>] [-AlternativeProcedure2 <String>]
-    [-DebtorName <String>] [-DebtorAddressType <AddressType>] [-DebtorStreet <String>]
+    [-DebtorName <String>] [-DebtorAddressType <SwissQrAddressType>] [-DebtorStreet <String>]
     [-DebtorHouseNumber <String>] [-DebtorPostalCode <String>] [-DebtorCity <String>]
     [-DebtorAddressLine1 <String>] [-DebtorAddressLine2 <String>] [-DebtorCountry <String>]
     [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>]
@@ -36,6 +36,7 @@ The cmdlet accepts payment fields directly and creates the required payment mode
 
 Use structured address parameters such as `-CreditorPostalCode` and `-CreditorCity` for the default `StructuredAddress` mode. `-CreditorStreet` and `-CreditorHouseNumber` are optional for addresses such as PO boxes or street values that do not split cleanly.
 Use `-CreditorAddressType CombinedAddress` with `-CreditorAddressLine1` and `-CreditorAddressLine2` when the address should be encoded as combined address lines.
+Use `-ReferenceType QRR` with a QR reference value, `-ReferenceType SCOR` with an ISO 11649 creditor reference, or `-ReferenceType NON` without `-Reference`.
 
 ## EXAMPLES
 
@@ -88,8 +89,7 @@ Creates a styled Swiss QR payment image and opens it after generation.
 | `-CreditorAddressLine2` | Second creditor address line for combined addresses. |
 | `-CreditorCountry` | Creditor two-letter country code. Defaults to `CH`. |
 | `-ReferenceType` | Reference type. Defaults to `NON`. |
-| `-Reference` | Reference text for QRR or SCOR reference types. |
-| `-ReferenceTextType` | Reference text kind. When omitted, QRR uses QR reference and SCOR uses ISO 11649 creditor reference. |
+| `-Reference` | Reference text. Required for `QRR` and `SCOR`; not allowed for `NON`. |
 | `-Amount` | Optional payment amount. |
 | `-UnstructuredMessage` | Optional unstructured payment message. |
 | `-BillInformation` | Optional bill information. |

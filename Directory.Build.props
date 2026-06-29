@@ -17,7 +17,7 @@
     <MicrosoftCSharpVersion>4.7.0</MicrosoftCSharpVersion>
 
     <ChartForgeXVersion>0.1.8</ChartForgeXVersion>
-    <CodeGlyphXVersion>1.5.0</CodeGlyphXVersion>
+    <CodeGlyphXVersion>1.6.0</CodeGlyphXVersion>
     <PowerShellStandardLibraryVersion>5.1.1</PowerShellStandardLibraryVersion>
     <XmlDoc2CmdletDocVersion>0.7.0</XmlDoc2CmdletDocVersion>
     <MicrosoftNETTestSdkVersion>17.14.1</MicrosoftNETTestSdkVersion>

@@ -117,6 +117,23 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
 
+    It 'exposes Swiss QR parameters through CodeGlyphX public enums' {
+        $parameters = (Get-Command New-ImageQRCodeSwiss).Parameters
+
+        $parameters['IbanType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrIbanType'
+        $parameters['Currency'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrCurrency'
+        $parameters['CreditorAddressType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrAddressType'
+        $parameters['ReferenceType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrReferenceType'
+        $parameters['DebtorAddressType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrAddressType'
+        $parameters.Keys | Should -Not -Contain 'ReferenceTextType'
+    }
+
+    It 'requires Swiss QR reference text for QRR and SCOR' {
+        {
+            New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType SCOR -FilePath (Join-Path $TestDir 'swiss_missing_scor_reference.png')
+        } | Should -Throw '*Reference is required*'
+    }
+
     It 'creates Slovenian UPN QR code' {
         $file = Join-Path $TestDir 'upn.png'
         if (Test-Path $file) { Remove-Item $file }

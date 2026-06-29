@@ -1,5 +1,6 @@
 using System;
 using ImagePlayground;
+using CodeGlyphX;
 using CodeGlyphX.Payloads;
 using System.Management.Automation;
 using System.Threading.Tasks;
@@ -28,11 +29,11 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>IBAN kind.</summary>
     [Parameter]
-    public SwissQrCodePayload.Iban.IbanType IbanType { get; set; } = SwissQrCodePayload.Iban.IbanType.Iban;
+    public SwissQrIbanType IbanType { get; set; } = SwissQrIbanType.Iban;
 
     /// <summary>Payment currency.</summary>
     [Parameter]
-    public QrSwissCurrency Currency { get; set; } = QrSwissCurrency.CHF;
+    public SwissQrCurrency Currency { get; set; } = SwissQrCurrency.CHF;
 
     /// <summary>Creditor name.</summary>
     [Parameter(Mandatory = true, Position = 1)]
@@ -40,7 +41,7 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>Creditor address type.</summary>
     [Parameter]
-    public SwissQrCodePayload.Contact.AddressType CreditorAddressType { get; set; } = SwissQrCodePayload.Contact.AddressType.StructuredAddress;
+    public SwissQrAddressType CreditorAddressType { get; set; } = SwissQrAddressType.StructuredAddress;
 
     /// <summary>Optional creditor street for structured addresses.</summary>
     [Parameter(Position = 2)]
@@ -72,15 +73,11 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>Reference type.</summary>
     [Parameter]
-    public SwissQrCodePayload.Reference.ReferenceType ReferenceType { get; set; } = SwissQrCodePayload.Reference.ReferenceType.NON;
+    public SwissQrReferenceType ReferenceType { get; set; } = SwissQrReferenceType.NON;
 
     /// <summary>Reference text for QRR or SCOR reference types.</summary>
     [Parameter]
     public string? Reference { get; set; }
-
-    /// <summary>Reference text kind. When omitted, QRR uses QR reference and SCOR uses ISO 11649 creditor reference.</summary>
-    [Parameter]
-    public SwissQrCodePayload.Reference.ReferenceTextType? ReferenceTextType { get; set; }
 
     /// <summary>Optional payment amount.</summary>
     [Parameter]
@@ -108,7 +105,7 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>Debtor address type.</summary>
     [Parameter]
-    public SwissQrCodePayload.Contact.AddressType DebtorAddressType { get; set; } = SwissQrCodePayload.Contact.AddressType.StructuredAddress;
+    public SwissQrAddressType DebtorAddressType { get; set; } = SwissQrAddressType.StructuredAddress;
 
     /// <summary>Optional debtor street for structured addresses.</summary>
     [Parameter]
@@ -209,20 +206,13 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
     }
 
     private SwissQrCodePayload.Reference BuildReference() {
-        var referenceTextType = ReferenceTextType;
-        if (!referenceTextType.HasValue && ReferenceType == SwissQrCodePayload.Reference.ReferenceType.QRR) {
-            referenceTextType = SwissQrCodePayload.Reference.ReferenceTextType.QrReference;
-        } else if (!referenceTextType.HasValue && ReferenceType == SwissQrCodePayload.Reference.ReferenceType.SCOR) {
-            referenceTextType = SwissQrCodePayload.Reference.ReferenceTextType.CreditorReferenceIso11649;
-        }
-
-        return new SwissQrCodePayload.Reference(ReferenceType, Reference, referenceTextType);
+        return new SwissQrCodePayload.Reference(ReferenceType, Reference);
     }
 
     private static SwissQrCodePayload.Contact? TryCreateOptionalContact(
         string nameParameter,
         string? name,
-        SwissQrCodePayload.Contact.AddressType addressType,
+        SwissQrAddressType addressType,
         string? street,
         string? houseNumber,
         string? postalCode,
@@ -240,7 +230,7 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
     private static SwissQrCodePayload.Contact CreateContact(
         string nameParameter,
         string? name,
-        SwissQrCodePayload.Contact.AddressType addressType,
+        SwissQrAddressType addressType,
         string? street,
         string? houseNumber,
         string? postalCode,
@@ -249,7 +239,7 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
         string? addressLine2,
         string country) {
         var requiredName = RequireValue(name, nameParameter);
-        if (addressType == SwissQrCodePayload.Contact.AddressType.CombinedAddress) {
+        if (addressType == SwissQrAddressType.CombinedAddress) {
             return SwissQrCodePayload.Contact.CreateCombined(
                 requiredName,
                 RequireValue(addressLine1, nameParameter.Replace("Name", "AddressLine1")),
