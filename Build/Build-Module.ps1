@@ -7,17 +7,9 @@ param(
     [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
 )
 
-$psPublishModulePath = $Env:PSPUBLISHMODULE_PATH
-if ($psPublishModulePath) {
-    Import-Module -Name $psPublishModulePath -Force -ErrorAction Stop
-} else {
-    Import-Module PSPublishModule -Force -ErrorAction Stop
-}
+Import-Module PSPublishModule -Force -ErrorAction Stop
 
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$powerShellProjectPath = Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
-
-Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
+Build-Module -ModuleName 'ImagePlayground' {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -116,6 +108,7 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'ImagePlayground.PowerShell'
         NETProjectName                    = 'ImagePlayground.PowerShell'
+        NETProjectPath                    = 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
         NETAssemblyLoadContext            = $true
@@ -213,9 +206,9 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     $newConfigurationArtefactSplat = @{
         Type                = 'Unpacked'
         Enable              = $true
-        Path                = "$PSScriptRoot\..\Artefacts\Unpacked"
-        ModulesPath         = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
-        RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
+        Path                = 'Artefacts\Unpacked'
+        ModulesPath         = 'Artefacts\Unpacked\Modules'
+        RequiredModulesPath = 'Artefacts\Unpacked\Modules'
         AddRequiredModules  = $true
         CopyFiles           = @{
             #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
@@ -225,9 +218,9 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     $newConfigurationArtefactSplat = @{
         Type                = 'Packed'
         Enable              = $true
-        Path                = "$PSScriptRoot\..\Artefacts\Packed"
-        ModulesPath         = "$PSScriptRoot\..\Artefacts\Packed\Modules"
-        RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Packed\Modules"
+        Path                = 'Artefacts\Packed'
+        ModulesPath         = 'Artefacts\Packed\Modules'
+        RequiredModulesPath = 'Artefacts\Packed\Modules'
         AddRequiredModules  = $true
         CopyFiles           = @{
             #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
