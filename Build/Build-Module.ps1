@@ -207,8 +207,8 @@ Build-Module -ModuleName 'ImagePlayground' {
         Type                = 'Unpacked'
         Enable              = $true
         Path                = 'Artefacts\Unpacked'
-        ModulesPath         = 'Artefacts\Unpacked\Modules'
-        RequiredModulesPath = 'Artefacts\Unpacked\Modules'
+        ModulesPath         = 'Modules'
+        RequiredModulesPath = 'Modules'
         AddRequiredModules  = $true
         CopyFiles           = @{
             #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
@@ -219,8 +219,8 @@ Build-Module -ModuleName 'ImagePlayground' {
         Type                = 'Packed'
         Enable              = $true
         Path                = 'Artefacts\Packed'
-        ModulesPath         = 'Artefacts\Packed\Modules'
-        RequiredModulesPath = 'Artefacts\Packed\Modules'
+        ModulesPath         = 'Modules'
+        RequiredModulesPath = 'Modules'
         AddRequiredModules  = $true
         CopyFiles           = @{
             #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"

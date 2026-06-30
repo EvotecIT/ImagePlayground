@@ -109,6 +109,14 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
 
+    It 'creates Swiss QR code with empty combined creditor address line 1' {
+        $file = Join-Path $TestDir 'swiss_combined_empty_line1.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        Test-Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
+    }
+
     It 'creates Swiss QR code with structured creditor postal address only' {
         $file = Join-Path $TestDir 'swiss_postal_address.png'
         if (Test-Path $file) { Remove-Item $file }

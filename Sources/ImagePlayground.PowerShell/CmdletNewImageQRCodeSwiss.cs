@@ -242,7 +242,7 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
         if (addressType == SwissQrAddressType.CombinedAddress) {
             return SwissQrCodePayload.Contact.CreateCombined(
                 requiredName,
-                RequireValue(addressLine1, nameParameter.Replace("Name", "AddressLine1")),
+                OptionalValue(addressLine1),
                 RequireValue(addressLine2, nameParameter.Replace("Name", "AddressLine2")),
                 country);
         }
@@ -264,6 +264,10 @@ public sealed class NewImageQrCodeSwissCmdlet : AsyncQrCodeCmdlet {
         }
 
         return false;
+    }
+
+    private static string OptionalValue(string? value) {
+        return string.IsNullOrWhiteSpace(value) ? string.Empty : value!;
     }
 
     private static string RequireValue(string? value, string parameterName) {
