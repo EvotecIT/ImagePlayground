@@ -136,6 +136,45 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         $parameters.Keys | Should -Not -Contain 'ReferenceTextType'
     }
 
+    It 'exposes Swiss QR payload value-object accelerators for static helpers' {
+        $expectedAccelerators = @(
+            'CodeGlyphX.Payloads.SwissQrCodePayload'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+AdditionalInformation'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Contact'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
+        )
+        $legacyAccelerators = @(
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceTextType'
+        )
+        $moduleScriptPath = Join-Path -Path (Get-Module -Name ImagePlayground).ModuleBase -ChildPath 'ImagePlayground.psm1'
+        $moduleScript = Get-Content -Path $moduleScriptPath -Raw
+        if ($moduleScript -notmatch 'RegisterPowerForgeAssemblyTypeAccelerators') {
+            $buildScript = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\Build\Build-Module.ps1') -Raw
+            foreach ($accelerator in $expectedAccelerators) {
+                $buildScript | Should -Match ([regex]::Escape($accelerator))
+            }
+
+            foreach ($accelerator in $legacyAccelerators) {
+                $buildScript | Should -Not -Match ([regex]::Escape($accelerator))
+            }
+
+            return
+        }
+
+        $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
+
+        foreach ($accelerator in $expectedAccelerators) {
+            $typeAccelerators.ContainsKey($accelerator) | Should -BeTrue
+        }
+
+        foreach ($accelerator in $legacyAccelerators) {
+            $typeAccelerators.ContainsKey($accelerator) | Should -BeFalse
+        }
+    }
+
     It 'requires Swiss QR reference text for QRR and SCOR' {
         {
             New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType SCOR -FilePath (Join-Path $TestDir 'swiss_missing_scor_reference.png')
