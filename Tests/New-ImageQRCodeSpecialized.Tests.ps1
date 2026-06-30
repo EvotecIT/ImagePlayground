@@ -3,40 +3,6 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Import-Module "$PSScriptRoot/../ImagePlayground.psd1" -Force
         $TestDir = Join-Path $PSScriptRoot 'Artifacts'
         if (-not (Test-Path $TestDir)) { New-Item -Path $TestDir -ItemType Directory | Out-Null }
-
-        function New-TestSwissQrPayload {
-            $iban = [CodeGlyphX.Payloads.SwissQrCodePayload+Iban]::new(
-                'CH4431999123000889012',
-                [CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType]::Iban)
-            $creditor = [CodeGlyphX.Payloads.SwissQrCodePayload+Contact]::CreateStructured(
-                'Evotec GmbH',
-                'Main Street',
-                '1',
-                '8000',
-                'Zurich',
-                'CH')
-            $reference = [CodeGlyphX.Payloads.SwissQrCodePayload+Reference]::new(
-                [CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType]::NON)
-
-            [CodeGlyphX.Payloads.SwissQrCodePayload]::new(
-                $iban,
-                [CodeGlyphX.Payloads.QrSwissCurrency]::CHF,
-                $creditor,
-                $reference)
-        }
-
-        function New-TestSlovenianUpnPayload {
-            [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new(
-                'John Doe',
-                'Main Street 1',
-                'Ljubljana',
-                'Evotec d.o.o.',
-                'Business Street 2',
-                'Maribor',
-                'SI56192001234567890',
-                'Invoice 2026-041',
-                199.99)
-        }
     }
 
     It 'creates OTP QR code' {
@@ -122,8 +88,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Swiss QR code' {
         $file = Join-Path $TestDir 'swiss.png'
         if (Test-Path $file) { Remove-Item $file }
-        $payload = New-TestSwissQrPayload
-        New-ImageQRCodeSwiss -Payload $payload -FilePath $file
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
@@ -131,17 +96,95 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Swiss QR code asynchronously' {
         $file = Join-Path $TestDir 'swiss_async.png'
         if (Test-Path $file) { Remove-Item $file }
-        $payload = New-TestSwissQrPayload
-        New-ImageQRCodeSwiss -Payload $payload -FilePath $file -Async
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 199.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath $file -Async
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
+    }
+
+    It 'creates Swiss QR code with combined creditor address' {
+        $file = Join-Path $TestDir 'swiss_combined.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine1 'Main Street 1' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        Test-Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
+    }
+
+    It 'creates Swiss QR code with empty combined creditor address line 1' {
+        $file = Join-Path $TestDir 'swiss_combined_empty_line1.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        Test-Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
+    }
+
+    It 'creates Swiss QR code with structured creditor postal address only' {
+        $file = Join-Path $TestDir 'swiss_postal_address.png'
+        if (Test-Path $file) { Remove-Item $file }
+        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        Test-Path $file | Should -BeTrue
+        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
+    }
+
+    It 'exposes Swiss QR parameters through CodeGlyphX public enums' {
+        $parameters = (Get-Command New-ImageQRCodeSwiss).Parameters
+
+        $parameters['IbanType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrIbanType'
+        $parameters['Currency'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrCurrency'
+        $parameters['CreditorAddressType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrAddressType'
+        $parameters['ReferenceType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrReferenceType'
+        $parameters['DebtorAddressType'].ParameterType.FullName | Should -Be 'CodeGlyphX.SwissQrAddressType'
+        $parameters.Keys | Should -Not -Contain 'ReferenceTextType'
+    }
+
+    It 'exposes Swiss QR payload value-object accelerators for static helpers' {
+        $expectedAccelerators = @(
+            'CodeGlyphX.Payloads.SwissQrCodePayload'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+AdditionalInformation'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Contact'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
+        )
+        $legacyAccelerators = @(
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceTextType'
+        )
+        $moduleScriptPath = Join-Path -Path (Get-Module -Name ImagePlayground).ModuleBase -ChildPath 'ImagePlayground.psm1'
+        $moduleScript = Get-Content -Path $moduleScriptPath -Raw
+        if ($PSEdition -ne 'Core' -or $moduleScript -notmatch 'RegisterPowerForgeAssemblyTypeAccelerators') {
+            $buildScript = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\Build\Build-Module.ps1') -Raw
+            foreach ($accelerator in $expectedAccelerators) {
+                $buildScript | Should -Match ([regex]::Escape($accelerator))
+            }
+
+            foreach ($accelerator in $legacyAccelerators) {
+                $buildScript | Should -Not -Match ([regex]::Escape($accelerator))
+            }
+
+            return
+        }
+
+        $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
+
+        foreach ($accelerator in $expectedAccelerators) {
+            $typeAccelerators.ContainsKey($accelerator) | Should -BeTrue
+        }
+
+        foreach ($accelerator in $legacyAccelerators) {
+            $typeAccelerators.ContainsKey($accelerator) | Should -BeFalse
+        }
+    }
+
+    It 'requires Swiss QR reference text for QRR and SCOR' {
+        {
+            New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType SCOR -FilePath (Join-Path $TestDir 'swiss_missing_scor_reference.png')
+        } | Should -Throw '*Reference is required*'
     }
 
     It 'creates Slovenian UPN QR code' {
         $file = Join-Path $TestDir 'upn.png'
         if (Test-Path $file) { Remove-Item $file }
-        $payload = New-TestSlovenianUpnPayload
-        New-ImageQRCodeSlovenianUpnQr -Payload $payload -FilePath $file
+        New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^UPNQR'
     }
@@ -149,8 +192,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Slovenian UPN QR code asynchronously' {
         $file = Join-Path $TestDir 'upn_async.png'
         if (Test-Path $file) { Remove-Item $file }
-        $payload = New-TestSlovenianUpnPayload
-        New-ImageQRCodeSlovenianUpnQr -Payload $payload -FilePath $file -Async
+        New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -Deadline ([datetime]'2026-04-10') -RecipientSiModel 'SI00' -RecipientSiReference '2026041' -FilePath $file -Async
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^UPNQR'
     }
@@ -187,12 +229,19 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     }
 
     It 'throws on invalid pixel size for Swiss' {
-        $payload = New-TestSwissQrPayload
-        { New-ImageQRCodeSwiss -Payload $payload -FilePath (Join-Path $TestDir 'swiss_invalid.png') -PixelSize 0 } | Should -Throw
+        { New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath (Join-Path $TestDir 'swiss_invalid.png') -PixelSize 0 } | Should -Throw
     }
 
     It 'throws on invalid pixel size for Slovenian UPN' {
-        $payload = New-TestSlovenianUpnPayload
-        { New-ImageQRCodeSlovenianUpnQr -Payload $payload -FilePath (Join-Path $TestDir 'upn_invalid.png') -PixelSize 0 } | Should -Throw
+        { New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -FilePath (Join-Path $TestDir 'upn_invalid.png') -PixelSize 0 } | Should -Throw
+    }
+
+    It 'does not expose legacy Swiss or Slovenian payload parameters' {
+        (Get-Command New-ImageQRCodeSwiss).Parameters.Keys | Should -Not -Contain 'Payload'
+        (Get-Command New-ImageQRCodeSlovenianUpnQr).Parameters.Keys | Should -Not -Contain 'Payload'
+    }
+
+    It 'does not expose unsupported Swiss ultimate creditor parameters' {
+        (Get-Command New-ImageQRCodeSwiss).Parameters.Keys -like 'UltimateCreditor*' | Should -BeNullOrEmpty
     }
 }

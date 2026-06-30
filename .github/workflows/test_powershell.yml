@@ -120,6 +120,7 @@ jobs:
         with:
           name: packaged-module
           path: Artefacts/Unpacked/Modules/ImagePlayground
+          if-no-files-found: error
 
   test-windows-ps5:
     #if: false # Temporarily disabled

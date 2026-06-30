@@ -7,17 +7,9 @@ param(
     [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
 )
 
-$psPublishModulePath = $Env:PSPUBLISHMODULE_PATH
-if ($psPublishModulePath) {
-    Import-Module -Name $psPublishModulePath -Force -ErrorAction Stop
-} else {
-    Import-Module PSPublishModule -Force -ErrorAction Stop
-}
+Import-Module PSPublishModule -Force -ErrorAction Stop
 
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$powerShellProjectPath = Join-Path -Path $projectRoot -ChildPath 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
-
-Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
+Build-Module -ModuleName 'ImagePlayground' {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -116,6 +108,7 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'ImagePlayground.PowerShell'
         NETProjectName                    = 'ImagePlayground.PowerShell'
+        NETProjectPath                    = 'Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
         NETAssemblyLoadContext            = $true
@@ -124,26 +117,74 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
             'ChartForgeX.Core.Chart'
             'ChartForgeX.Primitives.ChartColor'
             'ChartForgeX.Primitives.ChartPoint'
+            'ChartForgeX.Topology.TopologyCanvasSurfaceStyle'
             'ChartForgeX.Topology.TopologyChart'
+            'ChartForgeX.Topology.TopologyDirection'
             'ChartForgeX.Topology.TopologyEdge'
+            'ChartForgeX.Topology.TopologyEdgeEmphasis'
+            'ChartForgeX.Topology.TopologyEdgeKind'
+            'ChartForgeX.Topology.TopologyEdgeLineStyle'
+            'ChartForgeX.Topology.TopologyEdgePort'
+            'ChartForgeX.Topology.TopologyEdgeRouting'
             'ChartForgeX.Topology.TopologyGroup'
+            'ChartForgeX.Topology.TopologyGroupLayoutPolicy'
+            'ChartForgeX.Topology.TopologyHealthStatus'
             'ChartForgeX.Topology.TopologyLayoutDirection'
             'ChartForgeX.Topology.TopologyLayoutMode'
             'ChartForgeX.Topology.TopologyNode'
-            'CodeGlyphX.Payloads.QrSwissCurrency'
+            'ChartForgeX.Topology.TopologyNodeDisplayMode'
+            'ChartForgeX.Topology.TopologyNodeKind'
+            'ChartForgeX.Topology.TopologyVisualStyle'
+            'CodeGlyphX.BarcodeType'
+            'CodeGlyphX.OtpAlgorithm'
+            'CodeGlyphX.OtpAuthType'
+            'CodeGlyphX.Payloads.QrBezahlAuthorityType'
+            'CodeGlyphX.Payloads.QrBezahlPeriodicUnit'
+            'CodeGlyphX.Payloads.QrBitcoinLikeType'
+            'CodeGlyphX.Payloads.QrCalendarEncoding'
+            'CodeGlyphX.Payloads.QrContactAddressOrder'
+            'CodeGlyphX.Payloads.QrContactAddressType'
+            'CodeGlyphX.Payloads.QrContactOutputType'
+            'CodeGlyphX.Payloads.QrGeolocationEncoding'
+            'CodeGlyphX.Payloads.QrGirocodeEncoding'
+            'CodeGlyphX.Payloads.QrGirocodeRemittanceType'
+            'CodeGlyphX.Payloads.QrGirocodeVersion'
+            'CodeGlyphX.Payloads.QrMailEncoding'
+            'CodeGlyphX.Payloads.QrMmsEncoding'
+            'CodeGlyphX.Payloads.QrShadowSocksMethod'
+            'CodeGlyphX.Payloads.QrSmsEncoding'
             'CodeGlyphX.Payloads.SlovenianUpnQrPayload'
             'CodeGlyphX.Payloads.SwissQrCodePayload'
+            'CodeGlyphX.Payloads.SwissQrCodePayload+AdditionalInformation'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Contact'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
+            'CodeGlyphX.QrErrorCorrectionLevel'
+            'CodeGlyphX.QrTextEncoding'
+            'CodeGlyphX.SwissQrAddressType'
+            'CodeGlyphX.SwissQrCurrency'
+            'CodeGlyphX.SwissQrIbanType'
+            'CodeGlyphX.SwissQrReferenceType'
+            'ImagePlayground.ChartBarOptions'
+            'ImagePlayground.ChartHeatmapColorScale'
+            'ImagePlayground.ChartLegendPosition'
+            'ImagePlayground.ChartMarkerShape'
+            'ImagePlayground.ChartPictorialSymbol'
+            'ImagePlayground.ChartPieLabelContent'
+            'ImagePlayground.ChartRenderOptions'
+            'ImagePlayground.ChartTheme'
             'ImagePlayground.Image'
+            'ImagePlayground.ImagePlacement'
+            'ImagePlayground.Sampler'
             'ImagePlayground.Status'
             'ImagePlayground.WatermarkPlacement'
+            'SixLabors.Fonts.HorizontalAlignment'
+            'SixLabors.Fonts.VerticalAlignment'
             'SixLabors.ImageSharp.Color'
             'SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag'
+            'SixLabors.ImageSharp.PointF'
             'SixLabors.ImageSharp.Processing.FlipMode'
+            'SixLabors.ImageSharp.Processing.RotateMode'
             'SixLabors.ImageSharp.Rational'
             'SixLabors.ImageSharp.Rectangle'
         )
@@ -169,9 +210,9 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     $newConfigurationArtefactSplat = @{
         Type                = 'Unpacked'
         Enable              = $true
-        Path                = "$PSScriptRoot\..\Artefacts\Unpacked"
-        ModulesPath         = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
-        RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Unpacked\Modules"
+        Path                = 'Artefacts\Unpacked'
+        ModulesPath         = 'Modules'
+        RequiredModulesPath = 'Modules'
         AddRequiredModules  = $true
         CopyFiles           = @{
             #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
@@ -181,9 +222,9 @@ Build-Module -ModuleName 'ImagePlayground' -CsprojPath $powerShellProjectPath {
     $newConfigurationArtefactSplat = @{
         Type                = 'Packed'
         Enable              = $true
-        Path                = "$PSScriptRoot\..\Artefacts\Packed"
-        ModulesPath         = "$PSScriptRoot\..\Artefacts\Packed\Modules"
-        RequiredModulesPath = "$PSScriptRoot\..\Artefacts\Packed\Modules"
+        Path                = 'Artefacts\Packed'
+        ModulesPath         = 'Modules'
+        RequiredModulesPath = 'Modules'
         AddRequiredModules  = $true
         CopyFiles           = @{
             #"Examples\PublishingExample\Example-ExchangeEssentials.ps1" = "RunMe.ps1"
