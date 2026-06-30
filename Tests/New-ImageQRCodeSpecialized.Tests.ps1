@@ -151,7 +151,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         )
         $moduleScriptPath = Join-Path -Path (Get-Module -Name ImagePlayground).ModuleBase -ChildPath 'ImagePlayground.psm1'
         $moduleScript = Get-Content -Path $moduleScriptPath -Raw
-        if ($moduleScript -notmatch 'RegisterPowerForgeAssemblyTypeAccelerators') {
+        if ($PSEdition -ne 'Core' -or $moduleScript -notmatch 'RegisterPowerForgeAssemblyTypeAccelerators') {
             $buildScript = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\Build\Build-Module.ps1') -Raw
             foreach ($accelerator in $expectedAccelerators) {
                 $buildScript | Should -Match ([regex]::Escape($accelerator))
