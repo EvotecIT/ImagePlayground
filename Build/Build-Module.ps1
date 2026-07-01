@@ -117,6 +117,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX'
             'CodeGlyphX'
             'ImagePlayground'
+            'ImagePlayground.PowerShell'
             'SixLabors.Fonts'
             'SixLabors.ImageSharp'
         )
