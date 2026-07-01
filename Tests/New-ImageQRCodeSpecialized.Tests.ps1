@@ -145,9 +145,8 @@ Describe 'New-ImageQRCode specialized cmdlets' {
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
         )
         $expectedEnumAccelerators = @(
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceTextType'
+            'CodeGlyphX.SwissQrIbanType'
+            'CodeGlyphX.SwissQrReferenceType'
         )
         $moduleScriptPath = Join-Path -Path (Get-Module -Name ImagePlayground).ModuleBase -ChildPath 'ImagePlayground.psm1'
         $moduleScript = Get-Content -Path $moduleScriptPath -Raw
