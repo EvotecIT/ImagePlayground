@@ -118,8 +118,6 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'CodeGlyphX'
             'ImagePlayground'
             'ImagePlayground.PowerShell'
-            'SixLabors.Fonts'
-            'SixLabors.ImageSharp'
         )
         NETAssemblyTypeAccelerators       = @(
             'ChartForgeX.Core.Chart'
@@ -136,11 +134,16 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
             'ImagePlayground.Image'
+            'SixLabors.Fonts.HorizontalAlignment'
+            'SixLabors.Fonts.VerticalAlignment'
             'SixLabors.ImageSharp.Color'
             'SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag'
             'SixLabors.ImageSharp.PointF'
             'SixLabors.ImageSharp.Rational'
             'SixLabors.ImageSharp.Rectangle'
+            'SixLabors.ImageSharp.Processing.FlipMode'
+            'SixLabors.ImageSharp.Processing.GrayscaleMode'
+            'SixLabors.ImageSharp.Processing.RotateMode'
         )
         NETBinaryModuleDocumentation      = $true
         #NETExcludeMainLibrary             = $true
