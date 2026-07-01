@@ -1,6 +1,6 @@
 param(
     [ValidateSet('Manifest', 'Build', 'Publish')]
-    [string] $ConfigurationGateMode = 'Build',
+    [string] $RunMode = 'Build',
 
     [string] $PowerShellGalleryApiKeyPath = 'C:\Support\Important\PowerShellGalleryAPI.txt',
 
@@ -9,7 +9,7 @@ param(
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
 
-Build-Module -ModuleName 'ImagePlayground' {
+Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -112,81 +112,38 @@ Build-Module -ModuleName 'ImagePlayground' {
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
         NETAssemblyLoadContext            = $true
-        NETAssemblyTypeAcceleratorMode    = 'AllowList'
+        NETAssemblyTypeAcceleratorMode    = 'Enums'
+        NETAssemblyTypeAcceleratorAssemblies = @(
+            'ChartForgeX'
+            'CodeGlyphX'
+            'ImagePlayground'
+            'ImagePlayground.PowerShell'
+        )
         NETAssemblyTypeAccelerators       = @(
             'ChartForgeX.Core.Chart'
             'ChartForgeX.Primitives.ChartColor'
             'ChartForgeX.Primitives.ChartPoint'
-            'ChartForgeX.Topology.TopologyCanvasSurfaceStyle'
             'ChartForgeX.Topology.TopologyChart'
-            'ChartForgeX.Topology.TopologyDirection'
             'ChartForgeX.Topology.TopologyEdge'
-            'ChartForgeX.Topology.TopologyEdgeEmphasis'
-            'ChartForgeX.Topology.TopologyEdgeKind'
-            'ChartForgeX.Topology.TopologyEdgeLineStyle'
-            'ChartForgeX.Topology.TopologyEdgePort'
-            'ChartForgeX.Topology.TopologyEdgeRouting'
             'ChartForgeX.Topology.TopologyGroup'
-            'ChartForgeX.Topology.TopologyGroupLayoutPolicy'
-            'ChartForgeX.Topology.TopologyHealthStatus'
-            'ChartForgeX.Topology.TopologyLayoutDirection'
-            'ChartForgeX.Topology.TopologyLayoutMode'
             'ChartForgeX.Topology.TopologyNode'
-            'ChartForgeX.Topology.TopologyNodeDisplayMode'
-            'ChartForgeX.Topology.TopologyNodeKind'
-            'ChartForgeX.Topology.TopologyVisualStyle'
-            'CodeGlyphX.BarcodeType'
-            'CodeGlyphX.OtpAlgorithm'
-            'CodeGlyphX.OtpAuthType'
-            'CodeGlyphX.Payloads.QrBezahlAuthorityType'
-            'CodeGlyphX.Payloads.QrBezahlPeriodicUnit'
-            'CodeGlyphX.Payloads.QrBitcoinLikeType'
-            'CodeGlyphX.Payloads.QrCalendarEncoding'
-            'CodeGlyphX.Payloads.QrContactAddressOrder'
-            'CodeGlyphX.Payloads.QrContactAddressType'
-            'CodeGlyphX.Payloads.QrContactOutputType'
-            'CodeGlyphX.Payloads.QrGeolocationEncoding'
-            'CodeGlyphX.Payloads.QrGirocodeEncoding'
-            'CodeGlyphX.Payloads.QrGirocodeRemittanceType'
-            'CodeGlyphX.Payloads.QrGirocodeVersion'
-            'CodeGlyphX.Payloads.QrMailEncoding'
-            'CodeGlyphX.Payloads.QrMmsEncoding'
-            'CodeGlyphX.Payloads.QrShadowSocksMethod'
-            'CodeGlyphX.Payloads.QrSmsEncoding'
             'CodeGlyphX.Payloads.SlovenianUpnQrPayload'
             'CodeGlyphX.Payloads.SwissQrCodePayload'
             'CodeGlyphX.Payloads.SwissQrCodePayload+AdditionalInformation'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Contact'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
-            'CodeGlyphX.QrErrorCorrectionLevel'
-            'CodeGlyphX.QrTextEncoding'
-            'CodeGlyphX.SwissQrAddressType'
-            'CodeGlyphX.SwissQrCurrency'
-            'CodeGlyphX.SwissQrIbanType'
-            'CodeGlyphX.SwissQrReferenceType'
-            'ImagePlayground.ChartBarOptions'
-            'ImagePlayground.ChartHeatmapColorScale'
-            'ImagePlayground.ChartLegendPosition'
-            'ImagePlayground.ChartMarkerShape'
-            'ImagePlayground.ChartPictorialSymbol'
-            'ImagePlayground.ChartPieLabelContent'
-            'ImagePlayground.ChartRenderOptions'
-            'ImagePlayground.ChartTheme'
             'ImagePlayground.Image'
-            'ImagePlayground.ImagePlacement'
-            'ImagePlayground.Sampler'
-            'ImagePlayground.Status'
-            'ImagePlayground.WatermarkPlacement'
             'SixLabors.Fonts.HorizontalAlignment'
             'SixLabors.Fonts.VerticalAlignment'
             'SixLabors.ImageSharp.Color'
             'SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag'
             'SixLabors.ImageSharp.PointF'
-            'SixLabors.ImageSharp.Processing.FlipMode'
-            'SixLabors.ImageSharp.Processing.RotateMode'
             'SixLabors.ImageSharp.Rational'
             'SixLabors.ImageSharp.Rectangle'
+            'SixLabors.ImageSharp.Processing.FlipMode'
+            'SixLabors.ImageSharp.Processing.GrayscaleMode'
+            'SixLabors.ImageSharp.Processing.RotateMode'
         )
         NETBinaryModuleDocumentation      = $true
         #NETExcludeMainLibrary             = $true
@@ -198,7 +155,6 @@ Build-Module -ModuleName 'ImagePlayground' {
         #SeparateFileLibraries             = $true
         DeleteTargetModuleBeforeBuild     = $true
         MergeLibraryDebugging             = $false
-        RefreshPSD1Only                   = $false
         NETHandleRuntimes                 = $true
     }
 
@@ -239,5 +195,4 @@ Build-Module -ModuleName 'ImagePlayground' {
     New-ConfigurationPublish -Type PowerShellGallery -FilePath $PowerShellGalleryApiKeyPath -Enabled:$false -UseAsDependencyVersionSource
     New-ConfigurationPublish -Type GitHub -FilePath $GitHubApiKeyPath -UserName 'EvotecIT' -Enabled:$false -RepositoryName 'ImagePlayground' -OverwriteTagName 'ImagePlayground-PowerShellModule.<TagModuleVersionWithPreRelease>'
 
-    New-ConfigurationGate -Mode $ConfigurationGateMode
 } -ExitCode
