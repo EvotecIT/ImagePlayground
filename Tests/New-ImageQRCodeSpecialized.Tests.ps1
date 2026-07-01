@@ -136,7 +136,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         $parameters.Keys | Should -Not -Contain 'ReferenceTextType'
     }
 
-    It 'exposes Swiss QR payload value-object accelerators for static helpers' {
+    It 'exposes Swiss QR payload value-object accelerators and public enums for static helpers' {
         $expectedAccelerators = @(
             'CodeGlyphX.Payloads.SwissQrCodePayload'
             'CodeGlyphX.Payloads.SwissQrCodePayload+AdditionalInformation'
@@ -144,7 +144,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
             'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
         )
-        $legacyAccelerators = @(
+        $expectedEnumAccelerators = @(
             'CodeGlyphX.Payloads.SwissQrCodePayload+Iban+IbanType'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceType'
             'CodeGlyphX.Payloads.SwissQrCodePayload+Reference+ReferenceTextType'
@@ -157,9 +157,8 @@ Describe 'New-ImageQRCode specialized cmdlets' {
                 $buildScript | Should -Match ([regex]::Escape($accelerator))
             }
 
-            foreach ($accelerator in $legacyAccelerators) {
-                $buildScript | Should -Not -Match ([regex]::Escape($accelerator))
-            }
+            $buildScript | Should -Match ([regex]::Escape("NETAssemblyTypeAcceleratorMode    = 'Enums'"))
+            $buildScript | Should -Match ([regex]::Escape("'CodeGlyphX'"))
 
             return
         }
@@ -170,8 +169,8 @@ Describe 'New-ImageQRCode specialized cmdlets' {
             $typeAccelerators.ContainsKey($accelerator) | Should -BeTrue
         }
 
-        foreach ($accelerator in $legacyAccelerators) {
-            $typeAccelerators.ContainsKey($accelerator) | Should -BeFalse
+        foreach ($accelerator in $expectedEnumAccelerators) {
+            $typeAccelerators.ContainsKey($accelerator) | Should -BeTrue
         }
     }
 

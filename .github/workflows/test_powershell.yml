@@ -17,7 +17,6 @@ on:
 env:
   DOTNET_VERSION: '8.x'
   BUILD_CONFIGURATION: 'Debug'
-  PSPUBLISHMODULE_REF: '105a24cf399ce8c7a3a7a269427ef2bfbc3b5d64'
 
 jobs:
   refresh-psd1:
@@ -30,13 +29,6 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref }}
 
-      - name: Checkout PSPublishModule
-        uses: actions/checkout@v4
-        with:
-          repository: EvotecIT/PSPublishModule
-          ref: ${{ env.PSPUBLISHMODULE_REF }}
-          path: .dependencies/PSPublishModule
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -46,16 +38,10 @@ jobs:
         shell: pwsh
         run: |
           Install-Module Pester -Force -Scope CurrentUser -AllowClobber
-
-      - name: Build PSPublishModule
-        shell: pwsh
-        run: .\Build\Build-Module.ps1
-        working-directory: .dependencies/PSPublishModule
+          Install-Module PSPublishModule -Force -Scope CurrentUser -AllowClobber
 
       - name: Refresh module manifest
-        env:
-          RefreshPSD1Only: 'true'
-        run: .\Build\Build-Module.ps1
+        run: .\Build\Build-Module.ps1 -RunMode Manifest
         shell: pwsh
 
       - name: Commit refreshed PSD1
@@ -83,13 +69,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Checkout PSPublishModule
-        uses: actions/checkout@v4
-        with:
-          repository: EvotecIT/PSPublishModule
-          ref: ${{ env.PSPUBLISHMODULE_REF }}
-          path: .dependencies/PSPublishModule
-
       - name: Download manifest
         uses: actions/download-artifact@v4
         with:
@@ -105,15 +84,11 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
-
-      - name: Build PSPublishModule
-        shell: pwsh
-        run: .\Build\Build-Module.ps1
-        working-directory: .dependencies/PSPublishModule
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
       - name: Build module layout
         shell: pwsh
-        run: .\Build\Build-Module.ps1
+        run: .\Build\Build-Module.ps1 -RunMode Build
 
       - name: Upload packaged module
         uses: actions/upload-artifact@v4
