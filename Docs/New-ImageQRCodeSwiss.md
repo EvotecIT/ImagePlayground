@@ -1,116 +1,613 @@
 ---
-external help file: ImagePlayground.PowerShell.dll-Help.xml
+external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeSwiss
-
 ## SYNOPSIS
-
-Creates a Swiss QR payment code image.
+Generates a Swiss QR payment code.
 
 ## SYNTAX
-
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeSwiss -Iban <String> -CreditorName <String> -FilePath <String>
-    [-IbanType <SwissQrIbanType>] [-Currency <SwissQrCurrency>]
-    [-CreditorAddressType <SwissQrAddressType>] [-CreditorStreet <String>] [-CreditorHouseNumber <String>]
-    [-CreditorPostalCode <String>] [-CreditorCity <String>] [-CreditorAddressLine1 <String>]
-    [-CreditorAddressLine2 <String>] [-CreditorCountry <String>]
-    [-ReferenceType <SwissQrReferenceType>] [-Reference <String>]
-    [-Amount <Decimal>] [-UnstructuredMessage <String>] [-BillInformation <String>]
-    [-AlternativeProcedure1 <String>] [-AlternativeProcedure2 <String>]
-    [-DebtorName <String>] [-DebtorAddressType <SwissQrAddressType>] [-DebtorStreet <String>]
-    [-DebtorHouseNumber <String>] [-DebtorPostalCode <String>] [-DebtorCity <String>]
-    [-DebtorAddressLine1 <String>] [-DebtorAddressLine2 <String>] [-DebtorCountry <String>]
-    [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>]
-    [-PixelSize <Int32>] [-Async] [<CommonParameters>]
+New-ImageQRCodeSwiss [-Iban] <string> [-CreditorName] <string> [[-CreditorStreet] <string>] [[-CreditorHouseNumber] <string>] [[-CreditorPostalCode] <string>] [[-CreditorCity] <string>] [-FilePath] <string> [-IbanType <SwissQrIbanType>] [-Currency <SwissQrCurrency>] [-CreditorAddressType <SwissQrAddressType>] [-CreditorAddressLine1 <string>] [-CreditorAddressLine2 <string>] [-CreditorCountry <string>] [-ReferenceType <SwissQrReferenceType>] [-Reference <string>] [-Amount <decimal>] [-UnstructuredMessage <string>] [-BillInformation <string>] [-AlternativeProcedure1 <string>] [-AlternativeProcedure2 <string>] [-DebtorName <string>] [-DebtorAddressType <SwissQrAddressType>] [-DebtorStreet <string>] [-DebtorHouseNumber <string>] [-DebtorPostalCode <string>] [-DebtorCity <string>] [-DebtorAddressLine1 <string>] [-DebtorAddressLine2 <string>] [-DebtorCountry <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-
-`New-ImageQRCodeSwiss` renders Swiss QR bill payment details into a QR image.
-The cmdlet accepts payment fields directly and creates the required payment model internally.
-
-Use structured address parameters such as `-CreditorPostalCode` and `-CreditorCity` for the default `StructuredAddress` mode. `-CreditorStreet` and `-CreditorHouseNumber` are optional for addresses such as PO boxes or street values that do not split cleanly.
-Use `-CreditorAddressType CombinedAddress` with `-CreditorAddressLine1` and `-CreditorAddressLine2` when the address should be encoded as combined address lines.
-Use `-ReferenceType QRR` with a QR reference value, `-ReferenceType SCOR` with an ISO 11649 creditor reference, or `-ReferenceType NON` without `-Reference`.
+Use this cmdlet when a prepared SwissQrCodePayload should be rendered into a payment QR image.
 
 ## EXAMPLES
 
-### Example 1: Create a basic Swiss QR payment code
-
+### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath swiss.png
+PS> $swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss.png
 ```
 
-Creates a Swiss QR payment code with a structured creditor address.
+Renders a Swiss payment QR code from a previously prepared payment payload object.
 
-### Example 2: Add amount and message
-
+### EXAMPLE 2
 ```powershell
-New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 199.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath swiss-invoice.png
+PS> $swiss = [CodeGlyphX.Payloads.SwissQrCodePayload]::new($iban, $currency, $creditor, $reference)
+New-ImageQRCodeSwiss -Payload $swiss -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show
 ```
 
-Creates a payment QR code with amount and an unstructured message.
-
-### Example 3: Use combined creditor address lines
-
-```powershell
-New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine1 'Main Street 1' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath swiss-combined.png
-```
-
-Creates a Swiss QR payment code using combined creditor address lines.
-
-### Example 4: Create a styled image and open it
-
-```powershell
-New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 249.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show
-```
-
-Creates a styled Swiss QR payment image and opens it after generation.
+Creates a branded QR image and opens it immediately after generation.
 
 ## PARAMETERS
 
-| Parameter | Description |
-| --- | --- |
-| `-Iban` | Swiss or Liechtenstein IBAN. |
-| `-IbanType` | IBAN kind. Defaults to `Iban`. |
-| `-Currency` | Payment currency. Defaults to `CHF`. |
-| `-CreditorName` | Creditor name. |
-| `-CreditorAddressType` | Creditor address format. Use `StructuredAddress` or `CombinedAddress`. |
-| `-CreditorStreet` | Optional creditor street for structured addresses. |
-| `-CreditorHouseNumber` | Optional creditor house number for structured addresses. |
-| `-CreditorPostalCode` | Creditor postal code for structured addresses. |
-| `-CreditorCity` | Creditor city for structured addresses. |
-| `-CreditorAddressLine1` | First creditor address line for combined addresses. |
-| `-CreditorAddressLine2` | Second creditor address line for combined addresses. |
-| `-CreditorCountry` | Creditor two-letter country code. Defaults to `CH`. |
-| `-ReferenceType` | Reference type. Defaults to `NON`. |
-| `-Reference` | Reference text. Required for `QRR` and `SCOR`; not allowed for `NON`. |
-| `-Amount` | Optional payment amount. |
-| `-UnstructuredMessage` | Optional unstructured payment message. |
-| `-BillInformation` | Optional bill information. |
-| `-AlternativeProcedure1` | Optional first alternative procedure block. |
-| `-AlternativeProcedure2` | Optional second alternative procedure block. |
-| `-DebtorName` | Optional debtor name. |
-| `-DebtorAddressType` | Optional debtor address format. |
-| `-DebtorStreet` | Optional debtor street for structured addresses. |
-| `-DebtorHouseNumber` | Optional debtor house number for structured addresses. |
-| `-DebtorPostalCode` | Debtor postal code for structured addresses. |
-| `-DebtorCity` | Debtor city for structured addresses. |
-| `-DebtorAddressLine1` | First debtor address line for combined addresses. |
-| `-DebtorAddressLine2` | Second debtor address line for combined addresses. |
-| `-DebtorCountry` | Debtor two-letter country code. Defaults to `CH`. |
-| `-FilePath` | Output image path. The image format is inferred from the file extension. |
-| `-Show` | Opens the image after creation. |
-| `-ForegroundColor` | Foreground color of QR modules. Defaults to black. |
-| `-BackgroundColor` | Background color of the QR code. Defaults to white. |
-| `-PixelSize` | Pixel size for each QR module. Defaults to `20`. |
-| `-Async` | Uses asynchronous processing. |
+### -AlternativeProcedure1
+Optional first alternative procedure block.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AlternativeProcedure2
+Optional second alternative procedure block.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Amount
+Optional payment amount.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: Color
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BillInformation
+Optional bill information.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorAddressLine1
+Creditor first address line for combined addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorAddressLine2
+Creditor second address line for combined addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorAddressType
+Creditor address type.
+
+```yaml
+Type: SwissQrAddressType
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values: StructuredAddress, CombinedAddress
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorCity
+Creditor city for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorCountry
+Creditor two-letter country code.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorHouseNumber
+Optional creditor house number for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorName
+Creditor name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorPostalCode
+Creditor postal code for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CreditorStreet
+Optional creditor street for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Currency
+Payment currency.
+
+```yaml
+Type: SwissQrCurrency
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values: CHF, EUR
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorAddressLine1
+Debtor first address line for combined addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorAddressLine2
+Debtor second address line for combined addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorAddressType
+Debtor address type.
+
+```yaml
+Type: SwissQrAddressType
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values: StructuredAddress, CombinedAddress
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorCity
+Debtor city for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorCountry
+Debtor two-letter country code.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorHouseNumber
+Optional debtor house number for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorName
+Debtor name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorPostalCode
+Debtor postal code for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DebtorStreet
+Optional debtor street for structured addresses.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FilePath
+The image format is inferred from the file extension.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 6
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: Color
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Iban
+Swiss or Liechtenstein IBAN.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -IbanType
+IBAN kind.
+
+```yaml
+Type: SwissQrIbanType
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values: Iban, QrIban
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Payload
+Swiss QR payload data.
+
+```yaml
+Type: CodeGlyphX.Payloads.SwissQrCodePayload
+Parameter Sets: (All)
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Reference
+Reference text for QRR or SCOR reference types.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ReferenceType
+Reference type.
+
+```yaml
+Type: SwissQrReferenceType
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values: QRR, SCOR, NON
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Show
+Opens the image once generated.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UnstructuredMessage
+Optional unstructured payment message.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `None`
 
 ## RELATED LINKS
 
-[ImagePlayground project](https://github.com/EvotecIT/ImagePlayground)
+- None

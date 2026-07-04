@@ -30,6 +30,7 @@ PS> New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr.png
 PS> New-ImageQRCode -Content 'text' -FilePath qr.png -Show
 ```
 
+
 ### EXAMPLE 3
 ```powershell
 PS> New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPath logo.png
@@ -49,9 +50,9 @@ Possible values:
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -BackgroundColor
@@ -131,7 +132,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -PixelSize

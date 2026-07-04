@@ -1,82 +1,373 @@
 ---
-external help file: ImagePlayground.PowerShell.dll-Help.xml
+external help file: ImagePlayground-help.xml
 Module Name: ImagePlayground
-online version:
+online version: https://github.com/EvotecIT/ImagePlayground
 schema: 2.0.0
 ---
-
 # New-ImageQRCodeSlovenianUpnQr
-
 ## SYNOPSIS
-
-Creates a Slovenian UPN QR payment code image.
+Generates a Slovenian UPN QR payment code.
 
 ## SYNTAX
-
+### __AllParameterSets
 ```powershell
-New-ImageQRCodeSlovenianUpnQr -PayerName <String> -PayerAddress <String> -PayerPlace <String>
-    -RecipientName <String> -RecipientAddress <String> -RecipientPlace <String>
-    -RecipientIban <String> -Description <String> -Amount <Double> -FilePath <String>
-    [-Deadline <DateTime>] [-RecipientSiModel <String>] [-RecipientSiReference <String>]
-    [-Code <String>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>]
-    [-PixelSize <Int32>] [-Async] [<CommonParameters>]
+New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <datetime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-
-`New-ImageQRCodeSlovenianUpnQr` renders Slovenian UPN payment details into a QR image.
-The cmdlet accepts payment fields directly and creates the required payment model internally.
+Use this cmdlet when a prepared Slovenian UPN payment payload should be rendered into a scannable QR image.
 
 ## EXAMPLES
 
-### Example 1: Create a Slovenian UPN QR payment code
-
+### EXAMPLE 1
 ```powershell
-New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -FilePath upn.png
+PS> $upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Invoice 2026-041',19999)
+New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn.png
 ```
 
-Creates a Slovenian UPN QR payment code from the supplied payment fields.
+Generates a UPN payment QR code from a complete Slovenian payment payload object.
 
-### Example 2: Add deadline and SI reference
-
+### EXAMPLE 2
 ```powershell
-New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -Deadline ([datetime]'2026-04-10') -RecipientSiModel 'SI00' -RecipientSiReference '2026041' -FilePath upn-reference.png
+PS> $upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Annual subscription',4900)
+New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn-brand.png -ForegroundColor DarkGreen -PixelSize 14 -Show
 ```
 
-Creates a payment QR code with deadline and recipient SI reference details.
-
-### Example 3: Create a styled image and open it
-
-```powershell
-New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Annual subscription' -Amount 49 -FilePath upn-brand.png -ForegroundColor DarkGreen -PixelSize 14 -Show
-```
-
-Creates a styled Slovenian UPN QR payment image and opens it after generation.
+Creates a styled payment QR code and opens the resulting image after generation.
 
 ## PARAMETERS
 
-| Parameter | Description |
-| --- | --- |
-| `-PayerName` | Payer name. |
-| `-PayerAddress` | Payer street address. |
-| `-PayerPlace` | Payer postal place. |
-| `-RecipientName` | Recipient name. |
-| `-RecipientAddress` | Recipient street address. |
-| `-RecipientPlace` | Recipient postal place. |
-| `-RecipientIban` | Recipient IBAN. |
-| `-Description` | Payment description. |
-| `-Amount` | Payment amount. |
-| `-FilePath` | Output image path. The image format is inferred from the file extension. |
-| `-Deadline` | Optional payment deadline. |
-| `-RecipientSiModel` | Recipient SI model. Defaults to `SI00`. |
-| `-RecipientSiReference` | Optional recipient SI reference. |
-| `-Code` | UPN payment code. Defaults to `OTHR`. |
-| `-Show` | Opens the image after creation. |
-| `-ForegroundColor` | Foreground color of QR modules. Defaults to black. |
-| `-BackgroundColor` | Background color of the QR code. Defaults to white. |
-| `-PixelSize` | Pixel size for each QR module. Defaults to `20`. |
-| `-Async` | Uses asynchronous processing. |
+### -Amount
+Payment amount.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 8
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Async
+Use asynchronous processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -BackgroundColor
+Background color of the QR code.
+
+```yaml
+Type: Color
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: FFFFFFFF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Code
+UPN payment code.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Deadline
+Payment deadline.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Description
+Payment description.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 7
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FilePath
+The image format is inferred from the file extension.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 9
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -ForegroundColor
+Foreground color of QR modules.
+
+```yaml
+Type: Color
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 000000FF
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PayerAddress
+Payer street address.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PayerName
+Payer name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PayerPlace
+Payer postal place.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Payload
+UPN payment payload.
+
+```yaml
+Type: CodeGlyphX.Payloads.SlovenianUpnQrPayload
+Parameter Sets: (All)
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PixelSize
+Pixel size for each QR module.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 20
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -RecipientAddress
+Recipient street address.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RecipientIban
+Recipient IBAN.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 6
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RecipientName
+Recipient name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RecipientPlace
+Recipient postal place.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: True
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RecipientSiModel
+Recipient SI model.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RecipientSiReference
+Recipient SI reference.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Show
+Opens the image after creation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `None`
 
 ## RELATED LINKS
 
-[ImagePlayground project](https://github.com/EvotecIT/ImagePlayground)
+- None
