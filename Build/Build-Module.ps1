@@ -119,6 +119,8 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ImagePlayground'
             'ImagePlayground.PowerShell'
         )
+        # Enums are registered from the assemblies above. This list is only for non-enum types
+        # that are intentionally part of the PowerShell scripting surface.
         NETAssemblyTypeAccelerators       = @(
             'ChartForgeX.Core.Chart'
             'ChartForgeX.Primitives.ChartColor'
@@ -127,12 +129,6 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Topology.TopologyEdge'
             'ChartForgeX.Topology.TopologyGroup'
             'ChartForgeX.Topology.TopologyNode'
-            'CodeGlyphX.Payloads.SlovenianUpnQrPayload'
-            'CodeGlyphX.Payloads.SwissQrCodePayload'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+AdditionalInformation'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Contact'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Iban'
-            'CodeGlyphX.Payloads.SwissQrCodePayload+Reference'
             'ImagePlayground.Image'
             'SixLabors.Fonts.HorizontalAlignment'
             'SixLabors.Fonts.VerticalAlignment'
