@@ -174,6 +174,18 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         }
     }
 
+    It 'uses packaged CodeGlyphX by default unless a local project is requested' {
+        $propsPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Directory.Build.props'
+        $props = Get-Content -Path $propsPath -Raw
+        [xml] $propsXml = $props
+        $localCodeGlyphXDefaults = @($propsXml.Project.PropertyGroup.UseLocalCodeGlyphXProject)
+
+        $localCodeGlyphXDefaults | Should -HaveCount 1
+        $localCodeGlyphXDefaults[0].Condition | Should -Be "'`$(UseLocalCodeGlyphXProject)' == ''"
+        $localCodeGlyphXDefaults[0].InnerText | Should -Be 'false'
+        $props | Should -Not -Match ([regex]::Escape('..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj'))
+    }
+
     It 'requires Swiss QR reference text for QRR and SCOR' {
         {
             New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType SCOR -FilePath (Join-Path $TestDir 'swiss_missing_scor_reference.png')

@@ -3,10 +3,6 @@
   "RootPath": "..",
   "ExpectedVersion": null,
   "ExpectedVersionMap": {
-    "ImagePlayground.Core": "2.0.X",
-    "ImagePlayground.BarCode": "2.0.X",
-    "ImagePlayground.Chart": "2.0.X",
-    "ImagePlayground.QRCode": "2.0.X",
     "ImagePlayground": "2.0.X",
     "ImagePlayground.Gdi": "2.0.X"
   },
