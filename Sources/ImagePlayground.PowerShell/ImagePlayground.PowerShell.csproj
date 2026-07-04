@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <VersionPrefix>$(ImagePlaygroundPowerShellPackageVersion)</VersionPrefix>
+        <VersionPrefix>2.0.0</VersionPrefix>
         <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
         <AssemblyName>ImagePlayground.PowerShell</AssemblyName>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
@@ -52,17 +52,17 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
-        <PackageReference Include="ChartForgeX" Version="$(ChartForgeXVersion)" />
+        <PackageReference Include="ChartForgeX" Version="0.1.8" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
-        <PackageReference Include="CodeGlyphX" Version="$(CodeGlyphXVersion)" />
+        <PackageReference Include="CodeGlyphX" Version="1.6.0" />
     </ItemGroup>
 
     <ItemGroup>
         <!-- This is needed for XmlDoc2CmdletDoc to generate a PowerShell documentation. DLL itself
         will be removed/hidden -->
-        <PackageReference Include="MatejKafka.XmlDoc2CmdletDoc" Version="$(XmlDoc2CmdletDocVersion)">
+        <PackageReference Include="MatejKafka.XmlDoc2CmdletDoc" Version="0.7.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -91,7 +91,7 @@
     </Target>
 
     <ItemGroup>
-        <PackageReference Include="PowerShellStandard.Library" Version="$(PowerShellStandardLibraryVersion)" PrivateAssets="all" />
+        <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
