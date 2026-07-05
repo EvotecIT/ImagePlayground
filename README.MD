@@ -643,9 +643,3 @@ Get-ImageExif -FilePath $PSScriptRoot\Output\IMG_46442.jpeg | Format-Table
 - ChartForgeX (in-repo/workspace, SVG/HTML/PNG chart rendering)
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) - licensed Apache 2.0
 - [Codeuctivity.ImageSharpCompare](https://github.com/Codeuctivity/ImageSharp.Compare) - licensed Apache 2.0
-
-#### Future Considerations / Alternatives
-If any of the libraries above prove insufficient, we can add more libraries to the list or replace with those
-
-- [OxyPlot](https://github.com/oxyplot/oxyplot) - licensed MIT
-- [Microcharts](https://github.com/microcharts-dotnet/Microcharts) - licensed MIT
