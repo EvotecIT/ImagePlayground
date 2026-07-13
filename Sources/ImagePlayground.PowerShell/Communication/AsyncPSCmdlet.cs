@@ -12,6 +12,8 @@ namespace ImagePlayground.PowerShell;
 /// </summary>
 /// <remarks>
 /// Invoke asynchronous hooks on the PowerShell pipeline thread until their first incomplete await.
+/// The base temporarily suppresses the host synchronization context while invoking each hook so
+/// continuations cannot be posted back to the pipeline thread while it is pumping output.
 /// Keep hook implementations asynchronous all the way through and pass <see cref="CancelToken"/> to
 /// cancellable engine operations. Do not block with Task.Wait, Task.Result, or Task.WaitAll.
 /// </remarks>
@@ -261,11 +263,15 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         _pipelineThreadId = Environment.CurrentManagedThreadId;
         _currentOutPipe = outPipe;
 
+        var synchronizationContext = SynchronizationContext.Current;
         try {
+            SynchronizationContext.SetSynchronizationContext(null);
             blockTask = task();
         } catch {
             ClearPipes();
             throw;
+        } finally {
+            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
         }
 
         if (blockTask.IsCompleted) {

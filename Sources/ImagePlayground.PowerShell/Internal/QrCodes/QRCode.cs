@@ -1131,9 +1131,10 @@ public class QrCode {
     private static async Task RenderToFileAsync(QrPayloadData payload, string filePath, QrEasyOptions options, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = ResolveValidatedOutputPath(filePath, out _);
-        byte[] pngBytes = CodeGlyphX.QrCode.Render(payload, CodeGlyphX.Rendering.OutputFormat.Png, options).Data;
+        var format = CodeGlyphX.Rendering.OutputFormatInfo.Resolve(fullPath, CodeGlyphX.Rendering.OutputFormat.Png);
+        byte[] output = CodeGlyphX.QrCode.Render(payload, format, options).Data;
         cancellationToken.ThrowIfCancellationRequested();
-        await SavePngBytesAsync(pngBytes, fullPath, cancellationToken).ConfigureAwait(false);
+        await WriteAllBytesAsync(fullPath, output, cancellationToken).ConfigureAwait(false);
     }
 
     private static void RenderToFileWithCenteredLogo(QrPayloadData payload, string filePath, string logoPath, QrEasyOptions options) {
@@ -1369,35 +1370,6 @@ public class QrCode {
         }
 
         image.Save(filePath, Helpers.GetEncoder(extension, null, null));
-    }
-
-    private static async Task SavePngBytesAsync(byte[] pngBytes, string filePath, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
-        string fullPath = ResolveValidatedOutputPath(filePath, out string extension);
-
-        if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
-            await WriteAllBytesAsync(fullPath, pngBytes, cancellationToken).ConfigureAwait(false);
-            return;
-        }
-
-        if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
-            string tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
-            try {
-                await WriteAllBytesAsync(tempPath, pngBytes, cancellationToken).ConfigureAwait(false);
-                using var wrappedImage = Image.Load(tempPath);
-                wrappedImage.SaveAsIcon(fullPath);
-            } finally {
-                if (File.Exists(tempPath)) {
-                    File.Delete(tempPath);
-                }
-            }
-            return;
-        }
-
-        using MemoryStream input = new(pngBytes, writable: false);
-        using Image<Rgba32> image = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(input, cancellationToken).ConfigureAwait(false);
-        using FileStream output = File.Create(fullPath);
-        await image.SaveAsync(output, Helpers.GetEncoder(extension, null, null), cancellationToken).ConfigureAwait(false);
     }
 
     private static async Task SaveCompositeImageAsync(Image<Rgba32> image, string filePath, CancellationToken cancellationToken) {

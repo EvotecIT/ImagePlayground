@@ -105,6 +105,17 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'creates QR code in an owner-supported vector format' {
+        $file = Join-Path $TestDir 'qr.svg'
+
+        if (Test-Path -Path $file) { Remove-Item -Path $file }
+
+        New-ImageQRCode -Content 'https://evotec.xyz/vector' -FilePath $file
+
+        Test-Path -Path $file | Should -BeTrue
+        (Get-Content -Path $file -Raw) | Should -Match '<svg'
+    }
+
     It 'creates QR code icon with centered logo in a new directory' {
         $directory = Join-Path $TestDir 'qr-logo-icon'
         $file = Join-Path $directory 'qr_logo.ico'

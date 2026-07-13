@@ -124,8 +124,36 @@ public class BarCode {
             IncludeBarcode = true
         };
         DecodeResult<CodeGlyphDecoded> result = CodeGlyph.DecodeImageResult(imageBytes, options);
-        CodeGlyphDecoded? decoded = result.Value;
-        return result.IsSuccess && decoded is not null && decoded.Kind != CodeGlyphKind.Qr ? decoded : null;
+        if (result.IsSuccess) {
+            CodeGlyphDecoded? decoded = result.Value;
+            if (decoded is not null && decoded.Kind != CodeGlyphKind.Qr && !IsAmbiguousBarcode(decoded)) {
+                return decoded;
+            }
+
+            var multipleOptions = new CodeGlyphDecodeOptions {
+                CancellationToken = cancellationToken,
+                IncludeBarcode = true,
+                Barcode = new BarcodeDecodeOptions {
+                    EnableTileScan = true
+                }
+            };
+            if (CodeGlyph.TryDecodeAllImage(imageBytes, out CodeGlyphDecoded[] decodedSymbols, multipleOptions)) {
+                return decodedSymbols.FirstOrDefault(symbol => symbol.Kind != CodeGlyphKind.Qr && !IsAmbiguousBarcode(symbol))
+                    ?? decodedSymbols.FirstOrDefault(symbol => symbol.Kind != CodeGlyphKind.Qr);
+            }
+
+            return decoded is not null && decoded.Kind != CodeGlyphKind.Qr ? decoded : null;
+        }
+
+        return result.Failure switch {
+            DecodeFailureReason.NoResult => null,
+            DecodeFailureReason.Cancelled => throw new OperationCanceledException(result.Message, cancellationToken),
+            DecodeFailureReason.InvalidInput => throw new InvalidDataException(result.Message),
+            DecodeFailureReason.UnsupportedFormat => throw new InvalidDataException(result.Message),
+            DecodeFailureReason.PlatformNotSupported => throw new PlatformNotSupportedException(result.Message),
+            DecodeFailureReason.Error => throw new InvalidOperationException(result.Message),
+            _ => throw new InvalidOperationException(result.Message)
+        };
     }
 
     /// <summary>
@@ -162,5 +190,12 @@ public class BarCode {
             BarcodeType.MicroPDF417 => true,
             _ => false
         };
+    }
+
+    private static bool IsAmbiguousBarcode(CodeGlyphDecoded decoded) {
+        // These symbologies intentionally accept short bar patterns, so mixed images can produce
+        // incidental matches. Prefer a stronger CodeGlyphX candidate when one is available.
+        return decoded.Kind == CodeGlyphKind.Barcode1D
+            && decoded.Barcode?.Type is BarcodeType.PatchCode or BarcodeType.Pharmacode or BarcodeType.PharmacodeTwoTrack;
     }
 }
