@@ -14,7 +14,7 @@
     PrivateData            = @{
         PSData = @{
             IconUri                    = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
-            LicenseUri                 = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
+            LicenseUri                 = 'https://github.com/EvotecIT/ImagePlayground/blob/master/LICENSE'
             ProjectUri                 = 'https://github.com/EvotecIT/ImagePlayground'
             RequireLicenseAcceptance   = $false
             Tags                       = @('windows', 'image', 'image-processing', 'exif', 'metadata')
