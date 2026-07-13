@@ -192,21 +192,13 @@ public sealed class NewImageQrCodeBezahlCodeCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
         ValidateAuthorityParameters();
         FilePath = EnsureQrOutputPath(FilePath);
 
-        if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateBezahlCodeAsync(Authority, Name, Account, Bnc, Iban, Bic, Reason, FilePath, Amount, Currency, PostingKey, ExecutionDate, SepaReference, CreditorId, MandateId, DateOfSignature, PeriodicUnit, PeriodicUnitRotation, PeriodicFirstExecutionDate, PeriodicLastExecutionDate, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.QrCode.GenerateBezahlCode(Authority, Name, Account, Bnc, Iban, Bic, Reason, FilePath, Amount, Currency, PostingKey, ExecutionDate, SepaReference, CreditorId, MandateId, DateOfSignature, PeriodicUnit, PeriodicUnitRotation, PeriodicFirstExecutionDate, PeriodicLastExecutionDate, false, ForegroundColor, BackgroundColor, PixelSize);
-        }
+        await ImagePlayground.QrCode.GenerateBezahlCodeAsync(Authority, Name, Account, Bnc, Iban, Bic, Reason, FilePath, Amount, Currency, PostingKey, ExecutionDate, SepaReference, CreditorId, MandateId, DateOfSignature, PeriodicUnit, PeriodicUnitRotation, PeriodicFirstExecutionDate, PeriodicLastExecutionDate, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }

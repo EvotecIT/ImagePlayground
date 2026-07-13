@@ -55,20 +55,12 @@ public sealed class NewImageQrCodeEmailCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
         FilePath = EnsureQrOutputPath(FilePath);
 
-        if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateEmailAsync(FilePath, Email, Subject, Message, QrMailEncoding.Mailto, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.QrCode.GenerateEmail(FilePath, Email, Subject, Message, QrMailEncoding.Mailto, false, ForegroundColor, BackgroundColor, PixelSize);
-        }
+        await ImagePlayground.QrCode.GenerateEmailAsync(FilePath, Email, Subject, Message, QrMailEncoding.Mailto, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }

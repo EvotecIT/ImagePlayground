@@ -63,20 +63,12 @@ public sealed class NewImageQrCodeBitcoinCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
         FilePath = EnsureQrOutputPath(FilePath);
 
-        if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateBitcoinAddressAsync(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.QrCode.GenerateBitcoinAddress(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-        }
+        await ImagePlayground.QrCode.GenerateBitcoinAddressAsync(Currency, Address, Amount, Label, Message, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }

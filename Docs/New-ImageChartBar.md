@@ -34,7 +34,7 @@ Bar color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -66,7 +66,7 @@ Values for the bar.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -85,7 +85,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

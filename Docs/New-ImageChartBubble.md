@@ -33,7 +33,7 @@ Series color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -65,7 +65,7 @@ Bubble sizes.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -81,7 +81,7 @@ X values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -97,7 +97,7 @@ Y values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -116,7 +116,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

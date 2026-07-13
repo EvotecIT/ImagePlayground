@@ -123,20 +123,12 @@ public sealed class NewImageQrContactCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
         FilePath = EnsureQrOutputPath(FilePath);
 
-        if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateContactAsync(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false, ForegroundColor, BackgroundColor, PixelSize, QrContactAddressType.HomePreferred, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.QrCode.GenerateContact(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false, ForegroundColor, BackgroundColor, PixelSize);
-        }
+        await ImagePlayground.QrCode.GenerateContactAsync(FilePath, OutputType, Firstname ?? string.Empty, Lastname ?? string.Empty, Nickname, Phone, MobilePhone, WorkPhone, Email, Birthday, Website, Street, HouseNumber, City, ZipCode, Country, Note, StateRegion, AddressOrder, Org, OrgTitle, false, ForegroundColor, BackgroundColor, PixelSize, QrContactAddressType.HomePreferred, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }

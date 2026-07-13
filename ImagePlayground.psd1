@@ -5,19 +5,19 @@
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
     Copyright              = '(c) 2011 - 2026 Przemyslaw Klys @ Evotec. All rights reserved.'
-    Description            = 'ImagePlayground is a PowerShell module that provides a set of functions for image processing. Among other things it can create QRCodes, BarCodes, Charts, and do image processing that can help with daily tasks.'
+    Description            = 'Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.'
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @()
     GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
-    ModuleVersion          = '2.0.0'
+    ModuleVersion          = '3.0.0'
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
             IconUri                    = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
-            LicenseUri                 = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
+            LicenseUri                 = 'https://github.com/EvotecIT/ImagePlayground/blob/master/LICENSE'
             ProjectUri                 = 'https://github.com/EvotecIT/ImagePlayground'
             RequireLicenseAcceptance   = $false
-            Tags                       = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
+            Tags                       = @('windows', 'image', 'image-processing', 'charts', 'topology', 'qrcodes', 'barcodes')
             ExternalModuleDependencies = @()
         }
     }

@@ -17,16 +17,10 @@ public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageBarCodeFileNotFound", FilePath);
-        var result = Async.IsPresent
-            ? await BarCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false)
-            : BarCode.Read(filePath);
+        var result = await BarCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false);
         WriteObject(result);
     }
 }

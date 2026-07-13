@@ -11,7 +11,7 @@ Reads barcode information from an image file.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-ImageBarCode [-FilePath] <string> [-Async] [<CommonParameters>]
+Get-ImageBarCode [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,29 +27,13 @@ Get-ImageBarCode -FilePath barcode.png
 
 ## PARAMETERS
 
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -FilePath
 The file must exist.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -68,7 +52,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

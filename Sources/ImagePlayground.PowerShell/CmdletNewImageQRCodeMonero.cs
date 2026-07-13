@@ -52,20 +52,12 @@ public sealed class NewImageQrCodeMoneroCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
         FilePath = EnsureQrOutputPath(FilePath);
 
-        if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateMoneroTransactionAsync(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.QrCode.GenerateMoneroTransaction(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-        }
+        await ImagePlayground.QrCode.GenerateMoneroTransactionAsync(Address, Amount, PaymentId, RecipientName, Description, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }

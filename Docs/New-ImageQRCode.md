@@ -11,7 +11,7 @@ Generates a QR code image from plain text content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-LogoPath <string>] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
+New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-LogoPath <string>] [-Transparent] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,34 +39,18 @@ PS> New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPat
 
 ## PARAMETERS
 
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -BackgroundColor
 Background color of the QR code.
 
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: FFFFFFFF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -77,7 +61,7 @@ Content encoded in the QR code.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -93,7 +77,7 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -109,12 +93,12 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 000000FF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -125,7 +109,7 @@ Optional logo image to place at the center of the QR code.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -141,12 +125,12 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 20
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -157,12 +141,12 @@ Open the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -173,12 +157,12 @@ Create the QR code with a transparent background.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -192,7 +176,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

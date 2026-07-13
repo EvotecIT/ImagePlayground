@@ -11,7 +11,7 @@ Generates a QR code for a Shadowsocks configuration.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeShadowSocks [-ServerHost] <string> [-Port] <int> [-Password] <string> [-Method] <QrShadowSocksMethod> [[-Tag] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
+New-ImageQRCodeShadowSocks [-ServerHost] <string> [-Port] <int> [-Password] <string> [-Method] <QrShadowSocksMethod> [[-Tag] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,34 +35,18 @@ Generates a named client profile QR code and opens it immediately after creation
 
 ## PARAMETERS
 
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -BackgroundColor
 Background color of the QR code.
 
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: FFFFFFFF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -73,7 +57,7 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -89,12 +73,12 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 000000FF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -102,17 +86,15 @@ Accept wildcard characters: True
 ### -Method
 Encryption method.
 
-Possible values: Chacha20IetfPoly1305, Aes128Gcm, Aes192Gcm, Aes256Gcm, XChacha20IetfPoly1305, Aes128Cfb, Aes192Cfb, Aes256Cfb, Aes128Ctr, Aes192Ctr, Aes256Ctr, Camellia128Cfb, Camellia192Cfb, Camellia256Cfb, Chacha20Ietf, Aes256Cb, Aes128Ofb, Aes192Ofb, Aes256Ofb, Aes128Cfb1, Aes192Cfb1, Aes256Cfb1, Aes128Cfb8, Aes192Cfb8, Aes256Cfb8, Chacha20, BfCfb, Rc4Md5, Salsa20, DesCfb, IdeaCfb, Rc2Cfb, Cast5Cfb, Salsa20Ctr, Rc4, SeedCfb, Table
-
 ```yaml
 Type: QrShadowSocksMethod
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Chacha20IetfPoly1305, Aes128Gcm, Aes192Gcm, Aes256Gcm, XChacha20IetfPoly1305, Aes128Cfb, Aes192Cfb, Aes256Cfb, Aes128Ctr, Aes192Ctr, Aes256Ctr, Camellia128Cfb, Camellia192Cfb, Camellia256Cfb, Chacha20Ietf, Aes256Cb, Aes128Ofb, Aes192Ofb, Aes256Ofb, Aes128Cfb1, Aes192Cfb1, Aes256Cfb1, Aes128Cfb8, Aes192Cfb8, Aes256Cfb8, Chacha20, BfCfb, Rc4Md5, Salsa20, DesCfb, IdeaCfb, Rc2Cfb, Cast5Cfb, Salsa20Ctr, Rc4, SeedCfb, Table
 
 Required: True
 Position: 3
-Default value: Chacha20IetfPoly1305
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -123,7 +105,7 @@ Password for the server.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -139,12 +121,12 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 20
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -155,12 +137,12 @@ Server port.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 1
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -187,12 +169,12 @@ Opens the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -203,7 +185,7 @@ Optional tag.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -222,7 +204,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

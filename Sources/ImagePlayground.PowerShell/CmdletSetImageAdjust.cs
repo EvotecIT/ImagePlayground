@@ -43,18 +43,10 @@ public sealed class SetImageAdjustCmdlet : AsyncImageCmdlet {
         [Parameter]
         public float? Sepia { get; set; }
 
-        /// <summary>Use asynchronous processing.</summary>
-        [Parameter]
-        public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageAdjustFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
-        if (Async.IsPresent) {
-            await ImageHelper.AdjustAsync(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia, CancelToken).ConfigureAwait(false);
-        } else {
-            ImageHelper.Adjust(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia);
-        }
+        await ImageHelper.AdjustAsync(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia, CancelToken).ConfigureAwait(false);
     }
 }

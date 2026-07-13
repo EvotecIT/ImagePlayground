@@ -12,7 +12,8 @@ public partial class ImagePlayground {
     public void Test_BarCodeRead_DoesNotLockFile() {
         string filePath = Path.Combine(_directoryWithImages, "BarcodeEAN13.png");
         var result = BarCode.Read(filePath);
-        Assert.True(result.Message == "9012341234571");
+        Assert.NotNull(result);
+        Assert.Equal("9012341234571", result.Text);
         using var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
@@ -20,7 +21,8 @@ public partial class ImagePlayground {
     public async Task Test_BarCodeReadAsync_DoesNotLockFile() {
         string filePath = Path.Combine(_directoryWithImages, "BarcodeEAN13.png");
         var result = await BarCode.ReadAsync(filePath);
-        Assert.True(result.Message == "9012341234571");
+        Assert.NotNull(result);
+        Assert.Equal("9012341234571", result.Text);
         using var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 
@@ -28,8 +30,8 @@ public partial class ImagePlayground {
     public void Test_QrCodeRead_DoesNotLockFile() {
         string filePath = Path.Combine(_directoryWithImages, "QRCode1.png");
         var result = QrCode.Read(filePath);
-        Assert.Equal(Status.Found, result.Status);
-        Assert.True(!string.IsNullOrEmpty(result.Message));
+        Assert.NotNull(result);
+        Assert.False(string.IsNullOrEmpty(result.Text));
         using var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

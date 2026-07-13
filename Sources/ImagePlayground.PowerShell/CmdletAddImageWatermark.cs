@@ -65,10 +65,6 @@ public sealed class AddImageWatermarkCmdlet : AsyncImageCmdlet {
     [ValidateRange(1, 1000)]
     public int? Spacing { get; set; }
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "AddImageWatermarkFileNotFound", FilePath);
@@ -76,23 +72,11 @@ public sealed class AddImageWatermarkCmdlet : AsyncImageCmdlet {
         var output = Helpers.ResolvePath(OutputPath);
 
         if (Spacing != null) {
-            if (Async.IsPresent) {
-                await ImagePlayground.ImageHelper.WatermarkImageTiledAsync(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
-            } else {
-                ImagePlayground.ImageHelper.WatermarkImageTiled(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage);
-            }
+            await ImagePlayground.ImageHelper.WatermarkImageTiledAsync(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
         } else if (ParameterSetName == ParameterSetCoordinates) {
-            if (Async.IsPresent) {
-                await ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
-            } else {
-                ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage);
-            }
+            await ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, X, Y, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
         } else {
-            if (Async.IsPresent) {
-                await ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
-            } else {
-                ImagePlayground.ImageHelper.WatermarkImage(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage);
-            }
+            await ImagePlayground.ImageHelper.WatermarkImageAsync(filePath, output, watermark, Placement, Opacity, Padding, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);
         }
     }
 }

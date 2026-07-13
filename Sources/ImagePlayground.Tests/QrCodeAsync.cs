@@ -19,8 +19,8 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath));
         var result = await QrCode.ReadAsync(filePath);
-        Assert.Equal(Status.Found, result.Status);
-        Assert.Equal("https://evotec.xyz", result.Message);
+        Assert.NotNull(result);
+        Assert.Equal("https://evotec.xyz", result.Text);
     }
 
     [Fact]
@@ -48,8 +48,8 @@ public partial class ImagePlayground {
     public async Task Test_QrCodeReadAsync_DoesNotLockFile() {
         string filePath = Path.Combine(_directoryWithImages, "QRCode1.png");
         var result = await QrCode.ReadAsync(filePath);
-        Assert.Equal(Status.Found, result.Status);
-        Assert.True(!string.IsNullOrEmpty(result.Message));
+        Assert.NotNull(result);
+        Assert.False(string.IsNullOrEmpty(result.Text));
         using var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

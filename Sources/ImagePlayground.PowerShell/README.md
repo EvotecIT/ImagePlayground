@@ -1,14 +1,15 @@
 # ImagePlayground.PowerShell
 
-ImagePlayground.PowerShell is the PowerShell module assembly for ImagePlayground cmdlets.
+This project builds the binary ImagePlayground PowerShell module. It provides one command surface over the `ImagePlayground`, `ChartForgeX`, and `CodeGlyphX` .NET packages.
 
-This package is primarily used by the ImagePlayground module packaging pipeline. Most PowerShell users should install the module from PowerShell Gallery with `Install-Module ImagePlayground`.
+Use it for image conversion, resizing, composition, text, watermarks, metadata, thumbnails, icons, mosaics, grids, avatars, GIFs, charts, topology diagrams, QR codes, and barcodes. The cmdlets stay thin: ChartForgeX owns chart rendering, CodeGlyphX owns code generation and decoding, and ImagePlayground owns image manipulation.
 
-## Supported Areas
+```powershell
+Install-Module -Name ImagePlayground -Scope CurrentUser
+Import-Module ImagePlayground
 
-- Image manipulation cmdlets.
-- QR code and barcode cmdlets powered by CodeGlyphX-backed ImagePlayground APIs.
-- Chart cmdlets powered by ChartForgeX-backed ImagePlayground APIs, including simple DSL builders for operational charts and direct native ChartForgeX chart rendering.
-- EXIF metadata, image comparison, thumbnails, icons, grids, mosaics, and GIF cmdlets.
+Resize-Image -FilePath '.\photo.jpg' -OutputPath '.\photo-small.jpg' -Width 800
+Add-ImageWatermark -FilePath '.\photo.jpg' -OutputPath '.\marked.jpg' -WatermarkPath '.\logo.png'
+```
 
-Chart cmdlets can render native `ChartForgeX.Core.Chart` instances directly, so callers can use the full ChartForgeX builder API and let ImagePlayground handle module packaging, output paths, preview, and PNG/SVG/HTML file creation. The PowerShell DSL emits `ChartForgeX.Simple` definitions instead of ImagePlayground-owned chart DTOs.
+Cmdlets expose one execution mode. Where the core has a cancellable asynchronous file API, the cmdlet uses it internally; callers do not select an implementation with `-Async`.

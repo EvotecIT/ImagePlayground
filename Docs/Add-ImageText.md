@@ -6,7 +6,8 @@ schema: 2.0.0
 ---
 # Add-ImageText
 ## SYNOPSIS
-Adds text to an image at the provided coordinates and writes the updated image to disk.
+Adds text to an image at the provided coordinates and writes the updated
+image to disk.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -44,12 +45,12 @@ Text color.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 000000FF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -60,7 +61,7 @@ Source image path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -76,12 +77,12 @@ Font family.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: Arial
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -92,12 +93,12 @@ Font size.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 16
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -108,7 +109,7 @@ Outline color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -124,12 +125,12 @@ Outline width.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -140,7 +141,7 @@ Destination image path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -156,7 +157,7 @@ Color of shadow.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -172,12 +173,12 @@ X offset for shadow.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -188,12 +189,12 @@ Y offset for shadow.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -204,7 +205,7 @@ Text to add.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -220,12 +221,12 @@ X coordinate.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 3
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -236,12 +237,12 @@ Y coordinate.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 4
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -255,7 +256,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

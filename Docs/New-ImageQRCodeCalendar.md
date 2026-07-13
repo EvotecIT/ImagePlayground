@@ -11,7 +11,7 @@ Creates a calendar event QR code image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeCalendar [-Entry] <string> [[-Message] <string>] [[-Location] <string>] [-From] <datetime> [-To] <datetime> [-FilePath] <string> [-AllDayEvent] [-EventEncoding <QrCalendarEncoding>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
+New-ImageQRCodeCalendar [-Entry] <string> [[-Message] <string>] [[-Location] <string>] [-From] <datetime> [-To] <datetime> [-FilePath] <string> [-AllDayEvent] [-EventEncoding <QrCalendarEncoding>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,30 +41,14 @@ Specifies whether the event spans the full day.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -BackgroundColor
@@ -73,12 +57,12 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: FFFFFFFF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -89,7 +73,7 @@ Event title.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -102,17 +86,15 @@ Accept wildcard characters: True
 ### -EventEncoding
 Calendar encoding.
 
-Possible values: Universal, ICalComplete
-
 ```yaml
 Type: QrCalendarEncoding
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Universal, ICalComplete
 
 Required: False
 Position: named
-Default value: ICalComplete
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -123,7 +105,7 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -139,12 +121,12 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 000000FF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -155,12 +137,12 @@ Start date.
 ```yaml
 Type: DateTime
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 3
-Default value: 0001-01-01 00:00:00
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -171,7 +153,7 @@ Event location.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -187,7 +169,7 @@ Event description.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -203,12 +185,12 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 20
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -219,12 +201,12 @@ Open the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -235,12 +217,12 @@ End date.
 ```yaml
 Type: DateTime
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 4
-Default value: 0001-01-01 00:00:00
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -254,7 +236,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

@@ -2,16 +2,17 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 2.0.0
+Help Version: 3.0.0
 Locale: en-US
 ---
 # ImagePlayground Module
 ## Description
-ImagePlayground is a PowerShell module that provides a set of functions for image processing. Among other things it can create QRCodes, BarCodes, Charts, and do image processing that can help with daily tasks.
+Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.
 
 ## ImagePlayground Cmdlets
 ### [Add-ImageText](Add-ImageText.md)
-Adds text to an image at the provided coordinates and writes the updated image to disk.
+Adds text to an image at the provided coordinates and writes the updated
+image to disk.
 
 ### [Add-ImageTextBox](Add-ImageTextBox.md)
 Adds wrapped text to an image within a box.
@@ -167,7 +168,8 @@ Creates waterfall chart data item.
 Creates word cloud chart term.
 
 ### [New-ImageCrop](New-ImageCrop.md)
-Creates a cropped version of an image using rectangular, circular or polygonal areas.
+Creates a cropped version of an image using rectangular, circular or
+polygonal areas.
 
 ### [New-ImageGif](New-ImageGif.md)
 Creates an animated GIF from existing images.
@@ -185,7 +187,7 @@ Creates a mosaic image from multiple files.
 Generates a QR code image from plain text content.
 
 ### [New-ImageQRCodeBezahlCode](New-ImageQRCodeBezahlCode.md)
-Generates a BezahlCode QR for German payments.
+Generates a BezahlCode QR for German banking payloads.
 
 ### [New-ImageQRCodeBitcoin](New-ImageQRCodeBitcoin.md)
 Generates a QR code for Bitcoin-like payments.

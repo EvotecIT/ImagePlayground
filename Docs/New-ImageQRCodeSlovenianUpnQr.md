@@ -11,26 +11,24 @@ Generates a Slovenian UPN QR payment code.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <datetime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
+New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <datetime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet when a prepared Slovenian UPN payment payload should be rendered into a scannable QR image.
+Use this cmdlet to render Slovenian UPN payment details into a scannable QR image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Invoice 2026-041',19999)
-New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn.png
+PS> New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -FilePath upn.png
 ```
 
-Generates a UPN payment QR code from a complete Slovenian payment payload object.
+Generates a UPN payment QR code from the payment fields supplied to the cmdlet.
 
 ### EXAMPLE 2
 ```powershell
-PS> $upn = [CodeGlyphX.Payloads.SlovenianUpnQrPayload]::new('John Doe','Main Street 1','Ljubljana','Evotec d.o.o.','Business Street 2','Maribor','SI56192001234567890','Annual subscription',4900)
-New-ImageQRCodeSlovenianUpnQr -Payload $upn -FilePath upn-brand.png -ForegroundColor DarkGreen -PixelSize 14 -Show
+PS> New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Annual subscription' -Amount 49 -FilePath upn-brand.png -ForegroundColor DarkGreen -PixelSize 14 -Show
 ```
 
 Creates a styled payment QR code and opens the resulting image after generation.
@@ -43,30 +41,14 @@ Payment amount.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 8
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -BackgroundColor
@@ -75,12 +57,12 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: FFFFFFFF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -91,14 +73,14 @@ UPN payment code.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Deadline
@@ -107,14 +89,14 @@ Payment deadline.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Description
@@ -123,14 +105,14 @@ Payment description.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 7
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -FilePath
@@ -139,7 +121,7 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -155,12 +137,12 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 000000FF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -171,14 +153,14 @@ Payer street address.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -PayerName
@@ -187,14 +169,14 @@ Payer name.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -PayerPlace
@@ -203,27 +185,11 @@ Payer postal place.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Payload
-UPN payment payload.
-
-```yaml
-Type: CodeGlyphX.Payloads.SlovenianUpnQrPayload
-Parameter Sets: (All)
-Aliases:
-Possible values:
-
-Required: False
-Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -235,12 +201,12 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 20
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -251,14 +217,14 @@ Recipient street address.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 4
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -RecipientIban
@@ -267,14 +233,14 @@ Recipient IBAN.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 6
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -RecipientName
@@ -283,14 +249,14 @@ Recipient name.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 3
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -RecipientPlace
@@ -299,14 +265,14 @@ Recipient postal place.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 5
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -RecipientSiModel
@@ -315,14 +281,14 @@ Recipient SI model.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -RecipientSiReference
@@ -331,14 +297,14 @@ Recipient SI reference.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Show
@@ -347,12 +313,12 @@ Opens the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -366,7 +332,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

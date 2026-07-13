@@ -21,8 +21,8 @@ namespace ImagePlayground;
 /// constructing payload strings.
 /// </para>
 /// <para>
-/// Output format is inferred from the destination file extension, and decode methods return a rich
-/// <see cref="BarcodeResult{TPixel}"/> value rather than throwing when no QR code is found.
+/// Output format is inferred from the destination file extension, and decode methods return the
+/// CodeGlyphX <see cref="QrDecoded"/> contract when a QR code is found.
 /// </para>
 /// </summary>
 public class QrCode {
@@ -1131,9 +1131,10 @@ public class QrCode {
     private static async Task RenderToFileAsync(QrPayloadData payload, string filePath, QrEasyOptions options, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = ResolveValidatedOutputPath(filePath, out _);
-        byte[] pngBytes = CodeGlyphX.QrCode.Render(payload, CodeGlyphX.Rendering.OutputFormat.Png, options).Data;
+        var format = CodeGlyphX.Rendering.OutputFormatInfo.Resolve(fullPath, CodeGlyphX.Rendering.OutputFormat.Png);
+        byte[] output = CodeGlyphX.QrCode.Render(payload, format, options).Data;
         cancellationToken.ThrowIfCancellationRequested();
-        await SavePngBytesAsync(pngBytes, fullPath, cancellationToken).ConfigureAwait(false);
+        await WriteAllBytesAsync(fullPath, output, cancellationToken).ConfigureAwait(false);
     }
 
     private static void RenderToFileWithCenteredLogo(QrPayloadData payload, string filePath, string logoPath, QrEasyOptions options) {
@@ -1371,35 +1372,6 @@ public class QrCode {
         image.Save(filePath, Helpers.GetEncoder(extension, null, null));
     }
 
-    private static async Task SavePngBytesAsync(byte[] pngBytes, string filePath, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
-        string fullPath = ResolveValidatedOutputPath(filePath, out string extension);
-
-        if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
-            await WriteAllBytesAsync(fullPath, pngBytes, cancellationToken).ConfigureAwait(false);
-            return;
-        }
-
-        if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
-            string tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
-            try {
-                await WriteAllBytesAsync(tempPath, pngBytes, cancellationToken).ConfigureAwait(false);
-                using var wrappedImage = Image.Load(tempPath);
-                wrappedImage.SaveAsIcon(fullPath);
-            } finally {
-                if (File.Exists(tempPath)) {
-                    File.Delete(tempPath);
-                }
-            }
-            return;
-        }
-
-        using MemoryStream input = new(pngBytes, writable: false);
-        using Image<Rgba32> image = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(input, cancellationToken).ConfigureAwait(false);
-        using FileStream output = File.Create(fullPath);
-        await image.SaveAsync(output, Helpers.GetEncoder(extension, null, null), cancellationToken).ConfigureAwait(false);
-    }
-
     private static async Task SaveCompositeImageAsync(Image<Rgba32> image, string filePath, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         Helpers.CreateParentDirectory(filePath);
@@ -1431,42 +1403,16 @@ public class QrCode {
         await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task<byte[]> ReadAllBytesAsync(string filePath, CancellationToken cancellationToken) {
-        using FileStream stream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 81920, useAsync: true);
-        if (stream.Length > int.MaxValue) {
-            throw new IOException($"File is too large to read into memory: {filePath}");
-        }
-
-        byte[] buffer = new byte[stream.Length];
-        int offset = 0;
-        while (offset < buffer.Length) {
-            int read = await stream.ReadAsync(buffer, offset, buffer.Length - offset, cancellationToken).ConfigureAwait(false);
-            if (read == 0) {
-                break;
-            }
-
-            offset += read;
-        }
-
-        if (offset == buffer.Length) {
-            return buffer;
-        }
-
-        byte[] result = new byte[offset];
-        Buffer.BlockCopy(buffer, 0, result, 0, offset);
-        return result;
-    }
-
     /// <summary>
     /// Reads a QR code image and returns the decoded payload.
     /// </summary>
-    /// <para>The returned result reports whether a QR code was found and includes the decoded payload text when successful.</para>
+    /// <para>Returns the CodeGlyphX decoded payload when a QR code is found; otherwise, returns <see langword="null"/>.</para>
     /// <param name="filePath">Path to the QR code image.</param>
-    /// <returns>Decoded barcode result.</returns>
+    /// <returns>The CodeGlyphX decoded QR payload, or <see langword="null"/> when no QR code is found.</returns>
     /// <example>
     ///   <code>var result = QrCode.Read("code.png");</code>
     /// </example>
-    public static BarcodeResult<Rgba32> Read(string filePath) {
+    public static QrDecoded? Read(string filePath) {
         return ReadAsync(filePath).GetAwaiter().GetResult();
     }
 
@@ -1475,8 +1421,8 @@ public class QrCode {
     /// </summary>
     /// <param name="filePath">Path to the QR code image.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image loading or fallback reads.</param>
-    /// <returns>Decoded barcode result.</returns>
-    public static async Task<BarcodeResult<Rgba32>> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
+    /// <returns>The CodeGlyphX decoded QR payload, or <see langword="null"/> when no QR code is found.</returns>
+    public static async Task<QrDecoded?> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         #if NET8_0_OR_GREATER
@@ -1486,54 +1432,24 @@ public class QrCode {
 
         cancellationToken.ThrowIfCancellationRequested();
         if (TryDecodePixels(pixels, image.Width, image.Height, out var decoded)) {
-            return new BarcodeResult<Rgba32> {
-                Status = Status.Found,
-                Message = decoded.Text,
-                Value = decoded.Text
-            };
+            return decoded;
         }
 
         var composited = CompositeOnWhite(image);
         if (composited is not null && TryDecodePixels(composited, image.Width, image.Height, out decoded)) {
-            return new BarcodeResult<Rgba32> {
-                Status = Status.Found,
-                Message = decoded.Text,
-                Value = decoded.Text
-            };
+            return decoded;
         }
 
-        decoded = await TryDecodeImageFallbackAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        if (decoded is not null) {
-            return new BarcodeResult<Rgba32> {
-                Status = Status.Found,
-                Message = decoded.Text,
-                Value = decoded.Text
-            };
-        }
-
-        return new BarcodeResult<Rgba32> {
-            Status = Status.NotFound
-        };
+        return await TryDecodeImageFallbackAsync(fullPath, cancellationToken).ConfigureAwait(false);
         #else
-        var decoded = await TryDecodeImageFallbackAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        if (decoded is not null) {
-            return new BarcodeResult<Rgba32> {
-                Status = Status.Found,
-                Message = decoded.Text,
-                Value = decoded.Text
-            };
-        }
-
-        return new BarcodeResult<Rgba32> {
-            Status = Status.NotFound
-        };
+        return await TryDecodeImageFallbackAsync(fullPath, cancellationToken).ConfigureAwait(false);
         #endif
 
     }
 
     private static async Task<QrDecoded?> TryDecodeImageFallbackAsync(string fullPath, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        byte[] imageBytes = await ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
         if (QrImageDecoder.TryDecodeImage(imageBytes, out var decoded)) {
             return decoded;
         }
@@ -1615,7 +1531,3 @@ public class QrCode {
         return (byte)((foreground * alpha + background * (255 - alpha) + 127) / 255);
     }
 }
-
-
-
-

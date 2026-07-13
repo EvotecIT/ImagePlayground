@@ -33,7 +33,7 @@ Directory containing images.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -49,12 +49,12 @@ Ignore aspect ratio.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -65,12 +65,12 @@ Thumbnail height.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 100
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -81,7 +81,7 @@ Destination directory for thumbnails.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -94,12 +94,10 @@ Accept wildcard characters: True
 ### -Sampler
 Resampling algorithm.
 
-Possible values: NearestNeighbor, Box, Triangle, Hermite, Lanczos2, Lanczos3, Lanczos5, Lanczos8, MitchellNetravali, CatmullRom, Robidoux, RobidouxSharp, Spline, Welch
-
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -115,12 +113,12 @@ Thumbnail width.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 100
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -134,7 +132,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

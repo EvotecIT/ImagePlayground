@@ -1,3 +1,19 @@
+## Unreleased
+
+### Breaking changes
+
+- Removed the PowerShell `-Async` parameter. Affected cmdlets now always use their cancellable asynchronous core implementation.
+- Removed the unused `ImagePlayground.BarcodeResult` type; CodeGlyphX owns barcode result contracts for .NET callers.
+- Removed the unused Microsoft.CSharp dependency and limited System.Text.Json and System.Memory package references to .NET Standard 2.0 and .NET Framework 4.7.2.
+- Marked ImagePlayground.Gdi as a deprecated compatibility package for existing Windows integrations.
+
+### Changed
+
+- Kept the ImagePlayground PowerShell module as the unified surface over ImagePlayground, ChartForgeX, and CodeGlyphX while keeping the C# packages as separate capability owners.
+- Aligned asynchronous cmdlets with the PSPublishModule `AsyncPSCmdlet` lifecycle for cancellation and thread-safe pipeline writes.
+- Made local ChartForgeX and CodeGlyphX project references opt-in so builds use published packages by default.
+- Made module signing opt-in for local and CI builds.
+
 ### 0.0.8 - 2024.06.05
 - Bump dependencies
 - Fix signing

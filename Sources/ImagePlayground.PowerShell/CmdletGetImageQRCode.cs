@@ -13,7 +13,7 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 /// <example>
 ///   <summary>Check the raw value</summary>
-///   <code>(Get-ImageQRCode -FilePath qr.png).Message</code>
+///   <code>(Get-ImageQRCode -FilePath qr.png).Text</code>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "ImageQRCode")]
 public sealed class GetImageQrCodeCmdlet : AsyncImageCmdlet {
@@ -22,16 +22,10 @@ public sealed class GetImageQrCodeCmdlet : AsyncImageCmdlet {
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageQRCodeFileNotFound", FilePath);
-        var result = Async.IsPresent
-            ? await ImagePlayground.QrCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false)
-            : ImagePlayground.QrCode.Read(filePath);
+        var result = await ImagePlayground.QrCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false);
         WriteObject(result);
     }
 }

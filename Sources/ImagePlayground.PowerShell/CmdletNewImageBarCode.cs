@@ -24,17 +24,9 @@ public sealed class NewImageBarCodeCmdlet : AsyncImageCmdlet {
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
     public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var output = Helpers.ResolvePath(FilePath);
-        if (Async.IsPresent) {
-            await BarCode.GenerateAsync(Type, Value, output, CancelToken).ConfigureAwait(false);
-        } else {
-            BarCode.Generate(Type, Value, output);
-        }
+        await BarCode.GenerateAsync(Type, Value, output, CancelToken).ConfigureAwait(false);
     }
 }

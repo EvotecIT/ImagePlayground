@@ -11,7 +11,7 @@ Reads QR code information from an image file.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-ImageQRCode [-FilePath] <string> [-Async] [<CommonParameters>]
+Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,27 +27,11 @@ Get-ImageQRCode -FilePath qr.png
 
 ### EXAMPLE 2
 ```powershell
-(Get-ImageQRCode -FilePath qr.png).Message
+(Get-ImageQRCode -FilePath qr.png).Text
 ```
 
 
 ## PARAMETERS
-
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -FilePath
 The file must exist.
@@ -55,7 +39,7 @@ The file must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -74,7 +58,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

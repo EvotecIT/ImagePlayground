@@ -16,9 +16,6 @@ internal class Program {
         string folderPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Images");
         Setup(folderPath);
 
-        //Example.QRCode(folderPath);
-        //Example.BarCodes1(folderPath);
-        //Example.Charts1(folderPath);
         //Example.ResizeImage(folderPath);
         //Example.ConvertTo(folderPath);
 

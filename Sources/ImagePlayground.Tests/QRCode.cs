@@ -86,7 +86,8 @@ public partial class ImagePlayground {
         BarCode.Generate(BarcodeType.EAN, "9012341234571", filePath);
 
         var read1 = BarCode.Read(filePath);
-        Assert.True(read1.Message == "9012341234571");
+        Assert.NotNull(read1);
+        Assert.Equal("9012341234571", read1.Text);
         Assert.True(File.Exists(filePath) == true);
 
         filePath = System.IO.Path.Combine(_directoryWithTests, "BarcodeEAN7.png");
@@ -94,7 +95,8 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(filePath) == true);
 
         var read2 = BarCode.Read(filePath);
-        Assert.True(read2.Message == "96385074");
+        Assert.NotNull(read2);
+        Assert.Equal("96385074", read2.Text);
     }
 
     [Theory]
@@ -135,7 +137,7 @@ public partial class ImagePlayground {
         QrCode.Generate("https://evotec.xyz", filePath);
         Assert.True(File.Exists(filePath));
     }
-      
+
     [Fact]
     public void Test_QRCode_WithLogo() {
         string filePath = Path.Combine(_directoryWithImages, "QRCodeWithLogo.png");

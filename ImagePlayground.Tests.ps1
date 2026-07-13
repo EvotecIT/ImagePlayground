@@ -63,12 +63,12 @@ function Assert-ImagePlaygroundQrMessage {
     )
 
     $result = Get-ImageQRCode -FilePath $FilePath
-    $result.Status | Should -Be ([ImagePlayground.Status]::Found)
+    $result | Should -Not -BeNullOrEmpty
 
     if ($PSBoundParameters.ContainsKey('ExpectedMessage')) {
-        $result.Message | Should -Be $ExpectedMessage
+        $result.Text | Should -Be $ExpectedMessage
     } elseif ($PSBoundParameters.ContainsKey('ExpectedPattern')) {
-        $result.Message | Should -Match $ExpectedPattern
+        $result.Text | Should -Match $ExpectedPattern
     } else {
         throw 'ExpectedMessage or ExpectedPattern must be provided.'
     }

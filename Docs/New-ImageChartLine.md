@@ -34,7 +34,7 @@ Line color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -45,14 +45,12 @@ Accept wildcard characters: True
 ```
 
 ### -Marker
-Shape of markers placed on data points.
-
-Possible values: None, FilledCircle, OpenCircle, FilledSquare, OpenSquare, FilledTriangleUp, OpenTriangleUp, FilledTriangleDown, OpenTriangleDown, FilledDiamond, OpenDiamond, Eks, Cross, VerticalBar, HorizontalBar, TriUp, TriDown, Asterisk, HashTag, OpenCircleWithDot, OpenCircleWithCross, OpenCircleWithEks, CircleWithLineLeft, CircleWithLineRight, TriangleWithLineLeft, TriangleWithLineRight
+ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.
 
 ```yaml
 Type: ChartMarkerShape
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: None, Circle, Square, Diamond
 
 Required: False
@@ -84,12 +82,12 @@ Render the line using a smooth curve.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -100,7 +98,7 @@ Y values for the line.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -119,7 +117,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

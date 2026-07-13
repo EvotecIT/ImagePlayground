@@ -13,13 +13,6 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^otpauth://'
     }
 
-    It 'creates OTP QR code asynchronously' {
-        $file = Join-Path $TestDir 'otp_async.png'
-        if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeOtp -Type Totp -SecretBase32 'JBSWY3DPEHPK3PXP' -Label 'john.doe@evotec.pl' -Issuer 'Evotec' -FilePath $file -Async
-        Test-Path $file | Should -BeTrue
-        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^otpauth://'
-    }
 
     It 'creates Shadowsocks QR code' {
         $file = Join-Path $TestDir 'shadowsocks.png'
@@ -29,13 +22,6 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^ss://'
     }
 
-    It 'creates Shadowsocks QR code asynchronously' {
-        $file = Join-Path $TestDir 'shadowsocks_async.png'
-        if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeShadowSocks -Host 'example.com' -Port 8388 -Password 'secret' -Method Aes256Gcm -Tag 'Warsaw' -FilePath $file -Async
-        Test-Path $file | Should -BeTrue
-        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^ss://'
-    }
 
     It 'creates BezahlCode QR code' {
         $file = Join-Path $TestDir 'bezahl.png'
@@ -45,13 +31,6 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^bank://contact'
     }
 
-    It 'creates BezahlCode QR code asynchronously' {
-        $file = Join-Path $TestDir 'bezahl_async.png'
-        if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeBezahlCode -Authority Contact -Name 'Evotec GmbH' -Account '1234567890' -Bnc '10020030' -Reason 'Invoice 2026-041' -FilePath $file -Async
-        Test-Path $file | Should -BeTrue
-        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^bank://contact'
-    }
 
     It 'creates BezahlCode contact v2 SEPA QR code' {
         $file = Join-Path $TestDir 'bezahl_contact_v2_sepa.png'
@@ -69,10 +48,10 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^bank://singlepayment'
     }
 
-    It 'creates BezahlCode periodic SEPA QR code asynchronously' {
-        $file = Join-Path $TestDir 'bezahl_periodic_sepa_async.png'
+    It 'creates BezahlCode periodic SEPA QR code' {
+        $file = Join-Path $TestDir 'bezahl_periodic_sepa.png'
         if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeBezahlCode -Authority PeriodicSinglePaymentSepa -Name 'Evotec GmbH' -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Amount 29.99 -Reason 'Support Retainer' -PeriodicUnit Monthly -PeriodicUnitRotation 1 -PeriodicFirstExecutionDate ([datetime]'2026-05-01') -PeriodicLastExecutionDate ([datetime]'2026-12-01') -FilePath $file -Async
+        New-ImageQRCodeBezahlCode -Authority PeriodicSinglePaymentSepa -Name 'Evotec GmbH' -Iban 'DE12500105170648489890' -Bic 'COBADEFFXXX' -Amount 29.99 -Reason 'Support Retainer' -PeriodicUnit Monthly -PeriodicUnitRotation 1 -PeriodicFirstExecutionDate ([datetime]'2026-05-01') -PeriodicLastExecutionDate ([datetime]'2026-12-01') -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^bank://periodicsinglepaymentsepa'
     }
@@ -93,13 +72,6 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
 
-    It 'creates Swiss QR code asynchronously' {
-        $file = Join-Path $TestDir 'swiss_async.png'
-        if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 199.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath $file -Async
-        Test-Path $file | Should -BeTrue
-        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
-    }
 
     It 'creates Swiss QR code with combined creditor address' {
         $file = Join-Path $TestDir 'swiss_combined.png'
@@ -200,10 +172,10 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^UPNQR'
     }
 
-    It 'creates Slovenian UPN QR code asynchronously' {
-        $file = Join-Path $TestDir 'upn_async.png'
+    It 'creates Slovenian UPN QR code with deadline and reference' {
+        $file = Join-Path $TestDir 'upn_deadline.png'
         if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -Deadline ([datetime]'2026-04-10') -RecipientSiModel 'SI00' -RecipientSiReference '2026041' -FilePath $file -Async
+        New-ImageQRCodeSlovenianUpnQr -PayerName 'John Doe' -PayerAddress 'Main Street 1' -PayerPlace 'Ljubljana' -RecipientName 'Evotec d.o.o.' -RecipientAddress 'Business Street 2' -RecipientPlace 'Maribor' -RecipientIban 'SI56192001234567890' -Description 'Invoice 2026-041' -Amount 199.99 -Deadline ([datetime]'2026-04-10') -RecipientSiModel 'SI00' -RecipientSiReference '2026041' -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^UPNQR'
     }

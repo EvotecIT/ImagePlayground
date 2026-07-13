@@ -95,10 +95,6 @@ public sealed class NewImageQrCodeSlovenianUpnQrCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
@@ -106,11 +102,7 @@ public sealed class NewImageQrCodeSlovenianUpnQrCmdlet : AsyncQrCodeCmdlet {
 
         var payload = new SlovenianUpnQrPayload(PayerName, PayerAddress, PayerPlace, RecipientName, RecipientAddress, RecipientPlace, RecipientIban, Description, Amount, Deadline, RecipientSiModel, RecipientSiReference, Code);
 
-        if (Async.IsPresent) {
-            await ImagePlayground.QrCode.GenerateSlovenianUpnQrAsync(payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.QrCode.GenerateSlovenianUpnQr(payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize);
-        }
+        await ImagePlayground.QrCode.GenerateSlovenianUpnQrAsync(payload, FilePath, false, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }

@@ -56,19 +56,6 @@ Describe 'New-ImageQRCode' {
 
     }
 
-    It 'creates QR code asynchronously' {
-
-        $file = Join-Path $TestDir 'qr_async.png'
-
-        if (Test-Path $file) { Remove-Item $file }
-
-        New-ImageQRCode -Content 'https://evotec.xyz/async' -FilePath $file -Async
-
-        Test-Path $file | Should -BeTrue
-
-        Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz/async'
-
-    }
 
     It 'creates QR code with centered logo' {
         $file = Join-Path $TestDir 'qr_logo.png'
@@ -118,6 +105,17 @@ Describe 'New-ImageQRCode' {
 
     }
 
+    It 'creates QR code in an owner-supported vector format' {
+        $file = Join-Path $TestDir 'qr.svg'
+
+        if (Test-Path -Path $file) { Remove-Item -Path $file }
+
+        New-ImageQRCode -Content 'https://evotec.xyz/vector' -FilePath $file
+
+        Test-Path -Path $file | Should -BeTrue
+        (Get-Content -Path $file -Raw) | Should -Match '<svg'
+    }
+
     It 'creates QR code icon with centered logo in a new directory' {
         $directory = Join-Path $TestDir 'qr-logo-icon'
         $file = Join-Path $directory 'qr_logo.ico'
@@ -131,21 +129,9 @@ Describe 'New-ImageQRCode' {
         (Get-Item -Path $file).Length | Should -BeGreaterThan 0
     }
 
-    It 'creates QR code icon with centered logo asynchronously' {
-        $file = Join-Path $TestDir 'qr_logo_async.ico'
-        $logo = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
-
-        if (Test-Path $file) { Remove-Item $file }
-
-        New-ImageQRCode -Content 'https://evotec.xyz/logo-icon-async' -FilePath $file -LogoPath $logo -Async
-
-        Test-Path $file | Should -BeTrue
-        (Get-Item -Path $file).Length | Should -BeGreaterThan 0
-    }
 
     It 'throws on invalid pixel size' {
         { New-ImageQRCode -Content 'https://evotec.xyz' -FilePath (Join-Path $TestDir 'qr_invalid.png') -PixelSize 0 } | Should -Throw
     }
 
 }
-

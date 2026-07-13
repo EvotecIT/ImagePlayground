@@ -11,7 +11,7 @@ Generates a QR code for one-time-password configuration.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <string> [[-Label] <string>] [[-Issuer] <string>] [-FilePath] <string> [-Algorithm <OtpAlgorithm>] [-Digits <int>] [-Period <int>] [-Counter <int>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [-Async] [<CommonParameters>]
+New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <string> [[-Label] <string>] [[-Issuer] <string>] [-FilePath] <string> [-Algorithm <OtpAlgorithm>] [-Digits <int>] [-Period <int>] [-Counter <int>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,35 +38,17 @@ Creates a counter-based OTP payload for systems that use event-driven one-time p
 ### -Algorithm
 Hash algorithm.
 
-Possible values: Sha1, Sha256, Sha512
-
 ```yaml
 Type: OtpAlgorithm
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Sha1, Sha256, Sha512
-
-Required: False
-Position: named
-Default value: Sha1
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -BackgroundColor
@@ -75,12 +57,12 @@ Background color of the QR code.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: FFFFFFFF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -91,7 +73,7 @@ Counter for HOTP.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -107,12 +89,12 @@ Number of digits.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 6
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -123,7 +105,7 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -139,12 +121,12 @@ Foreground color of QR modules.
 ```yaml
 Type: Color
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 000000FF
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -155,7 +137,7 @@ Issuer name.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -171,7 +153,7 @@ Account label.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -187,12 +169,12 @@ Period for TOTP.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 30
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -203,12 +185,12 @@ Pixel size for each QR module.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 20
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -219,7 +201,7 @@ Base32-encoded secret.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -235,12 +217,12 @@ Opens the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -248,17 +230,15 @@ Accept wildcard characters: True
 ### -Type
 OTP type.
 
-Possible values: Totp, Hotp
-
 ```yaml
 Type: OtpAuthType
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Totp, Hotp
 
 Required: True
 Position: 0
-Default value: Totp
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -272,7 +252,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

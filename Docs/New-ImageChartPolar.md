@@ -21,7 +21,7 @@ Creates polar chart data item.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartPolar -Name 'Series1' -Angle 0,1.57 -Value 1,2 -Color Blue
+New-ImageChartPolar -Name 'Series1' -Angle 0,1.57,3.14 -Value 1,2,1 -Color Blue
 ```
 
 
@@ -39,7 +39,7 @@ Angle values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -55,7 +55,7 @@ Series color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -87,7 +87,7 @@ Radius values for the series.
 ```yaml
 Type: Double[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -106,7 +106,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

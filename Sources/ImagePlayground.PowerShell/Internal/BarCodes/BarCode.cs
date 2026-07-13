@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.UpcE;
-using SixLabors.ImageSharp;
-using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ImagePlayground;
 
@@ -117,51 +115,51 @@ public class BarCode {
     /// <summary>
     /// Reads and decodes a barcode from an image asynchronously.
     /// </summary>
-    public static async Task<BarcodeResult<ImageSharpRgba32>> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
+    public static async Task<CodeGlyphDecoded?> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
-        byte[] imageBytes = File.ReadAllBytes(fullPath);
+        byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        var options = new CodeGlyphDecodeOptions {
+            CancellationToken = cancellationToken,
+            IncludeBarcode = true
+        };
+        DecodeResult<CodeGlyphDecoded> result = CodeGlyph.DecodeImageResult(imageBytes, options);
+        if (result.IsSuccess) {
+            CodeGlyphDecoded? decoded = result.Value;
+            if (decoded is not null && decoded.Kind != CodeGlyphKind.Qr && !IsAmbiguousBarcode(decoded)) {
+                return decoded;
+            }
 
-        cancellationToken.ThrowIfCancellationRequested();
-        if (DataMatrixCode.TryDecodeImage(imageBytes, cancellationToken, out var dataMatrix)) {
-            return new BarcodeResult<ImageSharpRgba32> {
-                Value = dataMatrix,
-                Status = Status.Found,
-                Message = dataMatrix
+            var multipleOptions = new CodeGlyphDecodeOptions {
+                CancellationToken = cancellationToken,
+                IncludeBarcode = true,
+                Barcode = new BarcodeDecodeOptions {
+                    EnableTileScan = true
+                }
             };
+            if (CodeGlyph.TryDecodeAllImage(imageBytes, out CodeGlyphDecoded[] decodedSymbols, multipleOptions)) {
+                return decodedSymbols.FirstOrDefault(symbol => symbol.Kind != CodeGlyphKind.Qr && !IsAmbiguousBarcode(symbol))
+                    ?? decodedSymbols.FirstOrDefault(symbol => symbol.Kind != CodeGlyphKind.Qr);
+            }
+
+            return decoded is not null && decoded.Kind != CodeGlyphKind.Qr ? decoded : null;
         }
 
-        cancellationToken.ThrowIfCancellationRequested();
-        if (Pdf417Code.TryDecodeImage(imageBytes, cancellationToken, out string pdf417)) {
-            return new BarcodeResult<ImageSharpRgba32> {
-                Value = pdf417,
-                Status = Status.Found,
-                Message = pdf417
-            };
-        }
-
-        using Image<ImageSharpRgba32> barcodeImage = await SixLabors.ImageSharp.Image.LoadAsync<ImageSharpRgba32>(fullPath, cancellationToken).ConfigureAwait(false);
-        byte[] pixels = new byte[barcodeImage.Width * barcodeImage.Height * 4];
-        barcodeImage.CopyPixelDataTo(pixels);
-
-        cancellationToken.ThrowIfCancellationRequested();
-        if (BarcodeDecoder.TryDecode(pixels, barcodeImage.Width, barcodeImage.Height, barcodeImage.Width * 4, CodeGlyphX.PixelFormat.Rgba32, null, null, cancellationToken, out var decoded)) {
-            return new BarcodeResult<ImageSharpRgba32> {
-                Value = decoded.Text,
-                Status = Status.Found,
-                Message = decoded.Text
-            };
-        }
-
-        return new BarcodeResult<ImageSharpRgba32> {
-            Status = Status.NotFound
+        return result.Failure switch {
+            DecodeFailureReason.NoResult => null,
+            DecodeFailureReason.Cancelled => throw new OperationCanceledException(result.Message, cancellationToken),
+            DecodeFailureReason.InvalidInput => throw new InvalidDataException(result.Message),
+            DecodeFailureReason.UnsupportedFormat => throw new InvalidDataException(result.Message),
+            DecodeFailureReason.PlatformNotSupported => throw new PlatformNotSupportedException(result.Message),
+            DecodeFailureReason.Error => throw new InvalidOperationException(result.Message),
+            _ => throw new InvalidOperationException(result.Message)
         };
     }
 
     /// <summary>
     /// Reads and decodes a barcode from an image.
     /// </summary>
-    public static BarcodeResult<ImageSharpRgba32> Read(string filePath) {
+    public static CodeGlyphDecoded? Read(string filePath) {
         return ReadAsync(filePath).GetAwaiter().GetResult();
     }
 
@@ -192,5 +190,12 @@ public class BarCode {
             BarcodeType.MicroPDF417 => true,
             _ => false
         };
+    }
+
+    private static bool IsAmbiguousBarcode(CodeGlyphDecoded decoded) {
+        // These symbologies intentionally accept short bar patterns, so mixed images can produce
+        // incidental matches. Prefer a stronger CodeGlyphX candidate when one is available.
+        return decoded.Kind == CodeGlyphKind.Barcode1D
+            && decoded.Barcode?.Type is BarcodeType.PatchCode or BarcodeType.Pharmacode or BarcodeType.PharmacodeTwoTrack;
     }
 }

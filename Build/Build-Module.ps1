@@ -2,6 +2,8 @@ param(
     [ValidateSet('Manifest', 'Build', 'Publish')]
     [string] $RunMode = 'Build',
 
+    [bool] $SignModule = $false,
+
     [string] $PowerShellGalleryApiKeyPath = 'C:\Support\Important\PowerShellGalleryAPI.txt',
 
     [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
@@ -19,7 +21,8 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion          = '2.0.0'
+        ModuleVersion          = '3.0.0'
+        AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
@@ -27,15 +30,15 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # Copyright statement for this module
         Copyright              = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
         # Description of the functionality provided by this module
-        Description            = 'ImagePlayground is a PowerShell module that provides a set of functions for image processing. Among other things it can create QRCodes, BarCodes, Charts, and do image processing that can help with daily tasks.'
+        Description            = 'Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.'
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags                   = @('windows', 'image', 'charts', 'qrcodes', 'barcodes')
+        Tags                   = @('windows', 'image', 'image-processing', 'charts', 'topology', 'qrcodes', 'barcodes')
         # A URL to the main website for this project.
         ProjectUri             = 'https://github.com/EvotecIT/ImagePlayground'
 
         IconUri                = 'https://evotec.xyz/wp-content/uploads/2022/07/ImagePlayground.png'
 
-        LicenseUri             = 'https://github.com/EvotecIT/ImagePlayground/blob/master/License'
+        LicenseUri             = 'https://github.com/EvotecIT/ImagePlayground/blob/master/LICENSE'
 
         DotNetFrameworkVersion = '4.7.2'
     }
@@ -89,14 +92,13 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
 
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$true -SkipExternalHelp -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$true -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf #-ImportRequiredModules
 
     $newConfigurationBuildSplat = @{
         Enable                            = $true
-        # lets sign module only on my machine for now
-        SignModule                        = $true
+        SignModule                        = $SignModule
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
         CertificateThumbprint             = '92e95fb58effa6a4a75e77a33cdd6bfe6dd30f1a'

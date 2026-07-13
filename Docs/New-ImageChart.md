@@ -65,7 +65,7 @@ Annotations for the chart.
 ```yaml
 Type: Object[]
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -81,7 +81,7 @@ ScriptBlock producing annotations.
 ```yaml
 Type: ScriptBlock
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -97,7 +97,7 @@ Chart background color.
 ```yaml
 Type: Nullable`1
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -113,14 +113,14 @@ ChartForgeX chart object to render.
 ```yaml
 Type: Chart
 Parameter Sets: Chart
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -ChartScript
@@ -129,14 +129,14 @@ The script block receives the chart as its first argument and can mutate it dire
 ```yaml
 Type: ScriptBlock
 Parameter Sets: ChartScript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -ChartsDefinition
@@ -145,7 +145,7 @@ ScriptBlock producing chart definitions.
 ```yaml
 Type: ScriptBlock
 Parameter Sets: ScriptBlock
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -161,7 +161,7 @@ Chart definitions provided directly.
 ```yaml
 Type: Object[]
 Parameter Sets: Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -177,7 +177,7 @@ The image format is inferred from the file extension.
 ```yaml
 Type: String
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -193,12 +193,12 @@ Height of the chart.
 ```yaml
 Type: Int32
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 400
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -209,14 +209,14 @@ Renderer options created by New-ImageChartOptions.
 ```yaml
 Type: ChartRenderOptions
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Show
@@ -225,12 +225,12 @@ Open the image after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -241,12 +241,12 @@ Display grid lines.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -254,17 +254,15 @@ Accept wildcard characters: True
 ### -Theme
 Chart theme.
 
-Possible values: Default, Dark, Light
-
 ```yaml
 Type: ChartTheme
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values: Default, Dark, Light
 
 Required: False
 Position: named
-Default value: Default
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -275,12 +273,12 @@ Width of the chart.
 ```yaml
 Type: Int32
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 600
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -291,7 +289,7 @@ X axis title.
 ```yaml
 Type: String
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -307,7 +305,7 @@ Y axis title.
 ```yaml
 Type: String
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -322,11 +320,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `ImagePlayground.ChartDefinition[]`
+- `ChartForgeX.Core.Chart
+System.Object[]`
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

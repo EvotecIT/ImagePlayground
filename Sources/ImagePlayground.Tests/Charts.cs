@@ -69,7 +69,8 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(file));
         var read = QrCode.Read(file);
-        Assert.Contains("BEGIN", read.Message);
+        Assert.NotNull(read);
+        Assert.Contains("BEGIN", read.Text);
     }
 
     [Fact]

@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <VersionPrefix>2.0.0</VersionPrefix>
+        <VersionPrefix>3.0.0</VersionPrefix>
         <TargetFrameworks>netstandard2.0;net472;net8.0</TargetFrameworks>
         <AssemblyName>ImagePlayground.PowerShell</AssemblyName>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <Description>Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
@@ -36,11 +37,11 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
-        <ProjectReference Include="$(ChartForgeXProjectPath)" Condition="'$(ChartForgeXProjectPath)' != ''" />
+        <ProjectReference Include="$(ChartForgeXProjectPath)" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(CodeGlyphXProjectPath)' != ''">
-        <ProjectReference Include="$(CodeGlyphXProjectPath)" Condition="'$(CodeGlyphXProjectPath)' != ''" />
+        <ProjectReference Include="$(CodeGlyphXProjectPath)" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">

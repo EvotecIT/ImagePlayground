@@ -59,10 +59,6 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Use asynchronous processing.</summary>
-    [Parameter]
-    public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         ValidatePixelSize(PixelSize);
@@ -74,16 +70,10 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
             ValidateLogoImage(logoPath);
         }
 
-        if (Async.IsPresent) {
-            if (logoPath is null) {
-                await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-            } else {
-                await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, logoPath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-            }
-        } else if (logoPath is null) {
-            ImagePlayground.QrCode.Generate(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
+        if (logoPath is null) {
+            await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
         } else {
-            ImagePlayground.QrCode.Generate(Content, FilePath, logoPath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize);
+            await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, logoPath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
         }
 
         ShowGeneratedQrCode(FilePath, Show);
