@@ -6,7 +6,8 @@ schema: 2.0.0
 ---
 # New-ImageCrop
 ## SYNOPSIS
-Creates a cropped version of an image using rectangular, circular or polygonal areas.
+Creates a cropped version of an image using rectangular, circular or
+polygonal areas.
 
 ## SYNTAX
 ### Rectangle (Default)
@@ -50,12 +51,12 @@ X coordinate of the circle center.
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -66,12 +67,12 @@ Y coordinate of the circle center.
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -82,7 +83,7 @@ Path to the image being cropped.
 ```yaml
 Type: String
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -98,12 +99,12 @@ Height of the rectangle.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -114,12 +115,12 @@ Open the cropped file after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -130,7 +131,7 @@ Where to save the cropped image.
 ```yaml
 Type: String
 Parameter Sets: Rectangle, Circle, Polygon
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -146,7 +147,7 @@ Points describing a polygon.
 ```yaml
 Type: PointF[]
 Parameter Sets: Polygon
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -162,12 +163,12 @@ Radius of the circle.
 ```yaml
 Type: Single
 Parameter Sets: Circle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -178,12 +179,12 @@ Width of the rectangle.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -194,12 +195,12 @@ X coordinate for rectangle cropping.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -210,12 +211,12 @@ Y coordinate for rectangle cropping.
 ```yaml
 Type: Int32
 Parameter Sets: Rectangle
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -229,7 +230,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

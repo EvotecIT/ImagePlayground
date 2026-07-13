@@ -41,27 +41,15 @@ public sealed class SetImageRotationCmdlet : AsyncImageCmdlet {
         [Parameter(Mandatory = true, Position = 2, ParameterSetName = ParameterSetMode)]
         public RotateMode RotateMode { get; set; }
 
-        /// <summary>Use asynchronous processing.</summary>
-        [Parameter]
-        public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageRotationFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetDegrees) {
-            if (Async.IsPresent) {
-                await ImagePlayground.ImageHelper.RotateAsync(filePath, output, Degrees, CancelToken).ConfigureAwait(false);
-            } else {
-                ImagePlayground.ImageHelper.Rotate(filePath, output, Degrees);
-            }
+            await ImagePlayground.ImageHelper.RotateAsync(filePath, output, Degrees, CancelToken).ConfigureAwait(false);
         } else {
-            if (Async.IsPresent) {
-                await ImagePlayground.ImageHelper.RotateAsync(filePath, output, RotateMode, CancelToken).ConfigureAwait(false);
-            } else {
-                ImagePlayground.ImageHelper.Rotate(filePath, output, RotateMode);
-            }
+            await ImagePlayground.ImageHelper.RotateAsync(filePath, output, RotateMode, CancelToken).ConfigureAwait(false);
         }
     }
 }

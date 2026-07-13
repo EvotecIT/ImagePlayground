@@ -51,21 +51,13 @@ public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
         public SwitchParameter DontRespectAspectRatio { get; set; }
 
-        /// <summary>Use asynchronous processing.</summary>
-        [Parameter]
-        public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "ResizeImageFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
 
         if (ParameterSetName == ParameterSetPercentage) {
-            if (Async.IsPresent) {
-                await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, Percentage, CancelToken).ConfigureAwait(false);
-            } else {
-                ImagePlayground.ImageHelper.Resize(filePath, output, Percentage);
-            }
+            await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, Percentage, CancelToken).ConfigureAwait(false);
             return;
         }
 
@@ -88,10 +80,6 @@ public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
         int? height = heightBound ? Height : (int?)null;
         bool keepAspect = !DontRespectAspectRatio.IsPresent;
 
-        if (Async.IsPresent) {
-            await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, width, height, keepAspect, cancellationToken: CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.ImageHelper.Resize(filePath, output, width, height, keepAspect);
-        }
+        await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, width, height, keepAspect, cancellationToken: CancelToken).ConfigureAwait(false);
     }
 }

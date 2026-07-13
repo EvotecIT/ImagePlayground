@@ -3,9 +3,6 @@
     <Company>Evotec</Company>
     <Authors>Przemyslaw Klys</Authors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
-    <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == '' and Exists('$(MSBuildThisFileDirectory)..\ChartForgeX\ChartForgeX\ChartForgeX.csproj')">true</UseLocalChartForgeXProject>
-    <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == ''">false</UseLocalChartForgeXProject>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>

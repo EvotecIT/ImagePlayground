@@ -3,7 +3,7 @@
   "RootPath": "..",
   "ExpectedVersion": null,
   "ExpectedVersionMap": {
-    "ImagePlayground": "2.0.X",
+    "ImagePlayground": "3.0.X",
     "ImagePlayground.Gdi": "2.0.X"
   },
   "ExpectedVersionMapAsInclude": true,

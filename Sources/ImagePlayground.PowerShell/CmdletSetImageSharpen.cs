@@ -25,18 +25,10 @@ public sealed class SetImageSharpenCmdlet : AsyncImageCmdlet {
         [Parameter(Mandatory = true, Position = 2)]
         public float Amount { get; set; }
 
-        /// <summary>Use asynchronous processing.</summary>
-        [Parameter]
-        public SwitchParameter Async { get; set; }
-
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageSharpenFileNotFound", FilePath);
         var output = Helpers.ResolvePath(OutputPath);
-        if (Async.IsPresent) {
-            await ImagePlayground.ImageHelper.SharpenAsync(filePath, output, Amount, CancelToken).ConfigureAwait(false);
-        } else {
-            ImagePlayground.ImageHelper.Sharpen(filePath, output, Amount);
-        }
+        await ImagePlayground.ImageHelper.SharpenAsync(filePath, output, Amount, CancelToken).ConfigureAwait(false);
     }
 }

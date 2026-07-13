@@ -11,7 +11,7 @@ Blurs an image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-ImageBlur [-FilePath] <string> [-OutputPath] <string> [-Amount] <float> [-Async] [<CommonParameters>]
+Set-ImageBlur [-FilePath] <string> [-OutputPath] <string> [-Amount] <float> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -33,28 +33,12 @@ Specifies the strength of the blur.
 ```yaml
 Type: Single
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 2
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -65,7 +49,7 @@ The image must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -81,7 +65,7 @@ Supported formats depend on the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -100,7 +84,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

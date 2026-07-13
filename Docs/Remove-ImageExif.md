@@ -44,12 +44,12 @@ Remove all tags.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: All
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -60,7 +60,7 @@ Tags to remove.
 ```yaml
 Type: ExifTag[]
 Parameter Sets: Tag
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -76,7 +76,7 @@ Path to the image file.
 ```yaml
 Type: String
 Parameter Sets: Tag, All
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -92,7 +92,7 @@ Optional output path.
 ```yaml
 Type: String
 Parameter Sets: Tag, All
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -111,7 +111,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

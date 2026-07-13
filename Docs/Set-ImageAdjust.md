@@ -11,7 +11,7 @@ Adjusts image properties.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-ImageAdjust [-FilePath] <string> [-OutputPath] <string> [-Brightness <float>] [-Contrast <float>] [-Lightness <float>] [-Opacity <float>] [-Saturation <float>] [-Sepia <float>] [-Async] [<CommonParameters>]
+Set-ImageAdjust [-FilePath] <string> [-OutputPath] <string> [-Brightness <float>] [-Contrast <float>] [-Lightness <float>] [-Opacity <float>] [-Saturation <float>] [-Sepia <float>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,29 +27,13 @@ Set-ImageAdjust -FilePath in.png -OutputPath out.png -Brightness 1.2 -Contrast 1
 
 ## PARAMETERS
 
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Brightness
 Brightness adjustment factor.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -65,7 +49,7 @@ Contrast adjustment factor.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -81,7 +65,7 @@ The image must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -97,7 +81,7 @@ Lightness adjustment factor.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -113,7 +97,7 @@ Opacity adjustment factor.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -129,7 +113,7 @@ Supported formats depend on the file extension.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -145,7 +129,7 @@ Saturation adjustment factor.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -161,7 +145,7 @@ Sepia adjustment factor.
 ```yaml
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -180,7 +164,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

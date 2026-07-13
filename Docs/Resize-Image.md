@@ -11,12 +11,12 @@ Resizes an image.
 ## SYNTAX
 ### HeightWidth (Default)
 ```powershell
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [-Async] [<CommonParameters>]
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [<CommonParameters>]
 ```
 
 ### Percentage
 ```powershell
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [-Async] [<CommonParameters>]
+Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,34 +38,18 @@ Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200
 
 ## PARAMETERS
 
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: HeightWidth, Percentage
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -DontRespectAspectRatio
 Only valid when resizing by width or height.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: HeightWidth
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -76,7 +60,7 @@ The image must exist.
 ```yaml
 Type: String
 Parameter Sets: HeightWidth, Percentage
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -87,17 +71,17 @@ Accept wildcard characters: True
 ```
 
 ### -Height
-Used with Width when not using .
+Used with Width when not using Percentage.
 
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -108,7 +92,7 @@ Supported formats depend on the file extension.
 ```yaml
 Type: String
 Parameter Sets: HeightWidth, Percentage
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -124,28 +108,28 @@ Applies uniform scaling relative to the original size.
 ```yaml
 Type: Int32
 Parameter Sets: Percentage
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Width
-Used with Height when not using .
+Used with Height when not using Percentage.
 
 ```yaml
 Type: Int32
 Parameter Sets: HeightWidth
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -159,7 +143,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

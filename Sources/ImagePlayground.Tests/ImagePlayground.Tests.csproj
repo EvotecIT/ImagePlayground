@@ -22,7 +22,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
-        <ProjectReference Include="..\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -48,9 +47,6 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Images\QRCode1.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Images\QRCodeWifi.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

@@ -1,3 +1,14 @@
+## Unreleased
+
+### Breaking changes
+
+- Removed chart and topology cmdlets; use ChartForgeX directly.
+- Removed QR-code and barcode cmdlets and helper types; use CodeGlyphX directly.
+- Removed the PowerShell `-Async` parameter. Affected cmdlets now always use their cancellable asynchronous core implementation.
+- Removed ChartForgeX and CodeGlyphX from the PowerShell module dependency graph.
+- Removed the unused Microsoft.CSharp dependency and limited System.Text.Json and System.Memory package references to .NET Standard 2.0 and .NET Framework 4.7.2.
+- Marked ImagePlayground.Gdi as a deprecated compatibility package for existing Windows integrations.
+
 ### 0.0.8 - 2024.06.05
 - Bump dependencies
 - Fix signing

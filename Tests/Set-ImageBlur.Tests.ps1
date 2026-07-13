@@ -21,18 +21,6 @@ Describe 'Set-ImageBlur' {
         $orig.Dispose()
     }
 
-    It 'blurs an image asynchronously' {
-        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
-        $dest = Join-Path $TestDir 'logo-blur-async.png'
-        Set-ImageBlur -FilePath $src -OutputPath $dest -Amount 5 -Async
-        $orig = [ImagePlayground.Image]::Load($src)
-        $img = [ImagePlayground.Image]::Load($dest)
-        $img.Width | Should -Be $orig.Width
-        $img.Height | Should -Be $orig.Height
-        $img.Dispose()
-        $orig.Dispose()
-    }
-
     It 'throws when the source file does not exist' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/missing.png'
         $dest = Join-Path $TestDir 'logo-blur-missing.png'

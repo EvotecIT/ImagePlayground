@@ -38,12 +38,12 @@ Corner radius for rounding.
 ```yaml
 Type: Single
 Parameter Sets: Path, Stream
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 20
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -54,7 +54,7 @@ Path to the input image.
 ```yaml
 Type: String
 Parameter Sets: Path, Stream
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -70,12 +70,12 @@ Height of the avatar.
 ```yaml
 Type: Int32
 Parameter Sets: Path, Stream
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 200
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -86,12 +86,12 @@ Open the avatar after saving.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Path, Stream
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -102,7 +102,7 @@ Destination path when saving to disk.
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -118,12 +118,12 @@ Stream that receives the avatar image.
 ```yaml
 Type: Stream
 Parameter Sets: Stream
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 1
-Default value: System.IO.Stream+NullStream
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -134,12 +134,12 @@ Width of the avatar.
 ```yaml
 Type: Int32
 Parameter Sets: Path, Stream
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 200
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -153,7 +153,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

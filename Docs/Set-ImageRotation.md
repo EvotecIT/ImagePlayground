@@ -11,16 +11,16 @@ Sets image rotation.
 ## SYNTAX
 ### Degrees (Default)
 ```powershell
-Set-ImageRotation [-FilePath] <string> [-OutputPath] <string> [-Degrees] <float> [-Async] [<CommonParameters>]
+Set-ImageRotation [-FilePath] <string> [-OutputPath] <string> [-Degrees] <float> [<CommonParameters>]
 ```
 
 ### Mode
 ```powershell
-Set-ImageRotation [-FilePath] <string> [-OutputPath] <string> [-RotateMode] <RotateMode> [-Async] [<CommonParameters>]
+Set-ImageRotation [-FilePath] <string> [-OutputPath] <string> [-RotateMode] <RotateMode> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use Degrees for arbitrary angles or for predefined rotations.
+Use Degrees for arbitrary angles or RotateMode for predefined rotations.
 
 ## EXAMPLES
 
@@ -38,34 +38,18 @@ Set-ImageRotation -FilePath in.png -OutputPath out.png -RotateMode Rotate180
 
 ## PARAMETERS
 
-### -Async
-Use asynchronous processing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Degrees, Mode
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Degrees
 Use for arbitrary rotations.
 
 ```yaml
 Type: Single
 Parameter Sets: Degrees
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 2
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -76,7 +60,7 @@ The image must exist.
 ```yaml
 Type: String
 Parameter Sets: Degrees, Mode
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -92,7 +76,7 @@ Supported formats depend on the file extension.
 ```yaml
 Type: String
 Parameter Sets: Degrees, Mode
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -105,12 +89,10 @@ Accept wildcard characters: True
 ### -RotateMode
 Use when rotating 90, 180 or 270 degrees.
 
-Possible values: None, Rotate90, Rotate180, Rotate270
-
 ```yaml
 Type: RotateMode
 Parameter Sets: Mode
-Aliases:
+Aliases: None
 Possible values: None, Rotate90, Rotate180, Rotate270
 
 Required: True
@@ -129,7 +111,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `System.Object`
 
 ## RELATED LINKS
 

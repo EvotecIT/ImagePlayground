@@ -1,16 +1,26 @@
 # ImagePlayground
 
-ImagePlayground is the main .NET package for ImageSharp-based image processing, EXIF metadata, image comparison, text and watermark overlays, thumbnails, icons, grids, mosaics, conversions, and animated GIF helpers.
+`ImagePlayground` is the cross-platform .NET image-processing package in this repository. It uses ImageSharp and targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .NET 10.
 
-Use this package for .NET applications that need image manipulation without the QR, barcode, or chart engines. The PowerShell module can still combine ImagePlayground with CodeGlyphX and ChartForgeX for an all-in-one cmdlet surface.
+```shell
+dotnet add package ImagePlayground
+```
 
-## Supported Areas
+Use it for image conversion, resizing, cropping, comparison, composition, drawing, text, watermarks, metadata, HEIF metadata, thumbnails, icons, grids, mosaics, avatars, and GIFs.
 
-- Image load, save, conversion, resize, crop, rotate, blur, sharpen, watermark, text, thumbnails, icons, grids, mosaics, and GIF creation.
-- EXIF metadata read, write, import, export, and removal helpers.
-- Image comparison helpers.
-## Related Packages
+```csharp
+using ImagePlayground;
+using SixLabors.ImageSharp;
 
-- `ChartForgeX` for direct chart, visual block, and topology rendering.
-- `CodeGlyphX` for direct QR and barcode engine access.
-- `ImagePlayground.Gdi` for optional Windows-focused GDI+ composition helpers.
+ImageHelper.Resize("photo.jpg", "photo-small.jpg", width: 800, height: null);
+
+using var image = Image.Load("photo.jpg");
+image.Resize(1200, 1200, keepAspectRatio: true);
+image.Save("photo-resized.jpg");
+```
+
+Related capabilities have separate owners:
+
+- Use [ChartForgeX](https://www.nuget.org/packages/ChartForgeX) for charts and topology diagrams.
+- Use [CodeGlyphX](https://www.nuget.org/packages/CodeGlyphX) for QR codes and barcodes.
+- Use `ImagePlayground.Gdi` only to maintain existing Windows GDI+ integrations; it is deprecated for new development.
