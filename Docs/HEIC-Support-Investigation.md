@@ -6,14 +6,16 @@ This note captures what it would take to add Apple HEIC support to ImagePlaygrou
 
 ImagePlayground currently routes image loading through `SixLabors.ImageSharp.Image.Load(...)` in a few central places:
 
-- `Sources/ImagePlayground/Image.cs`
-- `Sources/ImagePlayground/ImageHelper.cs`
-- `Sources/ImagePlayground/Image.Image.cs`
+- `Sources/ImagePlayground.Core/Image.cs`
+- `Sources/ImagePlayground.Core/ImageHelper.cs`
+- `Sources/ImagePlayground.Core/Image.Image.cs`
+- `Sources/ImagePlayground.BarCode/BarCode.cs`
+- `Sources/ImagePlayground.QRCode/QRCode.cs`
 
 Supported output formats are also hard-coded today and do not include `.heic` or `.heif`:
 
-- `Sources/ImagePlayground/Helpers.cs`
-- `Sources/ImagePlayground/Helpers.Encoder.cs`
+- `Sources/ImagePlayground.Core/Helpers.cs`
+- `Sources/ImagePlayground.Core/Helpers.Encoder.cs`
 
 That means HEIC support is not a small extension-list change. The current decode stack does not understand HEIC at all.
 

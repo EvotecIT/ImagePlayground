@@ -22,7 +22,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
         ModuleVersion          = '3.0.0'
-        AliasesToExport        = @()
+        AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
@@ -30,9 +30,9 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # Copyright statement for this module
         Copyright              = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
         # Description of the functionality provided by this module
-        Description            = 'PowerShell commands for image conversion, resizing, composition, text, watermarks, metadata, thumbnails, icons, mosaics, grids, avatars, and GIFs.'
+        Description            = 'Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.'
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags                   = @('windows', 'image', 'image-processing', 'exif', 'metadata')
+        Tags                   = @('windows', 'image', 'image-processing', 'charts', 'topology', 'qrcodes', 'barcodes')
         # A URL to the main website for this project.
         ProjectUri             = 'https://github.com/EvotecIT/ImagePlayground'
 
@@ -116,12 +116,21 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         NETAssemblyLoadContext            = $true
         NETAssemblyTypeAcceleratorMode    = 'Enums'
         NETAssemblyTypeAcceleratorAssemblies = @(
+            'ChartForgeX'
+            'CodeGlyphX'
             'ImagePlayground'
             'ImagePlayground.PowerShell'
         )
         # Enums are registered from the assemblies above. This list is only for non-enum types
         # that are intentionally part of the PowerShell scripting surface.
         NETAssemblyTypeAccelerators       = @(
+            'ChartForgeX.Core.Chart'
+            'ChartForgeX.Primitives.ChartColor'
+            'ChartForgeX.Primitives.ChartPoint'
+            'ChartForgeX.Topology.TopologyChart'
+            'ChartForgeX.Topology.TopologyEdge'
+            'ChartForgeX.Topology.TopologyGroup'
+            'ChartForgeX.Topology.TopologyNode'
             'ImagePlayground.Image'
             'SixLabors.Fonts.HorizontalAlignment'
             'SixLabors.Fonts.VerticalAlignment'

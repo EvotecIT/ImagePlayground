@@ -1,0 +1,28 @@
+using System.Management.Automation;
+using ChartForgeX.Primitives;
+using ImagePlayground;
+
+namespace ImagePlayground.PowerShell;
+
+/// <summary>Creates donut chart data item.</summary>
+[Cmdlet(VerbsCommon.New, "ImageChartDonut")]
+public sealed class NewImageChartDonutCmdlet : PSCmdlet {
+    /// <summary>Label for the slice.</summary>
+    [Alias("Label")]
+    [Parameter(Mandatory = true, Position = 0)]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>Value for the slice.</summary>
+    [Parameter(Mandatory = true, Position = 1)]
+    public double Value { get; set; }
+
+    /// <summary>Slice color.</summary>
+    [Parameter]
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord() {
+        WriteObject(new ChartDonut(Name, Value, ChartColorConverter.Convert(Color)));
+    }
+}

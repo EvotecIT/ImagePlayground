@@ -1,0 +1,32 @@
+using System.Management.Automation;
+using ChartForgeX.Primitives;
+using ImagePlayground;
+
+namespace ImagePlayground.PowerShell;
+
+/// <summary>Creates radial gauge chart data item.</summary>
+/// <example>
+///   <summary>Create radial gauge</summary>
+///   <code>New-ImageChartRadial -Name 'CPU' -Value 75 -Color Orange</code>
+/// </example>
+[Cmdlet(VerbsCommon.New, "ImageChartRadial")]
+public sealed class NewImageChartRadialCmdlet : PSCmdlet {
+    /// <summary>Label for the gauge.</summary>
+    [Alias("Label")]
+    [Parameter(Mandatory = true, Position = 0)]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>Value for the gauge.</summary>
+    [Parameter(Mandatory = true, Position = 1)]
+    public double Value { get; set; }
+
+    /// <summary>Gauge color.</summary>
+    [Parameter]
+    [ChartColorArgumentTransformation]
+    public ChartColor? Color { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord() {
+        WriteObject(new ChartRadial(Name, Value, ChartColorConverter.Convert(Color)));
+    }
+}

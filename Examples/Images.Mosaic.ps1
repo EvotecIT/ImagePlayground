@@ -3,7 +3,7 @@
 $mosaicParams = @{
     FilePaths   = @(
         "$PSScriptRoot\Samples\LogoEvotec.png",
-        "$PSScriptRoot\Samples\Snow.jpeg",
+        "$PSScriptRoot\Samples\QRCode.png",
         "$PSScriptRoot\Samples\BarcodeEAN7.png",
         "$PSScriptRoot\Samples\BarcodeEAN13.png"
     )
