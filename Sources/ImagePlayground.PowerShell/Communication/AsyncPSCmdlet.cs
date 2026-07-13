@@ -12,12 +12,18 @@ namespace ImagePlayground.PowerShell;
 /// </summary>
 /// <remarks>
 /// Invoke asynchronous hooks on the PowerShell pipeline thread until their first incomplete await.
-/// The base temporarily suppresses the host synchronization context while invoking each hook so
-/// continuations cannot be posted back to the pipeline thread while it is pumping output.
+/// The base temporarily replaces the host synchronization context with an internal thread-pool
+/// context while invoking each hook. This prevents continuations from capturing either the host
+/// context or a custom task scheduler that may be running the PowerShell pipeline thread.
 /// Keep hook implementations asynchronous all the way through and pass <see cref="CancelToken"/> to
 /// cancellable engine operations. Do not block with Task.Wait, Task.Result, or Task.WaitAll.
 /// </remarks>
 public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
+    private sealed class AsyncHookSynchronizationContext : SynchronizationContext {
+        public override void Post(SendOrPostCallback callback, object? state)
+            => ThreadPool.QueueUserWorkItem(_ => callback(state));
+    }
+
     private enum PipelineType {
         Output,
         OutputEnumerate,
@@ -46,6 +52,7 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
     }
 
     private readonly CancellationTokenSource _cancelSource = new();
+    private static readonly SynchronizationContext HookSynchronizationContext = new AsyncHookSynchronizationContext();
     private BlockingCollection<PipelineItem>? _currentOutPipe;
     private int _pipelineThreadId;
 
@@ -265,7 +272,7 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         var synchronizationContext = SynchronizationContext.Current;
         try {
-            SynchronizationContext.SetSynchronizationContext(null);
+            SynchronizationContext.SetSynchronizationContext(HookSynchronizationContext);
             blockTask = task();
         } catch {
             ClearPipes();
