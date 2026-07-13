@@ -10,7 +10,12 @@ namespace ImagePlayground.PowerShell;
 /// Base class for cmdlets that await asynchronous engine work while routing PowerShell pipeline writes
 /// back through the synchronous cmdlet pipeline thread.
 /// </summary>
-public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposable {
+/// <remarks>
+/// Invoke asynchronous hooks on the PowerShell pipeline thread until their first incomplete await.
+/// Keep hook implementations asynchronous all the way through and pass <see cref="CancelToken"/> to
+/// cancellable engine operations. Do not block with Task.Wait, Task.Result, or Task.WaitAll.
+/// </remarks>
+public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
     private enum PipelineType {
         Output,
         OutputEnumerate,
@@ -99,7 +104,7 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposabl
 
     /// <summary>Thread-safe output bridge for asynchronous cmdlet code.</summary>
     public new void WriteObject(object? sendToPipeline)
-        => WriteObject(sendToPipeline, false);
+        => WriteObject(sendToPipeline, enumerateCollection: false);
 
     /// <summary>Thread-safe output bridge for asynchronous cmdlet code.</summary>
     public new void WriteObject(object? sendToPipeline, bool enumerateCollection) {
@@ -124,36 +129,36 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposabl
     }
 
     /// <summary>Thread-safe warning bridge for asynchronous cmdlet code.</summary>
-    public new void WriteWarning(string message) {
+    public new void WriteWarning(string text) {
         ThrowIfStopped();
         if (_currentOutPipe is null || IsPipelineThread) {
-            base.WriteWarning(message);
+            base.WriteWarning(text);
             return;
         }
 
-        _currentOutPipe.Add(new PipelineItem(message, PipelineType.Warning), CancelToken);
+        _currentOutPipe.Add(new PipelineItem(text, PipelineType.Warning), CancelToken);
     }
 
     /// <summary>Thread-safe verbose bridge for asynchronous cmdlet code.</summary>
-    public new void WriteVerbose(string message) {
+    public new void WriteVerbose(string text) {
         ThrowIfStopped();
         if (_currentOutPipe is null || IsPipelineThread) {
-            base.WriteVerbose(message);
+            base.WriteVerbose(text);
             return;
         }
 
-        _currentOutPipe.Add(new PipelineItem(message, PipelineType.Verbose), CancelToken);
+        _currentOutPipe.Add(new PipelineItem(text, PipelineType.Verbose), CancelToken);
     }
 
     /// <summary>Thread-safe debug bridge for asynchronous cmdlet code.</summary>
-    public new void WriteDebug(string message) {
+    public new void WriteDebug(string text) {
         ThrowIfStopped();
         if (_currentOutPipe is null || IsPipelineThread) {
-            base.WriteDebug(message);
+            base.WriteDebug(text);
             return;
         }
 
-        _currentOutPipe.Add(new PipelineItem(message, PipelineType.Debug), CancelToken);
+        _currentOutPipe.Add(new PipelineItem(text, PipelineType.Debug), CancelToken);
     }
 
     /// <summary>Thread-safe information bridge for asynchronous cmdlet code.</summary>
@@ -185,10 +190,9 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposabl
         }
     }
 
-    /// <summary>Disposes managed resources.</summary>
-    public void Dispose() {
-        _cancelSource.Dispose();
-    }
+    /// <inheritdoc />
+    public void Dispose()
+        => _cancelSource.Dispose();
 
     private bool IsPipelineThread
         => _pipelineThreadId != 0 && Environment.CurrentManagedThreadId == _pipelineThreadId;
@@ -215,7 +219,7 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposabl
                     base.WriteObject(item.Value);
                     break;
                 case PipelineType.OutputEnumerate:
-                    base.WriteObject(item.Value, true);
+                    base.WriteObject(item.Value, enumerateCollection: true);
                     break;
                 case PipelineType.Error:
                     base.WriteError((ErrorRecord)item.Value!);
@@ -248,13 +252,36 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposabl
             }
         }
 
+        void PumpQueuedItems() {
+            while (outPipe.TryTake(out var item)) {
+                PumpItem(item);
+            }
+        }
+
         _pipelineThreadId = Environment.CurrentManagedThreadId;
         _currentOutPipe = outPipe;
 
-        blockTask = Task.Run(task, CancelToken);
+        try {
+            blockTask = task();
+        } catch {
+            ClearPipes();
+            throw;
+        }
+
+        if (blockTask.IsCompleted) {
+            CompleteAddingIfNeeded(outPipe);
+            try {
+                PumpQueuedItems();
+            } finally {
+                ClearPipes();
+            }
+
+            blockTask.GetAwaiter().GetResult();
+            return;
+        }
 
         _ = blockTask.ContinueWith(
-            _ => ClearPipes(),
+            completed => ClearPipes(),
             CancellationToken.None,
             TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler.Default);

@@ -10,7 +10,7 @@
 ### Changed
 
 - Kept the ImagePlayground PowerShell module as the unified surface over ImagePlayground, ChartForgeX, and CodeGlyphX while keeping the C# packages as separate capability owners.
-- Aligned asynchronous cmdlets with the current Evotec `AsyncPSCmdlet` lifecycle for cancellation and thread-safe pipeline writes.
+- Aligned asynchronous cmdlets with the PSPublishModule `AsyncPSCmdlet` lifecycle for cancellation and thread-safe pipeline writes.
 - Made local ChartForgeX and CodeGlyphX project references opt-in so builds use published packages by default.
 - Made module signing opt-in for local and CI builds.
 
