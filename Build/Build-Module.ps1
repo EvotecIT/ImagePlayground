@@ -131,6 +131,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Topology.TopologyEdge'
             'ChartForgeX.Topology.TopologyGroup'
             'ChartForgeX.Topology.TopologyNode'
+            'CodeGlyphX.QrPixelDecodeOptions'
             'ImagePlayground.Image'
             'SixLabors.Fonts.HorizontalAlignment'
             'SixLabors.Fonts.VerticalAlignment'

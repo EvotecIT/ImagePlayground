@@ -11,7 +11,7 @@ Reads QR code information from an image file.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-ImageQRCode [-FilePath] <string> [<CommonParameters>]
+Get-ImageQRCode [-FilePath] <string> [-DecodeOptions <QrPixelDecodeOptions>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,6 +32,22 @@ Get-ImageQRCode -FilePath qr.png
 
 
 ## PARAMETERS
+
+### -DecodeOptions
+When omitted, ImagePlayground uses bounded fast-upright and robust-transform passes. Use Stylized for QR art or other difficult images.
+
+```yaml
+Type: QrPixelDecodeOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -FilePath
 The file must exist.

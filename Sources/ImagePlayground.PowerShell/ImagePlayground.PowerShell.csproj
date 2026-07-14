@@ -37,19 +37,19 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
-        <ProjectReference Include="$(ChartForgeXProjectPath)" />
+        <ProjectReference Include="$(ChartForgeXProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(CodeGlyphXProjectPath)' != ''">
-        <ProjectReference Include="$(CodeGlyphXProjectPath)" />
+        <ProjectReference Include="$(CodeGlyphXProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">
-        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" />
+        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true' And '$(CodeGlyphXProjectPath)' == ''">
-        <ProjectReference Include="..\..\..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj" />
+        <ProjectReference Include="..\..\..\CodeGlyphX\CodeGlyphX\CodeGlyphX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">

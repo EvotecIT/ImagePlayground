@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using CodeGlyphX;
 using Xunit;
 
 namespace ImagePlayground.Tests;
@@ -42,6 +44,30 @@ public partial class ImagePlayground {
         cts.Cancel();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => QrCode.ReadAsync(filePath, cts.Token));
+    }
+
+    [Fact]
+    public async Task Test_QrCodeReadAsync_CancelsActiveRecognition() {
+        string filePath = Path.Combine(_directoryWithImages, "KulekWSluchawkach.jpg");
+        QrPixelDecodeOptions options = QrPixelDecodeOptions.Robust();
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+        var stopwatch = Stopwatch.StartNew();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => QrCode.ReadAsync(filePath, cts.Token, options));
+
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(5), $"Cancellation took {stopwatch.Elapsed}.");
+    }
+
+    [Fact]
+    public async Task Test_QrCodeReadAsync_NonQrImageReturnsNullWithinBudget() {
+        string filePath = Path.Combine(_directoryWithImages, "KulekWSluchawkach.jpg");
+        QrPixelDecodeOptions options = QrPixelDecodeOptions.Screen(250, 800);
+        var stopwatch = Stopwatch.StartNew();
+
+        QrDecoded? result = await QrCode.ReadAsync(filePath, CancellationToken.None, options);
+
+        Assert.Null(result);
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(5), $"Budgeted recognition took {stopwatch.Elapsed}.");
     }
 
     [Fact]
