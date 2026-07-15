@@ -8,7 +8,6 @@ ImagePlayground provides image manipulation APIs for .NET and matching PowerShel
 | --- | --- |
 | Resize, crop, convert, compare, compose, watermark, draw text, edit metadata, create thumbnails, icons, mosaics, grids, avatars, or GIFs from .NET | [`ImagePlayground`](https://www.nuget.org/packages/ImagePlayground) |
 | Image manipulation, charts, topology diagrams, QR codes, and barcodes from PowerShell | [`ImagePlayground`](https://www.powershellgallery.com/packages/ImagePlayground) PowerShell module |
-| Maintain an existing Windows-only GDI+ integration | [`ImagePlayground.Gdi`](https://www.nuget.org/packages/ImagePlayground.Gdi) — deprecated compatibility package |
 | Create charts or topology diagrams | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
 | Create or decode QR codes and barcodes | [`CodeGlyphX`](https://www.nuget.org/packages/CodeGlyphX) |
 
@@ -93,9 +92,10 @@ Render a ChartForgeX-backed chart without leaving the ImagePlayground PowerShell
 
 ```powershell
 New-ImageChart {
-    New-ImageChartBar -Value 5 -Label 'C#'
-    New-ImageChartBar -Value 12 -Label 'PowerShell'
-} -FilePath '.\languages.png' -Width 500 -Height 500
+    param($chart)
+    $points = [ChartForgeX.Core.ChartPoints]::FromValues(5, 12)
+    $chart.WithTitle('Languages').WithSize(720, 420).WithXLabels('C#', 'PowerShell').AddBar('Projects', $points)
+} -FilePath '.\languages.png'
 ```
 
 PowerShell commands have one execution path. Commands that can use asynchronous file APIs do so internally and honor pipeline cancellation; there is no `-Async` switch because a PowerShell command invocation still completes before returning control to the caller.
@@ -104,11 +104,9 @@ See [the generated command reference](Docs/Readme.md) and the focused scripts un
 
 ## Breaking changes
 
-ImagePlayground 3.0 removes the PowerShell `-Async` parameter; invoke the command normally. Cmdlets with cancellable asynchronous APIs use them internally.
+ImagePlayground 3.0 removes the PowerShell `-Async` parameter, the Windows-only `ImagePlayground.Gdi` project, and the parallel `New-ImageChart*` chart-definition cmdlets. Invoke asynchronous-capable commands normally and construct charts through ChartForgeX's native API.
 
-The PowerShell module continues to provide chart, topology, QR-code, and barcode commands. Only the C# ownership boundary is strict: use ChartForgeX or CodeGlyphX directly from .NET code.
-
-`ImagePlayground.Gdi` remains available for existing Windows integrations, but it is deprecated. New code should use the main ImagePlayground package for image manipulation and ChartForgeX for chart rendering.
+The PowerShell module continues to provide a thin `New-ImageChart` rendering command plus topology, QR-code, and barcode commands. C# callers use ChartForgeX or CodeGlyphX directly for those capabilities.
 
 ## Build and test
 

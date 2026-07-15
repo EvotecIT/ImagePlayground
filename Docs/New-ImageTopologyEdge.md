@@ -11,7 +11,7 @@ Creates a topology edge definition.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageTopologyEdge [-SourceNodeId] <string> [-TargetNodeId] <string> [[-Label] <string>] [-Id <string>] [-SecondaryLabel <string>] [-TertiaryLabel <string>] [-Kind <TopologyEdgeKind>] [-Status <TopologyHealthStatus>] [-Direction <TopologyDirection>] [-Routing <TopologyEdgeRouting>] [-LineStyle <TopologyEdgeLineStyle>] [-Emphasis <TopologyEdgeEmphasis>] [-SourcePort <TopologyEdgePort>] [-TargetPort <TopologyEdgePort>] [-RouteLane <double>] [-LabelOffsetX <double>] [-LabelOffsetY <double>] [-Color <string>] [-Muted] [-Href <string>] [-Tooltip <string>] [<CommonParameters>]
+New-ImageTopologyEdge [-SourceNodeId] <string> [-TargetNodeId] <string> [[-Label] <string>] [-Id <string>] [-SecondaryLabel <string>] [-TertiaryLabel <string>] [-Kind <TopologyEdgeKind>] [-Status <TopologyHealthStatus>] [-Direction <VisualLinkDirection>] [-Routing <TopologyEdgeRouting>] [-LineStyle <TopologyEdgeLineStyle>] [-Emphasis <TopologyEdgeEmphasis>] [-SourcePort <TopologyEdgePort>] [-TargetPort <TopologyEdgePort>] [-RouteLane <double>] [-LabelOffsetX <double>] [-LabelOffsetY <double>] [-Color <string>] [-Muted] [-Href <string>] [-Tooltip <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Accept wildcard characters: True
 Direction marker behavior.
 
 ```yaml
-Type: TopologyDirection
+Type: VisualLinkDirection
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: None, Forward, Backward, Bidirectional

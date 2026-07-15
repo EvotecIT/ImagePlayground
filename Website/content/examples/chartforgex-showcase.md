@@ -9,21 +9,21 @@ meta.project_hub_path: "/projects/imageplayground/"
 meta.project_link_examples: "/projects/imageplayground/examples/"
 ---
 
-ImagePlayground uses ChartForgeX for chart rendering, so the same chart definition can be written as PNG, SVG or a standalone HTML page. Transparent rendering is useful when the chart should be placed over an existing image instead of framed as a report card.
+ImagePlayground keeps chart construction in ChartForgeX and provides a thin PowerShell rendering command. The same native chart can be written as PNG, SVG, or a standalone HTML page.
 
 ```powershell
-Import-Module .\ImagePlayground.psd1 -Force
+using module ImagePlayground
 
-$definitions = @(
-    New-ImageChartLine -Name 'CPU' -Value 31,42,37,55,68,61,74,58,49,63 -Color DeepSkyBlue -Marker Circle -Smooth
-    New-ImageChartLine -Name 'Memory' -Value 48,51,55,57,60,62,59,64,66,69 -Color MediumSeaGreen -Marker Square -Smooth
-)
+$cpu = [ChartForgeX.Core.ChartPoints]::FromValues(31,42,37,55,68,61,74,58,49,63)
+$memory = [ChartForgeX.Core.ChartPoints]::FromValues(48,51,55,57,60,62,59,64,66,69)
+$chart = [ChartForgeX.Core.Chart]::Create()
+$chart.WithTitle('Workstation health').WithSize(920, 520).WithTheme([ChartForgeX.Themes.ChartTheme]::ReportDark()).WithXAxis('Sample').WithYAxis('Usage %').WithGrid().WithLegend() | Out-Null
+$chart.AddSmoothLine('CPU', $cpu, [ChartForgeX.Primitives.ChartColor]::FromHex('#38BDF8')) | Out-Null
+$chart.AddSmoothLine('Memory', $memory, [ChartForgeX.Primitives.ChartColor]::FromHex('#34D399')) | Out-Null
 
-$options = New-ImageChartOptions -Transparent -NoCard -NoPlotBackground -ShowLegend -LegendPosition Bottom -ShowDataLabels
-
-New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath .\Examples\Samples\ChartsChartForgeXTransparent.png -Width 760 -Height 420
-New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath .\Examples\Samples\ChartsChartForgeXTrend.svg -Width 760 -Height 420
-New-ImageChart -Definition $definitions -Theme Dark -ShowGrid -XTitle 'Sample' -YTitle 'Usage %' -Options $options -FilePath .\Examples\Samples\ChartsChartForgeXTrend.html -Width 760 -Height 420
+$chart | New-ImageChart -FilePath .\Examples\Samples\ChartsChartForgeXTrend.png
+$chart | New-ImageChart -FilePath .\Examples\Samples\ChartsChartForgeXTrend.svg
+$chart | New-ImageChart -FilePath .\Examples\Samples\ChartsChartForgeXTrend.html
 ```
 
-The repository script `Examples\Charts.ChartForgeX.Showcase.ps1` also creates donut, progress, pictorial and word-cloud samples.
+The repository script `Examples\Charts.ChartForgeX.Showcase.ps1` contains the complete example.

@@ -6,109 +6,39 @@ schema: 2.0.0
 ---
 # New-ImageChart
 ## SYNOPSIS
-Creates an image chart from definitions.
+Renders a native ChartForgeX chart to an image or document file.
 
 ## SYNTAX
-### ScriptBlock (Default)
+### ChartScript (Default)
 ```powershell
-New-ImageChart [-ChartsDefinition] <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [<CommonParameters>]
-```
-
-### ChartScript
-```powershell
-New-ImageChart -ChartScript <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [<CommonParameters>]
+New-ImageChart [-ChartScript] <scriptblock> -FilePath <string> [-Show] [<CommonParameters>]
 ```
 
 ### Chart
 ```powershell
-New-ImageChart -Chart <Chart> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [<CommonParameters>]
-```
-
-### Definition
-```powershell
-New-ImageChart -Definition <Object[]> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [<CommonParameters>]
+New-ImageChart -Chart <Chart> -FilePath <string> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet to render one or more chart definitions into a final image file.
+ChartForgeX owns chart construction and options. This cmdlet only resolves the destination, saves the chart, and optionally opens it.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> New-ImageChart -ChartsDefinition {
-    New-ImageChartBar -Name 'Q1' -Value 12,18,25 -Color CornflowerBlue
-    New-ImageChartBar -Name 'Q2' -Value 14,20,28 -Color Orange
-} -FilePath chart.png -XTitle 'Month' -YTitle 'Revenue'
+PS> New-ImageChart -ChartScript {
+    param($chart)
+    $points = [ChartForgeX.Core.ChartPoints]::FromValues(35, 42, 58, 61)
+    $chart.WithTitle('CPU').AddSmoothLine('Usage', $points).WithGrid()
+} -FilePath cpu-usage.png
 ```
 
-Builds chart definitions inside a script block and renders them into a PNG file.
-
-### EXAMPLE 2
-```powershell
-PS> $defs = @(
-    New-ImageChartLine -Name 'CPU' -Value 35,42,58,61,49 -Color LimeGreen -Smooth
-)
-$ann = @(
-    New-ImageChartAnnotation -X 3 -Y 61 -Text 'Peak' -Arrow
-)
-New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme Dark -ShowGrid -Show
-```
-
-Renders a themed line chart and overlays an annotation highlighting the peak value.
+The script receives the native chart and may mutate it or return a replacement chart.
 
 ## PARAMETERS
 
-### -Annotation
-Annotations for the chart.
-
-```yaml
-Type: Object[]
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -AnnotationsDefinition
-ScriptBlock producing annotations.
-
-```yaml
-Type: ScriptBlock
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Background
-Chart background color.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Chart
-ChartForgeX chart object to render.
+Native ChartForgeX chart object to render.
 
 ```yaml
 Type: Chart
@@ -124,27 +54,11 @@ Accept wildcard characters: True
 ```
 
 ### -ChartScript
-The script block receives the chart as its first argument and can mutate it directly or return a replacement chart.
+Script block that receives and configures a native ChartForgeX chart.
 
 ```yaml
 Type: ScriptBlock
 Parameter Sets: ChartScript
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ChartsDefinition
-ScriptBlock producing chart definitions.
-
-```yaml
-Type: ScriptBlock
-Parameter Sets: ScriptBlock
 Aliases: None
 Possible values:
 
@@ -155,64 +69,16 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Definition
-Chart definitions provided directly.
-
-```yaml
-Type: Object[]
-Parameter Sets: Definition
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
 ### -FilePath
-The image format is inferred from the file extension.
+Output file path. The output format is inferred from its extension.
 
 ```yaml
 Type: String
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
+Parameter Sets: ChartScript, Chart
 Aliases: None
 Possible values:
 
 Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Height
-Height of the chart.
-
-```yaml
-Type: Int32
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Options
-Renderer options created by New-ImageChartOptions.
-
-```yaml
-Type: ChartRenderOptions
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -220,91 +86,11 @@ Accept wildcard characters: True
 ```
 
 ### -Show
-Open the image after creation.
+Open the rendered file after creation.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ShowGrid
-Display grid lines.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Theme
-Chart theme.
-
-```yaml
-Type: ChartTheme
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values: Default, Dark, Light
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Width
-Width of the chart.
-
-```yaml
-Type: Int32
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -XTitle
-X axis title.
-
-```yaml
-Type: String
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -YTitle
-Y axis title.
-
-```yaml
-Type: String
-Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
+Parameter Sets: ChartScript, Chart
 Aliases: None
 Possible values:
 
@@ -320,8 +106,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `ChartForgeX.Core.Chart
-System.Object[]`
+- `ChartForgeX.Core.Chart`
 
 ## OUTPUTS
 

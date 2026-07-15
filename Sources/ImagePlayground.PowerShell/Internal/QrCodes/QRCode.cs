@@ -11,6 +11,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using CodeGlyphXPixelFormat = CodeGlyphX.PixelFormat;
 using CodeGlyphXRgba32 = CodeGlyphX.Rendering.Png.Rgba32;
+using ChartForgeX.Raster;
 
 namespace ImagePlayground;
 /// <summary>
@@ -1197,10 +1198,6 @@ public class QrCode {
         string fullLogoPath = Helpers.ResolvePath(logoPath);
         string fullOutputPath = Helpers.ResolvePath(outputPath);
 
-#if NET472
-        OverlayCenteredLogoFramework(fullQrPath, fullLogoPath, fullOutputPath);
-        return;
-#else
         string tempOutputPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(fullOutputPath)}");
 
         try {
@@ -1232,7 +1229,6 @@ public class QrCode {
                 File.Delete(tempOutputPath);
             }
         }
-#endif
     }
 
     private static async Task OverlayCenteredLogoAsync(string qrPath, string logoPath, string outputPath, CancellationToken cancellationToken) {
@@ -1241,10 +1237,6 @@ public class QrCode {
         string fullLogoPath = Helpers.ResolvePath(logoPath);
         string fullOutputPath = Helpers.ResolvePath(outputPath);
 
-#if NET472
-        OverlayCenteredLogoFramework(fullQrPath, fullLogoPath, fullOutputPath);
-        await Task.CompletedTask.ConfigureAwait(false);
-#else
         string tempOutputPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(fullOutputPath)}");
 
         try {
@@ -1277,79 +1269,7 @@ public class QrCode {
                 File.Delete(tempOutputPath);
             }
         }
-#endif
     }
-
-    #if NET472
-    private static void OverlayCenteredLogoFramework(string qrPath, string logoPath, string outputPath) {
-        string tempOutputPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(outputPath)}");
-        try {
-            using (var sourceBitmap = new System.Drawing.Bitmap(qrPath))
-            using (var qrBitmap = new System.Drawing.Bitmap(sourceBitmap.Width, sourceBitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-            using (var logoBitmap = new System.Drawing.Bitmap(logoPath)) {
-                using (var graphics = System.Drawing.Graphics.FromImage(qrBitmap)) {
-                    graphics.DrawImage(sourceBitmap, 0, 0, sourceBitmap.Width, sourceBitmap.Height);
-                }
-
-                int maxLogoWidth = Math.Max(1, qrBitmap.Width / 8);
-                int maxLogoHeight = Math.Max(1, qrBitmap.Height / 8);
-                double widthRatio = maxLogoWidth / (double)logoBitmap.Width;
-                double heightRatio = maxLogoHeight / (double)logoBitmap.Height;
-                double scale = Math.Min(widthRatio, heightRatio);
-                int logoWidth = Math.Max(1, (int)Math.Round(logoBitmap.Width * scale));
-                int logoHeight = Math.Max(1, (int)Math.Round(logoBitmap.Height * scale));
-                int x = (qrBitmap.Width - logoWidth) / 2;
-                int y = (qrBitmap.Height - logoHeight) / 2;
-
-                using (var graphics = System.Drawing.Graphics.FromImage(qrBitmap))
-                using (var resizedLogo = new System.Drawing.Bitmap(logoBitmap, new System.Drawing.Size(logoWidth, logoHeight))) {
-                    graphics.DrawImage(resizedLogo, x, y, logoWidth, logoHeight);
-                }
-
-                SaveCompositeBitmapFramework(qrBitmap, tempOutputPath);
-            }
-
-            File.Copy(tempOutputPath, outputPath, true);
-        } finally {
-            if (File.Exists(tempOutputPath)) {
-                File.Delete(tempOutputPath);
-            }
-        }
-    }
-
-    private static void SaveCompositeBitmapFramework(System.Drawing.Bitmap bitmap, string filePath) {
-        Helpers.CreateParentDirectory(filePath);
-        string extension = Path.GetExtension(filePath);
-
-        if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
-            string tempPngPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
-            try {
-                bitmap.Save(tempPngPath, System.Drawing.Imaging.ImageFormat.Png);
-                using var wrappedImage = Image.Load(tempPngPath);
-                wrappedImage.SaveAsIcon(filePath);
-            } finally {
-                if (File.Exists(tempPngPath)) {
-                    File.Delete(tempPngPath);
-                }
-            }
-            return;
-        }
-
-        bitmap.Save(filePath, GetFrameworkImageFormat(extension));
-    }
-
-    private static System.Drawing.Imaging.ImageFormat GetFrameworkImageFormat(string extension) {
-        return extension.ToLowerInvariant() switch {
-            ".png" => System.Drawing.Imaging.ImageFormat.Png,
-            ".jpg" => System.Drawing.Imaging.ImageFormat.Jpeg,
-            ".jpeg" => System.Drawing.Imaging.ImageFormat.Jpeg,
-            ".bmp" => System.Drawing.Imaging.ImageFormat.Bmp,
-            ".gif" => System.Drawing.Imaging.ImageFormat.Gif,
-            ".tiff" => System.Drawing.Imaging.ImageFormat.Tiff,
-            _ => System.Drawing.Imaging.ImageFormat.Png
-        };
-    }
-    #endif
 
     private static void SaveCompositeImage(Image<Rgba32> image, string filePath) {
         Helpers.CreateParentDirectory(filePath);
@@ -1425,102 +1345,53 @@ public class QrCode {
     public static async Task<QrDecoded?> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
-        #if NET8_0_OR_GREATER
-        using Image<Rgba32> image = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(fullPath, cancellationToken).ConfigureAwait(false);
-        byte[] pixels = new byte[image.Width * image.Height * 4];
-        image.CopyPixelDataTo(pixels);
+        byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        RgbaImage image = RasterImageDecoder.Decode(imageBytes);
+        byte[] pixels = image.Pixels;
 
         cancellationToken.ThrowIfCancellationRequested();
-        if (TryDecodePixels(pixels, image.Width, image.Height, out var decoded)) {
+        if (TryDecodePixels(pixels, image.Width, image.Height, cancellationToken, out var decoded)) {
             return decoded;
         }
 
         var composited = CompositeOnWhite(image);
-        if (composited is not null && TryDecodePixels(composited, image.Width, image.Height, out decoded)) {
+        if (composited is not null && TryDecodePixels(composited, image.Width, image.Height, cancellationToken, out decoded)) {
             return decoded;
         }
 
-        return await TryDecodeImageFallbackAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        #else
-        return await TryDecodeImageFallbackAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        #endif
-
+        return null;
     }
 
-    private static async Task<QrDecoded?> TryDecodeImageFallbackAsync(string fullPath, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
-        byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        if (QrImageDecoder.TryDecodeImage(imageBytes, out var decoded)) {
-            return decoded;
-        }
-
-        var aggressiveOptions = new QrPixelDecodeOptions {
+    private static bool TryDecodePixels(byte[] pixels, int width, int height, CancellationToken cancellationToken, out QrDecoded decoded) {
+        var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
-            StylizedSampling = true
+            StylizedSampling = true,
+#if FRAMEWORK
+            MaxDimension = 360,
+#else
+            MaxDimension = 1200,
+#endif
+            BudgetMilliseconds = 5000
         };
-
-        cancellationToken.ThrowIfCancellationRequested();
-        if (QrImageDecoder.TryDecodeImage(imageBytes, aggressiveOptions, out decoded)) {
-            return decoded;
-        }
-
-        using FileStream stream = File.OpenRead(fullPath);
-        if (QrImageDecoder.TryDecodeImage(stream, out decoded)) {
-            return decoded;
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-        stream.Position = 0;
-        return QrImageDecoder.TryDecodeImage(stream, aggressiveOptions, out decoded) ? decoded : null;
+        return QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, options, cancellationToken, out decoded);
     }
 
-    #if NET8_0_OR_GREATER
-    private static bool TryDecodePixels(byte[] pixels, int width, int height, out QrDecoded decoded) {
-        if (QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, out decoded)) {
-            return true;
-        }
-
-        var aggressiveOptions = new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Robust,
-            AggressiveSampling = true,
-            StylizedSampling = true
-        };
-        return QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, aggressiveOptions, out decoded);
-    }
-    #endif
-
-    private static byte[]? CompositeOnWhite(Image<Rgba32> image) {
+    private static byte[]? CompositeOnWhite(RgbaImage image) {
         byte[]? composited = null;
-        var index = 0;
-
-        for (var y = 0; y < image.Height; y++) {
-            for (var x = 0; x < image.Width; x++) {
-                Rgba32 pixel = image[x, y];
-                if (pixel.A == 255) {
-                    if (composited is not null) {
-                        composited[index] = pixel.R;
-                        composited[index + 1] = pixel.G;
-                        composited[index + 2] = pixel.B;
-                        composited[index + 3] = 255;
-                    }
-
-                    index += 4;
-                    continue;
-                }
-
-                composited ??= new byte[image.Width * image.Height * 4];
-                if (index > 0) {
-                    image.CopyPixelDataTo(composited);
-                }
-
-                byte alpha = pixel.A;
-                composited[index] = BlendChannel(pixel.R, alpha);
-                composited[index + 1] = BlendChannel(pixel.G, alpha);
-                composited[index + 2] = BlendChannel(pixel.B, alpha);
-                composited[index + 3] = 255;
-                index += 4;
+        var source = image.Pixels;
+        for (var index = 0; index < source.Length; index += 4) {
+            var alpha = source[index + 3];
+            if (alpha == 255) continue;
+            if (composited == null) {
+                composited = new byte[source.Length];
+                Buffer.BlockCopy(source, 0, composited, 0, source.Length);
             }
+
+            composited[index] = BlendChannel(source[index], alpha);
+            composited[index + 1] = BlendChannel(source[index + 1], alpha);
+            composited[index + 2] = BlendChannel(source[index + 2], alpha);
+            composited[index + 3] = 255;
         }
 
         return composited;
