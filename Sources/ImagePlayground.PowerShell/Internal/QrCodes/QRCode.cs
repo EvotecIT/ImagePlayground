@@ -1346,7 +1346,7 @@ public class QrCode {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        RgbaImage image = RasterImageDecoder.Decode(imageBytes);
+        RgbaImage image = DecodeQrImage(imageBytes);
         byte[] pixels = image.Pixels;
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -1360,6 +1360,15 @@ public class QrCode {
         }
 
         return null;
+    }
+
+    private static RgbaImage DecodeQrImage(byte[] imageBytes) {
+        if (RasterImageDecoder.TryDecode(imageBytes, out var image)) return image;
+
+        using Image<Rgba32> hostImage = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
+        var pixels = new byte[checked(hostImage.Width * hostImage.Height * 4)];
+        hostImage.CopyPixelDataTo(pixels);
+        return new RgbaImage(hostImage.Width, hostImage.Height, pixels);
     }
 
     private static bool TryDecodePixels(byte[] pixels, int width, int height, CancellationToken cancellationToken, out QrDecoded decoded) {

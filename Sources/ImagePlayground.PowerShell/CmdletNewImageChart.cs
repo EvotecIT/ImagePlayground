@@ -79,6 +79,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
 
     private void SaveChart(Chart chart) {
         var output = Helpers.ResolvePath(FilePath);
+        Helpers.CreateParentDirectory(output);
         chart.Save(output);
         if (Show.IsPresent) Helpers.Open(output, true);
     }

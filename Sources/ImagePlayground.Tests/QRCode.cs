@@ -3,6 +3,7 @@ using System.IO;
 using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Formats.Webp;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
 
@@ -54,6 +55,18 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath));
         AssertQrDecoded(filePath, "https://evotec.xyz");
+    }
+
+    [Fact]
+    public void Test_QRCode_ReadsHostSupportedWebp() {
+        string pngPath = Path.Combine(_directoryWithTests, "qr_webp_source.png");
+        string webpPath = Path.Combine(_directoryWithTests, "qr_webp.webp");
+        QrCode.Generate("https://evotec.xyz/webp", pngPath);
+        using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(pngPath)) {
+            image.Save(webpPath, new WebpEncoder { Quality = 100, FileFormat = WebpFileFormatType.Lossless });
+        }
+
+        AssertQrDecoded(webpPath, "https://evotec.xyz/webp");
     }
 
     [Fact]

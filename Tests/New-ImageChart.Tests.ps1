@@ -41,6 +41,19 @@ Describe 'New-ImageChart' {
         Test-Path -LiteralPath $file | Should -BeTrue
     }
 
+    It 'creates the output parent directory' {
+        $directory = Join-Path -Path $TestDir -ChildPath 'nested-chart-output'
+        $file = Join-Path -Path $directory -ChildPath 'chart.png'
+        Remove-Item -LiteralPath $directory -Recurse -Force -ErrorAction SilentlyContinue
+
+        New-ImageChart -ChartScript {
+            param($chart)
+            $chart.WithTitle('Nested output').WithSize(240, 160)
+        } -FilePath $file
+
+        Test-Path -LiteralPath $file | Should -BeTrue
+    }
+
     It 'rejects several charts for one output path' {
         $file = Join-Path -Path $TestDir -ChildPath 'invalid.png'
         $charts = @(
