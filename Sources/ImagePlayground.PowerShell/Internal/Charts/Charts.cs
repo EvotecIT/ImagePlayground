@@ -470,34 +470,10 @@ internal static class Charts {
         var binSize = ResolveSharedBinSize(histograms.Select(item => item.Definition));
         var min = histograms.SelectMany(item => item.Values).Min();
         var max = histograms.SelectMany(item => item.Values).Max();
-        if (Math.Abs(max - min) < 0.000001) {
-            chart.WithXLabels(FormatHistogramNumber(min));
-            foreach (var histogram in histograms) {
-                chart.AddBar(histogram.Definition.Name, new[] { new ChartPoint(1, histogram.Values.Length) });
-            }
-
-            return;
-        }
-
-        var binCount = binSize.HasValue ? Math.Max(1, (int)Math.Ceiling((max - min) / binSize.Value)) : 10;
-        var width = (max - min) / binCount;
-        var labels = new string[binCount];
-        for (var i = 0; i < binCount; i++) {
-            var start = min + width * i;
-            var end = i == binCount - 1 ? max : start + width;
-            labels[i] = FormatHistogramNumber(start) + "-" + FormatHistogramNumber(end);
-        }
-
-        chart.WithXLabels(labels);
-        foreach (var histogram in histograms) {
-            var counts = new int[binCount];
-            foreach (var value in histogram.Values) {
-                var index = value >= max ? binCount - 1 : (int)Math.Floor((value - min) / width);
-                counts[Math.Max(0, Math.Min(binCount - 1, index))]++;
-            }
-
-            chart.AddBar(histogram.Definition.Name, counts.Select((count, index) => new ChartPoint(index + 1, count)));
-        }
+        var layout = binSize.HasValue
+            ? ChartHistogramBinLayout.FromWidth(min, max, binSize.Value)
+            : ChartHistogramBinLayout.FromCount(min, max, 10);
+        foreach (var histogram in histograms) chart.AddHistogram(histogram.Definition.Name, histogram.Values, layout);
     }
 
     private static void ApplyPointColors(CfxChart chart, ChartColor?[] colors) {
@@ -644,8 +620,6 @@ internal static class Charts {
     }
 
     private static ChartColor WithAlpha(ChartColor color, byte alpha) => ChartColor.FromRgba(color.R, color.G, color.B, alpha);
-
-    private static string FormatHistogramNumber(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 
     private readonly struct HistogramDefinition {
         public HistogramDefinition(ChartHistogram definition, double[] values) {

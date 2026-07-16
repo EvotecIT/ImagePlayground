@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using ChartForgeX;
 using ChartForgeX.Core;
 using CodeGlyphX.Payloads;
@@ -41,6 +42,16 @@ public partial class ImagePlayground {
         };
         var exception = Assert.Throws<ArgumentException>(() => global::ImagePlayground.Charts.Build(mixed));
         Assert.Contains("shared marker size", exception.Message);
+    }
+
+    [Fact]
+    public void Test_HistogramBinSizePreservesRequestedWidth() {
+        var chart = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartHistogram("Requested width", new[] { 0d, 1d, 3d, 5d, 6d, 9d, 10d }, 3)
+        });
+
+        Assert.Equal(new[] { "0-3", "3-6", "6-9", "9-10" }, chart.Options.XAxisLabels.Select(label => label.Text));
+        Assert.Equal(new[] { 2d, 2d, 1d, 2d }, chart.Series[0].Points.Select(point => point.Y));
     }
 
     [Fact]

@@ -173,6 +173,23 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeFalse
     }
 
+    It 'preserves the requested histogram bin size in rendered labels' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_histogram_bin_size.svg'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartHistogram -Name 'Requested width' -Values 0, 1, 3, 5, 6, 9, 10 -BinSize 3
+        } -FilePath $file -Width 500 -Height 320
+
+        $svg = Get-Content -Path $file -Raw
+        $svg | Should -Match '>0-3</text>'
+        $svg | Should -Match '>3-6</text>'
+        $svg | Should -Match '>6-9</text>'
+        $svg | Should -Match '>9-10</text>'
+    }
+
     It 'rejects point callouts for exclusive polar charts before rendering' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_polar_annotation.png'
         if (Test-Path -Path $file) {
