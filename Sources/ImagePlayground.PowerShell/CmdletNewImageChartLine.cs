@@ -28,8 +28,8 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
     [ChartColorArgumentTransformation]
     public ChartColor? Color { get; set; }
 
-    /// <summary>Markers placed on data points.</summary>
-    /// <para>ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.</para>
+    /// <summary>Optional circle markers placed on data points.</summary>
+    /// <para>None suppresses line markers; Circle enables ChartForgeX's shared line-marker style.</para>
     [Parameter]
     public ChartMarkerShape Marker { get; set; } = ChartMarkerShape.None;
 
@@ -39,7 +39,11 @@ public sealed class NewImageChartLineCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        float? markerSize = Marker == ChartMarkerShape.None ? null : 6;
+        var markerSize = Marker switch {
+            ChartMarkerShape.None => 0f,
+            ChartMarkerShape.Circle => 6f,
+            _ => throw new System.ArgumentOutOfRangeException(nameof(Marker), Marker, "Unsupported line marker shape.")
+        };
         WriteObject(new ChartLine(Name, Value, ChartColorConverter.Convert(Color), markerSize, Smooth.IsPresent));
     }
 }

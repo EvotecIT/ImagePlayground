@@ -11,7 +11,7 @@ public sealed class ChartLine : ChartDefinition {
     /// <summary>Line color.</summary>
     public ChartColor? Color { get; }
 
-    /// <summary>Optional size of the markers.</summary>
+    /// <summary>Optional diameter of the shared circle markers. Null and zero suppress markers.</summary>
     public float? MarkerSize { get; }
 
     /// <summary>Render the line using a smooth curve.</summary>
@@ -21,7 +21,7 @@ public sealed class ChartLine : ChartDefinition {
     /// <param name="name">Series name.</param>
     /// <param name="value">Line values.</param>
     /// <param name="color">Optional line color.</param>
-    /// <param name="markerSize">Optional marker size.</param>
+    /// <param name="markerSize">Optional circle-marker diameter. Null and zero suppress markers.</param>
     /// <param name="smooth">Render as a smooth curve.</param>
     public ChartLine(
         string name,

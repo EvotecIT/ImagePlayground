@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using ChartForgeX;
 using ChartForgeX.Core;
@@ -23,6 +24,23 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(file));
         using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
         Assert.True(stream.Length > 64);
+    }
+
+    [Fact]
+    public void Test_LineDefinitionsPreserveMarkerPolicy() {
+        var markerless = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartLine("Without markers", new[] { 10d, 30d, 20d })
+        });
+
+        Assert.Equal(0d, markerless.Options.Theme.MarkerRadius);
+        Assert.DoesNotContain("data-cfx-role=\"line-marker\"", markerless.ToSvg());
+
+        var mixed = new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartLine("Without markers", new[] { 10d, 30d, 20d }, markerSize: 0),
+            new global::ImagePlayground.ChartLine("With markers", new[] { 20d, 15d, 25d }, markerSize: 6)
+        };
+        var exception = Assert.Throws<ArgumentException>(() => global::ImagePlayground.Charts.Build(mixed));
+        Assert.Contains("shared marker size", exception.Message);
     }
 
     [Fact]

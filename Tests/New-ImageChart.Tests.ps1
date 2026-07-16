@@ -148,6 +148,31 @@ Describe 'New-ImageChart' {
         $definition.Radius[3] | Should -Be 3
     }
 
+    It 'preserves explicit line marker semantics' {
+        $withoutMarkers = New-ImageChartLine -Name 'Plain' -Value 1, 3, 2
+        $withMarkers = New-ImageChartLine -Name 'Marked' -Value 2, 4, 3 -Marker Circle
+
+        $withoutMarkers.MarkerSize | Should -Be 0
+        $withMarkers.MarkerSize | Should -Be 6
+        [enum]::GetNames([ImagePlayground.ChartMarkerShape]) | Should -Be @('None', 'Circle')
+    }
+
+    It 'rejects mixed line marker policies before rendering' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_mixed_line_markers.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        {
+            New-ImageChart -ChartsDefinition {
+                New-ImageChartLine -Name 'Plain' -Value 1, 3, 2
+                New-ImageChartLine -Name 'Marked' -Value 2, 4, 3 -Marker Circle
+            } -FilePath $file -ErrorAction Stop
+        } | Should -Throw '*shared marker size*'
+
+        Test-Path -Path $file | Should -BeFalse
+    }
+
     It 'rejects point callouts for exclusive polar charts before rendering' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_polar_annotation.png'
         if (Test-Path -Path $file) {

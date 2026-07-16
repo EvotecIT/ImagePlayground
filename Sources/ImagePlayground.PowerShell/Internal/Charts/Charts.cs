@@ -622,11 +622,7 @@ internal static class Charts {
                 throw new ArgumentOutOfRangeException(nameof(line), line.MarkerSize.Value, "Marker size must be zero or greater.");
             }
 
-            if (!line.MarkerSize.HasValue) {
-                continue;
-            }
-
-            var candidate = Math.Max(0, line.MarkerSize.Value / 2d);
+            var candidate = Math.Max(0, (line.MarkerSize ?? 0) / 2d);
             if (markerRadius.HasValue && Math.Abs(markerRadius.Value - candidate) > 0.000001) {
                 throw new ArgumentException("ImagePlayground line definitions require a shared marker size for all line series because ChartForgeX marker radius is chart-wide.", nameof(lines));
             }

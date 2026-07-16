@@ -10,7 +10,7 @@
 ### Changed
 
 - Kept every `New-ImageChart*` command as a thin PowerShell adapter over ChartForgeX while keeping the C# packages as separate capability owners.
-- Upgraded the PowerShell chart adapter to ChartForgeX 1.0.1 and mapped `New-ImageChartPolar` angle/radius pairs to true polar geometry.
+- Upgraded the PowerShell chart adapter to ChartForgeX 1.0.2, mapped `New-ImageChartPolar` angle/radius pairs to true polar geometry, and preserved explicit line-marker `None`/`Circle` semantics.
 - Unified topology direction values on ChartForgeX's product-neutral `VisualLinkDirection` contract.
 - Replaced QR image decoding fallbacks with one bounded, dependency-free ChartForgeX raster decode path and one CodeGlyphX pixel decode policy.
 - Aligned asynchronous cmdlets with the PSPublishModule `AsyncPSCmdlet` lifecycle for cancellation and thread-safe pipeline writes.
