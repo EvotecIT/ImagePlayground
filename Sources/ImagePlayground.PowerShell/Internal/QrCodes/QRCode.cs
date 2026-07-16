@@ -1372,6 +1372,10 @@ public class QrCode {
     }
 
     private static bool TryDecodePixels(byte[] pixels, int width, int height, CancellationToken cancellationToken, out QrDecoded decoded) {
+        if (QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, options: null, cancellationToken, out decoded)) {
+            return true;
+        }
+
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
