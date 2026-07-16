@@ -6,11 +6,11 @@
 - Removed the unused `ImagePlayground.BarcodeResult` type; CodeGlyphX owns barcode result contracts for .NET callers.
 - Removed the unused Microsoft.CSharp dependency and limited System.Text.Json and System.Memory package references to .NET Standard 2.0 and .NET Framework 4.7.2.
 - Removed the Windows-only `ImagePlayground.Gdi` project and its `System.Drawing` implementation.
-- Removed the parallel `New-ImageChart*` chart-definition API. `New-ImageChart` now renders a native ChartForgeX chart or a script that configures one.
 
 ### Changed
 
-- Kept the ImagePlayground PowerShell module as a thin aggregation surface over ImagePlayground, ChartForgeX, and CodeGlyphX while keeping the C# packages as separate capability owners.
+- Kept every `New-ImageChart*` command as a thin PowerShell adapter over ChartForgeX while keeping the C# packages as separate capability owners.
+- Upgraded the PowerShell chart adapter to ChartForgeX 1.0.1 and mapped `New-ImageChartPolar` angle/radius pairs to true polar geometry.
 - Unified topology direction values on ChartForgeX's product-neutral `VisualLinkDirection` contract.
 - Replaced QR image decoding fallbacks with one bounded, dependency-free ChartForgeX raster decode path and one CodeGlyphX pixel decode policy.
 - Aligned asynchronous cmdlets with the PSPublishModule `AsyncPSCmdlet` lifecycle for cancellation and thread-safe pipeline writes.

@@ -132,6 +132,39 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
+    It 'preserves true polar angle and radius data in a dedicated definition' {
+        $definition = New-ImageChartPolar -Name 'Irregular sweep' -Angle @(0, 0.7, 2.4, 5.7) -Value @(1, 4, 2, 3) -Color '#38BDF8'
+
+        $definition.GetType().FullName | Should -Be 'ImagePlayground.ChartPolar'
+        $definition.Angle.Count | Should -Be 4
+        $definition.Angle[0] | Should -Be 0
+        $definition.Angle[1] | Should -Be 0.7
+        $definition.Angle[2] | Should -Be 2.4
+        $definition.Angle[3] | Should -Be 5.7
+        $definition.Radius.Count | Should -Be 4
+        $definition.Radius[0] | Should -Be 1
+        $definition.Radius[1] | Should -Be 4
+        $definition.Radius[2] | Should -Be 2
+        $definition.Radius[3] | Should -Be 3
+    }
+
+    It 'rejects point callouts for exclusive polar charts before rendering' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_polar_annotation.png'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        {
+            New-ImageChart -ChartsDefinition {
+                New-ImageChartPolar -Name 'Sweep' -Angle @(0, 0.7, 2.4, 5.7) -Value @(1, 4, 2, 3)
+            } -AnnotationsDefinition {
+                New-ImageChartAnnotation -X 0.7 -Y 4 -Text 'Peak' -Arrow
+            } -FilePath $file -ErrorAction Stop
+        } | Should -Throw '*exclusive chart kinds*'
+
+        Test-Path -Path $file | Should -BeFalse
+    }
+
     It 'creates an area chart' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_area.png'
         if (Test-Path -Path $file) {

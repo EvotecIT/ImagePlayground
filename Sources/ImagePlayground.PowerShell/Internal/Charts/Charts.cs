@@ -102,6 +102,8 @@ internal static class Charts {
             }
         } else if (type == typeof(ChartBoxPlotSeries)) {
             foreach (var box in list.Cast<ChartBoxPlotSeries>()) chart.AddBoxPlot(box.Name, BuildBoxPlots(box), box.Color);
+        } else if (type == typeof(ChartPolar)) {
+            foreach (var polar in list.Cast<ChartPolar>()) chart.AddPolar(polar.Name, BuildXYPoints(polar.Angle, polar.Radius), polar.Color);
         } else if (type == typeof(ChartRadar)) {
             AddRadarDefinitions(chart, list.Cast<ChartRadar>());
         } else if (type == typeof(ChartPie)) {
@@ -534,6 +536,7 @@ internal static class Charts {
                 case ChartSeriesKind.LayeredRadial:
                 case ChartSeriesKind.Bullet:
                 case ChartSeriesKind.Waterfall:
+                case ChartSeriesKind.Polar:
                 case ChartSeriesKind.Radar:
                 case ChartSeriesKind.Funnel:
                 case ChartSeriesKind.Treemap:
