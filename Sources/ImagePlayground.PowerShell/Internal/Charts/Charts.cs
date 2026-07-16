@@ -499,36 +499,7 @@ internal static class Charts {
 
     internal static bool HasExclusiveSeries(CfxChart chart) {
         foreach (var series in chart.Series) {
-            switch (series.Kind) {
-                case ChartSeriesKind.Heatmap:
-                case ChartSeriesKind.HexbinHeatmap:
-                case ChartSeriesKind.CalendarHeatmap:
-                case ChartSeriesKind.DottedMap:
-                case ChartSeriesKind.TileMap:
-                case ChartSeriesKind.RegionMap:
-                case ChartSeriesKind.Gauge:
-                case ChartSeriesKind.Circle:
-                case ChartSeriesKind.RadialBar:
-                case ChartSeriesKind.LayeredRadial:
-                case ChartSeriesKind.Bullet:
-                case ChartSeriesKind.Waterfall:
-                case ChartSeriesKind.Polar:
-                case ChartSeriesKind.Radar:
-                case ChartSeriesKind.Funnel:
-                case ChartSeriesKind.Treemap:
-                case ChartSeriesKind.Timeline:
-                case ChartSeriesKind.Gantt:
-                case ChartSeriesKind.Sankey:
-                case ChartSeriesKind.Tree:
-                case ChartSeriesKind.Sunburst:
-                case ChartSeriesKind.Pictorial:
-                case ChartSeriesKind.ProgressBar:
-                case ChartSeriesKind.WordCloud:
-                case ChartSeriesKind.Pie:
-                case ChartSeriesKind.Donut:
-                case ChartSeriesKind.PolarArea:
-                    return true;
-            }
+            if (ChartSeriesKindCapabilities.IsExclusive(series.Kind)) return true;
         }
 
         return false;
