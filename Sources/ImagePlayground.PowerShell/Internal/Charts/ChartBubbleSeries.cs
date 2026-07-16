@@ -1,0 +1,32 @@
+using System.Collections.Generic;
+using ChartForgeX.Primitives;
+
+namespace ImagePlayground;
+
+/// <summary>Bubble chart definition.</summary>
+public sealed class ChartBubbleSeries : ChartDefinition {
+    /// <summary>X values.</summary>
+    public IList<double> X { get; }
+
+    /// <summary>Y values.</summary>
+    public IList<double> Y { get; }
+
+    /// <summary>Size values.</summary>
+    public IList<double> Size { get; }
+
+    /// <summary>Bubble color.</summary>
+    public ChartColor? Color { get; }
+
+    /// <summary>Create a bubble chart definition.</summary>
+    /// <param name="name">Series name.</param>
+    /// <param name="x">X data points.</param>
+    /// <param name="y">Y data points.</param>
+    /// <param name="size">Bubble sizes.</param>
+    /// <param name="color">Optional bubble color.</param>
+    public ChartBubbleSeries(string name, IList<double> x, IList<double> y, IList<double> size, ChartColor? color = null) : base(name) {
+        X = x;
+        Y = y;
+        Size = size;
+        Color = color;
+    }
+}

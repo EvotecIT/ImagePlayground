@@ -1,0 +1,22 @@
+using System.Collections.Generic;
+using ChartForgeX.Primitives;
+
+namespace ImagePlayground;
+
+/// <summary>Bar chart definition.</summary>
+public sealed class ChartBar : ChartDefinition {
+    /// <summary>Bar values.</summary>
+    public IList<double> Value { get; }
+
+    /// <summary>Bar color.</summary>
+    public ChartColor? Color { get; }
+
+    /// <summary>Create a bar chart definition.</summary>
+    /// <param name="name">Series name.</param>
+    /// <param name="value">Bar values.</param>
+    /// <param name="color">Optional bar color.</param>
+    public ChartBar(string name, IList<double> value, ChartColor? color = null) : base(name) {
+        Value = value;
+        Color = color;
+    }
+}

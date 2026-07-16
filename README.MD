@@ -92,11 +92,12 @@ Render a ChartForgeX-backed chart without leaving the ImagePlayground PowerShell
 
 ```powershell
 New-ImageChart {
-    param($chart)
-    $points = [ChartForgeX.Core.ChartPoints]::FromValues(5, 12)
-    $chart.WithTitle('Languages').WithSize(720, 420).WithXLabels('C#', 'PowerShell').AddBar('Projects', $points)
-} -FilePath '.\languages.png'
+    New-ImageChartBar -Name 'C#' -Value 5 -Color CornflowerBlue
+    New-ImageChartBar -Name 'PowerShell' -Value 12 -Color MediumSeaGreen
+} -FilePath '.\languages.png' -Width 720 -Height 420 -ShowGrid
 ```
+
+The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other chart-definition commands remain the normal PowerShell experience. Advanced scripts can also pass a native `ChartForgeX.Core.Chart` through `-Chart` or configure one through `-ChartScript`.
 
 PowerShell commands have one execution path. Commands that can use asynchronous file APIs do so internally and honor pipeline cancellation; there is no `-Async` switch because a PowerShell command invocation still completes before returning control to the caller.
 
@@ -104,9 +105,9 @@ See [the generated command reference](Docs/Readme.md) and the focused scripts un
 
 ## Breaking changes
 
-ImagePlayground 3.0 removes the PowerShell `-Async` parameter, the Windows-only `ImagePlayground.Gdi` project, and the parallel `New-ImageChart*` chart-definition cmdlets. Invoke asynchronous-capable commands normally and construct charts through ChartForgeX's native API.
+ImagePlayground 3.0 removes the PowerShell `-Async` parameter and the Windows-only `ImagePlayground.Gdi` project. Invoke asynchronous-capable commands normally.
 
-The PowerShell module continues to provide a thin `New-ImageChart` rendering command plus topology, QR-code, and barcode commands. C# callers use ChartForgeX or CodeGlyphX directly for those capabilities.
+The PowerShell module keeps its chart-definition, topology, QR-code, and barcode commands. Those commands are thin adapters: ChartForgeX owns chart and topology rendering, CodeGlyphX owns code generation and decoding, and ImagePlayground keeps the PowerShell user experience. C# callers should use the owning packages directly.
 
 ## Build and test
 
