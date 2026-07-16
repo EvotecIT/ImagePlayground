@@ -1346,7 +1346,7 @@ public class QrCode {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
         byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        RgbaImage image = DecodeQrImage(imageBytes);
+        RgbaImage image = await DecodeQrImageAsync(imageBytes, cancellationToken).ConfigureAwait(false);
         byte[] pixels = image.Pixels;
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -1362,12 +1362,27 @@ public class QrCode {
         return null;
     }
 
-    private static RgbaImage DecodeQrImage(byte[] imageBytes) {
+    private static async Task<RgbaImage> DecodeQrImageAsync(byte[] imageBytes, CancellationToken cancellationToken) {
         if (RasterImageDecoder.TryDecode(imageBytes, out var image)) return image;
 
-        using Image<Rgba32> hostImage = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
+        using var stream = new MemoryStream(imageBytes, writable: false);
+        using Image<Rgba32> hostImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(stream, cancellationToken).ConfigureAwait(false);
         var pixels = new byte[checked(hostImage.Width * hostImage.Height * 4)];
-        hostImage.CopyPixelDataTo(pixels);
+        hostImage.ProcessPixelRows(accessor => {
+            for (var y = 0; y < accessor.Height; y++) {
+                cancellationToken.ThrowIfCancellationRequested();
+                Span<Rgba32> row = accessor.GetRowSpan(y);
+                var offset = y * hostImage.Width * 4;
+                for (var x = 0; x < row.Length; x++) {
+                    var pixel = row[x];
+                    pixels[offset++] = pixel.R;
+                    pixels[offset++] = pixel.G;
+                    pixels[offset++] = pixel.B;
+                    pixels[offset++] = pixel.A;
+                }
+            }
+        });
+        cancellationToken.ThrowIfCancellationRequested();
         return new RgbaImage(hostImage.Width, hostImage.Height, pixels);
     }
 
