@@ -57,7 +57,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
-        <PackageReference Include="CodeGlyphX" Version="1.6.0" />
+        <PackageReference Include="CodeGlyphX" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
