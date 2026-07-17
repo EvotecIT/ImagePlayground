@@ -1,3 +1,4 @@
+using CodeGlyphX;
 using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
@@ -22,10 +23,15 @@ public sealed class GetImageQrCodeCmdlet : AsyncImageCmdlet {
     [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
     public string FilePath { get; set; } = string.Empty;
 
+    /// <summary>CodeGlyphX recognition options used while decoding the QR image.</summary>
+    /// <para>When omitted, ImagePlayground uses bounded fast-upright and robust-transform passes. Use <see cref="QrPixelDecodeOptions.Stylized"/> for QR art or other difficult images.</para>
+    [Parameter]
+    public QrPixelDecodeOptions? DecodeOptions { get; set; }
+
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageQRCodeFileNotFound", FilePath);
-        var result = await ImagePlayground.QrCode.ReadAsync(filePath, CancelToken).ConfigureAwait(false);
+        var result = await ImagePlayground.QrCode.ReadAsync(filePath, CancelToken, DecodeOptions).ConfigureAwait(false);
         WriteObject(result);
     }
 }
