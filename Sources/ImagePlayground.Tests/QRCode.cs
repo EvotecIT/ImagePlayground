@@ -4,6 +4,7 @@ using Xunit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
 
@@ -171,6 +172,20 @@ public partial class ImagePlayground {
 
         byte[] logoBytes = File.ReadAllBytes(filePath);
         Assert.NotEqual(baseBytes, logoBytes);
+    }
+
+    [Fact]
+    public void Test_QRCode_ReadsRotatedImage() {
+        string filePath = Path.Combine(_directoryWithImages, "QRCodeRotated.png");
+        File.Delete(filePath);
+        QrCode.Generate("https://evotec.xyz/rotated", filePath);
+
+        using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath)) {
+            image.Mutate(context => context.Rotate(90));
+            image.SaveAsPng(filePath);
+        }
+
+        AssertQrDecoded(filePath, "https://evotec.xyz/rotated");
     }
 
     [Theory]

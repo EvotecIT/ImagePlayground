@@ -9,9 +9,7 @@ using CodeGlyphX.Payloads;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using CodeGlyphXPixelFormat = CodeGlyphX.PixelFormat;
 using CodeGlyphXRgba32 = CodeGlyphX.Rendering.Png.Rgba32;
-using ChartForgeX.Raster;
 
 namespace ImagePlayground;
 /// <summary>
@@ -26,7 +24,7 @@ namespace ImagePlayground;
 /// CodeGlyphX <see cref="QrDecoded"/> contract when a QR code is found.
 /// </para>
 /// </summary>
-public class QrCode {
+public partial class QrCode {
     /// <summary>
     /// Creates a QR code image from a raw string value.
     /// </summary>
@@ -1323,110 +1321,4 @@ public class QrCode {
         await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Reads a QR code image and returns the decoded payload.
-    /// </summary>
-    /// <para>Returns the CodeGlyphX decoded payload when a QR code is found; otherwise, returns <see langword="null"/>.</para>
-    /// <param name="filePath">Path to the QR code image.</param>
-    /// <returns>The CodeGlyphX decoded QR payload, or <see langword="null"/> when no QR code is found.</returns>
-    /// <example>
-    ///   <code>var result = QrCode.Read("code.png");</code>
-    /// </example>
-    public static QrDecoded? Read(string filePath) {
-        return ReadAsync(filePath).GetAwaiter().GetResult();
-    }
-
-    /// <summary>
-    /// Reads a QR code image and returns the decoded payload asynchronously.
-    /// </summary>
-    /// <param name="filePath">Path to the QR code image.</param>
-    /// <param name="cancellationToken">Cancellation token used to abort image loading or fallback reads.</param>
-    /// <returns>The CodeGlyphX decoded QR payload, or <see langword="null"/> when no QR code is found.</returns>
-    public static async Task<QrDecoded?> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
-        cancellationToken.ThrowIfCancellationRequested();
-        string fullPath = Helpers.ResolvePath(filePath);
-        byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        RgbaImage image = await DecodeQrImageAsync(imageBytes, cancellationToken).ConfigureAwait(false);
-        byte[] pixels = image.Pixels;
-
-        cancellationToken.ThrowIfCancellationRequested();
-        if (TryDecodePixels(pixels, image.Width, image.Height, cancellationToken, out var decoded)) {
-            return decoded;
-        }
-
-        var composited = CompositeOnWhite(image);
-        if (composited is not null && TryDecodePixels(composited, image.Width, image.Height, cancellationToken, out decoded)) {
-            return decoded;
-        }
-
-        return null;
-    }
-
-    private static async Task<RgbaImage> DecodeQrImageAsync(byte[] imageBytes, CancellationToken cancellationToken) {
-        if (RasterImageDecoder.TryDecode(imageBytes, out var image)) return image;
-
-        using var stream = new MemoryStream(imageBytes, writable: false);
-        using Image<Rgba32> hostImage = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(stream, cancellationToken).ConfigureAwait(false);
-        var pixels = new byte[checked(hostImage.Width * hostImage.Height * 4)];
-        hostImage.ProcessPixelRows(accessor => {
-            for (var y = 0; y < accessor.Height; y++) {
-                cancellationToken.ThrowIfCancellationRequested();
-                Span<Rgba32> row = accessor.GetRowSpan(y);
-                var offset = y * hostImage.Width * 4;
-                for (var x = 0; x < row.Length; x++) {
-                    var pixel = row[x];
-                    pixels[offset++] = pixel.R;
-                    pixels[offset++] = pixel.G;
-                    pixels[offset++] = pixel.B;
-                    pixels[offset++] = pixel.A;
-                }
-            }
-        });
-        cancellationToken.ThrowIfCancellationRequested();
-        return new RgbaImage(hostImage.Width, hostImage.Height, pixels);
-    }
-
-    private static bool TryDecodePixels(byte[] pixels, int width, int height, CancellationToken cancellationToken, out QrDecoded decoded) {
-        if (QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, options: null, cancellationToken, out decoded)) {
-            return true;
-        }
-
-        var options = new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Robust,
-            AggressiveSampling = true,
-            StylizedSampling = true,
-#if FRAMEWORK
-            MaxDimension = 360,
-#else
-            MaxDimension = 1200,
-#endif
-            BudgetMilliseconds = 5000
-        };
-        return QrImageDecoder.TryDecode(pixels, width, height, width * 4, CodeGlyphXPixelFormat.Rgba32, options, cancellationToken, out decoded);
-    }
-
-    private static byte[]? CompositeOnWhite(RgbaImage image) {
-        byte[]? composited = null;
-        var source = image.Pixels;
-        for (var index = 0; index < source.Length; index += 4) {
-            var alpha = source[index + 3];
-            if (alpha == 255) continue;
-            if (composited == null) {
-                composited = new byte[source.Length];
-                Buffer.BlockCopy(source, 0, composited, 0, source.Length);
-            }
-
-            composited[index] = BlendChannel(source[index], alpha);
-            composited[index + 1] = BlendChannel(source[index + 1], alpha);
-            composited[index + 2] = BlendChannel(source[index + 2], alpha);
-            composited[index + 3] = 255;
-        }
-
-        return composited;
-    }
-
-    private static byte BlendChannel(byte foreground, byte alpha) {
-        const int background = 255;
-        return (byte)((foreground * alpha + background * (255 - alpha) + 127) / 255);
-    }
 }

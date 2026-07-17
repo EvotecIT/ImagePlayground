@@ -50,7 +50,7 @@ Barcode type.
 Type: BarcodeType
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Code128, GS1_128, Code39, Code93, EAN, UPCA, UPCE, ITF14, ITF, Industrial2of5, Matrix2of5, IATA2of5, PatchCode, Codabar, MSI, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, GS1DataBarTruncated, GS1DataBarOmni, GS1DataBarStacked, GS1DataBarExpanded, GS1DataBarExpandedStacked, UspsImb, KixCode, DataMatrix, PDF417, MicroPDF417
+Possible values: Code128, GS1_128, Code39, Code93, EAN, UPCA, UPCE, ITF14, ITF, Industrial2of5, Matrix2of5, IATA2of5, PatchCode, Codabar, MSI, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, GS1DataBarTruncated, GS1DataBarOmni, GS1DataBarStacked, GS1DataBarExpanded, GS1DataBarExpandedStacked, UspsImb, KixCode, DataMatrix, PDF417, MicroPDF417, GS1DataBarLimited, GS1DataBarStackedOmni, MaxiCode, DotCode, HanXin, GS1Composite
 
 Required: True
 Position: 0

@@ -148,14 +148,34 @@ Describe 'New-ImageQRCode specialized cmdlets' {
 
     It 'uses packaged CodeGlyphX by default unless a local project is requested' {
         $propsPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Directory.Build.props'
+        $projectPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
         $props = Get-Content -Path $propsPath -Raw
         [xml] $propsXml = $props
+        [xml] $projectXml = Get-Content -Path $projectPath -Raw
         $localCodeGlyphXDefaults = @($propsXml.Project.PropertyGroup.UseLocalCodeGlyphXProject)
+        $localCodeGlyphXReferences = @($projectXml.Project.ItemGroup.ProjectReference | Where-Object Include -Like '*CodeGlyphX*')
 
         $localCodeGlyphXDefaults | Should -HaveCount 1
         $localCodeGlyphXDefaults[0].Condition | Should -Be "'`$(UseLocalCodeGlyphXProject)' == ''"
         $localCodeGlyphXDefaults[0].InnerText | Should -Be 'false'
-        $props | Should -Not -Match ([regex]::Escape('..\CodeMatrix\CodeGlyphX\CodeGlyphX.csproj'))
+        $localCodeGlyphXReferences | Should -HaveCount 2
+        $localCodeGlyphXReferences.Include | Should -Contain '$(CodeGlyphXProjectPath)'
+        $localCodeGlyphXReferences.Include | Should -Contain '..\..\..\CodeGlyphX\CodeGlyphX\CodeGlyphX.csproj'
+    }
+
+    It 'preserves versions of independently released local project dependencies' {
+        $projectPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Sources\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj'
+        [xml] $projectXml = Get-Content -Path $projectPath -Raw
+        $independentReferences = @($projectXml.Project.ItemGroup.ProjectReference | Where-Object Include -Match 'CodeGlyphX|ChartForgeX')
+        $expectedProperties = @('Version', 'VersionPrefix', 'VersionSuffix', 'PackageVersion', 'AssemblyVersion', 'FileVersion', 'InformationalVersion')
+
+        $independentReferences | Should -HaveCount 4
+        foreach ($reference in $independentReferences) {
+            $propertiesToRemove = @($reference.GlobalPropertiesToRemove -split ';')
+            foreach ($property in $expectedProperties) {
+                $propertiesToRemove | Should -Contain $property -Because "$($reference.Include) is released independently from ImagePlayground"
+            }
+        }
     }
 
     It 'requires Swiss QR reference text for QRR and SCOR' {
