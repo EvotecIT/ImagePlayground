@@ -3,8 +3,6 @@ using System.Management.Automation;
 using ChartForgeX.Core;
 using ChartForgeX.Primitives;
 using ImagePlayground;
-using ChartDefinition = ChartForgeX.Simple.ChartDefinition;
-using ChartAnnotationDefinition = ChartForgeX.Simple.ChartAnnotationDefinition;
 
 namespace ImagePlayground.PowerShell;
 
@@ -180,7 +178,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
         }
 
         var output = Helpers.ResolvePath(FilePath);
-        Charts.Generate(_definitions, output, Width, Height, null, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background, Options);
+        Charts.Generate(_definitions, output, Width, Height, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background, Options);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
@@ -230,7 +228,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
 
         foreach (var annotation in _annotations) {
             if (annotation.Arrow) {
-                if (HasExclusiveSeries(chart)) {
+                if (Charts.HasExclusiveSeries(chart)) {
                     var exception = new PSArgumentException("Point-callout annotations cannot be used with exclusive chart kinds because they add a scatter series.");
                     ThrowTerminatingError(new ErrorRecord(exception, "NewImageChartAnnotationUnsupported", ErrorCategory.InvalidArgument, annotation));
                     return;
@@ -241,42 +239,6 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
                 chart.AddVerticalLine(annotation.X, annotation.Text);
             }
         }
-    }
-
-    private static bool HasExclusiveSeries(Chart chart) {
-        foreach (var series in chart.Series) {
-            switch (series.Kind) {
-                case ChartSeriesKind.Heatmap:
-                case ChartSeriesKind.HexbinHeatmap:
-                case ChartSeriesKind.CalendarHeatmap:
-                case ChartSeriesKind.DottedMap:
-                case ChartSeriesKind.TileMap:
-                case ChartSeriesKind.RegionMap:
-                case ChartSeriesKind.Gauge:
-                case ChartSeriesKind.Circle:
-                case ChartSeriesKind.RadialBar:
-                case ChartSeriesKind.LayeredRadial:
-                case ChartSeriesKind.Bullet:
-                case ChartSeriesKind.Waterfall:
-                case ChartSeriesKind.Radar:
-                case ChartSeriesKind.Funnel:
-                case ChartSeriesKind.Treemap:
-                case ChartSeriesKind.Timeline:
-                case ChartSeriesKind.Gantt:
-                case ChartSeriesKind.Sankey:
-                case ChartSeriesKind.Tree:
-                case ChartSeriesKind.Sunburst:
-                case ChartSeriesKind.Pictorial:
-                case ChartSeriesKind.ProgressBar:
-                case ChartSeriesKind.WordCloud:
-                case ChartSeriesKind.Pie:
-                case ChartSeriesKind.Donut:
-                case ChartSeriesKind.PolarArea:
-                    return true;
-            }
-        }
-
-        return false;
     }
 
     private void AddDefinitions(IEnumerable<object> definitions) {

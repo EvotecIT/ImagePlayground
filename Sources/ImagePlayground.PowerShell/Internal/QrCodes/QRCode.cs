@@ -1196,10 +1196,6 @@ public partial class QrCode {
         string fullLogoPath = Helpers.ResolvePath(logoPath);
         string fullOutputPath = Helpers.ResolvePath(outputPath);
 
-#if NET472
-        OverlayCenteredLogoFramework(fullQrPath, fullLogoPath, fullOutputPath);
-        return;
-#else
         string tempOutputPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(fullOutputPath)}");
 
         try {
@@ -1231,7 +1227,6 @@ public partial class QrCode {
                 File.Delete(tempOutputPath);
             }
         }
-#endif
     }
 
     private static async Task OverlayCenteredLogoAsync(string qrPath, string logoPath, string outputPath, CancellationToken cancellationToken) {
@@ -1240,10 +1235,6 @@ public partial class QrCode {
         string fullLogoPath = Helpers.ResolvePath(logoPath);
         string fullOutputPath = Helpers.ResolvePath(outputPath);
 
-#if NET472
-        OverlayCenteredLogoFramework(fullQrPath, fullLogoPath, fullOutputPath);
-        await Task.CompletedTask.ConfigureAwait(false);
-#else
         string tempOutputPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(fullOutputPath)}");
 
         try {
@@ -1276,79 +1267,7 @@ public partial class QrCode {
                 File.Delete(tempOutputPath);
             }
         }
-#endif
     }
-
-    #if NET472
-    private static void OverlayCenteredLogoFramework(string qrPath, string logoPath, string outputPath) {
-        string tempOutputPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(outputPath)}");
-        try {
-            using (var sourceBitmap = new System.Drawing.Bitmap(qrPath))
-            using (var qrBitmap = new System.Drawing.Bitmap(sourceBitmap.Width, sourceBitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-            using (var logoBitmap = new System.Drawing.Bitmap(logoPath)) {
-                using (var graphics = System.Drawing.Graphics.FromImage(qrBitmap)) {
-                    graphics.DrawImage(sourceBitmap, 0, 0, sourceBitmap.Width, sourceBitmap.Height);
-                }
-
-                int maxLogoWidth = Math.Max(1, qrBitmap.Width / 8);
-                int maxLogoHeight = Math.Max(1, qrBitmap.Height / 8);
-                double widthRatio = maxLogoWidth / (double)logoBitmap.Width;
-                double heightRatio = maxLogoHeight / (double)logoBitmap.Height;
-                double scale = Math.Min(widthRatio, heightRatio);
-                int logoWidth = Math.Max(1, (int)Math.Round(logoBitmap.Width * scale));
-                int logoHeight = Math.Max(1, (int)Math.Round(logoBitmap.Height * scale));
-                int x = (qrBitmap.Width - logoWidth) / 2;
-                int y = (qrBitmap.Height - logoHeight) / 2;
-
-                using (var graphics = System.Drawing.Graphics.FromImage(qrBitmap))
-                using (var resizedLogo = new System.Drawing.Bitmap(logoBitmap, new System.Drawing.Size(logoWidth, logoHeight))) {
-                    graphics.DrawImage(resizedLogo, x, y, logoWidth, logoHeight);
-                }
-
-                SaveCompositeBitmapFramework(qrBitmap, tempOutputPath);
-            }
-
-            File.Copy(tempOutputPath, outputPath, true);
-        } finally {
-            if (File.Exists(tempOutputPath)) {
-                File.Delete(tempOutputPath);
-            }
-        }
-    }
-
-    private static void SaveCompositeBitmapFramework(System.Drawing.Bitmap bitmap, string filePath) {
-        Helpers.CreateParentDirectory(filePath);
-        string extension = Path.GetExtension(filePath);
-
-        if (extension.Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
-            string tempPngPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
-            try {
-                bitmap.Save(tempPngPath, System.Drawing.Imaging.ImageFormat.Png);
-                using var wrappedImage = Image.Load(tempPngPath);
-                wrappedImage.SaveAsIcon(filePath);
-            } finally {
-                if (File.Exists(tempPngPath)) {
-                    File.Delete(tempPngPath);
-                }
-            }
-            return;
-        }
-
-        bitmap.Save(filePath, GetFrameworkImageFormat(extension));
-    }
-
-    private static System.Drawing.Imaging.ImageFormat GetFrameworkImageFormat(string extension) {
-        return extension.ToLowerInvariant() switch {
-            ".png" => System.Drawing.Imaging.ImageFormat.Png,
-            ".jpg" => System.Drawing.Imaging.ImageFormat.Jpeg,
-            ".jpeg" => System.Drawing.Imaging.ImageFormat.Jpeg,
-            ".bmp" => System.Drawing.Imaging.ImageFormat.Bmp,
-            ".gif" => System.Drawing.Imaging.ImageFormat.Gif,
-            ".tiff" => System.Drawing.Imaging.ImageFormat.Tiff,
-            _ => System.Drawing.Imaging.ImageFormat.Png
-        };
-    }
-    #endif
 
     private static void SaveCompositeImage(Image<Rgba32> image, string filePath) {
         Helpers.CreateParentDirectory(filePath);

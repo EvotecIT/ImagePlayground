@@ -23,4 +23,3 @@ Related capabilities have separate owners:
 
 - Use [ChartForgeX](https://www.nuget.org/packages/ChartForgeX) for charts and topology diagrams.
 - Use [CodeGlyphX](https://www.nuget.org/packages/CodeGlyphX) for QR codes and barcodes.
-- Use `ImagePlayground.Gdi` only to maintain existing Windows GDI+ integrations; it is deprecated for new development.

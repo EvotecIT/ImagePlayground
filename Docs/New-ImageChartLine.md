@@ -45,13 +45,13 @@ Accept wildcard characters: True
 ```
 
 ### -Marker
-ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.
+None suppresses line markers; Circle enables ChartForgeX's shared line-marker style.
 
 ```yaml
 Type: ChartMarkerShape
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: None, Circle, Square, Diamond
+Possible values: None, Circle
 
 Required: False
 Position: named

@@ -1,3 +1,4 @@
+using ChartForgeX.Primitives;
 using ChartForgeX.Topology;
 using System.Management.Automation;
 using System.Threading;
@@ -51,7 +52,7 @@ public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
 
     /// <para>Direction marker behavior.</para>
     [Parameter]
-    public TopologyDirection Direction { get; set; } = TopologyDirection.None;
+    public VisualLinkDirection Direction { get; set; } = VisualLinkDirection.None;
 
     /// <para>Edge routing mode.</para>
     [Parameter]

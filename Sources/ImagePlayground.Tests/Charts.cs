@@ -1,68 +1,62 @@
-using global::ImagePlayground;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using ChartForgeX;
+using ChartForgeX.Core;
 using CodeGlyphX.Payloads;
 using Xunit;
-using ChartAnnotationDefinition = ChartForgeX.Simple.ChartAnnotationDefinition;
 
 namespace ImagePlayground.Tests;
 
-/// <summary>
-/// Tests for Charts.
-/// </summary>
 public partial class ImagePlayground {
     [Fact]
-    public void Test_GenerateBarChart() {
-        string file = Path.Combine(_directoryWithTests, "chart_bar.png");
+    public void Test_NativeChartForgeXChartRendersWithoutImagePlaygroundModels() {
+        var file = Path.Combine(_directoryWithTests, "chart-native.png");
         if (File.Exists(file)) File.Delete(file);
 
-        var defs = new List<ChartDefinition> {
-                new ChartBar("A", new List<double> { 1, 2 }),
-                new ChartBar("B", new List<double> { 3, 4 })
-            };
-
-        Charts.Generate(defs, file, 300, 200);
+        Chart.Create()
+            .WithSize(360, 220)
+            .WithTitle("Native ChartForgeX")
+            .WithGrid()
+            .AddBar("A", ChartPoints.FromValues(1, 2, 3))
+            .AddBar("B", ChartPoints.FromValues(3, 4, 5))
+            .Save(file);
 
         Assert.True(File.Exists(file));
         using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+        Assert.True(stream.Length > 64);
     }
 
     [Fact]
-    public void Test_GenerateBarChart_WithAxisTitles() {
-        string file = Path.Combine(_directoryWithTests, "chart_bar_titles.png");
-        if (File.Exists(file)) File.Delete(file);
+    public void Test_LineDefinitionsPreserveMarkerPolicy() {
+        var markerless = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartLine("Without markers", new[] { 10d, 30d, 20d })
+        });
 
-        var defs = new List<ChartDefinition> {
-                new ChartBar("A", new List<double> { 1, 2 }),
-                new ChartBar("B", new List<double> { 3, 4 })
-            };
+        Assert.Equal(0d, markerless.Options.Theme.MarkerRadius);
+        Assert.DoesNotContain("data-cfx-role=\"line-marker\"", markerless.ToSvg());
 
-        Charts.Generate(defs, file, 300, 200, null, "X", "Y");
-
-        Assert.True(File.Exists(file));
-        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+        var mixed = new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartLine("Without markers", new[] { 10d, 30d, 20d }, markerSize: 0),
+            new global::ImagePlayground.ChartLine("With markers", new[] { 20d, 15d, 25d }, markerSize: 6)
+        };
+        var exception = Assert.Throws<ArgumentException>(() => global::ImagePlayground.Charts.Build(mixed));
+        Assert.Contains("shared marker size", exception.Message);
     }
 
     [Fact]
-    public void Test_GenerateBarChart_ShowGrid() {
-        string file = Path.Combine(_directoryWithTests, "chart_bar_grid.png");
-        if (File.Exists(file)) File.Delete(file);
+    public void Test_HistogramBinSizePreservesRequestedWidth() {
+        var chart = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartHistogram("Requested width", new[] { 0d, 1d, 3d, 5d, 6d, 9d, 10d }, 3)
+        });
 
-        var defs = new List<ChartDefinition> {
-                new ChartBar("A", new List<double> { 1, 2 }),
-                new ChartBar("B", new List<double> { 3, 4 })
-            };
-
-        Charts.Generate(defs, file, 300, 200, null, null, null, true);
-
-        Assert.True(File.Exists(file));
-        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+        Assert.Equal(new[] { "0-3", "3-6", "6-9", "9-10" }, chart.Options.XAxisLabels.Select(label => label.Text));
+        Assert.Equal(new[] { 2d, 2d, 1d, 2d }, chart.Series[0].Points.Select(point => point.Y));
     }
 
     [Fact]
     public void Test_GenerateContactQr() {
-        string file = Path.Combine(_directoryWithTests, "contact.png");
+        var file = Path.Combine(_directoryWithTests, "contact.png");
         if (File.Exists(file)) File.Delete(file);
 
         QrCode.GenerateContact(file, QrContactOutputType.VCard4, "John", "Doe");
@@ -71,58 +65,5 @@ public partial class ImagePlayground {
         var read = QrCode.Read(file);
         Assert.NotNull(read);
         Assert.Contains("BEGIN", read.Text);
-    }
-
-    [Fact]
-    public void Test_GenerateMixedChartsThrows() {
-        var defs = new List<ChartDefinition> {
-                new ChartBar("A", new List<double> { 1 }),
-                new ChartLine("B", new List<double> { 2 })
-            };
-
-        Assert.Throws<ArgumentException>(() => Charts.Generate(defs, Path.Combine(_directoryWithTests, "mixed.png")));
-    }
-
-    [Fact]
-    public void Test_GenerateNullDefinitionsThrows() {
-        Assert.Throws<ArgumentNullException>(() => Charts.Generate(null!, Path.Combine(_directoryWithTests, "null.png")));
-    }
-
-    [Fact]
-    public void Test_GenerateEmptyDefinitionsThrows() {
-        Assert.Throws<ArgumentException>(() => Charts.Generate(new List<ChartDefinition>(), Path.Combine(_directoryWithTests, "empty.png")));
-    }
-
-    [Fact]
-    public void Test_GenerateWithAnnotations() {
-        string file = Path.Combine(_directoryWithTests, "chart_annotation.png");
-        if (File.Exists(file)) File.Delete(file);
-
-        var defs = new List<ChartDefinition> {
-                new ChartBar("A", new List<double> { 1 })
-            };
-        var anns = new List<ChartAnnotationDefinition> {
-                new ChartAnnotationDefinition(0, 1, "first", true)
-            };
-
-        Charts.Generate(defs, file, 300, 200, null, null, null, false, ChartTheme.Default, anns);
-
-        Assert.True(File.Exists(file));
-        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-    }
-
-    [Fact]
-    public void Test_GenerateChartForgeXSimpleExpansion() {
-        string file = Path.Combine(_directoryWithTests, "chart_horizontal_bar.png");
-        if (File.Exists(file)) File.Delete(file);
-
-        var defs = new List<ChartDefinition> {
-                new ChartHorizontalBar("Disk", new List<double> { 72, 28 })
-            };
-
-        Charts.Generate(defs, file, 300, 200);
-
-        Assert.True(File.Exists(file));
-        using var stream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
     }
 }

@@ -1,6 +1,5 @@
 using System.Management.Automation;
 using ImagePlayground;
-using ChartAnnotationDefinition = ChartForgeX.Simple.ChartAnnotationDefinition;
 
 namespace ImagePlayground.PowerShell;
 

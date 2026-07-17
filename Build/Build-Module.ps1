@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('Manifest', 'Build', 'Publish')]
+    [ValidateSet('Manifest', 'Documentation', 'Build', 'Publish')]
     [string] $RunMode = 'Build',
 
     [bool] $SignModule = $false,

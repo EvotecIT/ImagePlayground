@@ -6154,14 +6154,12 @@ System.Object[]</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Marker</maml:name>
           <maml:description>
-            <maml:para>ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.</maml:para>
+            <maml:para>None suppresses line markers; Circle enables ChartForgeX's shared line-marker style.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ChartMarkerShape</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>ChartMarkerShape</maml:name>
@@ -6223,14 +6221,12 @@ System.Object[]</maml:name>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>Marker</maml:name>
         <maml:description>
-          <maml:para>ChartForgeX renders line markers using the active chart marker style; non-None values enable markers.</maml:para>
+          <maml:para>None suppresses line markers; Circle enables ChartForgeX's shared line-marker style.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ChartMarkerShape</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>ChartMarkerShape</maml:name>
@@ -19112,7 +19108,7 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Direction marker behavior.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TopologyDirection</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualLinkDirection</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Forward</command:parameterValue>
@@ -19120,7 +19116,7 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">Bidirectional</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>TopologyDirection</maml:name>
+            <maml:name>VisualLinkDirection</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19425,7 +19421,7 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Direction marker behavior.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">TopologyDirection</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">VisualLinkDirection</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Forward</command:parameterValue>
@@ -19433,7 +19429,7 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Bidirectional</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>TopologyDirection</maml:name>
+          <maml:name>VisualLinkDirection</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
