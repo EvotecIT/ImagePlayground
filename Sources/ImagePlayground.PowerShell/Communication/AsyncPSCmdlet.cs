@@ -256,7 +256,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(
             sendToPipeline,
             enumerateCollection ? PipelineType.OutputEnumerate : PipelineType.Output));
@@ -273,7 +272,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(errorRecord, PipelineType.Error));
     }
 
@@ -305,7 +303,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(text, PipelineType.Warning));
     }
 
@@ -320,7 +317,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(text, PipelineType.Verbose));
     }
 
@@ -335,7 +331,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(text, PipelineType.Debug));
     }
 
@@ -350,7 +345,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(informationRecord, PipelineType.Information));
     }
 
@@ -365,7 +359,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem((messageData, tags), PipelineType.InformationWithTags));
     }
 
@@ -380,7 +373,6 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
         if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
         }
-        ThrowIfStopped();
         _ = TryQueue(new PipelineItem(progressRecord, PipelineType.Progress));
     }
 
@@ -604,7 +596,7 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         Volatile.Write(ref _asyncLifecycleStarted, 1);
         _pipelineThreadId = Environment.CurrentManagedThreadId;
-        _currentOutPipe = outPipe;
+        Volatile.Write(ref _currentOutPipe, outPipe);
 
         var synchronizationContext = SynchronizationContext.Current;
         try {
