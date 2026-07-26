@@ -127,8 +127,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         private void PublishReply(Func<PipelineReply> createReply) {
             try {
-                if (Interlocked.CompareExchange(ref _requesterState, 2, 1) != 1)
+                if (Interlocked.CompareExchange(ref _requesterState, 2, 1) != 1) {
                     return;
+                }
 
                 PipelineReply reply;
                 try {
@@ -158,18 +159,21 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         }
 
         public void ReleaseRequester() {
-            if (Interlocked.Exchange(ref _requesterState, 0) != 0)
+            if (Interlocked.Exchange(ref _requesterState, 0) != 0) {
                 Release();
+            }
         }
 
         public void ReleasePipeline() {
-            if (Interlocked.Exchange(ref _pipelineOwner, 0) == 1)
+            if (Interlocked.Exchange(ref _pipelineOwner, 0) == 1) {
                 Release();
+            }
         }
 
         private void Release() {
-            if (Interlocked.Decrement(ref _owners) == 0)
+            if (Interlocked.Decrement(ref _owners) == 0) {
                 _pipe.Dispose();
+            }
         }
     }
 
@@ -197,10 +201,16 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         public bool DropOnStop { get; }
 
+        public bool IsPumpBound { get; private set; }
+
         public void BindToHook(long hookGeneration) {
-            if (HookGeneration == 0)
+            if (HookGeneration == 0) {
                 HookGeneration = hookGeneration;
+            }
         }
+
+        public void BindToPump()
+            => IsPumpBound = true;
     }
 
     private sealed class PipelinePumpLease {
@@ -321,13 +331,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         => Task.CompletedTask;
 
     /// <inheritdoc />
-    protected override void EndProcessing() {
-        try {
-            RunBlockInAsync(EndProcessingAsync);
-        } finally {
-            Volatile.Write(ref _asyncLifecycleCompleted, 1);
-        }
-    }
+    protected override void EndProcessing()
+        => RunBlockInAsync(EndProcessingAsync);
 
     /// <summary>Asynchronous end hook.</summary>
     protected virtual Task EndProcessingAsync()
@@ -498,8 +503,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -519,8 +525,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -558,8 +565,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -579,8 +587,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -600,8 +609,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -621,8 +631,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -644,8 +655,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -667,8 +679,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }

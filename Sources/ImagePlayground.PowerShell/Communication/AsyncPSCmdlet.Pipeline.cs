@@ -23,8 +23,9 @@ public abstract partial class AsyncPSCmdlet {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(item);
     }
@@ -68,16 +69,18 @@ public abstract partial class AsyncPSCmdlet {
 
     /// <summary>Throws when PowerShell has requested cancellation.</summary>
     protected internal void ThrowIfStopped() {
-        if (_cancelSource.IsCancellationRequested)
+        if (_cancelSource.IsCancellationRequested) {
             throw new PipelineStoppedException();
+        }
     }
 
     /// <inheritdoc />
     public virtual void Dispose() {
         bool cancelActiveBlocks;
         lock (_lifecycleLock) {
-            if (_disposeRequested)
+            if (_disposeRequested) {
                 return;
+            }
 
             _disposeRequested = true;
             cancelActiveBlocks = _activeBlocks != 0;
@@ -85,8 +88,9 @@ public abstract partial class AsyncPSCmdlet {
         }
 
         try {
-            if (cancelActiveBlocks)
+            if (cancelActiveBlocks) {
                 CancelSource();
+            }
         } finally {
             lock (_lifecycleLock) {
                 DisposeCancelSourceIfInactive();
@@ -123,8 +127,10 @@ public abstract partial class AsyncPSCmdlet {
             var pipelineContext = new SynchronizationContextScope(
                 Volatile.Read(ref _pipelineSynchronizationContext));
             try {
-                if (!IsPumpingPipelineItem)
+                if (!IsPumpingPipelineItem) {
                     Volatile.Read(ref _pumpQueuedItems)?.Invoke();
+                }
+
                 return pipelineContext;
             } catch {
                 pipelineContext.Dispose();
@@ -139,15 +145,17 @@ public abstract partial class AsyncPSCmdlet {
         => EnterDirectPipelineAccess();
 
     private void ValidateInteractionGeneration() {
-        if (Volatile.Read(ref _asyncLifecycleStarted) == 0)
+        if (Volatile.Read(ref _asyncLifecycleStarted) == 0) {
             return;
+        }
 
         var activeGeneration = Volatile.Read(ref _activeHookGeneration);
         var originatingGeneration = _hookGeneration.Value;
         if (activeGeneration == 0 &&
             originatingGeneration == 0 &&
-            (IsPipelineThread || IsConstructionThreadOutsideAsyncHook))
+            (IsPipelineThread || IsConstructionThreadOutsideAsyncHook)) {
             return;
+        }
 
         if (originatingGeneration == 0 || originatingGeneration != activeGeneration) {
             throw new InvalidOperationException(
@@ -185,8 +193,9 @@ public abstract partial class AsyncPSCmdlet {
                 throw new PipelineStoppedException();
             }
 
-            if (reply.Rejection is not null)
+            if (reply.Rejection is not null) {
                 throw reply.Rejection;
+            }
 
             return reply.Value;
         } finally {
@@ -233,19 +242,25 @@ public abstract partial class AsyncPSCmdlet {
     private bool TryQueue(PipelineItem item) {
         item.BindToHook(_hookGeneration.Value);
         var pumpLease = _pipelinePumpLease.Value;
+        var isPumpBound =
+            pumpLease is { IsActive: true } &&
+            item.HookGeneration == pumpLease.Generation;
         lock (_hookAdmissionLock) {
             if (item.HookGeneration != 0 &&
                 item.HookGeneration != Volatile.Read(ref _acceptingHookWritesGeneration) &&
-                (pumpLease is null ||
-                 !pumpLease.IsActive ||
-                 item.HookGeneration != pumpLease.Generation)) {
+                !isPumpBound) {
                 item.ReplyPipe?.Reject();
                 return false;
             }
 
+            if (isPumpBound) {
+                item.BindToPump();
+            }
+
             var outPipe = Volatile.Read(ref _currentOutPipe);
-            if (outPipe is null)
+            if (outPipe is null) {
                 return false;
+            }
 
             try {
                 outPipe.Add(item, CancelToken);
@@ -255,8 +270,9 @@ public abstract partial class AsyncPSCmdlet {
             } catch (InvalidOperationException) {
                 return false;
             } catch (OperationCanceledException) when (_cancelSource.IsCancellationRequested) {
-                if (item.HookGeneration != 0 && !item.DropOnStop)
+                if (item.HookGeneration != 0 && !item.DropOnStop) {
                     throw new PipelineStoppedException();
+                }
 
                 return false;
             }
@@ -276,8 +292,9 @@ public abstract partial class AsyncPSCmdlet {
 
     private void EnterAsyncBlock() {
         lock (_lifecycleLock) {
-            if (_disposeRequested)
+            if (_disposeRequested) {
                 throw new ObjectDisposedException(GetType().FullName);
+            }
 
             _activeBlocks++;
         }
@@ -298,8 +315,9 @@ public abstract partial class AsyncPSCmdlet {
 
     private void CancelSource() {
         lock (_lifecycleLock) {
-            if (_cancelSourceDisposed)
+            if (_cancelSourceDisposed) {
                 return;
+            }
 
             _cancelSourceCancellationInProgress++;
         }
@@ -323,8 +341,9 @@ public abstract partial class AsyncPSCmdlet {
         if (!_disposeRequested ||
             _activeBlocks != 0 ||
             _cancelSourceCancellationInProgress != 0 ||
-            _cancelSourceDisposed)
+            _cancelSourceDisposed) {
             return;
+        }
 
         _cancelSource.Dispose();
         _cancelSourceDisposed = true;

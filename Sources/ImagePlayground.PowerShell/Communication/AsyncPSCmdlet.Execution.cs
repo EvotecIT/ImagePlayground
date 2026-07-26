@@ -33,16 +33,19 @@ public abstract partial class AsyncPSCmdlet {
 
         void DisposePipeOnce() {
             if (Interlocked.Exchange(ref pipeDisposed, 1) == 0) {
-                while (outPipe.TryTake(out var abandonedItem))
+                while (outPipe.TryTake(out var abandonedItem)) {
                     abandonedItem.ReplyPipe?.Reject();
+                }
+
                 outPipe.Dispose();
             }
         }
 
         static void CompleteAddingIfNeeded<T>(BlockingCollection<T> pipe) {
             try {
-                if (!pipe.IsAddingCompleted)
+                if (!pipe.IsAddingCompleted) {
                     pipe.CompleteAdding();
+                }
             } catch (ObjectDisposedException) {
                 // A deferred worker may race the one-time disposal after a pipeline failure.
             }
@@ -197,33 +200,60 @@ public abstract partial class AsyncPSCmdlet {
         }
 
         void PumpQueuedItems() {
-            if (IsPumpingPipelineItem)
+            if (IsPumpingPipelineItem) {
                 return;
+            }
 
             // Both callers close ordinary admission before entering this drain. Only a pipeline
             // item that is currently being pumped can enqueue more work through its flow-local
             // lease, so continue until that causal tail is empty.
-            while (outPipe.TryTake(out var item))
+            while (outPipe.TryTake(out var item)) {
                 PumpItem(item);
+            }
         }
 
         void PumpThroughDirectAccessBarrier() {
-            if (IsPumpingPipelineItem)
+            if (IsPumpingPipelineItem) {
                 return;
+            }
 
             var barrier = new PipelineItem(
                 value: null,
                 PipelineType.DirectAccessBarrier,
                 hookGeneration: hookGeneration,
                 dropOnStop: true);
-            if (!TryQueue(barrier))
-                return;
+            if (!TryQueue(barrier)) {
+                ThrowIfStopped();
+                throw new InvalidOperationException(
+                    "No active PowerShell pipeline is available for direct access.");
+            }
 
             while (outPipe.TryTake(out var item)) {
                 PumpItem(item);
-                if (ReferenceEquals(item, barrier))
+                if (ReferenceEquals(item, barrier)) {
+                    while (HasPumpBoundItems()) {
+                        ThrowIfStopped();
+                        if (!outPipe.TryTake(out var pumpBoundPredecessor)) {
+                            throw new InvalidOperationException(
+                                "The PowerShell pipeline closed while causal records were pending.");
+                        }
+
+                        PumpItem(pumpBoundPredecessor);
+                    }
+
                     return;
+                }
             }
+        }
+
+        bool HasPumpBoundItems() {
+            foreach (var queuedItem in outPipe.ToArray()) {
+                if (queuedItem.IsPumpBound) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         Volatile.Write(ref _asyncLifecycleStarted, 1);
@@ -270,8 +300,9 @@ public abstract partial class AsyncPSCmdlet {
                 throw;
             }
 
-            if (exception is OperationCanceledException && _cancelSource.IsCancellationRequested)
+            if (exception is OperationCanceledException && _cancelSource.IsCancellationRequested) {
                 throw new PipelineStoppedException();
+            }
 
             throw;
         } finally {
@@ -283,8 +314,9 @@ public abstract partial class AsyncPSCmdlet {
             lock (_hookAdmissionLock) {
                 _ = Interlocked.CompareExchange(ref _acceptingHookWritesGeneration, 0, hookGeneration);
             }
-            if (blockTask.IsFaulted)
+            if (blockTask.IsFaulted) {
                 _ = blockTask.Exception;
+            }
 
             try {
                 ThrowIfStopped();
@@ -308,8 +340,9 @@ public abstract partial class AsyncPSCmdlet {
                 completed => {
                     var retainedBlockOwned = true;
                     try {
-                        if (completed.IsFaulted)
+                        if (completed.IsFaulted) {
                             _ = completed.Exception;
+                        }
 
                         ExitAsyncBlock();
                         retainedBlockOwned = false;
@@ -337,8 +370,9 @@ public abstract partial class AsyncPSCmdlet {
                             DisposePipeOnce();
                         }
                     } finally {
-                        if (retainedBlockOwned)
+                        if (retainedBlockOwned) {
                             ExitAsyncBlock();
+                        }
                     }
                 },
                 CancellationToken.None,
@@ -354,8 +388,10 @@ public abstract partial class AsyncPSCmdlet {
                 var item = outPipe.Take(CancelToken);
                 PumpItem(item);
                 if (item.Type == PipelineType.HookCompleted) {
-                    while (outPipe.TryTake(out var pumpBoundItem))
+                    while (outPipe.TryTake(out var pumpBoundItem)) {
+                        ThrowIfStopped();
                         PumpItem(pumpBoundItem);
+                    }
                     break;
                 }
             }
@@ -370,13 +406,16 @@ public abstract partial class AsyncPSCmdlet {
                 // Preserve the pipeline failure while cancellation callbacks observe the same stop.
             } finally {
                 CompleteAddingIfNeeded(outPipe);
-                if (blockTask.IsCompleted)
+                if (blockTask.IsCompleted) {
                     DisposePipeOnce();
+                }
+
                 DeactivateHook();
             }
 
-            if (pipelineException is OperationCanceledException && stopRequested)
+            if (pipelineException is OperationCanceledException && stopRequested) {
                 throw new PipelineStoppedException();
+            }
 
             throw;
         }
