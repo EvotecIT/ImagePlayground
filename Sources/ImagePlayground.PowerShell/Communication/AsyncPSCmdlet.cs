@@ -97,8 +97,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             try {
                 reply = createReply();
             } catch (Exception exception) {
-                TryPublish(new PipelineReply(value: null, exception));
-                throw;
+                    TryPublish(new PipelineReply(value: null, exception));
+                    return;
             }
 
             TryPublish(reply);
