@@ -21,7 +21,14 @@ namespace ImagePlayground.PowerShell;
 public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     private sealed class AsyncHookSynchronizationContext : SynchronizationContext {
         public override void Post(SendOrPostCallback callback, object? state)
-            => ThreadPool.QueueUserWorkItem(_ => callback(state));
+            => ThreadPool.QueueUserWorkItem(_ => {
+                try {
+                    callback(state);
+                } catch (PipelineStoppedException) {
+                    // Fire-and-forget callbacks such as Progress<T> can run after StopProcessing.
+                    // Await continuations capture their own exceptions into the hook task.
+                }
+            });
     }
 
     private sealed class AsyncHookTaskScheduler : TaskScheduler {
@@ -103,8 +110,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         private void PublishReply(Func<PipelineReply> createReply) {
             try {
-                if (Volatile.Read(ref _requesterOwner) == 0)
+                if (Volatile.Read(ref _requesterOwner) == 0) {
                     return;
+                }
 
                 PipelineReply reply;
                 try {
@@ -134,18 +142,21 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         }
 
         public void ReleaseRequester() {
-            if (Interlocked.Exchange(ref _requesterOwner, 0) == 1)
+            if (Interlocked.Exchange(ref _requesterOwner, 0) == 1) {
                 Release();
+            }
         }
 
         public void ReleasePipeline() {
-            if (Interlocked.Exchange(ref _pipelineOwner, 0) == 1)
+            if (Interlocked.Exchange(ref _pipelineOwner, 0) == 1) {
                 Release();
+            }
         }
 
         private void Release() {
-            if (Interlocked.Decrement(ref _owners) == 0)
+            if (Interlocked.Decrement(ref _owners) == 0) {
                 _pipe.Dispose();
+            }
         }
     }
 
@@ -174,8 +185,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         public bool DropOnStop { get; }
 
         public void BindToHook(long hookGeneration) {
-            if (HookGeneration == 0)
+            if (HookGeneration == 0) {
                 HookGeneration = hookGeneration;
+            }
         }
     }
 
@@ -461,8 +473,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(
             sendToPipeline,
@@ -478,8 +491,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(errorRecord, PipelineType.Error));
     }
@@ -511,8 +525,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(message, PipelineType.Warning));
     }
@@ -526,8 +541,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(message, PipelineType.Verbose));
     }
@@ -541,8 +557,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(message, PipelineType.Debug));
     }
@@ -556,8 +573,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(text, PipelineType.CommandDetail));
     }
@@ -571,8 +589,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(informationRecord, PipelineType.Information));
     }
@@ -586,8 +605,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null)
+        if (Volatile.Read(ref _currentOutPipe) is null) {
             return;
+        }
 
         _ = TryQueue(new PipelineItem(
             (messageData, tags is null ? null : (string[])tags.Clone()),
