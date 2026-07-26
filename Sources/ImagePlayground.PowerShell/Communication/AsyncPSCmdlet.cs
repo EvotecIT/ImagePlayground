@@ -67,7 +67,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         ShouldContinueAll,
         ShouldContinueSecurity,
         PromptForCredential,
-        PromptForCredentialOptions
+        PromptForCredentialOptions,
+        HookCompleted
     }
 
     private sealed class PipelineReply {
@@ -102,9 +103,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         private void PublishReply(Func<PipelineReply> createReply) {
             try {
-                if (Volatile.Read(ref _requesterOwner) == 0) {
+                if (Volatile.Read(ref _requesterOwner) == 0)
                     return;
-                }
 
                 PipelineReply reply;
                 try {
@@ -134,21 +134,18 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         }
 
         public void ReleaseRequester() {
-            if (Interlocked.Exchange(ref _requesterOwner, 0) == 1) {
+            if (Interlocked.Exchange(ref _requesterOwner, 0) == 1)
                 Release();
-            }
         }
 
         public void ReleasePipeline() {
-            if (Interlocked.Exchange(ref _pipelineOwner, 0) == 1) {
+            if (Interlocked.Exchange(ref _pipelineOwner, 0) == 1)
                 Release();
-            }
         }
 
         private void Release() {
-            if (Interlocked.Decrement(ref _owners) == 0) {
+            if (Interlocked.Decrement(ref _owners) == 0)
                 _pipe.Dispose();
-            }
         }
     }
 
@@ -157,11 +154,13 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             object? value,
             PipelineType type,
             PipelineReplyChannel? replyPipe = null,
-            long hookGeneration = 0) {
+            long hookGeneration = 0,
+            bool dropOnStop = false) {
             Value = value;
             Type = type;
             ReplyPipe = replyPipe;
             HookGeneration = hookGeneration;
+            DropOnStop = dropOnStop;
         }
 
         public object? Value { get; }
@@ -172,11 +171,26 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         public long HookGeneration { get; private set; }
 
+        public bool DropOnStop { get; }
+
         public void BindToHook(long hookGeneration) {
-            if (HookGeneration == 0) {
+            if (HookGeneration == 0)
                 HookGeneration = hookGeneration;
-            }
         }
+    }
+
+    private sealed class PipelinePumpLease {
+        private int _active = 1;
+
+        public PipelinePumpLease(long generation)
+            => Generation = generation;
+
+        public long Generation { get; }
+
+        public bool IsActive => Volatile.Read(ref _active) != 0;
+
+        public void Close()
+            => Volatile.Write(ref _active, 0);
     }
 
     /// <summary>
@@ -193,32 +207,56 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
         /// <summary>Queues an output record for the originating hook.</summary>
         public void WriteObject(object? value, bool enumerateCollection = false)
-            => Queue(value, enumerateCollection ? PipelineType.OutputEnumerate : PipelineType.Output);
+            => Queue(
+                value,
+                enumerateCollection ? PipelineType.OutputEnumerate : PipelineType.Output);
 
         /// <summary>Queues an error record for the originating hook.</summary>
-        public void WriteError(ErrorRecord errorRecord) => Queue(errorRecord, PipelineType.Error);
+        public void WriteError(ErrorRecord errorRecord)
+            => Queue(errorRecord, PipelineType.Error);
+
         /// <summary>Queues a warning record for the originating hook.</summary>
-        public void WriteWarning(string message) => Queue(message, PipelineType.Warning);
+        public void WriteWarning(string message)
+            => Queue(message, PipelineType.Warning);
+
         /// <summary>Queues a verbose record for the originating hook.</summary>
-        public void WriteVerbose(string message) => Queue(message, PipelineType.Verbose);
+        public void WriteVerbose(string message)
+            => Queue(message, PipelineType.Verbose);
+
         /// <summary>Queues a debug record for the originating hook.</summary>
-        public void WriteDebug(string message) => Queue(message, PipelineType.Debug);
+        public void WriteDebug(string message)
+            => Queue(message, PipelineType.Debug);
+
         /// <summary>Queues an information record for the originating hook.</summary>
-        public void WriteInformation(InformationRecord informationRecord) => Queue(informationRecord, PipelineType.Information);
+        public void WriteInformation(InformationRecord informationRecord)
+            => Queue(informationRecord, PipelineType.Information);
+
         /// <summary>Queues tagged information for the originating hook.</summary>
         public void WriteInformation(object messageData, string[]? tags)
-            => Queue((messageData, tags is null ? null : (string[])tags.Clone()), PipelineType.InformationWithTags);
+            => Queue(
+                (messageData, tags is null ? null : (string[])tags.Clone()),
+                PipelineType.InformationWithTags);
+
         /// <summary>Queues a progress record for the originating hook.</summary>
-        public void WriteProgress(ProgressRecord progressRecord) => Queue(SnapshotProgressRecord(progressRecord), PipelineType.Progress);
+        public void WriteProgress(ProgressRecord progressRecord)
+            => Queue(SnapshotProgressRecord(progressRecord), PipelineType.Progress);
+
         /// <summary>Queues command-detail text for the originating hook.</summary>
-        public void WriteCommandDetail(string text) => Queue(text, PipelineType.CommandDetail);
+        public void WriteCommandDetail(string text)
+            => Queue(text, PipelineType.CommandDetail);
 
         private void Queue(object? value, PipelineType type)
-            => _ = _owner.TryQueue(new PipelineItem(value, type, hookGeneration: _hookGeneration));
+            => _ = _owner.TryQueue(
+                new PipelineItem(
+                    value,
+                    type,
+                    hookGeneration: _hookGeneration,
+                    dropOnStop: true));
     }
 
     private readonly CancellationTokenSource _cancelSource = new();
     private readonly AsyncLocal<long> _hookGeneration = new();
+    private readonly AsyncLocal<PipelinePumpLease?> _pipelinePumpLease = new();
     private readonly int _constructionThreadId = Environment.CurrentManagedThreadId;
     private readonly object _lifecycleLock = new();
     private static readonly SynchronizationContext HookSynchronizationContext = new AsyncHookSynchronizationContext();
@@ -227,6 +265,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     private Action? _pumpQueuedItems;
     private SynchronizationContext? _pipelineSynchronizationContext;
     private long _activeHookGeneration;
+    private long _acceptingHookWritesGeneration;
     private long _nextHookGeneration;
     private bool _cancelSourceDisposed;
     private bool _disposeRequested;
@@ -424,9 +463,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(
             sendToPipeline,
@@ -442,9 +480,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(errorRecord, PipelineType.Error));
     }
@@ -476,9 +513,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(message, PipelineType.Warning));
     }
@@ -492,9 +528,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(message, PipelineType.Verbose));
     }
@@ -508,9 +543,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(message, PipelineType.Debug));
     }
@@ -524,9 +558,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(text, PipelineType.CommandDetail));
     }
@@ -540,9 +573,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(informationRecord, PipelineType.Information));
     }
@@ -556,9 +588,8 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             return;
         }
 
-        if (Volatile.Read(ref _currentOutPipe) is null) {
+        if (Volatile.Read(ref _currentOutPipe) is null)
             return;
-        }
 
         _ = TryQueue(new PipelineItem(
             (messageData, tags is null ? null : (string[])tags.Clone()),
