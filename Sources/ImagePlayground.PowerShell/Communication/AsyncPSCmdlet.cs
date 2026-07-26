@@ -35,6 +35,18 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
             => TryExecuteTask(task);
     }
 
+    private sealed class SynchronizationContextScope : IDisposable {
+        private readonly SynchronizationContext? _previous;
+
+        public SynchronizationContextScope(SynchronizationContext? replacement) {
+            _previous = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(replacement);
+        }
+
+        public void Dispose()
+            => SynchronizationContext.SetSynchronizationContext(_previous);
+    }
+
     private enum PipelineType {
         Output,
         OutputEnumerate,
@@ -167,6 +179,44 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         }
     }
 
+    /// <summary>
+    /// Lifecycle-bound stream writers for callbacks that do not flow the hook execution context.
+    /// </summary>
+    protected sealed class CapturedPipelineStreams {
+        private readonly long _hookGeneration;
+        private readonly AsyncPSCmdlet _owner;
+
+        internal CapturedPipelineStreams(AsyncPSCmdlet owner, long hookGeneration) {
+            _owner = owner;
+            _hookGeneration = hookGeneration;
+        }
+
+        /// <summary>Queues an output record for the originating hook.</summary>
+        public void WriteObject(object? value, bool enumerateCollection = false)
+            => Queue(value, enumerateCollection ? PipelineType.OutputEnumerate : PipelineType.Output);
+
+        /// <summary>Queues an error record for the originating hook.</summary>
+        public void WriteError(ErrorRecord errorRecord) => Queue(errorRecord, PipelineType.Error);
+        /// <summary>Queues a warning record for the originating hook.</summary>
+        public void WriteWarning(string message) => Queue(message, PipelineType.Warning);
+        /// <summary>Queues a verbose record for the originating hook.</summary>
+        public void WriteVerbose(string message) => Queue(message, PipelineType.Verbose);
+        /// <summary>Queues a debug record for the originating hook.</summary>
+        public void WriteDebug(string message) => Queue(message, PipelineType.Debug);
+        /// <summary>Queues an information record for the originating hook.</summary>
+        public void WriteInformation(InformationRecord informationRecord) => Queue(informationRecord, PipelineType.Information);
+        /// <summary>Queues tagged information for the originating hook.</summary>
+        public void WriteInformation(object messageData, string[]? tags)
+            => Queue((messageData, tags is null ? null : (string[])tags.Clone()), PipelineType.InformationWithTags);
+        /// <summary>Queues a progress record for the originating hook.</summary>
+        public void WriteProgress(ProgressRecord progressRecord) => Queue(SnapshotProgressRecord(progressRecord), PipelineType.Progress);
+        /// <summary>Queues command-detail text for the originating hook.</summary>
+        public void WriteCommandDetail(string text) => Queue(text, PipelineType.CommandDetail);
+
+        private void Queue(object? value, PipelineType type)
+            => _ = _owner.TryQueue(new PipelineItem(value, type, hookGeneration: _hookGeneration));
+    }
+
     private readonly CancellationTokenSource _cancelSource = new();
     private readonly AsyncLocal<long> _hookGeneration = new();
     private readonly int _constructionThreadId = Environment.CurrentManagedThreadId;
@@ -175,11 +225,13 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     private static readonly TaskScheduler HookTaskScheduler = new AsyncHookTaskScheduler();
     private BlockingCollection<PipelineItem>? _currentOutPipe;
     private Action? _pumpQueuedItems;
+    private SynchronizationContext? _pipelineSynchronizationContext;
     private long _activeHookGeneration;
     private long _nextHookGeneration;
     private bool _cancelSourceDisposed;
     private bool _disposeRequested;
     private int _activeBlocks;
+    private int _asyncLifecycleCompleted;
     private int _asyncLifecycleStarted;
     private int _pipelineThreadId;
 
@@ -203,8 +255,13 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         => Task.CompletedTask;
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-        => RunBlockInAsync(EndProcessingAsync);
+    protected override void EndProcessing() {
+        try {
+            RunBlockInAsync(EndProcessingAsync);
+        } finally {
+            Volatile.Write(ref _asyncLifecycleCompleted, 1);
+        }
+    }
 
     /// <summary>Asynchronous end hook.</summary>
     protected virtual Task EndProcessingAsync()
@@ -218,7 +275,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public new bool ShouldProcess(string? target) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldProcess(target ?? string.Empty);
         }
 
@@ -229,7 +286,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public new bool ShouldProcess(string? target, string action) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldProcess(target ?? string.Empty, action);
         }
 
@@ -240,7 +297,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public new bool ShouldProcess(string verboseDescription, string verboseWarning, string caption) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldProcess(verboseDescription, verboseWarning, caption);
         }
 
@@ -257,7 +314,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         out ShouldProcessReason shouldProcessReason) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldProcess(verboseDescription, verboseWarning, caption, out shouldProcessReason);
         }
 
@@ -272,7 +329,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public new bool ShouldContinue(string query, string caption) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldContinue(query, caption);
         }
 
@@ -283,7 +340,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public new bool ShouldContinue(string query, string caption, ref bool yesToAll, ref bool noToAll) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldContinue(query, caption, ref yesToAll, ref noToAll);
         }
 
@@ -304,7 +361,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         ref bool noToAll) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return base.ShouldContinue(query, caption, hasSecurityImpact, ref yesToAll, ref noToAll);
         }
 
@@ -320,7 +377,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public PSCredential? PromptForCredential(string caption, string message, string userName, string targetName) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return Host.UI.PromptForCredential(caption, message, userName, targetName);
         }
 
@@ -339,7 +396,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
         PSCredentialUIOptions options) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineInteraction();
+            using var pipelineContext = EnterDirectPipelineInteraction();
             return Host.UI.PromptForCredential(
                 caption,
                 message,
@@ -360,8 +417,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe output bridge for asynchronous cmdlet code.</summary>
     public new void WriteObject(object? sendToPipeline, bool enumerateCollection) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteObject(sendToPipeline, enumerateCollection);
             return;
         }
@@ -377,8 +435,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe error bridge for asynchronous cmdlet code.</summary>
     public new void WriteError(ErrorRecord errorRecord) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteError(errorRecord);
             return;
         }
@@ -394,7 +453,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
     public new void ThrowTerminatingError(ErrorRecord errorRecord) {
         ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.ThrowTerminatingError(errorRecord);
             return;
         }
@@ -410,8 +469,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe warning bridge for asynchronous cmdlet code.</summary>
     public new void WriteWarning(string message) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteWarning(message);
             return;
         }
@@ -425,8 +485,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe verbose bridge for asynchronous cmdlet code.</summary>
     public new void WriteVerbose(string message) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteVerbose(message);
             return;
         }
@@ -440,8 +501,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe debug bridge for asynchronous cmdlet code.</summary>
     public new void WriteDebug(string message) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteDebug(message);
             return;
         }
@@ -455,8 +517,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe command-detail bridge for asynchronous cmdlet code.</summary>
     public new void WriteCommandDetail(string text) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteCommandDetail(text);
             return;
         }
@@ -470,8 +533,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe information bridge for asynchronous cmdlet code.</summary>
     public new void WriteInformation(InformationRecord informationRecord) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteInformation(informationRecord);
             return;
         }
@@ -485,8 +549,9 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable {
 
     /// <summary>Thread-safe information bridge for asynchronous cmdlet code.</summary>
     public new void WriteInformation(object messageData, string[]? tags) {
+        ThrowIfStopped();
         if (CanAccessPipelineDirectly) {
-            PrepareDirectPipelineAccess();
+            using var pipelineContext = EnterDirectPipelineAccess();
             base.WriteInformation(messageData, tags ?? Array.Empty<string>());
             return;
         }
