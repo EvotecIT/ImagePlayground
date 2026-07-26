@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImagePlayground.PowerShell;
 
-public abstract partial class AsyncPSCmdlet {
-    private void RunBlockInAsyncCore(Func<Task> task) {
+public abstract partial class AsyncPSCmdlet
+{
+    private void RunBlockInAsyncCore(Func<Task> task)
+    {
         // The transport must remain lossless and non-blocking. The pipeline thread can enumerate
         // user objects or invoke a host that waits for the same background producer that is writing
         // here; applying bounded backpressure would deadlock both sides.
@@ -17,9 +19,13 @@ public abstract partial class AsyncPSCmdlet {
         var pipeDisposed = 0;
         var hookGeneration = Interlocked.Increment(ref _nextHookGeneration);
         var synchronizationContext = SynchronizationContext.Current;
+        var hookSynchronizationContext =
+            new AsyncHookSynchronizationContext();
 
-        void ClearPipes() {
-            lock (_hookAdmissionLock) {
+        void ClearPipes()
+        {
+            lock (_hookAdmissionLock)
+            {
                 _ = Interlocked.CompareExchange(ref _acceptingHookWritesGeneration, 0, hookGeneration);
                 Volatile.Write(ref _pumpQueuedItems, null);
                 _ = Interlocked.CompareExchange(ref _currentOutPipe, null, outPipe);
@@ -31,41 +37,53 @@ public abstract partial class AsyncPSCmdlet {
         void DeactivateHook()
             => _ = Interlocked.CompareExchange(ref _activeHookGeneration, 0, hookGeneration);
 
-        void DisposePipeOnce() {
-            if (Interlocked.Exchange(ref pipeDisposed, 1) == 0) {
-                while (outPipe.TryTake(out var abandonedItem)) {
+        void DisposePipeOnce()
+        {
+            if (Interlocked.Exchange(ref pipeDisposed, 1) == 0)
+            {
+                while (outPipe.TryTake(out var abandonedItem))
                     abandonedItem.ReplyPipe?.Reject();
-                }
-
                 outPipe.Dispose();
             }
         }
 
-        static void CompleteAddingIfNeeded<T>(BlockingCollection<T> pipe) {
-            try {
-                if (!pipe.IsAddingCompleted) {
+        static void CompleteAddingIfNeeded<T>(BlockingCollection<T> pipe)
+        {
+            try
+            {
+                if (!pipe.IsAddingCompleted)
                     pipe.CompleteAdding();
-                }
-            } catch (ObjectDisposedException) {
+            }
+            catch (ObjectDisposedException)
+            {
                 // A deferred worker may race the one-time disposal after a pipeline failure.
             }
         }
 
-        void PumpItem(PipelineItem item) {
+        void PumpItem(PipelineItem item)
+        {
             if (Volatile.Read(ref _asyncLifecycleStarted) != 0 &&
-                item.HookGeneration != Volatile.Read(ref _activeHookGeneration)) {
+                item.HookGeneration != Volatile.Read(ref _activeHookGeneration))
+            {
                 item.ReplyPipe?.Reject();
                 return;
             }
 
             var priorItemGeneration = _hookGeneration.Value;
             var priorPumpLease = _pipelinePumpLease.Value;
+            var priorSharedPumpLease =
+                Volatile.Read(ref _currentPipelinePumpLease);
             var pumpLease = new PipelinePumpLease(item.HookGeneration);
-            try {
+            try
+            {
                 _ = Interlocked.Increment(ref _pipelinePumpDepth);
                 _hookGeneration.Value = item.HookGeneration;
                 _pipelinePumpLease.Value = pumpLease;
-                switch (item.Type) {
+                Volatile.Write(
+                    ref _currentPipelinePumpLease,
+                    pumpLease);
+                switch (item.Type)
+                {
                     case PipelineType.Output:
                         base.WriteObject(item.Value);
                         break;
@@ -118,7 +136,8 @@ public abstract partial class AsyncPSCmdlet {
                         break;
                     case PipelineType.ShouldProcessReason:
                         var reasonRequest = ((string Description, string Warning, string Caption))item.Value!;
-                        item.ReplyPipe!.Publish(() => {
+                        item.ReplyPipe!.Publish(() =>
+                        {
                             var result = base.ShouldProcess(
                                 reasonRequest.Description,
                                 reasonRequest.Warning,
@@ -135,7 +154,8 @@ public abstract partial class AsyncPSCmdlet {
                     case PipelineType.ShouldContinueAll:
                         var shouldContinueAll =
                             ((string Query, string Caption, bool YesToAll, bool NoToAll))item.Value!;
-                        item.ReplyPipe!.Publish(() => {
+                        item.ReplyPipe!.Publish(() =>
+                        {
                             var yesToAll = shouldContinueAll.YesToAll;
                             var noToAll = shouldContinueAll.NoToAll;
                             var continueAll = base.ShouldContinue(
@@ -149,7 +169,8 @@ public abstract partial class AsyncPSCmdlet {
                     case PipelineType.ShouldContinueSecurity:
                         var shouldContinueSecurity =
                             ((string Query, string Caption, bool HasSecurityImpact, bool YesToAll, bool NoToAll))item.Value!;
-                        item.ReplyPipe!.Publish(() => {
+                        item.ReplyPipe!.Publish(() =>
+                        {
                             var yesToAll = shouldContinueSecurity.YesToAll;
                             var noToAll = shouldContinueSecurity.NoToAll;
                             var continueSecurity = base.ShouldContinue(
@@ -191,54 +212,115 @@ public abstract partial class AsyncPSCmdlet {
                     case PipelineType.HookCompleted:
                         break;
                 }
-            } finally {
-                pumpLease.Close();
+            }
+            finally
+            {
+                pumpLease.CloseAndWait();
+                Volatile.Write(
+                    ref _currentPipelinePumpLease,
+                    priorSharedPumpLease);
                 _pipelinePumpLease.Value = priorPumpLease;
                 _hookGeneration.Value = priorItemGeneration;
                 _ = Interlocked.Decrement(ref _pipelinePumpDepth);
             }
         }
 
-        void PumpQueuedItems() {
-            if (IsPumpingPipelineItem) {
-                return;
+        void DrainPumpBoundItemsAfterFailure()
+        {
+            while (outPipe.TryTake(out var causalItem))
+            {
+                if (!causalItem.IsPumpBound)
+                {
+                    causalItem.ReplyPipe?.Reject();
+                    continue;
+                }
+
+                try
+                {
+                    PumpItem(causalItem);
+                }
+                catch
+                {
+                    causalItem.ReplyPipe?.Reject();
+                }
             }
+        }
+
+        void PumpItemPreservingCausalFailureRecords(PipelineItem item)
+        {
+            try
+            {
+                PumpItem(item);
+            }
+            catch
+            {
+                DrainPumpBoundItemsAfterFailure();
+                throw;
+            }
+        }
+
+        void PumpQueuedItems()
+        {
+            if (IsPumpingPipelineItem)
+                return;
 
             // Both callers close ordinary admission before entering this drain. Only a pipeline
             // item that is currently being pumped can enqueue more work through its flow-local
             // lease, so continue until that causal tail is empty.
-            while (outPipe.TryTake(out var item)) {
-                PumpItem(item);
-            }
+            while (outPipe.TryTake(out var item))
+                PumpItemPreservingCausalFailureRecords(item);
         }
 
-        void PumpThroughDirectAccessBarrier() {
-            if (IsPumpingPipelineItem) {
-                return;
-            }
-
+        void PumpThroughDirectAccessBarrier()
+        {
+            PipelineItem? completionMarker = null;
             var barrier = new PipelineItem(
                 value: null,
                 PipelineType.DirectAccessBarrier,
                 hookGeneration: hookGeneration,
                 dropOnStop: true);
-            if (!TryQueue(barrier)) {
+            if (!TryQueue(barrier))
+            {
                 ThrowIfStopped();
                 throw new InvalidOperationException(
                     "No active PowerShell pipeline is available for direct access.");
             }
 
-            while (outPipe.TryTake(out var item)) {
-                PumpItem(item);
-                if (ReferenceEquals(item, barrier)) {
-                    while (HasPumpBoundItems()) {
+            while (outPipe.TryTake(out var item))
+            {
+                if (item.Type == PipelineType.HookCompleted)
+                {
+                    completionMarker = item;
+                    continue;
+                }
+
+                PumpItemPreservingCausalFailureRecords(item);
+                if (ReferenceEquals(item, barrier))
+                {
+                    while (HasPumpBoundItems())
+                    {
                         ThrowIfStopped();
-                        if (!outPipe.TryTake(out var pumpBoundPredecessor)) {
+                        if (!outPipe.TryTake(out var pumpBoundPredecessor))
+                        {
                             throw new InvalidOperationException(
                                 "The PowerShell pipeline closed while causal records were pending.");
                         }
 
-                        PumpItem(pumpBoundPredecessor);
+                        if (pumpBoundPredecessor.Type ==
+                            PipelineType.HookCompleted)
+                        {
+                            completionMarker =
+                                pumpBoundPredecessor;
+                            continue;
+                        }
+
+                        PumpItemPreservingCausalFailureRecords(pumpBoundPredecessor);
+                    }
+
+                    if (completionMarker is not null)
+                    {
+                        outPipe.Add(
+                            completionMarker);
                     }
 
                     return;
@@ -246,11 +328,12 @@ public abstract partial class AsyncPSCmdlet {
             }
         }
 
-        bool HasPumpBoundItems() {
-            foreach (var queuedItem in outPipe.ToArray()) {
-                if (queuedItem.IsPumpBound) {
+        bool HasPumpBoundItems()
+        {
+            foreach (var queuedItem in outPipe.ToArray())
+            {
+                if (queuedItem.IsPumpBound)
                     return true;
-                }
             }
 
             return false;
@@ -260,19 +343,26 @@ public abstract partial class AsyncPSCmdlet {
         Volatile.Write(ref _pipelineThreadId, Environment.CurrentManagedThreadId);
         Volatile.Write(ref _activeHookGeneration, hookGeneration);
         Volatile.Write(ref _pumpQueuedItems, PumpThroughDirectAccessBarrier);
-        lock (_hookAdmissionLock) {
+        lock (_hookAdmissionLock)
+        {
             Volatile.Write(ref _acceptingHookWritesGeneration, hookGeneration);
             Volatile.Write(ref _currentOutPipe, outPipe);
         }
 
         var priorHookGeneration = _hookGeneration.Value;
-        try {
+        try
+        {
             Volatile.Write(ref _pipelineSynchronizationContext, synchronizationContext);
-            SynchronizationContext.SetSynchronizationContext(HookSynchronizationContext);
+            SynchronizationContext.SetSynchronizationContext(
+                hookSynchronizationContext);
             _hookGeneration.Value = hookGeneration;
-            if (TaskScheduler.Current == TaskScheduler.Default) {
+            ThrowIfStopped();
+            if (TaskScheduler.Current == TaskScheduler.Default)
+            {
                 blockTask = task();
-            } else {
+            }
+            else
+            {
                 using var invocationTask = new Task<Task>(
                     task,
                     CancellationToken.None,
@@ -280,52 +370,68 @@ public abstract partial class AsyncPSCmdlet {
                 invocationTask.RunSynchronously(HookTaskScheduler);
                 blockTask = invocationTask.GetAwaiter().GetResult();
             }
-        } catch (Exception exception) {
-            lock (_hookAdmissionLock) {
+        }
+        catch (Exception exception)
+        {
+            lock (_hookAdmissionLock)
+            {
                 _ = Interlocked.CompareExchange(ref _acceptingHookWritesGeneration, 0, hookGeneration);
             }
             SynchronizationContext.SetSynchronizationContext(synchronizationContext);
-            try {
+            try
+            {
                 PumpQueuedItems();
-            } catch {
+            }
+            catch
+            {
                 // Preserve the hook failure after best-effort delivery of records written before it.
-            } finally {
+            }
+            finally
+            {
                 ClearPipes();
                 DeactivateHook();
                 DisposePipeOnce();
             }
 
-            if (exception is PipelineStoppedException) {
+            if (exception is PipelineStoppedException)
+            {
                 CancelSource();
                 throw;
             }
 
-            if (exception is OperationCanceledException && _cancelSource.IsCancellationRequested) {
+            if (exception is OperationCanceledException && _cancelSource.IsCancellationRequested)
                 throw new PipelineStoppedException();
-            }
 
             throw;
-        } finally {
+        }
+        finally
+        {
             _hookGeneration.Value = priorHookGeneration;
             SynchronizationContext.SetSynchronizationContext(synchronizationContext);
         }
 
-        if (blockTask.IsCompleted) {
-            lock (_hookAdmissionLock) {
+        if (blockTask.IsCompleted)
+        {
+            lock (_hookAdmissionLock)
+            {
                 _ = Interlocked.CompareExchange(ref _acceptingHookWritesGeneration, 0, hookGeneration);
             }
-            if (blockTask.IsFaulted) {
+            if (blockTask.IsFaulted)
                 _ = blockTask.Exception;
-            }
 
-            try {
+            try
+            {
                 ThrowIfStopped();
                 PumpQueuedItems();
                 GetBlockTaskResult(blockTask);
-            } catch (PipelineStoppedException) {
+            }
+            catch (PipelineStoppedException)
+            {
                 CancelSource();
                 throw;
-            } finally {
+            }
+            finally
+            {
                 ClearPipes();
                 DeactivateHook();
                 DisposePipeOnce();
@@ -335,22 +441,27 @@ public abstract partial class AsyncPSCmdlet {
         }
 
         RetainAsyncBlock();
-        try {
+        try
+        {
             _ = blockTask.ContinueWith(
-                completed => {
+                completed =>
+                {
                     var retainedBlockOwned = true;
-                    try {
-                        if (completed.IsFaulted) {
+                    try
+                    {
+                        if (completed.IsFaulted)
                             _ = completed.Exception;
-                        }
 
                         ExitAsyncBlock();
                         retainedBlockOwned = false;
 
-                        lock (_hookAdmissionLock) {
+                        lock (_hookAdmissionLock)
+                        {
                             _ = Interlocked.CompareExchange(ref _acceptingHookWritesGeneration, 0, hookGeneration);
-                            try {
-                                if (!outPipe.IsAddingCompleted) {
+                            try
+                            {
+                                if (!outPipe.IsAddingCompleted)
+                                {
                                     outPipe.Add(
                                         new PipelineItem(
                                             value: null,
@@ -358,71 +469,93 @@ public abstract partial class AsyncPSCmdlet {
                                             hookGeneration: hookGeneration,
                                             dropOnStop: true));
                                 }
-                            } catch (ObjectDisposedException) {
+                            }
+                            catch (ObjectDisposedException)
+                            {
                                 // A pipeline failure may dispose the transport before the hook completes.
-                            } catch (InvalidOperationException) {
+                            }
+                            catch (InvalidOperationException)
+                            {
                                 // The pipeline completed adding while the hook completion was published.
                             }
                         }
 
-                        if (Volatile.Read(ref deferPipeDisposal) != 0) {
+                        if (Volatile.Read(ref deferPipeDisposal) != 0)
+                        {
                             ClearPipes();
                             DisposePipeOnce();
                         }
-                    } finally {
-                        if (retainedBlockOwned) {
+                    }
+                    finally
+                    {
+                        if (retainedBlockOwned)
                             ExitAsyncBlock();
-                        }
                     }
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously,
                 TaskScheduler.Default);
-        } catch {
+        }
+        catch
+        {
             ExitAsyncBlock();
             throw;
         }
 
-        try {
-            while (true) {
+        try
+        {
+            while (true)
+            {
                 var item = outPipe.Take(CancelToken);
-                PumpItem(item);
-                if (item.Type == PipelineType.HookCompleted) {
-                    while (outPipe.TryTake(out var pumpBoundItem)) {
+                PumpItemPreservingCausalFailureRecords(item);
+                if (item.Type == PipelineType.HookCompleted)
+                {
+                    while (outPipe.TryTake(out var pumpBoundItem))
+                    {
                         ThrowIfStopped();
-                        PumpItem(pumpBoundItem);
+                        PumpItemPreservingCausalFailureRecords(pumpBoundItem);
                     }
                     break;
                 }
             }
 
             ClearPipes();
-        } catch (Exception pipelineException) {
+        }
+        catch (Exception pipelineException)
+        {
             var stopRequested = _cancelSource.IsCancellationRequested;
             Volatile.Write(ref deferPipeDisposal, 1);
-            try {
+            try
+            {
                 CancelSource();
-            } catch (AggregateException) {
+            }
+            catch (AggregateException)
+            {
                 // Preserve the pipeline failure while cancellation callbacks observe the same stop.
-            } finally {
+            }
+            finally
+            {
                 CompleteAddingIfNeeded(outPipe);
-                if (blockTask.IsCompleted) {
+                if (blockTask.IsCompleted)
+                {
+                    ClearPipes();
                     DisposePipeOnce();
                 }
-
                 DeactivateHook();
             }
 
-            if (pipelineException is OperationCanceledException && stopRequested) {
+            if (pipelineException is OperationCanceledException && stopRequested)
                 throw new PipelineStoppedException();
-            }
 
             throw;
         }
 
-        try {
+        try
+        {
             GetBlockTaskResult(blockTask);
-        } finally {
+        }
+        finally
+        {
             DeactivateHook();
             DisposePipeOnce();
         }
