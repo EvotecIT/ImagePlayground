@@ -48,6 +48,7 @@ Write-Color
 
 try {
     $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+    $env:IMAGEPLAYGROUND_TEST_MODULE_PATH = $PrimaryModule.FullName
     Import-Module $PSScriptRoot\*.psd1 -Force -ErrorAction Stop
     Import-Module Pester -Force -ErrorAction Stop
 } catch {

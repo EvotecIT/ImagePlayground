@@ -99,6 +99,24 @@ New-ImageChart {
 
 The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other chart-definition commands remain the normal PowerShell experience. Advanced scripts can also pass a native `ChartForgeX.Core.Chart` through `-Chart` or configure one through `-ChartScript`.
 
+Build an animated visual story from native ChartForgeX blocks while keeping ImagePlayground as the thin PowerShell surface:
+
+```powershell
+New-ImageVisualStory -StoryScript {
+    param($Story)
+
+    $projects = [ChartForgeX.VisualBlocks.MetricCard]::Create()
+    [void] $projects.WithMetric('Maintained projects', '24').WithCaption('reusable libraries')
+    [void] $Story.WithTitle('Engineering portfolio').WithColumns(1)
+    [void] $Story.Add('projects', $projects)
+} -MotionDefinition {
+    New-ImageVisualMotionCue -TargetId title -Effect Reveal -DurationSeconds 0.65
+    New-ImageVisualMotionCue -TargetId projects -Effect Rise -DelaySeconds 0.25
+} -FilePath '.\portfolio.svg'
+```
+
+SVG and HTML preserve the script-free story. PNG renders the exact completed state, while reduced-motion and print users see all content immediately.
+
 PowerShell commands have one execution path. Commands that can use asynchronous file APIs do so internally and honor pipeline cancellation; there is no `-Async` switch because a PowerShell command invocation still completes before returning control to the caller.
 
 See [the generated command reference](Docs/Readme.md) and the focused scripts under [`Examples`](Examples).

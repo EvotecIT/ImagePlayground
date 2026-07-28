@@ -2,7 +2,7 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.0.0
+Help Version: 3.1.0
 Locale: en-US
 ---
 # ImagePlayground Module
@@ -248,6 +248,12 @@ Creates a topology group definition.
 
 ### [New-ImageTopologyNode](New-ImageTopologyNode.md)
 Creates a topology node definition.
+
+### [New-ImageVisualMotionCue](New-ImageVisualMotionCue.md)
+Creates one named motion cue for an animated ChartForgeX visual story.
+
+### [New-ImageVisualStory](New-ImageVisualStory.md)
+Creates a script-free animated visual story from a ChartForgeX visual grid.
 
 ### [Remove-ImageExif](Remove-ImageExif.md)
 Removes EXIF metadata from an image.

@@ -21,7 +21,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion          = '3.0.0'
+        ModuleVersion          = '3.1.0'
         AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
         # Author of this module
         Author                 = 'Przemyslaw Klys'
@@ -125,12 +125,19 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # that are intentionally part of the PowerShell scripting surface.
         NETAssemblyTypeAccelerators       = @(
             'ChartForgeX.Core.Chart'
+            'ChartForgeX.Core.ChartCalendarHeatmapItem'
+            'ChartForgeX.Motion.VisualMotionCue'
+            'ChartForgeX.Motion.VisualMotionTimeline'
             'ChartForgeX.Primitives.ChartColor'
             'ChartForgeX.Primitives.ChartPoint'
+            'ChartForgeX.Themes.ChartTheme'
             'ChartForgeX.Topology.TopologyChart'
             'ChartForgeX.Topology.TopologyEdge'
             'ChartForgeX.Topology.TopologyGroup'
             'ChartForgeX.Topology.TopologyNode'
+            'ChartForgeX.VisualBlocks.MetricCard'
+            'ChartForgeX.VisualBlocks.ChartTable'
+            'ChartForgeX.VisualBlocks.VisualGrid'
             'CodeGlyphX.QrPixelDecodeOptions'
             'ImagePlayground.Image'
             'SixLabors.Fonts.HorizontalAlignment'
