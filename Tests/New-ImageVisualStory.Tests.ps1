@@ -64,4 +64,17 @@ Describe 'New-ImageVisualStory' {
             } -FilePath $file
         } | Should -Throw
     }
+
+    It 'rejects multiple timelines emitted by one motion definition' {
+        $file = Join-Path -Path $TestDir -ChildPath 'multiple-motion-timelines.svg'
+        {
+            New-ImageVisualStory -StoryScript {
+                param($Story)
+                [void] $Story.Add('metric', [ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
+            } -MotionDefinition {
+                [ChartForgeX.Motion.VisualMotionTimeline]::Create().Fade('metric')
+                [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('metric')
+            } -FilePath $file
+        } | Should -Throw '*at most one VisualMotionTimeline*'
+    }
 }

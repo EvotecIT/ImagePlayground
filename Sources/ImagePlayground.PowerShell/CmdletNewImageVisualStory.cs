@@ -120,13 +120,20 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
         if (Motion != null || MotionDefinition == null) return Motion;
 
         VisualMotionTimeline? returnedTimeline = null;
+        var returnedTimelineCount = 0;
         var cues = new List<VisualMotionCue>();
         foreach (var result in MotionDefinition.Invoke()) {
             var value = result is PSObject psObject ? psObject.BaseObject : result;
-            if (value is VisualMotionTimeline timeline) returnedTimeline = timeline;
-            else if (value is VisualMotionCue cue) cues.Add(cue);
+            if (value is VisualMotionTimeline timeline) {
+                returnedTimeline = timeline;
+                returnedTimelineCount++;
+            } else if (value is VisualMotionCue cue) cues.Add(cue);
         }
 
+        if (returnedTimelineCount > 1) {
+            var exception = new PSArgumentException("MotionDefinition must emit at most one VisualMotionTimeline.");
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleMotionTimelines", ErrorCategory.InvalidArgument, null));
+        }
         if (returnedTimeline != null && cues.Count > 0) {
             var exception = new PSArgumentException("MotionDefinition must emit either one VisualMotionTimeline or motion cues, not both.");
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMixedMotionDefinition", ErrorCategory.InvalidArgument, null));
