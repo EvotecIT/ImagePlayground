@@ -85,8 +85,12 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (Story != null) _stories.Add(Story);
-        if (ParameterSetName == TranscriptSet) _transcript.Add(InputObject ?? string.Empty);
+        if (Story != null) {
+            _stories.Add(Story);
+        }
+        if (ParameterSetName == TranscriptSet) {
+            _transcript.Add(InputObject ?? string.Empty);
+        }
     }
 
     /// <inheritdoc />
@@ -96,7 +100,9 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
         var directory = Path.GetDirectoryName(output);
-        if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
+        if (!string.IsNullOrWhiteSpace(directory)) {
+            Directory.CreateDirectory(directory!);
+        }
 
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
             story.SaveSvg(output);
@@ -106,8 +112,12 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             story.SavePng(output);
         }
 
-        if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
-        if (PassThru.IsPresent) WriteObject(story);
+        if (Show.IsPresent) {
+            ImagePlayground.Helpers.Open(output, true);
+        }
+        if (PassThru.IsPresent) {
+            WriteObject(story);
+        }
     }
 
     private TerminalStory BuildStory() {
@@ -115,7 +125,9 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             var story = TerminalStory.Create();
             foreach (var result in StoryScript!.Invoke(story)) {
                 var value = result is PSObject psObject ? psObject.BaseObject : result;
-                if (value is TerminalStory returnedStory) story = returnedStory;
+                if (value is TerminalStory returnedStory) {
+                    story = returnedStory;
+                }
             }
 
             return story;

@@ -62,20 +62,26 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (Grid != null) _grids.Add(Grid);
+        if (Grid != null) {
+            _grids.Add(Grid);
+        }
     }
 
     /// <inheritdoc />
     protected override void EndProcessing() {
         var grid = BuildGrid();
         var motion = BuildMotion();
-        if (motion != null) grid.WithMotion(motion);
+        if (motion != null) {
+            grid.WithMotion(motion);
+        }
 
         var output = Helpers.ResolvePath(FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
         var directory = Path.GetDirectoryName(output);
-        if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
+        if (!string.IsNullOrWhiteSpace(directory)) {
+            Directory.CreateDirectory(directory!);
+        }
 
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
             grid.SaveSvg(output);
@@ -85,8 +91,12 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             grid.SavePng(output);
         }
 
-        if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
-        if (PassThru.IsPresent) WriteObject(grid);
+        if (Show.IsPresent) {
+            ImagePlayground.Helpers.Open(output, true);
+        }
+        if (PassThru.IsPresent) {
+            WriteObject(grid);
+        }
     }
 
     private VisualGrid BuildGrid() {
@@ -94,7 +104,9 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             var grid = VisualGrid.Create();
             foreach (var result in StoryScript.Invoke(grid)) {
                 var value = result is PSObject psObject ? psObject.BaseObject : result;
-                if (value is VisualGrid returnedGrid) grid = returnedGrid;
+                if (value is VisualGrid returnedGrid) {
+                    grid = returnedGrid;
+                }
             }
 
             return grid;
@@ -117,7 +129,9 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             var exception = new PSArgumentException("Use either Motion or MotionDefinition, not both.");
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleMotionSources", ErrorCategory.InvalidArgument, null));
         }
-        if (Motion != null || MotionDefinition == null) return Motion;
+        if (Motion != null || MotionDefinition == null) {
+            return Motion;
+        }
 
         VisualMotionTimeline? returnedTimeline = null;
         var returnedTimelineCount = 0;
@@ -127,7 +141,9 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             if (value is VisualMotionTimeline timeline) {
                 returnedTimeline = timeline;
                 returnedTimelineCount++;
-            } else if (value is VisualMotionCue cue) cues.Add(cue);
+            } else if (value is VisualMotionCue cue) {
+                cues.Add(cue);
+            }
         }
 
         if (returnedTimelineCount > 1) {
@@ -138,14 +154,18 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             var exception = new PSArgumentException("MotionDefinition must emit either one VisualMotionTimeline or motion cues, not both.");
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMixedMotionDefinition", ErrorCategory.InvalidArgument, null));
         }
-        if (returnedTimeline != null) return returnedTimeline;
+        if (returnedTimeline != null) {
+            return returnedTimeline;
+        }
         if (cues.Count == 0) {
             var exception = new PSArgumentException("MotionDefinition must emit at least one object from New-ImageVisualMotionCue.");
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMissingMotionCues", ErrorCategory.InvalidArgument, null));
         }
 
         var motion = VisualMotionTimeline.Create();
-        foreach (var cue in cues) motion.Add(cue);
+        foreach (var cue in cues) {
+            motion.Add(cue);
+        }
         return motion;
     }
 
