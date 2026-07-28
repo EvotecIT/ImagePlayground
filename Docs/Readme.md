@@ -167,6 +167,9 @@ Creates waterfall chart data item.
 ### [New-ImageChartWordCloud](New-ImageChartWordCloud.md)
 Creates word cloud chart term.
 
+### [New-ImageConsoleStory](New-ImageConsoleStory.md)
+Creates a script-free animated console presentation from authored steps, captured transcript lines, or a native ChartForgeX terminal story.
+
 ### [New-ImageCrop](New-ImageCrop.md)
 Creates a cropped version of an image using rectangular, circular or
 polygonal areas.

@@ -99,7 +99,34 @@ New-ImageChart {
 
 The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other chart-definition commands remain the normal PowerShell experience. Advanced scripts can also pass a native `ChartForgeX.Core.Chart` through `-Chart` or configure one through `-ChartScript`.
 
-Build an animated visual story from native ChartForgeX blocks while keeping ImagePlayground as the thin PowerShell surface:
+Present an authored PowerShell session while keeping ChartForgeX as the reusable terminal renderer:
+
+```powershell
+New-ImageConsoleStory -StoryScript {
+    param($Console)
+
+    [void] $Console.WithTitle('pwsh - C:\OpenSource').WithWorkingDirectory('C:\OpenSource')
+    [void] $Console.Command('.\Invoke-ReleaseValidation.ps1')
+    [void] $Console.Output('PASS  all checks', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+} -FilePath '.\validation.svg'
+```
+
+To show a real script run, execute it explicitly and send the captured lines to the renderer:
+
+```powershell
+$transcript = & .\Invoke-EnvironmentAudit.ps1 2>&1 |
+    Out-String -Stream -Width 110
+
+$transcript | New-ImageConsoleStory `
+    -CommandText '.\Invoke-EnvironmentAudit.ps1' `
+    -Dialect PowerShell `
+    -FilePath '.\audit-demo.svg'
+```
+
+`New-ImageConsoleStory` never executes `-CommandText`. It accepts authored steps, captured transcript lines, or a native `ChartForgeX.Terminal.TerminalStory`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control presentation. SVG and HTML use script-free command typing and output reveals; PNG, print, and reduced-motion output show the completed transcript.
+Long captured lines wrap within the terminal instead of being discarded. For a custom dialect, pair `-Dialect Custom` with `-CustomPrompt 'demo> '`.
+
+Build a general animated visual story from native ChartForgeX blocks:
 
 ```powershell
 New-ImageVisualStory -StoryScript {

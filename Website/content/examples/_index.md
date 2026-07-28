@@ -29,4 +29,9 @@ These examples are selected from the ImagePlayground repository because they sho
     <h3>Create ChartForgeX charts</h3>
     <p>Generate PNG, SVG, HTML and transparent chart overlays from one chart definition.</p>
   </a>
+  <a class="ev-example-card" href="./console-story/">
+    <span class="ev-example-card__eyebrow">Terminal SVG</span>
+    <h3>Present a PowerShell script run</h3>
+    <p>Turn authored commands or caller-captured output into a polished script-free console animation.</p>
+  </a>
 </div>
