@@ -1,6 +1,6 @@
 ---
-title: PowerShell Console Story
-description: Present authored commands or captured PowerShell script output as a polished, script-free animated SVG.
+title: Console Story
+description: Present authored commands or captured script output as a polished SVG, GIF, APNG, HTML, or PNG.
 weight: 34
 ---
 
@@ -34,4 +34,22 @@ $transcript | New-ImageConsoleStory `
     -FilePath '.\audit-demo.svg'
 ```
 
-The command never invokes the text supplied through `-CommandText`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control how prompts are presented. SVG and HTML animate without JavaScript; PNG, print, and reduced-motion output show the complete transcript.
+The command never invokes the text supplied through `-CommandText`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control how prompts are presented. SVG and HTML animate without JavaScript. GIF and APNG reuse the same deterministic timeline for portable chat and documentation embeds; PNG, print, and reduced-motion output show the complete transcript.
+
+The story is generic enough for a short product walkthrough: type a few C# or PowerShell lines, reveal status or output, pause, and continue. For example, a five-line chart demo can be presented as a C# interactive session and saved directly for Discord:
+
+```powershell
+New-ImageConsoleStory -StoryScript {
+    param($Console)
+
+    [void] $Console.WithTitle('dotnet run - ChartForgeX').WithDialect(
+        [ChartForgeX.Terminal.TerminalDialect]::CSharp
+    ).WithWidth(1000)
+    [void] $Console.Command('using ChartForgeX; using ChartForgeX.Core; using System.Linq;', 0.65)
+    [void] $Console.Command('var chart = Chart.Create().WithTitle("Weekly builds");', 0.65)
+    [void] $Console.Command('chart.WithXLabels("Mon", "Tue", "Wed", "Thu", "Fri");', 0.65)
+    [void] $Console.Command('chart.AddLine("Builds", new[] { 12d, 18d, 15d, 24d, 31d }.Select((y, x) => new ChartPoint(x + 1, y)));', 1.1)
+    [void] $Console.Command('chart.SavePng("weekly-builds.png");', 0.65)
+    [void] $Console.Output('Saved weekly-builds.png (1000 x 560)', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+} -FilePath '.\chart-in-five-lines.gif'
+```

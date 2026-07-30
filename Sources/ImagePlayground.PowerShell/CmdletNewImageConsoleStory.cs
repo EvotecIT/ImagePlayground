@@ -9,7 +9,7 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates a script-free animated console presentation from authored steps, captured transcript lines, or a native ChartForgeX terminal story.</summary>
-/// <para>The cmdlet renders deterministic SVG or HTML motion and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.</para>
+/// <para>The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.</para>
 /// <example>
 ///   <summary>Author a PowerShell console presentation</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -28,6 +28,18 @@ namespace ImagePlayground.PowerShell;
 ///   <code>$output = &amp; .\Invoke-EnvironmentAudit.ps1 2&gt;&amp;1 | Out-String -Stream -Width 110
 /// $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell -FilePath '.\audit-demo.svg'</code>
 ///   <para>The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.</para>
+/// </example>
+/// <example>
+///   <summary>Export a portable animated GIF for chat or documentation</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageConsoleStory -StoryScript {
+///   param($Console)
+///   [void] $Console.WithDialect([ChartForgeX.Terminal.TerminalDialect]::CSharp)
+///   [void] $Console.Command('var chart = Chart.Create().WithTitle("Weekly builds");')
+///   [void] $Console.Command('chart.SavePng("weekly-builds.png");')
+///   [void] $Console.Output('Saved weekly-builds.png', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+/// } -FilePath '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5</code>
+///   <para>GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageConsoleStory", DefaultParameterSetName = StoryScriptSet)]
 [OutputType(typeof(TerminalStory))]
@@ -71,9 +83,33 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = TranscriptSet)]
     public string WorkingDirectory { get; set; } = @"C:\";
 
-    /// <summary>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</summary>
+    /// <summary>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</summary>
     [Parameter(Mandatory = true)]
     public string FilePath { get; set; } = string.Empty;
+
+    /// <summary>Frame rate used for animated GIF and APNG output.</summary>
+    [Parameter]
+    [ValidateRange(2, 30)]
+    public int FramesPerSecond { get; set; } = 10;
+
+    /// <summary>Completed-state hold time used for animated GIF and APNG output.</summary>
+    [Parameter]
+    [ValidateRange(0, 10)]
+    public double EndHoldSeconds { get; set; } = 1.2;
+
+    /// <summary>Raster density multiplier used for animated GIF and APNG output.</summary>
+    [Parameter]
+    [ValidateRange(1, 4)]
+    public int AnimationScale { get; set; } = 1;
+
+    /// <summary>Maximum frame budget used for animated GIF and APNG output.</summary>
+    [Parameter]
+    [ValidateRange(2, 600)]
+    public int MaximumFrames { get; set; } = 240;
+
+    /// <summary>Produce a single-play animated GIF or APNG instead of a repeating animation.</summary>
+    [Parameter]
+    public SwitchParameter NoLoop { get; set; }
 
     /// <summary>Open the generated presentation after creation.</summary>
     [Parameter]
@@ -108,8 +144,12 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             story.SaveSvg(output);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
             story.SaveHtml(output);
-        } else {
+        } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
             story.SavePng(output);
+        } else if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
+            story.SaveGif(output, BuildAnimationOptions());
+        } else {
+            story.SaveApng(output, BuildAnimationOptions());
         }
 
         if (Show.IsPresent) {
@@ -154,15 +194,26 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
         return _stories[0];
     }
 
+    private TerminalStoryAnimationOptions BuildAnimationOptions() {
+        return TerminalStoryAnimationOptions.Create()
+            .WithFramesPerSecond(FramesPerSecond)
+            .WithEndHold(EndHoldSeconds)
+            .WithOutputScale(AnimationScale)
+            .WithMaximumFrames(MaximumFrames)
+            .WithLoop(!NoLoop.IsPresent);
+    }
+
     private void ValidateExtension(string extension, string output) {
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
             extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
             extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
+            extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".apng", StringComparison.OrdinalIgnoreCase)) {
             return;
         }
 
-        var exception = new PSArgumentException("Console story output supports only .svg, .html, .htm, or .png file extensions.");
+        var exception = new PSArgumentException("Console story output supports only .svg, .html, .htm, .png, .gif, or .apng file extensions.");
         ThrowTerminatingError(new ErrorRecord(exception, "NewImageConsoleStoryUnsupportedExtension", ErrorCategory.InvalidArgument, output));
     }
 }

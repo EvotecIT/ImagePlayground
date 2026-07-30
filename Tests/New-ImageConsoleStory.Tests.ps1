@@ -71,12 +71,38 @@ Describe 'New-ImageConsoleStory' {
         $bytes[3] | Should -Be 71
     }
 
+    It 'renders portable GIF and APNG files from the same story timeline' {
+        $file = Join-Path -Path $TestDir -ChildPath 'console-story.gif'
+        $apngFile = Join-Path -Path $TestDir -ChildPath 'console-story.apng'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+        if (Test-Path -Path $apngFile) {
+            Remove-Item -Path $apngFile
+        }
+
+        $story = New-ImageConsoleStory -StoryScript {
+            param($Console)
+            [void] $Console.WithWidth(480).WithTiming(0, 200, 0).WithFinalPrompt($false)
+            [void] $Console.Command('dotnet run', 0.05)
+            [void] $Console.Output('Chart saved', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+        } -FilePath $file -FramesPerSecond 4 -EndHoldSeconds 0.1 -NoLoop -PassThru
+        $story | New-ImageConsoleStory -FilePath $apngFile -FramesPerSecond 4 -EndHoldSeconds 0.1
+
+        $bytes = [System.IO.File]::ReadAllBytes($file)
+        [System.Text.Encoding]::ASCII.GetString($bytes, 0, 6) | Should -Be 'GIF89a'
+        [System.Text.Encoding]::ASCII.GetString($bytes) | Should -Not -Match 'NETSCAPE2.0'
+        $apngBytes = [System.IO.File]::ReadAllBytes($apngFile)
+        $apngBytes[0] | Should -Be 137
+        [System.Text.Encoding]::ASCII.GetString($apngBytes) | Should -Match 'acTL'
+    }
+
     It 'rejects unsupported output extensions' {
         {
             New-ImageConsoleStory -StoryScript {
                 param($Console)
                 [void] $Console.Command('Get-Date')
-            } -FilePath (Join-Path -Path $TestDir -ChildPath 'console-story.gif')
+            } -FilePath (Join-Path -Path $TestDir -ChildPath 'console-story.webp')
         } | Should -Throw
     }
 }

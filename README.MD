@@ -108,7 +108,7 @@ New-ImageConsoleStory -StoryScript {
     [void] $Console.WithTitle('pwsh - C:\OpenSource').WithWorkingDirectory('C:\OpenSource')
     [void] $Console.Command('.\Invoke-ReleaseValidation.ps1')
     [void] $Console.Output('PASS  all checks', [ChartForgeX.Terminal.TerminalTextTone]::Success)
-} -FilePath '.\validation.svg'
+} -FilePath '.\validation.gif'
 ```
 
 To show a real script run, execute it explicitly and send the captured lines to the renderer:
@@ -123,7 +123,7 @@ $transcript | New-ImageConsoleStory `
     -FilePath '.\audit-demo.svg'
 ```
 
-`New-ImageConsoleStory` never executes `-CommandText`. It accepts authored steps, captured transcript lines, or a native `ChartForgeX.Terminal.TerminalStory`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control presentation. SVG and HTML use script-free command typing and output reveals; PNG, print, and reduced-motion output show the completed transcript.
+`New-ImageConsoleStory` never executes `-CommandText`. It accepts authored steps, captured transcript lines, or a native `ChartForgeX.Terminal.TerminalStory`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control presentation. SVG and HTML use script-free command typing and output reveals; GIF and APNG export that same timeline for Discord, issue, and documentation embeds; PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
 Long captured lines wrap within the terminal instead of being discarded. For a custom dialect, pair `-Dialect Custom` with `-CustomPrompt 'demo> '`.
 
 Build a general animated visual story from native ChartForgeX blocks:

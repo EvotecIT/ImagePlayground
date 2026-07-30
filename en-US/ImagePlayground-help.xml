@@ -22633,4 +22633,694 @@ polygonal areas.</maml:para>
     </command:examples>
     <command:relatedLinks />
   </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageConsoleStory</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageConsoleStory</command:noun>
+      <maml:description>
+        <maml:para>Creates a script-free animated console presentation from authored steps, captured transcript lines, or a native ChartForgeX terminal story.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="StoryScript">
+        <maml:name>New-ImageConsoleStory</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AnimationScale</maml:name>
+          <maml:description>
+            <maml:para>Raster density multiplier used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>EndHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Completed-state hold time used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1,2</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FramesPerSecond</maml:name>
+          <maml:description>
+            <maml:para>Frame rate used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>10</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumFrames</maml:name>
+          <maml:description>
+            <maml:para>Maximum frame budget used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>240</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoLoop</maml:name>
+          <maml:description>
+            <maml:para>Produce a single-play animated GIF or APNG instead of a repeating animation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Show</maml:name>
+          <maml:description>
+            <maml:para>Open the generated presentation after creation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="none">
+          <maml:name>StoryScript</maml:name>
+          <maml:description>
+            <maml:para>Script block that receives and configures a new ChartForgeX TerminalStory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
+          <dev:type>
+            <maml:name>ScriptBlock</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Story">
+        <maml:name>New-ImageConsoleStory</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AnimationScale</maml:name>
+          <maml:description>
+            <maml:para>Raster density multiplier used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>EndHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Completed-state hold time used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1,2</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FramesPerSecond</maml:name>
+          <maml:description>
+            <maml:para>Frame rate used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>10</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumFrames</maml:name>
+          <maml:description>
+            <maml:para>Maximum frame budget used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>240</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoLoop</maml:name>
+          <maml:description>
+            <maml:para>Produce a single-play animated GIF or APNG instead of a repeating animation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Show</maml:name>
+          <maml:description>
+            <maml:para>Open the generated presentation after creation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="none">
+          <maml:name>Story</maml:name>
+          <maml:description>
+            <maml:para>Native ChartForgeX terminal story to render.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TerminalStory</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStory</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Transcript">
+        <maml:name>New-ImageConsoleStory</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AnimationScale</maml:name>
+          <maml:description>
+            <maml:para>Raster density multiplier used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommandText</maml:name>
+          <maml:description>
+            <maml:para>Command text shown before captured transcript lines.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CustomPrompt</maml:name>
+          <maml:description>
+            <maml:para>Prompt text used when Dialect is Custom.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Dialect</maml:name>
+          <maml:description>
+            <maml:para>Prompt dialect used for captured transcript presentations.</maml:para>
+            <maml:para>Possible values: PowerShell, Bash, CommandPrompt, Python, CSharp, Custom</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalDialect</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CommandPrompt</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Python</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CSharp</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalDialect</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>PowerShell</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>EndHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Completed-state hold time used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1,2</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FramesPerSecond</maml:name>
+          <maml:description>
+            <maml:para>Frame rate used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>10</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="none">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>One captured output line. Accepts pipeline input and never executes the displayed command.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumFrames</maml:name>
+          <maml:description>
+            <maml:para>Maximum frame budget used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>240</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoLoop</maml:name>
+          <maml:description>
+            <maml:para>Produce a single-play animated GIF or APNG instead of a repeating animation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Show</maml:name>
+          <maml:description>
+            <maml:para>Open the generated presentation after creation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Terminal title shown for captured transcript presentations.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>PowerShell</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>WorkingDirectory</maml:name>
+          <maml:description>
+            <maml:para>Working directory shown in shell prompts for captured transcript presentations.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>C:\</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AnimationScale</maml:name>
+        <maml:description>
+          <maml:para>Raster density multiplier used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommandText</maml:name>
+        <maml:description>
+          <maml:para>Command text shown before captured transcript lines.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CustomPrompt</maml:name>
+        <maml:description>
+          <maml:para>Prompt text used when Dialect is Custom.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Dialect</maml:name>
+        <maml:description>
+          <maml:para>Prompt dialect used for captured transcript presentations.</maml:para>
+          <maml:para>Possible values: PowerShell, Bash, CommandPrompt, Python, CSharp, Custom</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalDialect</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CommandPrompt</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Python</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CSharp</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TerminalDialect</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>PowerShell</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>EndHoldSeconds</maml:name>
+        <maml:description>
+          <maml:para>Completed-state hold time used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1,2</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>FilePath</maml:name>
+        <maml:description>
+          <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>FramesPerSecond</maml:name>
+        <maml:description>
+          <maml:para>Frame rate used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>10</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="none">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>One captured output line. Accepts pipeline input and never executes the displayed command.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaximumFrames</maml:name>
+        <maml:description>
+          <maml:para>Maximum frame budget used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>240</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NoLoop</maml:name>
+        <maml:description>
+          <maml:para>Produce a single-play animated GIF or APNG instead of a repeating animation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Show</maml:name>
+        <maml:description>
+          <maml:para>Open the generated presentation after creation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="none">
+        <maml:name>Story</maml:name>
+        <maml:description>
+          <maml:para>Native ChartForgeX terminal story to render.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TerminalStory</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalStory</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="none">
+        <maml:name>StoryScript</maml:name>
+        <maml:description>
+          <maml:para>Script block that receives and configures a new ChartForgeX TerminalStory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
+        <dev:type>
+          <maml:name>ScriptBlock</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Title</maml:name>
+        <maml:description>
+          <maml:para>Terminal title shown for captured transcript presentations.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>PowerShell</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>WorkingDirectory</maml:name>
+        <maml:description>
+          <maml:para>Working directory shown in shell prompts for captured transcript presentations.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>C:\</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ChartForgeX.Terminal.TerminalStory</maml:name>
+        </dev:type>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Terminal.TerminalStory</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Author a PowerShell console presentation  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageConsoleStory -StoryScript {
+              param($Console)
+              [void] $Console.WithTitle('pwsh - C:\OpenSource').WithWorkingDirectory('C:\OpenSource')
+              [void] $Console.Command('Get-Service -Name WinRM')
+              [void] $Console.Output('Status   Name               DisplayName', [ChartForgeX.Terminal.TerminalTextTone]::Accent)
+              [void] $Console.Output('Running  WinRM              Windows Remote Management', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+            } -FilePath '.\service-demo.svg'</dev:code>
+        <dev:remarks>
+          <maml:para>Creates a self-contained SVG with command typing, output reveals, a blinking cursor, and a completed reduced-motion state.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----------  Example 2: Render output captured from an actual script run  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$output = &amp; .\Invoke-EnvironmentAudit.ps1 2&gt;&amp;1 | Out-String -Stream -Width 110
+            $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell -FilePath '.\audit-demo.svg'</dev:code>
+        <dev:remarks>
+          <maml:para>The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----------  Example 3: Export a portable animated GIF for chat or documentation  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageConsoleStory -StoryScript {
+              param($Console)
+              [void] $Console.WithDialect([ChartForgeX.Terminal.TerminalDialect]::CSharp)
+              [void] $Console.Command('var chart = Chart.Create().WithTitle("Weekly builds");')
+              [void] $Console.Command('chart.SavePng("weekly-builds.png");')
+              [void] $Console.Output('Saved weekly-builds.png', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+            } -FilePath '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5</dev:code>
+        <dev:remarks>
+          <maml:para>GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
 </helpItems>

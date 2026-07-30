@@ -11,21 +11,21 @@ Creates a script-free animated console presentation from authored steps, capture
 ## SYNTAX
 ### StoryScript (Default)
 ```powershell
-New-ImageConsoleStory [-StoryScript] <scriptblock> -FilePath <string> [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory [-StoryScript] <scriptblock> -FilePath <string> [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
 ```powershell
-New-ImageConsoleStory -Story <TerminalStory> -FilePath <string> [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Story <TerminalStory> -FilePath <string> [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Transcript
 ```powershell
-New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The cmdlet renders deterministic SVG or HTML motion and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.
+The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.
 
 ## EXAMPLES
 
@@ -50,7 +50,36 @@ $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Di
 
 The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.
 
+### EXAMPLE 3
+```powershell
+PS> New-ImageConsoleStory -StoryScript {
+  param($Console)
+  [void] $Console.WithDialect([ChartForgeX.Terminal.TerminalDialect]::CSharp)
+  [void] $Console.Command('var chart = Chart.Create().WithTitle("Weekly builds");')
+  [void] $Console.Command('chart.SavePng("weekly-builds.png");')
+  [void] $Console.Output('Saved weekly-builds.png', [ChartForgeX.Terminal.TerminalTextTone]::Success)
+} -FilePath '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5
+```
+
+GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.
+
 ## PARAMETERS
+
+### -AnimationScale
+Raster density multiplier used for animated GIF and APNG output.
+
+```yaml
+Type: Int32
+Parameter Sets: StoryScript, Story, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 1
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -CommandText
 Command text shown before captured transcript lines.
@@ -102,8 +131,24 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -EndHoldSeconds
+Completed-state hold time used for animated GIF and APNG output.
+
+```yaml
+Type: Double
+Parameter Sets: StoryScript, Story, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 1,2
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FilePath
-Output file path. Supported extensions are SVG, HTML, HTM, and PNG.
+Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.
 
 ```yaml
 Type: String
@@ -114,6 +159,22 @@ Possible values:
 Required: True
 Position: named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FramesPerSecond
+Frame rate used for animated GIF and APNG output.
+
+```yaml
+Type: Int32
+Parameter Sets: StoryScript, Story, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 10
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -131,6 +192,38 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -MaximumFrames
+Maximum frame budget used for animated GIF and APNG output.
+
+```yaml
+Type: Int32
+Parameter Sets: StoryScript, Story, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 240
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoLoop
+Produce a single-play animated GIF or APNG instead of a repeating animation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: StoryScript, Story, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
