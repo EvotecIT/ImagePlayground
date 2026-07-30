@@ -16,6 +16,32 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == "using");
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.String && Slice(result, span) == "\"😀\"");
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Comment && Slice(result, span) == "// outcome");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "WriteLine");
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "Console");
+        Assert.All(result.Spans, span => Assert.InRange(span.End, 1, source.Length));
+    }
+
+    [Fact]
+    public void CSharpRecognizesContextualKeywordsAndOperators() {
+        const string source = "public partial record Demo { required int Value { get; init; } async Task Run() { await Work(); Value++; value ??= fallback; flags <<= 1; } }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var keyword in new[] { "partial", "record", "required", "init", "async", "await" }) {
+            Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == keyword);
+        }
+        foreach (var operation in new[] { "++", "??=", "<<=" }) {
+            Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Operator && Slice(result, span) == operation);
+        }
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "Work");
+    }
+
+    [Fact]
+    public void CSharpMapsManyUnicodeTokenOffsetsWithoutLosingText() {
+        var source = string.Join("\n", Enumerable.Range(0, 500).Select(index => "var café" + index + " = \"😀\";"));
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        Assert.Equal(source, result.Text);
+        Assert.True(result.Spans.Count > 1000);
         Assert.All(result.Spans, span => Assert.InRange(span.End, 1, source.Length));
     }
 

@@ -31,6 +31,24 @@ Describe 'Generic visual stories' {
         @($source.Spans | ForEach-Object { $_.Kind.ToString() }) | Should -Contain 'Comment'
     }
 
+    It 'preserves nested expansions while leaving literal PowerShell arguments plain' {
+        $text = 'Write-Output "value: $status" ready'
+        $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
+        $tokens = @($source.Spans | ForEach-Object {
+            [pscustomobject] @{
+                Kind = $_.Kind.ToString()
+                Text = $source.Text.Substring($_.Start, $_.Length)
+            }
+        })
+
+        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq '$status' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'String' -and $_.Text -match '\\$status' }).Count |
+            Should -Be 0
+        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq 'ready' }).Count |
+            Should -Be 0
+    }
+
     It 'builds a source-to-result story whose completed state contains the outcome' {
         $file = Join-Path -Path $TestDir -ChildPath 'generic-story.svg'
         $source = ConvertTo-ImageStorySource -Text 'Write-Output "ready"' -Language PowerShell

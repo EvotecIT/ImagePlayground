@@ -47,12 +47,12 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         Collect(tree.RootNode, ranges);
         ranges.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
         var sourceText = StorySourceText.Create(source, Language);
-        var utf8 = Encoding.UTF8.GetBytes(source);
         var indexesAreUtf16 = tree.RootNode.EndIndex == source.Length;
+        var utf16Offsets = indexesAreUtf16 ? null : BuildUtf16OffsetMap(source);
         var previousEnd = 0;
         foreach (var range in ranges) {
-            var start = indexesAreUtf16 ? range.StartByte : Utf16Offset(utf8, range.StartByte);
-            var end = indexesAreUtf16 ? range.EndByte : Utf16Offset(utf8, range.EndByte);
+            var start = indexesAreUtf16 ? range.StartByte : Utf16Offset(utf16Offsets!, range.StartByte);
+            var end = indexesAreUtf16 ? range.EndByte : Utf16Offset(utf16Offsets!, range.EndByte);
             if (start < previousEnd || end <= start || end > source.Length) continue;
             sourceText.AddSpan(start, end - start, range.Kind);
             previousEnd = end;
@@ -127,6 +127,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
+            if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (Contains(parentType, "member_access") || Contains(parentType, "member_binding")) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
             return StorySyntaxKind.Variable;
@@ -151,6 +152,13 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 case "switch": case "this": case "throw": case "true": case "try": case "typeof":
                 case "uint": case "ulong": case "unchecked": case "unsafe": case "ushort": case "using":
                 case "var": case "virtual": case "void": case "volatile": case "while":
+                case "add": case "alias": case "and": case "ascending": case "args": case "async":
+                case "await": case "by": case "descending": case "dynamic": case "equals": case "file":
+                case "from": case "get": case "global": case "group": case "init": case "into":
+                case "join": case "let": case "managed": case "nameof": case "not": case "notnull":
+                case "nint": case "nuint": case "on": case "or": case "orderby": case "partial":
+                case "record": case "remove": case "required": case "scoped": case "select": case "set":
+                case "unmanaged": case "value": case "when": case "where": case "with": case "yield":
                     return true;
             }
             return false;
@@ -170,7 +178,9 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "=": case "==": case "!=": case "=>": case "+": case "-": case "*": case "/":
             case "%": case "&&": case "||": case "!": case "<": case ">": case "<=": case ">=":
             case "|": case "&": case "^": case "??": case "?.": case "+=": case "-=": case "*=":
-            case "/=": case "<<": case ">>":
+            case "/=": case "<<": case ">>": case ">>>": case "++": case "--": case "??=":
+            case "%=": case "&=": case "|=": case "^=": case "<<=": case ">>=": case ">>>=":
+            case "~": case "->": case "..":
                 return true;
             default:
                 return false;
@@ -203,13 +213,58 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         output.Add(new SemanticRange(startIndex, endIndex, kind));
     }
 
-    private static int Utf16Offset(byte[] utf8, int byteOffset) {
-        if (byteOffset < 0 || byteOffset > utf8.Length) throw new InvalidOperationException("Tree-sitter returned an invalid UTF-8 source offset.");
-        return Encoding.UTF8.GetCharCount(utf8, 0, byteOffset);
+    private static int[] BuildUtf16OffsetMap(string source) {
+        var byteLength = Encoding.UTF8.GetByteCount(source);
+        var offsets = new int[byteLength + 1];
+        var byteIndex = 0;
+        var charIndex = 0;
+        while (charIndex < source.Length) {
+            var value = source[charIndex];
+            var charCount = char.IsHighSurrogate(value) &&
+                            charIndex + 1 < source.Length &&
+                            char.IsLowSurrogate(source[charIndex + 1])
+                ? 2
+                : 1;
+            int encodedBytes;
+            if (charCount == 2) {
+                encodedBytes = 4;
+            } else if (value <= 0x7F) {
+                encodedBytes = 1;
+            } else if (value <= 0x7FF) {
+                encodedBytes = 2;
+            } else {
+                encodedBytes = 3;
+            }
+            for (var index = 0; index < encodedBytes; index++) offsets[byteIndex + index] = charIndex;
+            byteIndex += encodedBytes;
+            charIndex += charCount;
+            offsets[byteIndex] = charIndex;
+        }
+        if (byteIndex != byteLength) throw new InvalidOperationException("Unable to map the source's UTF-8 offsets.");
+        return offsets;
+    }
+
+    private static int Utf16Offset(int[] offsets, int byteOffset) {
+        if (byteOffset < 0 || byteOffset >= offsets.Length) throw new InvalidOperationException("Tree-sitter returned an invalid UTF-8 source offset.");
+        return offsets[byteOffset];
     }
 
     private static bool Contains(string value, string fragment) =>
         value.IndexOf(fragment, StringComparison.OrdinalIgnoreCase) >= 0;
+
+    private static bool IsInvokedMember(Node node) {
+        var parent = node.Parent;
+        if (parent == null ||
+            (!Contains(parent.Type, "member_access") && !Contains(parent.Type, "member_binding")) ||
+            !Contains(parent.Parent?.Type ?? string.Empty, "invocation")) {
+            return false;
+        }
+
+        foreach (var sibling in parent.Children) {
+            if (sibling.Type == "identifier" && sibling.StartIndex > node.StartIndex) return false;
+        }
+        return true;
+    }
 
     private readonly struct SemanticRange {
         public SemanticRange(int startByte, int endByte, StorySyntaxKind kind) {
