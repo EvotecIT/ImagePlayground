@@ -77,12 +77,24 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void BashLeavesOrdinaryWordsPlain() {
-        const string source = "echo ready";
+        const string source = "echo done\nprintf '%s' if\nif true; then echo ready; fi";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
 
         Assert.DoesNotContain(result.Spans, span =>
             span.Kind == StorySyntaxKind.Variable &&
             Slice(result, span) == "ready");
+        Assert.Equal(
+            0,
+            result.Spans.Count(span =>
+                span.Kind == StorySyntaxKind.Keyword &&
+                (Slice(result, span) == "done" || Slice(result, span) == "if") &&
+                span.Start < source.IndexOf("\nif true", StringComparison.Ordinal)));
+        foreach (var keyword in new[] { "if", "then", "fi" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Keyword &&
+                Slice(result, span) == keyword &&
+                span.Start >= source.IndexOf("\nif true", StringComparison.Ordinal));
+        }
     }
 
     [Fact]

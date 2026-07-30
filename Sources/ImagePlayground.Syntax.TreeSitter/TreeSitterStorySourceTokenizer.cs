@@ -122,7 +122,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private StorySyntaxKind LeafKind(Node node) {
         var text = node.Text;
-        if (IsReservedKeyword(text) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
+        if (IsReservedKeyword(node) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
         if (IsOperator(text)) return StorySyntaxKind.Operator;
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
@@ -136,7 +136,8 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         return StorySyntaxKind.Plain;
     }
 
-    private bool IsReservedKeyword(string value) {
+    private bool IsReservedKeyword(Node node) {
+        var value = node.Text;
         if (Language == "csharp") {
             switch (value) {
                 case "abstract": case "as": case "base": case "bool": case "break": case "byte":
@@ -156,6 +157,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             }
             return false;
         }
+        if (!string.Equals(node.Type, value, StringComparison.Ordinal)) return false;
         switch (value) {
             case "if": case "then": case "elif": case "else": case "fi": case "for": case "while":
             case "until": case "do": case "done": case "case": case "esac": case "in": case "function":
