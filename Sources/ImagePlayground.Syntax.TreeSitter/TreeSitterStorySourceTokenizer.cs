@@ -122,6 +122,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private StorySyntaxKind LeafKind(Node node) {
         var text = node.Text;
+        if (IsPreprocessorDirective(node)) return StorySyntaxKind.Keyword;
         if (IsReservedKeyword(node) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
         if (IsOperator(text)) return StorySyntaxKind.Operator;
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
@@ -192,7 +193,8 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "|": case "&": case "^": case "??": case "?.": case "+=": case "-=": case "*=":
             case "/=": case "<<": case ">>": case ">>>": case "++": case "--": case "??=":
             case "%=": case "&=": case "|=": case "^=": case "<<=": case ">>=": case ">>>=":
-            case "~": case "->": case "..":
+            case "~": case "->": case "..": case ">&": case "&>": case "&>>": case ">|":
+            case "<&": case "<<<": case "<<-":
                 return true;
             default:
                 return false;
@@ -265,7 +267,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         value.IndexOf(fragment, StringComparison.OrdinalIgnoreCase) >= 0;
 
     private static bool IsInvokedMember(Node node) {
-        var parent = node.Parent;
+        var target = node;
+        if (Contains(node.Parent?.Type ?? string.Empty, "generic_name")) target = node.Parent!;
+        var parent = target.Parent;
+        if (Contains(parent?.Type ?? string.Empty, "invocation")) return true;
         if (parent == null ||
             (!Contains(parent.Type, "member_access") && !Contains(parent.Type, "member_binding")) ||
             !Contains(parent.Parent?.Type ?? string.Empty, "invocation")) {
@@ -273,9 +278,22 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         }
 
         foreach (var sibling in parent.Children) {
-            if (sibling.Type == "identifier" && sibling.StartIndex > node.StartIndex) return false;
+            if ((sibling.Type == "identifier" || Contains(sibling.Type, "generic_name")) &&
+                sibling.StartIndex > target.StartIndex) {
+                return false;
+            }
         }
         return true;
+    }
+
+    private bool IsPreprocessorDirective(Node node) {
+        if (Language != "csharp" || !node.Text.StartsWith("#", StringComparison.Ordinal)) return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (Contains(current.Type, "preproc")) return true;
+            current = current.Parent;
+        }
+        return false;
     }
 
     private readonly struct SemanticRange {

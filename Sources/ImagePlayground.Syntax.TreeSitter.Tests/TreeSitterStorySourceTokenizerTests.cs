@@ -59,6 +59,21 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpRecognizesGenericInvocationsAndPreprocessorDirectives() {
+        const string source = "#nullable enable\n#if DEBUG\nclient.SendAsync<string>();\nWork<int>();\n#endif";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var command in new[] { "SendAsync", "Work" }) {
+            Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == command);
+        }
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "client");
+        foreach (var directive in new[] { "#nullable", "#if", "#endif" }) {
+            Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == directive);
+        }
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == "DEBUG");
+    }
+
+    [Fact]
     public void BashUsesAstSpansForCommandsStringsVariablesAndComments() {
         const string source = "status=\"ready\"\nprintf '%s\\n' \"$status\" # result";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
@@ -94,6 +109,18 @@ public sealed class TreeSitterStorySourceTokenizerTests {
                 span.Kind == StorySyntaxKind.Keyword &&
                 Slice(result, span) == keyword &&
                 span.Start >= source.IndexOf("\nif true", StringComparison.Ordinal));
+        }
+    }
+
+    [Fact]
+    public void BashRecognizesRedirectionOperators() {
+        const string source = "run 2>&1\nrun &>out\nrun &>>out\nrun >|out\nrun 3<&0\ncat <<< \"$value\"\ncat <<-EOF\nready\nEOF";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        foreach (var operation in new[] { ">&", "&>", "&>>", ">|", "<&", "<<<", "<<-" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Operator &&
+                Slice(result, span) == operation);
         }
     }
 
