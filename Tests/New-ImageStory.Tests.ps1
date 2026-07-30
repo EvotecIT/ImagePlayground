@@ -29,6 +29,10 @@ Describe 'Generic visual stories' {
         $source.Spans.Count | Should -BeGreaterThan 3
         @($source.Spans | ForEach-Object { $_.Kind.ToString() }) | Should -Contain 'Command'
         @($source.Spans | ForEach-Object { $_.Kind.ToString() }) | Should -Contain 'Comment'
+        @($source.Spans | Where-Object {
+            $_.Kind.ToString() -eq 'Operator' -and
+            $source.Text.Substring($_.Start, $_.Length) -eq '|'
+        }).Count | Should -Be 1
     }
 
     It 'preserves nested expansions while leaving literal PowerShell arguments plain' {

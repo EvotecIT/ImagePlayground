@@ -60,7 +60,7 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         if ((flags & TokenFlags.TypeName) != 0 || (flags & TokenFlags.AttributeName) != 0) return StorySyntaxKind.Type;
         if ((flags & TokenFlags.CommandName) != 0) return StorySyntaxKind.Command;
         if ((flags & TokenFlags.MemberName) != 0) return StorySyntaxKind.Property;
-        if ((flags & (TokenFlags.BinaryOperator | TokenFlags.UnaryOperator | TokenFlags.AssignmentOperator | TokenFlags.PrefixOrPostfixOperator)) != 0) return StorySyntaxKind.Operator;
+        if ((flags & (TokenFlags.BinaryOperator | TokenFlags.UnaryOperator | TokenFlags.AssignmentOperator | TokenFlags.PrefixOrPostfixOperator | TokenFlags.SpecialOperator)) != 0) return StorySyntaxKind.Operator;
         switch (token.Kind) {
             case TokenKind.Variable:
             case TokenKind.SplattedVariable:
