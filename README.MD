@@ -144,6 +144,26 @@ New-ImageVisualStory -StoryScript {
 
 SVG and HTML preserve the script-free story. PNG renders the exact completed state, while reduced-motion and print users see all content immediately.
 
+For complete source-to-result demonstrations, use the generic story commands. The final scene must contain every declared outcome, so a demo that promises a chart cannot finish at “Saved chart.png”:
+
+```powershell
+$chartPath = '.\weekly-builds.png'
+New-ImageChart {
+    New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
+} -FilePath $chartPath -Width 900 -Height 500
+
+$code = Get-Content '.\Create-WeeklyBuilds.ps1' -Raw
+$source = ConvertTo-ImageStorySource -Text $code -Language PowerShell
+$codePanel = New-ImageStoryPanel -Id code -Source $source
+$chartPanel = New-ImageStoryPanel -Id chart -MediaPath $chartPath -AccessibleText 'Weekly builds chart'
+$write = New-ImageStoryScene -Id write -Title 'Write five lines' -Panels $codePanel
+$result = New-ImageStoryScene -Id result -Title 'See the chart' -Layout Split -Panels $codePanel, $chartPanel
+$outcome = New-ImageStoryOutcome -Id chart -Label 'The weekly builds chart is visible.' -PanelId chart
+New-ImageStory -Title 'Chart in five lines' -Scenes $write, $result -Outcomes $outcome -FilePath '.\chart-story.gif'
+```
+
+`New-ImageStory` consumes already resolved text, terminal output, images, SVG, and other media; it never executes showcased code. Run a producer explicitly when you want a real result, then pass the captured artifact into the story. PowerShell highlighting uses the native PowerShell parser. C# and Bash can use the separate optional `ImagePlayground.Syntax.TreeSitter` package; there is intentionally no regex-coloring fallback and no Tree-sitter native payload in the normal PowerShell module.
+
 PowerShell commands have one execution path. Commands that can use asynchronous file APIs do so internally and honor pipeline cancellation; there is no `-Async` switch because a PowerShell command invocation still completes before returning control to the caller.
 
 See [the generated command reference](Docs/Readme.md) and the focused scripts under [`Examples`](Examples).

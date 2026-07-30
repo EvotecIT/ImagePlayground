@@ -2,17 +2,16 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.1.0
+Help Version: 3.2.0
 Locale: en-US
 ---
 # ImagePlayground Module
 ## Description
-Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.
+Unified PowerShell commands for image processing, charts, topology diagrams, visual stories, QR codes, and barcodes.
 
 ## ImagePlayground Cmdlets
 ### [Add-ImageText](Add-ImageText.md)
-Adds text to an image at the provided coordinates and writes the updated
-image to disk.
+Adds text to an image at the provided coordinates and writes the updated image to disk.
 
 ### [Add-ImageTextBox](Add-ImageTextBox.md)
 Adds wrapped text to an image within a box.
@@ -34,6 +33,9 @@ Converts an image to a different format.
 
 ### [ConvertTo-ImageBase64](ConvertTo-ImageBase64.md)
 Converts an image file into a Base64 encoded string.
+
+### [ConvertTo-ImageStorySource](ConvertTo-ImageStorySource.md)
+Converts exact source text into renderer-neutral syntax spans for visual stories.
 
 ### [Export-ImageMetadata](Export-ImageMetadata.md)
 Exports metadata from an image.
@@ -171,8 +173,7 @@ Creates word cloud chart term.
 Creates a script-free animated console presentation from authored steps, captured transcript lines, or a native ChartForgeX terminal story.
 
 ### [New-ImageCrop](New-ImageCrop.md)
-Creates a cropped version of an image using rectangular, circular or
-polygonal areas.
+Creates a cropped version of an image using rectangular, circular or polygonal areas.
 
 ### [New-ImageGif](New-ImageGif.md)
 Creates an animated GIF from existing images.
@@ -236,6 +237,18 @@ Creates a WiFi QR code image.
 
 ### [New-ImageQRContact](New-ImageQRContact.md)
 Generates a QR code image containing the provided contact details.
+
+### [New-ImageStory](New-ImageStory.md)
+Creates a generic source-to-result visual story from resolved scenes and declared outcomes.
+
+### [New-ImageStoryOutcome](New-ImageStoryOutcome.md)
+Declares a result that must be visible in the completed visual-story scene.
+
+### [New-ImageStoryPanel](New-ImageStoryPanel.md)
+Creates one resolved source, terminal, media, or text panel for a generic visual story.
+
+### [New-ImageStoryScene](New-ImageStoryScene.md)
+Groups resolved panels into one timed visual-story scene.
 
 ### [New-ImageThumbnail](New-ImageThumbnail.md)
 Creates thumbnails for all images in a directory.

@@ -3,6 +3,8 @@
 ### Added
 
 - Added `New-ImageVisualStory` and `New-ImageVisualMotionCue` as thin PowerShell adapters over ChartForgeX visual grids and motion timelines. SVG and HTML keep script-free motion; PNG renders the same completed state.
+- Added `ConvertTo-ImageStorySource`, `New-ImageStoryPanel`, `New-ImageStoryScene`, `New-ImageStoryOutcome`, and `New-ImageStory` for generic source/terminal/media/result presentations whose completed scene must visibly satisfy every declared outcome.
+- Added native PowerShell syntax spans through `System.Management.Automation` and the optional `ImagePlayground.Syntax.TreeSitter` package for AST-backed C# and Bash highlighting without adding its native runtime payload to the normal module.
 
 ### Breaking changes
 
@@ -13,7 +15,7 @@
 
 ### Changed
 
-- Upgraded the PowerShell visual adapter to ChartForgeX 1.2.0 for generic named motion targets, deterministic static fallback, and reduced-motion and print-safe output.
+- Upgraded the PowerShell visual adapter to ChartForgeX 1.3.0 for generic visual stories, outcome validation, syntax spans, deterministic static fallback, and reduced-motion and print-safe output.
 - Kept every `New-ImageChart*` command as a thin PowerShell adapter over ChartForgeX while keeping the C# packages as separate capability owners.
 - Upgraded the PowerShell chart adapter to ChartForgeX 1.0.2, mapped `New-ImageChartPolar` angle/radius pairs to true polar geometry, and preserved explicit line-marker `None`/`Circle` semantics.
 - Unified topology direction values on ChartForgeX's product-neutral `VisualLinkDirection` contract.

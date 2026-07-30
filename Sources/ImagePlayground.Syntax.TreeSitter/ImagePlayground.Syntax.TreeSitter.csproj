@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>3.2.0</VersionPrefix>
+    <AssemblyName>ImagePlayground.Syntax.TreeSitter</AssemblyName>
+    <Description>Optional Tree-sitter syntax adapter for ChartForgeX visual stories authored with ImagePlayground.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
+    <ProjectReference Include="$(ChartForgeXProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">
+    <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
+    <PackageReference Include="ChartForgeX" Version="1.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="TreeSitter.DotNet" Version="1.3.0" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>
