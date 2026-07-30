@@ -62,6 +62,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private void Collect(Node node, List<SemanticRange> output) {
         var kind = ContainerKind(node);
+        if (kind == StorySyntaxKind.String) {
+            CollectString(node, output);
+            return;
+        }
         if (kind != StorySyntaxKind.Plain) {
             Add(output, node, kind);
             return;
@@ -72,6 +76,35 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         }
         kind = LeafKind(node);
         if (kind != StorySyntaxKind.Plain) Add(output, node, kind);
+    }
+
+    private void CollectString(Node node, List<SemanticRange> output) {
+        var overrides = new List<SemanticRange>();
+        foreach (var child in node.Children) CollectStringOverrides(child, overrides);
+        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
+
+        var cursor = node.StartIndex;
+        foreach (var range in overrides) {
+            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
+            Add(output, cursor, range.StartByte, StorySyntaxKind.String);
+            Add(output, range.StartByte, range.EndByte, range.Kind);
+            cursor = range.EndByte;
+        }
+        Add(output, cursor, node.EndIndex, StorySyntaxKind.String);
+    }
+
+    private void CollectStringOverrides(Node node, List<SemanticRange> output) {
+        var kind = ContainerKind(node);
+        if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.String) {
+            Add(output, node, kind);
+            return;
+        }
+        if (node.Children.Count > 0) {
+            foreach (var child in node.Children) CollectStringOverrides(child, output);
+            return;
+        }
+        kind = LeafKind(node);
+        if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.String) Add(output, node, kind);
     }
 
     private StorySyntaxKind ContainerKind(Node node) {
@@ -98,7 +131,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
             return StorySyntaxKind.Variable;
         }
-        if (Language == "bash" && (node.Type == "word" || node.Type == "variable_name")) return StorySyntaxKind.Variable;
+        if (Language == "bash" && node.Type == "variable_name") return StorySyntaxKind.Variable;
         return StorySyntaxKind.Plain;
     }
 
@@ -155,15 +188,19 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
     }
 
     private static void Add(List<SemanticRange> output, Node node, StorySyntaxKind kind) {
-        if (node.EndIndex <= node.StartIndex) return;
+        Add(output, node.StartIndex, node.EndIndex, kind);
+    }
+
+    private static void Add(List<SemanticRange> output, int startIndex, int endIndex, StorySyntaxKind kind) {
+        if (endIndex <= startIndex) return;
         if (output.Count > 0) {
             var previous = output[output.Count - 1];
-            if (previous.EndByte == node.StartIndex && previous.Kind == kind) {
-                output[output.Count - 1] = new SemanticRange(previous.StartByte, node.EndIndex, kind);
+            if (previous.EndByte == startIndex && previous.Kind == kind) {
+                output[output.Count - 1] = new SemanticRange(previous.StartByte, endIndex, kind);
                 return;
             }
         }
-        output.Add(new SemanticRange(node.StartIndex, node.EndIndex, kind));
+        output.Add(new SemanticRange(startIndex, endIndex, kind));
     }
 
     private static int Utf16Offset(byte[] utf8, int byteOffset) {

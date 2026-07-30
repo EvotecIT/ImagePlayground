@@ -28,8 +28,22 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.Equal("bash", result.Language);
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span).Contains("printf", StringComparison.Ordinal));
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.String);
-        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Variable);
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Variable && Slice(result, span) == "$status");
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.String &&
+            span.Start <= source.IndexOf("$status", StringComparison.Ordinal) &&
+            span.End >= source.IndexOf("$status", StringComparison.Ordinal) + "$status".Length);
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Comment && Slice(result, span) == "# result");
+    }
+
+    [Fact]
+    public void BashLeavesOrdinaryWordsPlain() {
+        const string source = "echo ready";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Variable &&
+            Slice(result, span) == "ready");
     }
 
     [Fact]
