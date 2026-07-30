@@ -122,7 +122,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private StorySyntaxKind LeafKind(Node node) {
         var text = node.Text;
-        if (IsKeyword(text)) return StorySyntaxKind.Keyword;
+        if (IsReservedKeyword(text) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
         if (IsOperator(text)) return StorySyntaxKind.Operator;
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
@@ -136,7 +136,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         return StorySyntaxKind.Plain;
     }
 
-    private bool IsKeyword(string value) {
+    private bool IsReservedKeyword(string value) {
         if (Language == "csharp") {
             switch (value) {
                 case "abstract": case "as": case "base": case "bool": case "break": case "byte":
@@ -151,14 +151,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 case "short": case "sizeof": case "stackalloc": case "static": case "string": case "struct":
                 case "switch": case "this": case "throw": case "true": case "try": case "typeof":
                 case "uint": case "ulong": case "unchecked": case "unsafe": case "ushort": case "using":
-                case "var": case "virtual": case "void": case "volatile": case "while":
-                case "add": case "alias": case "and": case "ascending": case "args": case "async":
-                case "await": case "by": case "descending": case "dynamic": case "equals": case "file":
-                case "from": case "get": case "global": case "group": case "init": case "into":
-                case "join": case "let": case "managed": case "nameof": case "not": case "notnull":
-                case "nint": case "nuint": case "on": case "or": case "orderby": case "partial":
-                case "record": case "remove": case "required": case "scoped": case "select": case "set":
-                case "unmanaged": case "value": case "when": case "where": case "with": case "yield":
+                case "virtual": case "void": case "volatile": case "while":
                     return true;
             }
             return false;
@@ -167,6 +160,23 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "if": case "then": case "elif": case "else": case "fi": case "for": case "while":
             case "until": case "do": case "done": case "case": case "esac": case "in": case "function":
             case "select": case "time": case "coproc":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private bool IsContextualKeyword(Node node) {
+        if (Language != "csharp" || node.Type == "identifier") return false;
+        switch (node.Text) {
+            case "add": case "alias": case "and": case "ascending": case "args": case "async":
+            case "await": case "by": case "descending": case "dynamic": case "equals": case "file":
+            case "from": case "get": case "global": case "group": case "init": case "into":
+            case "join": case "let": case "managed": case "nameof": case "not": case "notnull":
+            case "nint": case "nuint": case "on": case "or": case "orderby": case "partial":
+            case "record": case "remove": case "required": case "scoped": case "select": case "set":
+            case "unmanaged": case "value": case "var": case "when": case "where": case "with":
+            case "yield":
                 return true;
             default:
                 return false;

@@ -36,6 +36,19 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpLeavesContextualWordsPlainWhenTheyAreIdentifiers() {
+        const string source = "var value = obj.value; int record = 1; int required = record; int async = required;";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var identifier in new[] { "value", "record", "required", "async" }) {
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Keyword &&
+                Slice(result, span) == identifier);
+        }
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == "var");
+    }
+
+    [Fact]
     public void CSharpMapsManyUnicodeTokenOffsetsWithoutLosingText() {
         var source = string.Join("\n", Enumerable.Range(0, 500).Select(index => "var café" + index + " = \"😀\";"));
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
