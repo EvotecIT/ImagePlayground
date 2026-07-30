@@ -8,6 +8,8 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageStoryScene")]
 [OutputType(typeof(ImageStorySceneSpec))]
 public sealed class NewImageStorySceneCmdlet : PSCmdlet {
+    private readonly List<ImageStoryPanelSpec> _panels = new();
+
     /// <summary>Stable scene identifier.</summary>
     [Parameter(Mandatory = true)]
     public string Id { get; set; } = string.Empty;
@@ -31,6 +33,13 @@ public sealed class NewImageStorySceneCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new ImageStorySceneSpec(Id, Title, DurationSeconds, Layout, Panels));
+        foreach (var panel in Panels) {
+            _panels.Add(panel);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing() {
+        WriteObject(new ImageStorySceneSpec(Id, Title, DurationSeconds, Layout, _panels.ToArray()));
     }
 }

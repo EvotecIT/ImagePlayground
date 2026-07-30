@@ -8,6 +8,18 @@ Describe 'Generic visual stories' {
         }
     }
 
+    It 'collects piped panels into one ordered scene' {
+        $source = New-ImageStoryPanel -Id source -Text 'Write-Output ready'
+        $result = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+
+        $scenes = @($source, $result) | New-ImageStoryScene -Id complete -Title Complete -Layout Split
+
+        @($scenes).Count | Should -Be 1
+        @($scenes.Panels).Count | Should -Be 2
+        $scenes.Panels[0].Id | Should -Be source
+        $scenes.Panels[1].Id | Should -Be result
+    }
+
     It 'tokenizes PowerShell with the native parser without changing source text' {
         $text = '$items = Get-Process | Sort-Object CPU -Descending # hottest'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
