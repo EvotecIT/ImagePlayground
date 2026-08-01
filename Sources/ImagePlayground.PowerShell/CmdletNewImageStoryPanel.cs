@@ -101,7 +101,9 @@ public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
             case TerminalSet:
                 return new VisualStoryTerminalSurface(Terminal!, AccessibleText);
             case MediaPathSet:
-                return new VisualStoryMediaSurface(File.ReadAllBytes(Helpers.ResolvePath(MediaPath)), AccessibleText);
+                return new VisualStoryMediaSurface(
+                    File.ReadAllBytes(PowerShellPathResolver.ResolveFileSystemPath(this, MediaPath)),
+                    AccessibleText);
             case MediaBytesSet:
                 return new VisualStoryMediaSurface(MediaBytes!, AccessibleText, MediaSvg);
             case MediaImageSet:

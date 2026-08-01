@@ -9,7 +9,7 @@ internal static class PowerShellPathResolver {
             throw new ArgumentNullException(nameof(cmdlet));
         }
         if (string.IsNullOrWhiteSpace(path)) {
-            throw new PSArgumentException("A non-empty output path is required.", nameof(path));
+            throw new PSArgumentException("A non-empty path is required.", nameof(path));
         }
         var resolved = cmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
             path,
@@ -17,7 +17,7 @@ internal static class PowerShellPathResolver {
             out _);
         if (provider == null ||
             !string.Equals(provider.Name, "FileSystem", StringComparison.OrdinalIgnoreCase)) {
-            throw new PSArgumentException("Image story output paths must use the FileSystem provider.", nameof(path));
+            throw new PSArgumentException("Image story paths must use the FileSystem provider.", nameof(path));
         }
         return resolved;
     }

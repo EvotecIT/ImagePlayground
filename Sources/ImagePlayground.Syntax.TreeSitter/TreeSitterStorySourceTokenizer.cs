@@ -129,6 +129,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
+            if (IsCSharpNamespaceName(node)) return StorySyntaxKind.Plain;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
             if (IsCSharpDeclarationName(node, "method_declaration") ||
@@ -237,6 +238,26 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                     field.Value.EndIndex >= node.EndIndex) {
                     return true;
                 }
+            }
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private bool IsCSharpNamespaceName(Node node) {
+        if (Language != "csharp") return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (string.Equals(current.Type, "using_directive", StringComparison.Ordinal)) return true;
+            if (Contains(current.Type, "namespace_declaration")) {
+                foreach (var field in current.Fields) {
+                    if (string.Equals(field.Key, "name", StringComparison.Ordinal) &&
+                        field.Value.StartIndex <= node.StartIndex &&
+                        field.Value.EndIndex >= node.EndIndex) {
+                        return true;
+                    }
+                }
+                return false;
             }
             current = current.Parent;
         }

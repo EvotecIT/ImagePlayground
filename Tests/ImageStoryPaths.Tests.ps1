@@ -35,6 +35,21 @@ Describe 'Image story output paths' {
 
         Test-Path -LiteralPath (Join-Path -Path $TestDrive -ChildPath 'provider-story.svg') | Should -BeTrue
         Test-Path -LiteralPath (Join-Path -Path $TestDrive -ChildPath 'provider-bundle/story.json') | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path -Path $TestDrive -ChildPath 'provider-bundle/provider-story.png') | Should -BeTrue
+    }
+
+    It 'resolves relative media inputs through the current FileSystem provider location' {
+        Copy-Item -LiteralPath "$PSScriptRoot/../Examples/Samples/ChartsBar.png" `
+            -Destination (Join-Path -Path $TestDrive -ChildPath 'provider-media.png')
+
+        Push-Location -Path $TestDrive
+        try {
+            $panel = New-ImageStoryPanel -Id result -MediaPath '.\provider-media.png' -AccessibleText 'Generated chart'
+        } finally {
+            Pop-Location
+        }
+
+        $panel.Surface.Kind.ToString() | Should -Be 'Media'
     }
 
     It 'resolves relative visual story paths through the current FileSystem provider location' {

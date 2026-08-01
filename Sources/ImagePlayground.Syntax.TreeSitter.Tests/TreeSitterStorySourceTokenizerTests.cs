@@ -115,6 +115,18 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpLeavesNamespaceAndImportNamesPlain() {
+        const string source = "namespace Company.Product; using System.Text; using Alias = Third.Party; class Demo { System.Text.StringBuilder field; }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var name in new[] { "Company", "Product", "System", "Text", "Alias", "Third", "Party" }) {
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Variable &&
+                Slice(result, span) == name);
+        }
+    }
+
+    [Fact]
     public void BashUsesAstSpansForCommandsStringsVariablesAndComments() {
         const string source = "status=\"ready\"\nprintf '%s\\n' \"$status\" # result";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);

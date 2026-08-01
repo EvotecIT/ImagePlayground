@@ -141,7 +141,9 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         else if (extension.Equals(".apng", System.StringComparison.OrdinalIgnoreCase)) story.SaveApng(output, BuildAnimationOptions());
         else story.SaveTranscript(output);
 
-        if (!string.IsNullOrWhiteSpace(BundlePath)) WriteBundle(story, PowerShellPathResolver.ResolveFileSystemPath(this, BundlePath!));
+        if (!string.IsNullOrWhiteSpace(BundlePath)) {
+            WriteBundle(story, PowerShellPathResolver.ResolveFileSystemPath(this, BundlePath!), output);
+        }
         if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         if (PassThru.IsPresent) WriteObject(story);
     }
@@ -170,9 +172,9 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         .WithMaximumFrames(MaximumFrames)
         .WithLoop(!NoLoop.IsPresent);
 
-    private void WriteBundle(VisualStory story, string bundlePath) {
+    private void WriteBundle(VisualStory story, string bundlePath, string resolvedOutputPath) {
         Directory.CreateDirectory(bundlePath);
-        var baseName = Path.GetFileNameWithoutExtension(FilePath);
+        var baseName = Path.GetFileNameWithoutExtension(resolvedOutputPath);
         if (string.IsNullOrWhiteSpace(baseName)) baseName = "visual-story";
         var requested = new HashSet<string>(BundleFormats ?? System.Array.Empty<string>(), System.StringComparer.OrdinalIgnoreCase) {
             "Png"
