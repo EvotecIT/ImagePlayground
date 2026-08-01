@@ -243,6 +243,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 Contains(current.Type, "unary_expression")) {
                 return true;
             }
+            if (string.Equals(current.Type, "command", StringComparison.Ordinal) ||
+                Contains(current.Type, "command_substitution")) {
+                return false;
+            }
             current = current.Parent;
         }
         return false;

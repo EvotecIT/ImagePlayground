@@ -155,7 +155,7 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void BashRecognizesTestOperatorsWithoutColoringCommandFlags() {
-        const string source = "if [[ $count -eq 1 && $count -ne 2 && $count -lt 3 && $file -nt $other && -f $file && -n $name && $name =~ ^a ]]; then rm -f output.txt; fi";
+        const string source = "if [[ $count -eq 1 && $count -ne 2 && $count -lt 3 && $file -nt $other && -f $file && -n $name && $name =~ ^a && $(rm -f nested.txt) ]]; then rm -f output.txt; fi";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
 
         foreach (var operation in new[] { "-eq", "-ne", "-lt", "-nt", "-f", "-n", "=~" }) {
@@ -167,7 +167,8 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.DoesNotContain(result.Spans, span =>
             span.Kind == StorySyntaxKind.Operator &&
             Slice(result, span) == "-f" &&
-            span.Start > source.IndexOf("rm -f", StringComparison.Ordinal));
+            (span.Start == source.IndexOf("rm -f nested", StringComparison.Ordinal) + 3 ||
+             span.Start == source.LastIndexOf("rm -f", StringComparison.Ordinal) + 3));
     }
 
     [Fact]
