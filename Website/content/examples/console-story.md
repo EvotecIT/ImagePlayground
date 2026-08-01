@@ -48,6 +48,43 @@ $story | New-ImageConsoleStory `
 
 The command never invokes the text supplied through `-CommandText`. `-Dialect` selects prompt behavior, `-Theme` selects colors, and `-WindowStyle` selects `MacOS`, `WindowsTerminal`, `Minimal`, or `None` chrome. SVG and HTML animate without JavaScript. GIF and APNG reuse the same deterministic timeline for portable chat and documentation embeds; PNG, print, and reduced-motion output show the complete transcript.
 
+## Persistent tabs and custom palettes
+
+Tabs are real persistent sessions rather than decorative labels. Each tab retains its own transcript buffer, prompt dialect, working directory, palette, and icon when the story switches away and returns. The initial tab is named `main`.
+
+```powershell
+$ubuntu = New-ImageConsoleStoryPalette `
+    -Preset Ubuntu `
+    -Background '#24071B' `
+    -Accent '#FF6A2B'
+
+New-ImageConsoleStory `
+    -Title PowerShell `
+    -WorkingDirectory 'C:\OpenSource' `
+    -Theme Campbell `
+    -WindowStyle WindowsTerminal `
+    -Content {
+        New-ImageConsoleStoryCommand -Text 'Get-Module ImagePlayground'
+
+        New-ImageConsoleStoryTab -Id legacy -Profile WindowsPowerShell
+        New-ImageConsoleStoryCommand -Text '$PSVersionTable.PSVersion'
+
+        New-ImageConsoleStoryTab `
+            -Id ubuntu `
+            -Profile Ubuntu `
+            -WorkingDirectory '~/src' `
+            -Palette $ubuntu
+        New-ImageConsoleStoryCommand -Text 'dotnet test'
+        New-ImageConsoleStoryOutput -Text 'Passed: 169' -Tone Success
+
+        Select-ImageConsoleStoryTab -Id main
+        New-ImageConsoleStoryOutput -Text 'All environments are ready.' -Tone Success
+    } `
+    -FilePath '.\multi-shell-demo.gif'
+```
+
+`-Profile` supplies sensible prompt, directory, icon, and palette defaults for `PowerShell`, `WindowsPowerShell`, `Ubuntu`, `Bash`, and `CommandPrompt`. `New-ImageConsoleStoryPalette` starts from a built-in palette and lets a demo override only the colors it needs. Window chrome remains independent, so the same multi-session story can use Windows Terminal, macOS, minimal, or chrome-free presentation.
+
 The story is generic enough for a short product walkthrough: type a few C# or PowerShell lines, reveal status or output, pause, and continue. For example, a five-line chart demo can be presented as a C# interactive session and saved directly for Discord:
 
 ```powershell

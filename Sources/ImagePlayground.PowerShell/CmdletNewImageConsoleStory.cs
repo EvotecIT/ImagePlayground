@@ -9,7 +9,7 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates a script-free animated console presentation from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.</summary>
-/// <para>The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.</para>
+/// <para>The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, Pause, Tab, and Select-ImageConsoleStoryTab cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.</para>
 /// <para>The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.</para>
 /// <example>
 ///   <summary>Author a PowerShell console presentation</summary>
@@ -54,11 +54,11 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = StoryScriptSet)]
     public ScriptBlock? StoryScript { get; set; }
 
-    /// <summary>PowerShell-native authoring block that emits steps created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.</summary>
+    /// <summary>PowerShell-native authoring block that emits command, output, table, pause, tab declaration, and tab-selection steps.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ContentSet)]
     public ScriptBlock? Content { get; set; }
 
-    /// <summary>Typed console story steps. Accepts pipeline input and arrays created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.</summary>
+    /// <summary>Typed console story steps. Accepts pipeline input and arrays created by the console story step cmdlets.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = StepSet)]
     public ImageConsoleStoryStep[]? Step { get; set; }
 
@@ -103,8 +103,14 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
-    [ValidateSet("Dark", "PowerShell", "Classic", "Light")]
+    [ValidateSet("Dark", "PowerShell", "WindowsPowerShell", "Ubuntu", "Campbell", "Classic", "Light")]
     public string Theme { get; set; } = "Dark";
+
+    /// <summary>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</summary>
+    [Parameter(ParameterSetName = TranscriptSet)]
+    [Parameter(ParameterSetName = ContentSet)]
+    [Parameter(ParameterSetName = StepSet)]
+    public TerminalTheme? Palette { get; set; }
 
     /// <summary>Visible terminal window chrome, independent of the color palette and prompt dialect.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
@@ -307,7 +313,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             .WithTitle(Title)
             .WithDialect(Dialect, CustomPrompt)
             .WithWorkingDirectory(WorkingDirectory)
-            .WithTheme(ResolveTheme())
+            .WithTheme(Palette ?? ResolveTheme())
             .WithWindowStyle(WindowStyle)
             .WithWidth(Width)
             .WithTypography(FontSize, LineHeight)
@@ -317,13 +323,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     }
 
     private TerminalTheme ResolveTheme() {
-        switch (Theme.ToUpperInvariant()) {
-            case "DARK": return TerminalTheme.Dark();
-            case "POWERSHELL": return TerminalTheme.PowerShell();
-            case "CLASSIC": return TerminalTheme.Classic();
-            case "LIGHT": return TerminalTheme.Light();
-            default: throw new InvalidOperationException("Unknown console story theme.");
-        }
+        return ConsoleStoryPaletteResolver.Resolve(Theme);
     }
 
     private void AddContentResult(object? result) {
@@ -341,7 +341,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
         }
 
         var exception = new PSArgumentException(
-            "New-ImageConsoleStory -Content accepts only steps created by New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, or New-ImageConsoleStoryPause. Received: " + value.GetType().FullName + ".");
+            "New-ImageConsoleStory -Content accepts only steps created by the ImageConsoleStory command, output, table, blank-line, pause, tab, and tab-selection cmdlets. Received: " + value.GetType().FullName + ".");
         ThrowTerminatingError(new ErrorRecord(exception, "NewImageConsoleStoryInvalidContent", ErrorCategory.InvalidData, value));
     }
 

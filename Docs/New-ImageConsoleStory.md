@@ -16,12 +16,12 @@ New-ImageConsoleStory [-StoryScript] <scriptblock> -FilePath <string> [-FramesPe
 
 ### Content
 ```powershell
-New-ImageConsoleStory -Content <scriptblock> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Content <scriptblock> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Step
 ```powershell
-New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
@@ -31,11 +31,11 @@ New-ImageConsoleStory -Story <TerminalStory> -FilePath <string> [-FramesPerSecon
 
 ### Transcript
 ```powershell
-New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.
+The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, Pause, Tab, and Select-ImageConsoleStoryTab cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.
 
 The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.
 
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 ```
 
 ### -Content
-PowerShell-native authoring block that emits steps created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.
+PowerShell-native authoring block that emits command, output, table, pause, tab declaration, and tab-selection steps.
 
 ```yaml
 Type: ScriptBlock
@@ -347,6 +347,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Palette
+Optional custom palette, normally created by New-ImageConsoleStoryPalette.
+
+```yaml
+Type: TerminalTheme
+Parameter Sets: Content, Step, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -PassThru
 Write the configured ChartForgeX TerminalStory to the pipeline.
 
@@ -396,7 +412,7 @@ Accept wildcard characters: False
 ```
 
 ### -Step
-Typed console story steps. Accepts pipeline input and arrays created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.
+Typed console story steps. Accepts pipeline input and arrays created by the console story step cmdlets.
 
 ```yaml
 Type: ImageConsoleStoryStep[]
@@ -450,7 +466,7 @@ Built-in terminal color palette used by composed and captured stories.
 Type: String
 Parameter Sets: Content, Step, Transcript
 Aliases:
-Possible values: Dark, PowerShell, Classic, Light
+Possible values: Dark, PowerShell, WindowsPowerShell, Ubuntu, Campbell, Classic, Light
 
 Required: False
 Position: named
@@ -530,7 +546,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `ImagePlayground.PowerShell.ImageConsoleStoryStep[]` — Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.
+- `ImagePlayground.PowerShell.ImageConsoleStoryStep[]` — Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
 - `ChartForgeX.Terminal.TerminalStory`
 - `System.String`
 

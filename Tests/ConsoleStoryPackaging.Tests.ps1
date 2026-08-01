@@ -7,8 +7,11 @@ Describe 'Image console story packaging contracts' {
             'New-ImageConsoleStoryBlankLine'
             'New-ImageConsoleStoryCommand'
             'New-ImageConsoleStoryOutput'
+            'New-ImageConsoleStoryPalette'
             'New-ImageConsoleStoryPause'
+            'New-ImageConsoleStoryTab'
             'New-ImageConsoleStoryTable'
+            'Select-ImageConsoleStoryTab'
             'New-ImageVisualMotionCue'
             'New-ImageVisualStory'
         )
@@ -22,6 +25,7 @@ Describe 'Image console story packaging contracts' {
         $parameterNames = @($consoleStory.SelectNodes(".//*[local-name()='parameter']/*[local-name()='name']") | ForEach-Object InnerText)
         $parameterNames | Should -Contain 'Content'
         $parameterNames | Should -Contain 'Step'
+        $parameterNames | Should -Contain 'Palette'
     }
 
     It 'declares the story step type accelerator for packaged imports' {

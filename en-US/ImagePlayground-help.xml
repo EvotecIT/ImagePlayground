@@ -8866,7 +8866,7 @@ img.Save("out.png");</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.</maml:para>
+      <maml:para>The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, Pause, Tab, and Select-ImageConsoleStoryTab cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.</maml:para>
       <maml:para>The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.</maml:para>
     </maml:description>
     <command:syntax>
@@ -9010,7 +9010,7 @@ img.Save("out.png");</dev:code>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Content</maml:name>
           <maml:description>
-            <maml:para>PowerShell-native authoring block that emits steps created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.</maml:para>
+            <maml:para>PowerShell-native authoring block that emits command, output, table, pause, tab declaration, and tab-selection steps.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
           <dev:type>
@@ -9173,6 +9173,18 @@ img.Save("out.png");</dev:code>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Palette</maml:name>
+          <maml:description>
+            <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
@@ -9217,6 +9229,9 @@ img.Save("out.png");</dev:code>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Campbell</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
           </command:parameterValueGroup>
@@ -9462,6 +9477,18 @@ img.Save("out.png");</dev:code>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Palette</maml:name>
+          <maml:description>
+            <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
@@ -9500,7 +9527,7 @@ img.Save("out.png");</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
           <maml:name>Step</maml:name>
           <maml:description>
-            <maml:para>Typed console story steps. Accepts pipeline input and arrays created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.</maml:para>
+            <maml:para>Typed console story steps. Accepts pipeline input and arrays created by the console story step cmdlets.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">ImageConsoleStoryStep[]</command:parameterValue>
           <dev:type>
@@ -9518,6 +9545,9 @@ img.Save("out.png");</dev:code>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Campbell</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
           </command:parameterValueGroup>
@@ -9898,6 +9928,18 @@ img.Save("out.png");</dev:code>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Palette</maml:name>
+          <maml:description>
+            <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
@@ -9942,6 +9984,9 @@ img.Save("out.png");</dev:code>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Campbell</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
           </command:parameterValueGroup>
@@ -10048,7 +10093,7 @@ img.Save("out.png");</dev:code>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Content</maml:name>
         <maml:description>
-          <maml:para>PowerShell-native authoring block that emits steps created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.</maml:para>
+          <maml:para>PowerShell-native authoring block that emits command, output, table, pause, tab declaration, and tab-selection steps.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
         <dev:type>
@@ -10223,6 +10268,18 @@ img.Save("out.png");</dev:code>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Palette</maml:name>
+        <maml:description>
+          <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalTheme</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Write the configured ChartForgeX TerminalStory to the pipeline.</maml:para>
@@ -10261,7 +10318,7 @@ img.Save("out.png");</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
         <maml:name>Step</maml:name>
         <maml:description>
-          <maml:para>Typed console story steps. Accepts pipeline input and arrays created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, and Pause cmdlets.</maml:para>
+          <maml:para>Typed console story steps. Accepts pipeline input and arrays created by the console story step cmdlets.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">ImageConsoleStoryStep[]</command:parameterValue>
         <dev:type>
@@ -10303,6 +10360,9 @@ img.Save("out.png");</dev:code>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Campbell</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
         </command:parameterValueGroup>
@@ -10374,7 +10434,7 @@ img.Save("out.png");</dev:code>
           <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep[]</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para>Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.</maml:para>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
         </maml:description>
       </command:inputType>
       <command:inputType>
@@ -10468,7 +10528,7 @@ img.Save("out.png");</dev:code>
           <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para>Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.</maml:para>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -10565,7 +10625,7 @@ img.Save("out.png");</dev:code>
           <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para>Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.</maml:para>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -10686,7 +10746,7 @@ img.Save("out.png");</dev:code>
           <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para>Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.</maml:para>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -10704,6 +10764,382 @@ img.Save("out.png");</dev:code>
         <dev:code>New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success</dev:code>
         <dev:remarks>
           <maml:para>The semantic tone is rendered consistently across SVG, HTML, PNG, GIF, and APNG output.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageConsoleStoryPalette</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageConsoleStoryPalette</command:noun>
+      <maml:description>
+        <maml:para>Creates a reusable terminal color palette for ImagePlayground console stories and tabs.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Start from a built-in palette and override only the colors that belong to the demo. Window chrome and shell dialect remain separate choices.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-ImageConsoleStoryPalette</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Accent</maml:name>
+          <maml:description>
+            <maml:para>Prompt and command accent color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Background</maml:name>
+          <maml:description>
+            <maml:para>Terminal content color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Border</maml:name>
+          <maml:description>
+            <maml:para>Frame and divider color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Cursor</maml:name>
+          <maml:description>
+            <maml:para>Cursor color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Error</maml:name>
+          <maml:description>
+            <maml:para>Error text color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FontFamily</maml:name>
+          <maml:description>
+            <maml:para>CSS font-family stack shared by every tab in the story.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>HeaderBackground</maml:name>
+          <maml:description>
+            <maml:para>Title-bar color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Muted</maml:name>
+          <maml:description>
+            <maml:para>Muted text color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PageBackground</maml:name>
+          <maml:description>
+            <maml:para>Outer page color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Preset</maml:name>
+          <maml:description>
+            <maml:para>Built-in palette used as the customization baseline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Campbell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Dark</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Success</maml:name>
+          <maml:description>
+            <maml:para>Success text color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Text</maml:name>
+          <maml:description>
+            <maml:para>Normal text color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Warning</maml:name>
+          <maml:description>
+            <maml:para>Warning text color in hexadecimal notation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Accent</maml:name>
+        <maml:description>
+          <maml:para>Prompt and command accent color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Background</maml:name>
+        <maml:description>
+          <maml:para>Terminal content color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Border</maml:name>
+        <maml:description>
+          <maml:para>Frame and divider color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Cursor</maml:name>
+        <maml:description>
+          <maml:para>Cursor color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Error</maml:name>
+        <maml:description>
+          <maml:para>Error text color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>FontFamily</maml:name>
+        <maml:description>
+          <maml:para>CSS font-family stack shared by every tab in the story.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>HeaderBackground</maml:name>
+        <maml:description>
+          <maml:para>Title-bar color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Muted</maml:name>
+        <maml:description>
+          <maml:para>Muted text color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PageBackground</maml:name>
+        <maml:description>
+          <maml:para>Outer page color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Preset</maml:name>
+        <maml:description>
+          <maml:para>Built-in palette used as the customization baseline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Campbell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>Dark</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Success</maml:name>
+        <maml:description>
+          <maml:para>Success text color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Text</maml:name>
+        <maml:description>
+          <maml:para>Normal text color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Warning</maml:name>
+        <maml:description>
+          <maml:para>Warning text color in hexadecimal notation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Terminal.TerminalTheme</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Create a branded Ubuntu-derived palette  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'</dev:code>
+        <dev:remarks>
+          <maml:para>Returns a ChartForgeX TerminalTheme that can be supplied through the Palette parameter.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -10759,7 +11195,7 @@ img.Save("out.png");</dev:code>
           <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para>Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.</maml:para>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -10777,6 +11213,213 @@ img.Save("out.png");</dev:code>
         <dev:code>New-ImageConsoleStoryPause -Seconds 0.8</dev:code>
         <dev:remarks>
           <maml:para>The pause affects animated SVG, HTML, GIF, and APNG timelines.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageConsoleStoryTab</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageConsoleStoryTab</command:noun>
+      <maml:description>
+        <maml:para>Declares and activates a persistent tab in an ImagePlayground console story.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Declared tabs remain visible in tab-aware window chrome and can be revisited with Select-ImageConsoleStoryTab.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-ImageConsoleStoryTab</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Stable identifier used by later tab-selection steps.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Palette</maml:name>
+          <maml:description>
+            <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Profile</maml:name>
+          <maml:description>
+            <maml:para>Built-in profile that supplies prompt behavior, default working directory, palette, and icon.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CommandPrompt</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>PowerShell</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Visible tab title. Defaults to the selected profile name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TransitionSeconds</maml:name>
+          <maml:description>
+            <maml:para>Duration of the visual switch from the previously active tab.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0,2</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>WorkingDirectory</maml:name>
+          <maml:description>
+            <maml:para>Working directory shown by this tab. Defaults to C:\ for Windows profiles and ~ for POSIX profiles.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Id</maml:name>
+        <maml:description>
+          <maml:para>Stable identifier used by later tab-selection steps.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Palette</maml:name>
+        <maml:description>
+          <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalTheme</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Profile</maml:name>
+        <maml:description>
+          <maml:para>Built-in profile that supplies prompt behavior, default working directory, palette, and icon.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WindowsPowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ubuntu</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CommandPrompt</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>PowerShell</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Title</maml:name>
+        <maml:description>
+          <maml:para>Visible tab title. Defaults to the selected profile name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TransitionSeconds</maml:name>
+        <maml:description>
+          <maml:para>Duration of the visual switch from the previously active tab.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0,2</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>WorkingDirectory</maml:name>
+        <maml:description>
+          <maml:para>Working directory shown by this tab. Defaults to C:\ for Windows profiles and ~ for POSIX profiles.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Open an Ubuntu tab  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -Title Ubuntu -WorkingDirectory '~/src'</dev:code>
+        <dev:remarks>
+          <maml:para>Creates a typed story step that opens and activates an Ubuntu-styled Bash session.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -10910,7 +11553,7 @@ img.Save("out.png");</dev:code>
           <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para>Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.</maml:para>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -25491,6 +26134,103 @@ polygonal areas.</maml:para>
         <dev:code>Save-Image -Image $img -FilePath out.jpg -Quality 80</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Select-ImageConsoleStoryTab</command:name>
+      <command:verb>Select</command:verb>
+      <command:noun>ImageConsoleStoryTab</command:noun>
+      <maml:description>
+        <maml:para>Switches an ImagePlayground console story to a previously declared persistent tab.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Switches an ImagePlayground console story to a previously declared persistent tab.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Select-ImageConsoleStoryTab</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Identifier of a tab declared earlier in the story. The initial tab is named main.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TransitionSeconds</maml:name>
+          <maml:description>
+            <maml:para>Duration of the visual switch to the selected tab.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0,2</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Id</maml:name>
+        <maml:description>
+          <maml:para>Identifier of a tab declared earlier in the story. The initial tab is named main.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TransitionSeconds</maml:name>
+        <maml:description>
+          <maml:para>Duration of the visual switch to the selected tab.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0,2</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.PowerShell.ImageConsoleStoryStep</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Return to the initial PowerShell tab  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Select-ImageConsoleStoryTab -Id main</dev:code>
+        <dev:remarks>
+          <maml:para>Activates the initial tab without clearing its existing transcript buffer.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

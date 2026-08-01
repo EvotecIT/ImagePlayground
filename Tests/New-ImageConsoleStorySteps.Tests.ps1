@@ -72,6 +72,43 @@ Describe 'Image console story step cmdlets' {
         }
     }
 
+    It 'authors persistent profile tabs and switches back without losing buffers' {
+        $file = Join-Path -Path $TestDir -ChildPath 'console-story-tabs.svg'
+        $ubuntuPalette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'
+
+        $story = New-ImageConsoleStory `
+            -Title 'PowerShell' `
+            -WorkingDirectory 'C:\Work' `
+            -Theme Campbell `
+            -WindowStyle WindowsTerminal `
+            -Content {
+                New-ImageConsoleStoryCommand -Text 'Get-ChildItem'
+                New-ImageConsoleStoryTab -Id windows-powershell -Profile WindowsPowerShell -WorkingDirectory 'C:\Legacy'
+                New-ImageConsoleStoryCommand -Text '$PSVersionTable.PSVersion'
+                New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -WorkingDirectory '~/src' -Palette $ubuntuPalette
+                New-ImageConsoleStoryCommand -Text 'dotnet test'
+                Select-ImageConsoleStoryTab -Id main
+                New-ImageConsoleStoryOutput -Text 'Back in PowerShell' -Tone Success
+            } `
+            -FilePath $file `
+            -PassThru
+
+        $story.Tabs.Count | Should -Be 3
+        $story.ActiveTabId | Should -Be 'main'
+        $story.Tabs[1].Title | Should -Be 'Windows PowerShell'
+        $story.Tabs[2].Dialect.ToString() | Should -Be 'Bash'
+        $story.Tabs[2].Theme.Background.ToCss() | Should -Be '#24071B'
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'OpenTab' }).Count | Should -Be 2
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 1
+
+        $svg = [System.IO.File]::ReadAllText($file)
+        $svg | Should -Match 'data-cfx-tab="windows-powershell"'
+        $svg | Should -Match 'data-cfx-tab="ubuntu"'
+        $svg | Should -Match '#24071B'
+        $svg | Should -Match '\[Ubuntu\] ~/src \$ dotnet test'
+        $svg | Should -Match 'cfx-terminal-tab-final'
+    }
+
     It 'accepts a reusable array of typed steps' {
         $file = Join-Path -Path $TestDir -ChildPath 'console-story-steps.svg'
         $steps = @(

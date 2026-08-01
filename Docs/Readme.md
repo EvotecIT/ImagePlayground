@@ -181,8 +181,14 @@ Creates a typed command step for an ImagePlayground console story.
 ### [New-ImageConsoleStoryOutput](New-ImageConsoleStoryOutput.md)
 Creates a typed output step for an ImagePlayground console story.
 
+### [New-ImageConsoleStoryPalette](New-ImageConsoleStoryPalette.md)
+Creates a reusable terminal color palette for ImagePlayground console stories and tabs.
+
 ### [New-ImageConsoleStoryPause](New-ImageConsoleStoryPause.md)
 Creates a silent timeline pause for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryTab](New-ImageConsoleStoryTab.md)
+Declares and activates a persistent tab in an ImagePlayground console story.
 
 ### [New-ImageConsoleStoryTable](New-ImageConsoleStoryTable.md)
 Creates a typed table step from ordinary PowerShell objects.
@@ -300,6 +306,9 @@ Resizes an image.
 
 ### [Save-Image](Save-Image.md)
 Saves an image to disk or returns its encoded bytes as a stream.
+
+### [Select-ImageConsoleStoryTab](Select-ImageConsoleStoryTab.md)
+Switches an ImagePlayground console story to a previously declared persistent tab.
 
 ### [Set-ImageAdjust](Set-ImageAdjust.md)
 Adjusts image properties.
