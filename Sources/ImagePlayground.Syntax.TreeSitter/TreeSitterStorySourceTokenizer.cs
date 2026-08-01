@@ -129,6 +129,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
+            if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (Contains(parentType, "member_access") || Contains(parentType, "member_binding")) return StorySyntaxKind.Property;
@@ -214,6 +215,23 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             default:
                 return false;
         }
+    }
+
+    private bool IsCSharpTypeReference(Node node) {
+        if (Language != "csharp") return false;
+        var current = node.Parent;
+        while (current != null) {
+            foreach (var field in current.Fields) {
+                if ((string.Equals(field.Key, "type", StringComparison.Ordinal) ||
+                     string.Equals(field.Key, "return_type", StringComparison.Ordinal)) &&
+                    field.Value.StartIndex <= node.StartIndex &&
+                    field.Value.EndIndex >= node.EndIndex) {
+                    return true;
+                }
+            }
+            current = current.Parent;
+        }
+        return false;
     }
 
     private bool IsBashTestOperator(Node node) {

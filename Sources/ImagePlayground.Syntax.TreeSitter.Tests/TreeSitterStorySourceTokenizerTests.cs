@@ -48,6 +48,23 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpRecognizesUserDefinedTypeReferences() {
+        const string source = "Widget item = new Widget(); List<string> items = new(); Widget Build(Widget input) => input;";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var typeName in new[] { "Widget", "List" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Type &&
+                Slice(result, span) == typeName);
+        }
+        foreach (var variableName in new[] { "item", "items", "input" }) {
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Type &&
+                Slice(result, span) == variableName);
+        }
+    }
+
+    [Fact]
     public void CSharpLeavesContextualWordsPlainWhenTheyAreIdentifiers() {
         const string source = "var value = obj.value; int record = 1; int required = record; int async = required;";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);

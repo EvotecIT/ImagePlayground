@@ -21,7 +21,7 @@ Describe 'Generic visual stories' {
     }
 
     It 'tokenizes PowerShell with the native parser without changing source text' {
-        $text = '$items = Get-Process | Sort-Object CPU -Descending > output.txt; $items.Count; [string]::Join(",", $items); Get-Process >> append.txt; Get-Process 2> error.txt; Get-Process 2>> errors.txt; Get-Process *> all.txt; Get-Process *>> all-append.txt # hottest'
+        $text = 'function Get-Ready { Get-Date }; Get-Ready; $items = Get-Process | Sort-Object CPU -Descending > output.txt; $items.Count; [string]::Join(",", $items); Get-Process >> append.txt; Get-Process 2> error.txt; Get-Process 2>> errors.txt; Get-Process *> all.txt; Get-Process *>> all-append.txt # hottest'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
 
         $source.Text | Should -BeExactly $text
@@ -29,6 +29,10 @@ Describe 'Generic visual stories' {
         $source.Spans.Count | Should -BeGreaterThan 3
         @($source.Spans | ForEach-Object { $_.Kind.ToString() }) | Should -Contain 'Command'
         @($source.Spans | ForEach-Object { $_.Kind.ToString() }) | Should -Contain 'Comment'
+        @($source.Spans | Where-Object {
+            $_.Kind.ToString() -eq 'Command' -and
+            $source.Text.Substring($_.Start, $_.Length) -eq 'Get-Ready'
+        }).Count | Should -Be 2
         @($source.Spans | Where-Object {
             $_.Kind.ToString() -eq 'Operator' -and
             $source.Text.Substring($_.Start, $_.Length) -eq '|'
