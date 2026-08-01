@@ -102,28 +102,39 @@ The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other 
 Present an authored PowerShell session while keeping ChartForgeX as the reusable terminal renderer:
 
 ```powershell
-New-ImageConsoleStory -StoryScript {
-    param($Console)
-
-    [void] $Console.WithTitle('pwsh - C:\OpenSource').WithWorkingDirectory('C:\OpenSource')
-    [void] $Console.Command('.\Invoke-ReleaseValidation.ps1')
-    [void] $Console.Output('PASS  all checks', [ChartForgeX.Terminal.TerminalTextTone]::Success)
-} -FilePath '.\validation.gif'
+New-ImageConsoleStory `
+    -Title 'pwsh - C:\OpenSource' `
+    -WorkingDirectory 'C:\OpenSource' `
+    -Theme PowerShell `
+    -Content {
+        New-ImageConsoleStoryCommand -Text '.\Invoke-ReleaseValidation.ps1'
+        New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success
+    } `
+    -FilePath '.\validation.gif'
 ```
 
-To show a real script run, execute it explicitly and send the captured lines to the renderer:
+The authoring commands return reusable typed steps. `New-ImageConsoleStoryTable` accepts ordinary PowerShell objects, so examples do not need direct ChartForgeX builders or `[void]` output suppression.
+
+To show a real script run, execute it explicitly, render the captured transcript to SVG, and reuse the same story for GIF:
 
 ```powershell
 $transcript = & .\Invoke-EnvironmentAudit.ps1 2>&1 |
     Out-String -Stream -Width 110
 
-$transcript | New-ImageConsoleStory `
+$story = $transcript | New-ImageConsoleStory `
     -CommandText '.\Invoke-EnvironmentAudit.ps1' `
     -Dialect PowerShell `
-    -FilePath '.\audit-demo.svg'
+    -Theme PowerShell `
+    -FilePath '.\audit-demo.svg' `
+    -PassThru
+
+$story | New-ImageConsoleStory `
+    -FilePath '.\audit-demo.gif' `
+    -FramesPerSecond 8 `
+    -EndHoldSeconds 1.5
 ```
 
-`New-ImageConsoleStory` never executes `-CommandText`. It accepts authored steps, captured transcript lines, or a native `ChartForgeX.Terminal.TerminalStory`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control presentation. SVG and HTML use script-free command typing and output reveals; GIF and APNG export that same timeline for Discord, issue, and documentation embeds; PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
+`New-ImageConsoleStory` never executes `-CommandText`. It accepts PowerShell-native steps, captured transcript lines, the advanced `-StoryScript` builder, or a native `ChartForgeX.Terminal.TerminalStory`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control presentation. SVG and HTML use script-free command typing and output reveals; GIF and APNG export that same timeline for Discord, issue, and documentation embeds; PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
 Long captured lines wrap within the terminal instead of being discarded. For a custom dialect, pair `-Dialect Custom` with `-CustomPrompt 'demo> '`.
 
 Build a general animated visual story from native ChartForgeX blocks:

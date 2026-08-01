@@ -3,6 +3,7 @@
 ### Added
 
 - Added `New-ImageVisualStory` and `New-ImageVisualMotionCue` as thin PowerShell adapters over ChartForgeX visual grids and motion timelines. SVG and HTML keep script-free motion; PNG renders the same completed state.
+- Added PowerShell-native `New-ImageConsoleStoryCommand`, `New-ImageConsoleStoryOutput`, `New-ImageConsoleStoryTable`, `New-ImageConsoleStoryBlankLine`, and `New-ImageConsoleStoryPause` definitions for composing terminal SVG, GIF, APNG, HTML, and PNG stories without direct fluent-builder calls.
 
 ### Breaking changes
 

@@ -1,18 +1,29 @@
-$output = Join-Path -Path $PSScriptRoot -ChildPath 'Output\powershell-console-story.svg'
+$svgOutput = Join-Path -Path $PSScriptRoot -ChildPath 'Output\powershell-console-story.svg'
+$gifOutput = Join-Path -Path $PSScriptRoot -ChildPath 'Output\powershell-console-story.gif'
 
-New-ImageConsoleStory -StoryScript {
-    param($Console)
+$projects = @(
+    [pscustomobject]@{ Project = 'ChartForgeX'; Stack = '.NET'; Status = 'ready' }
+    [pscustomobject]@{ Project = 'ImagePlayground'; Stack = 'PowerShell'; Status = 'ready' }
+)
 
-    $projects = [ChartForgeX.Terminal.TerminalTable]::Create()
-    [void] $projects.WithColumns([string[]]@('PROJECT', 'STACK', 'STATUS'))
-    [void] $projects.AddRow([object[]]@('ChartForgeX', '.NET', 'ready'))
-    [void] $projects.AddRow([object[]]@('ImagePlayground', 'PowerShell', 'ready'))
+$story = New-ImageConsoleStory `
+    -Title 'pwsh - C:\OpenSource' `
+    -WorkingDirectory 'C:\OpenSource' `
+    -Theme PowerShell `
+    -Content {
+        New-ImageConsoleStoryCommand -Text 'Get-ActivePortfolio | Format-Table'
+        $projects | New-ImageConsoleStoryTable `
+            -Property Project, Stack, Status `
+            -Header PROJECT, STACK, STATUS
 
-    [void] $Console.WithTitle('pwsh - C:\OpenSource')
-    [void] $Console.WithWorkingDirectory('C:\OpenSource')
-    [void] $Console.Command('Get-ActivePortfolio | Format-Table')
-    [void] $Console.Table($projects)
-    [void] $Console.Blank()
-    [void] $Console.Command('.\Invoke-ReleaseValidation.ps1')
-    [void] $Console.Output('PASS  all checks', [ChartForgeX.Terminal.TerminalTextTone]::Success)
-} -FilePath $output
+        New-ImageConsoleStoryBlankLine
+        New-ImageConsoleStoryCommand -Text '.\Invoke-ReleaseValidation.ps1'
+        New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success
+    } `
+    -FilePath $svgOutput `
+    -PassThru
+
+$story | New-ImageConsoleStory `
+    -FilePath $gifOutput `
+    -FramesPerSecond 8 `
+    -EndHoldSeconds 1.5

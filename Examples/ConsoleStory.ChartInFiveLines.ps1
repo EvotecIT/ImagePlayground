@@ -1,15 +1,15 @@
 $output = Join-Path -Path $PSScriptRoot -ChildPath 'Output\chart-in-five-lines.gif'
 
-New-ImageConsoleStory -StoryScript {
-    param($Console)
-
-    [void] $Console.WithTitle('dotnet run - ChartForgeX').WithDialect(
-        [ChartForgeX.Terminal.TerminalDialect]::CSharp
-    ).WithWidth(1000)
-    [void] $Console.Command('using ChartForgeX; using ChartForgeX.Core; using System.Linq;', 0.65)
-    [void] $Console.Command('var chart = Chart.Create().WithTitle("Weekly builds");', 0.65)
-    [void] $Console.Command('chart.WithXLabels("Mon", "Tue", "Wed", "Thu", "Fri");', 0.65)
-    [void] $Console.Command('chart.AddLine("Builds", new[] { 12d, 18d, 15d, 24d, 31d }.Select((y, x) => new ChartPoint(x + 1, y)));', 1.1)
-    [void] $Console.Command('chart.SavePng("weekly-builds.png");', 0.65)
-    [void] $Console.Output('Saved weekly-builds.png (1000 x 560)', [ChartForgeX.Terminal.TerminalTextTone]::Success)
-} -FilePath $output
+New-ImageConsoleStory `
+    -Title 'dotnet run - ChartForgeX' `
+    -Dialect CSharp `
+    -Width 1000 `
+    -Content {
+        New-ImageConsoleStoryCommand -Text 'using ChartForgeX; using ChartForgeX.Core; using System.Linq;' -DurationSeconds 0.65
+        New-ImageConsoleStoryCommand -Text 'var chart = Chart.Create().WithTitle("Weekly builds");' -DurationSeconds 0.65
+        New-ImageConsoleStoryCommand -Text 'chart.WithXLabels("Mon", "Tue", "Wed", "Thu", "Fri");' -DurationSeconds 0.65
+        New-ImageConsoleStoryCommand -Text 'chart.AddLine("Builds", new[] { 12d, 18d, 15d, 24d, 31d }.Select((y, x) => new ChartPoint(x + 1, y)));' -DurationSeconds 1.1
+        New-ImageConsoleStoryCommand -Text 'chart.SavePng("weekly-builds.png");' -DurationSeconds 0.65
+        New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png (1000 x 560)' -Tone Success
+    } `
+    -FilePath $output
