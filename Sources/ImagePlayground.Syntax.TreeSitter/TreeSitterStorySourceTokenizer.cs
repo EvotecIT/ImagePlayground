@@ -151,7 +151,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (Language == "csharp") {
             switch (value) {
                 case "abstract": case "as": case "base": case "bool": case "break": case "byte":
-                case "case": case "catch": case "char": case "class": case "const": case "continue":
+                case "case": case "catch": case "char": case "checked": case "class": case "const": case "continue":
                 case "decimal": case "default": case "delegate": case "do": case "double": case "else":
                 case "enum": case "event": case "explicit": case "extern": case "false": case "finally":
                 case "fixed": case "float": case "for": case "foreach": case "goto": case "if":

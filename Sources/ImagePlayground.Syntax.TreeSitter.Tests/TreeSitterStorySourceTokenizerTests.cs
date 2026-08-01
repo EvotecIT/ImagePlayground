@@ -23,10 +23,10 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void CSharpRecognizesContextualKeywordsAndOperators() {
-        const string source = "public partial record Demo { required int Value { get; init; } async Task Run() { await Work(); Value++; value ??= fallback; flags <<= 1; var result = ready ? success : failure; } }";
+        const string source = "public partial record Demo { required int Value { get; init; } async Task Run() { await Work(); checked { Value++; } value ??= fallback; flags <<= 1; var result = ready ? success : failure; } }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
 
-        foreach (var keyword in new[] { "partial", "record", "required", "init", "async", "await" }) {
+        foreach (var keyword in new[] { "partial", "record", "required", "init", "async", "await", "checked" }) {
             Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == keyword);
         }
         foreach (var operation in new[] { "++", "??=", "<<=", "?" }) {

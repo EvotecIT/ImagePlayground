@@ -16,9 +16,11 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         var result = StorySourceText.Create(source, Language);
         var ast = Parser.ParseInput(source, out var tokens, out _);
         var declaredCommandNames = DeclaredCommandNames(ast, tokens);
+        var declaredTypeNames = DeclaredTypeNames(ast, tokens);
+        var semanticOperators = SemanticOperators(ast, tokens);
         var ranges = new List<SemanticRange>();
         foreach (var token in tokens) {
-            Collect(token, ranges, declaredCommandNames);
+            Collect(token, ranges, declaredCommandNames, declaredTypeNames, semanticOperators);
         }
         ranges.Sort((left, right) => left.Start.CompareTo(right.Start));
         var previousEnd = 0;
@@ -30,10 +32,17 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         return result;
     }
 
-    private static void Collect(Token token, List<SemanticRange> output, HashSet<long> declaredCommandNames) {
+    private static void Collect(
+        Token token,
+        List<SemanticRange> output,
+        HashSet<long> declaredCommandNames,
+        HashSet<long> declaredTypeNames,
+        HashSet<long> semanticOperators) {
         if (token is StringExpandableToken expandable && expandable.NestedTokens != null && expandable.NestedTokens.Count > 0) {
             var nested = new List<SemanticRange>();
-            foreach (var nestedToken in expandable.NestedTokens) Collect(nestedToken, nested, declaredCommandNames);
+            foreach (var nestedToken in expandable.NestedTokens) {
+                Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, semanticOperators);
+            }
             nested.Sort((left, right) => left.Start.CompareTo(right.Start));
 
             var cursor = token.Extent.StartOffset;
@@ -47,7 +56,7 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
             return;
         }
 
-        Add(output, token.Extent.StartOffset, token.Extent.EndOffset, Map(token, declaredCommandNames));
+        Add(output, token.Extent.StartOffset, token.Extent.EndOffset, Map(token, declaredCommandNames, declaredTypeNames, semanticOperators));
     }
 
     private static void Add(List<SemanticRange> output, int start, int end, StorySyntaxKind kind) {
@@ -55,13 +64,20 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         output.Add(new SemanticRange(start, end, kind));
     }
 
-    private static StorySyntaxKind Map(Token token, HashSet<long> declaredCommandNames) {
-        if (declaredCommandNames.Contains(RangeKey(token.Extent.StartOffset, token.Extent.EndOffset))) return StorySyntaxKind.Command;
+    private static StorySyntaxKind Map(
+        Token token,
+        HashSet<long> declaredCommandNames,
+        HashSet<long> declaredTypeNames,
+        HashSet<long> semanticOperators) {
+        var rangeKey = RangeKey(token.Extent.StartOffset, token.Extent.EndOffset);
+        if (declaredTypeNames.Contains(rangeKey)) return StorySyntaxKind.Type;
+        if (declaredCommandNames.Contains(rangeKey)) return StorySyntaxKind.Command;
         var flags = token.TokenFlags;
         if ((flags & TokenFlags.Keyword) != 0) return StorySyntaxKind.Keyword;
         if ((flags & TokenFlags.TypeName) != 0 || (flags & TokenFlags.AttributeName) != 0) return StorySyntaxKind.Type;
         if ((flags & TokenFlags.CommandName) != 0) return StorySyntaxKind.Command;
         if ((flags & TokenFlags.MemberName) != 0) return StorySyntaxKind.Property;
+        if (semanticOperators.Contains(rangeKey)) return StorySyntaxKind.Operator;
         if (IsPunctuation(token.Kind)) return StorySyntaxKind.Punctuation;
         if ((flags & (TokenFlags.BinaryOperator | TokenFlags.UnaryOperator | TokenFlags.AssignmentOperator | TokenFlags.PrefixOrPostfixOperator | TokenFlags.SpecialOperator)) != 0) return StorySyntaxKind.Operator;
         switch (token.Kind) {
@@ -102,6 +118,37 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
             var invocation = (InvokeMemberExpressionAst)candidate;
             if (invocation.Member is StringConstantExpressionAst) {
                 ranges.Add(RangeKey(invocation.Member.Extent.StartOffset, invocation.Member.Extent.EndOffset));
+            }
+        }
+        return ranges;
+    }
+
+    private static HashSet<long> DeclaredTypeNames(ScriptBlockAst ast, Token[] tokens) {
+        var ranges = new HashSet<long>();
+        foreach (var candidate in ast.FindAll(node => node is TypeDefinitionAst, true)) {
+            var type = (TypeDefinitionAst)candidate;
+            var declarationEnd = type.Members.Count > 0
+                ? type.Members[0].Extent.StartOffset
+                : type.Extent.EndOffset;
+            foreach (var token in tokens) {
+                if (token.Extent.StartOffset <= type.Extent.StartOffset || token.Extent.EndOffset > declarationEnd) continue;
+                if (!string.Equals(token.Text, type.Name, StringComparison.OrdinalIgnoreCase)) continue;
+                ranges.Add(RangeKey(token.Extent.StartOffset, token.Extent.EndOffset));
+                break;
+            }
+        }
+        return ranges;
+    }
+
+    private static HashSet<long> SemanticOperators(ScriptBlockAst ast, Token[] tokens) {
+        var ranges = new HashSet<long>();
+        foreach (var candidate in ast.FindAll(node => node is CommandAst, true)) {
+            var command = (CommandAst)candidate;
+            if (command.InvocationOperator != TokenKind.Dot) continue;
+            foreach (var token in tokens) {
+                if (token.Kind != TokenKind.Dot || token.Extent.StartOffset != command.Extent.StartOffset) continue;
+                ranges.Add(RangeKey(token.Extent.StartOffset, token.Extent.EndOffset));
+                break;
             }
         }
         return ranges;

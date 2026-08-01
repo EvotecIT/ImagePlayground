@@ -79,6 +79,24 @@ Describe 'Generic visual stories' {
             Should -Be 0
     }
 
+    It 'distinguishes declared types and dot-sourcing from member punctuation' {
+        $text = 'enum Color { Red }; [Color] $color = [Color]::Red; . ./profile.ps1; $color.ToString()'
+        $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
+
+        @($source.Spans | Where-Object {
+            $_.Kind.ToString() -eq 'Type' -and
+            $source.Text.Substring($_.Start, $_.Length) -eq 'Color'
+        }).Count | Should -BeGreaterOrEqual 1
+        @($source.Spans | Where-Object {
+            $_.Kind.ToString() -eq 'Operator' -and
+            $source.Text.Substring($_.Start, $_.Length) -eq '.'
+        }).Count | Should -Be 1
+        @($source.Spans | Where-Object {
+            $_.Kind.ToString() -eq 'Punctuation' -and
+            $source.Text.Substring($_.Start, $_.Length) -eq '.'
+        }).Count | Should -Be 1
+    }
+
     It 'builds a source-to-result story whose completed state contains the outcome' {
         $file = Join-Path -Path $TestDir -ChildPath 'generic-story.svg'
         $source = ConvertTo-ImageStorySource -Text 'Write-Output "ready"' -Language PowerShell
