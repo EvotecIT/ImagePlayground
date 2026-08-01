@@ -10,6 +10,7 @@ $story = New-ImageConsoleStory `
     -Title 'pwsh - C:\OpenSource' `
     -WorkingDirectory 'C:\OpenSource' `
     -Theme PowerShell `
+    -WindowStyle MacOS `
     -Content {
         New-ImageConsoleStoryCommand -Text 'Get-ActivePortfolio | Format-Table'
         $projects | New-ImageConsoleStoryTable `

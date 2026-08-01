@@ -2,6 +2,7 @@
 
 ### Added
 
+- Added independent `MacOS`, `WindowsTerminal`, `Minimal`, and `None` console window styles without coupling chrome to prompt dialect or color theme.
 - Added `New-ImageVisualStory` and `New-ImageVisualMotionCue` as thin PowerShell adapters over ChartForgeX visual grids and motion timelines. SVG and HTML keep script-free motion; PNG renders the same completed state.
 - Added `ConvertTo-ImageStorySource`, `New-ImageStoryPanel`, `New-ImageStoryScene`, `New-ImageStoryOutcome`, and `New-ImageStory` for generic source/terminal/media/result presentations whose completed scene must visibly satisfy every declared outcome.
 - Added native PowerShell syntax spans through `System.Management.Automation` and the optional `ImagePlayground.Syntax.TreeSitter` package for AST-backed C# and Bash highlighting without adding its native runtime payload to the normal module.

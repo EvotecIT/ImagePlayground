@@ -106,6 +106,7 @@ New-ImageConsoleStory `
     -Title 'pwsh - C:\OpenSource' `
     -WorkingDirectory 'C:\OpenSource' `
     -Theme PowerShell `
+    -WindowStyle WindowsTerminal `
     -Content {
         New-ImageConsoleStoryCommand -Text '.\Invoke-ReleaseValidation.ps1'
         New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success
@@ -125,6 +126,7 @@ $story = $transcript | New-ImageConsoleStory `
     -CommandText '.\Invoke-EnvironmentAudit.ps1' `
     -Dialect PowerShell `
     -Theme PowerShell `
+    -WindowStyle Minimal `
     -FilePath '.\audit-demo.svg' `
     -PassThru
 
@@ -134,7 +136,7 @@ $story | New-ImageConsoleStory `
     -EndHoldSeconds 1.5
 ```
 
-`New-ImageConsoleStory` never executes `-CommandText`. It accepts PowerShell-native steps, captured transcript lines, the advanced `-StoryScript` builder, or a native `ChartForgeX.Terminal.TerminalStory`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control presentation. SVG and HTML use script-free command typing and output reveals; GIF and APNG export that same timeline for Discord, issue, and documentation embeds; PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
+`New-ImageConsoleStory` never executes `-CommandText`. It accepts PowerShell-native steps, captured transcript lines, the advanced `-StoryScript` builder, or a native `ChartForgeX.Terminal.TerminalStory`. `-Dialect` controls prompts, `-Theme` controls the color palette, and `-WindowStyle` independently selects `MacOS`, `WindowsTerminal`, `Minimal`, or `None` chrome. SVG and HTML use script-free command typing and output reveals; GIF and APNG export that same timeline for Discord, issue, and documentation embeds; PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
 Long captured lines wrap within the terminal instead of being discarded. For a custom dialect, pair `-Dialect Custom` with `-CustomPrompt 'demo> '`.
 
 Build a general animated visual story from native ChartForgeX blocks:

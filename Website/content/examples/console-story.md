@@ -16,6 +16,7 @@ New-ImageConsoleStory `
     -Title 'pwsh - C:\OpenSource' `
     -WorkingDirectory 'C:\OpenSource' `
     -Theme PowerShell `
+    -WindowStyle MacOS `
     -Content {
         New-ImageConsoleStoryCommand -Text 'Get-ActivePortfolio | Format-Table'
         $projects | New-ImageConsoleStoryTable `
@@ -35,6 +36,7 @@ $story = $transcript | New-ImageConsoleStory `
     -CommandText '.\Invoke-EnvironmentAudit.ps1' `
     -Dialect PowerShell `
     -Theme PowerShell `
+    -WindowStyle Minimal `
     -FilePath '.\audit-demo.svg' `
     -PassThru
 
@@ -44,7 +46,7 @@ $story | New-ImageConsoleStory `
     -EndHoldSeconds 1.5
 ```
 
-The command never invokes the text supplied through `-CommandText`. PowerShell, Bash, command prompt, Python, C#, and custom dialects only control how prompts are presented. SVG and HTML animate without JavaScript. GIF and APNG reuse the same deterministic timeline for portable chat and documentation embeds; PNG, print, and reduced-motion output show the complete transcript.
+The command never invokes the text supplied through `-CommandText`. `-Dialect` selects prompt behavior, `-Theme` selects colors, and `-WindowStyle` selects `MacOS`, `WindowsTerminal`, `Minimal`, or `None` chrome. SVG and HTML animate without JavaScript. GIF and APNG reuse the same deterministic timeline for portable chat and documentation embeds; PNG, print, and reduced-motion output show the complete transcript.
 
 The story is generic enough for a short product walkthrough: type a few C# or PowerShell lines, reveal status or output, pause, and continue. For example, a five-line chart demo can be presented as a C# interactive session and saved directly for Discord:
 
@@ -52,6 +54,8 @@ The story is generic enough for a short product walkthrough: type a few C# or Po
 New-ImageConsoleStory `
     -Title 'dotnet run - ChartForgeX' `
     -Dialect CSharp `
+    -Theme Dark `
+    -WindowStyle WindowsTerminal `
     -Width 1000 `
     -Content {
         New-ImageConsoleStoryCommand -Text 'using ChartForgeX; using ChartForgeX.Core; using System.Linq;' -DurationSeconds 0.65

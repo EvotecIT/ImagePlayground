@@ -9211,11 +9211,11 @@ img.Save("out.png");</dev:code>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Built-in terminal theme used by composed and captured stories.</maml:para>
+            <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <command:parameterValueGroup>
-            <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
@@ -9224,7 +9224,7 @@ img.Save("out.png");</dev:code>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>WindowsTerminal</dev:defaultValue>
+          <dev:defaultValue>Dark</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Title</maml:name>
@@ -9249,6 +9249,25 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>886</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>WindowStyle</maml:name>
+          <maml:description>
+            <maml:para>Visible terminal window chrome, independent of the color palette and prompt dialect.</maml:para>
+            <maml:para>Possible values: MacOS, WindowsTerminal, Minimal, None</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalWindowStyle</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">MacOS</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalWindowStyle</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>MacOS</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>WorkingDirectory</maml:name>
@@ -9493,11 +9512,11 @@ img.Save("out.png");</dev:code>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Built-in terminal theme used by composed and captured stories.</maml:para>
+            <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <command:parameterValueGroup>
-            <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
@@ -9506,7 +9525,7 @@ img.Save("out.png");</dev:code>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>WindowsTerminal</dev:defaultValue>
+          <dev:defaultValue>Dark</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Title</maml:name>
@@ -9531,6 +9550,25 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>886</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>WindowStyle</maml:name>
+          <maml:description>
+            <maml:para>Visible terminal window chrome, independent of the color palette and prompt dialect.</maml:para>
+            <maml:para>Possible values: MacOS, WindowsTerminal, Minimal, None</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalWindowStyle</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">MacOS</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalWindowStyle</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>MacOS</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>WorkingDirectory</maml:name>
@@ -9898,11 +9936,11 @@ img.Save("out.png");</dev:code>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Built-in terminal theme used by composed and captured stories.</maml:para>
+            <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <command:parameterValueGroup>
-            <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
@@ -9911,7 +9949,7 @@ img.Save("out.png");</dev:code>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>WindowsTerminal</dev:defaultValue>
+          <dev:defaultValue>Dark</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Title</maml:name>
@@ -9936,6 +9974,25 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>886</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>WindowStyle</maml:name>
+          <maml:description>
+            <maml:para>Visible terminal window chrome, independent of the color palette and prompt dialect.</maml:para>
+            <maml:para>Possible values: MacOS, WindowsTerminal, Minimal, None</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalWindowStyle</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">MacOS</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalWindowStyle</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>MacOS</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>WorkingDirectory</maml:name>
@@ -10240,11 +10297,11 @@ img.Save("out.png");</dev:code>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Theme</maml:name>
         <maml:description>
-          <maml:para>Built-in terminal theme used by composed and captured stories.</maml:para>
+          <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <command:parameterValueGroup>
-          <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Classic</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
@@ -10253,7 +10310,7 @@ img.Save("out.png");</dev:code>
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>WindowsTerminal</dev:defaultValue>
+        <dev:defaultValue>Dark</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Title</maml:name>
@@ -10278,6 +10335,25 @@ img.Save("out.png");</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>886</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>WindowStyle</maml:name>
+        <maml:description>
+          <maml:para>Visible terminal window chrome, independent of the color palette and prompt dialect.</maml:para>
+          <maml:para>Possible values: MacOS, WindowsTerminal, Minimal, None</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalWindowStyle</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">MacOS</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TerminalWindowStyle</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>MacOS</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>WorkingDirectory</maml:name>
@@ -10330,7 +10406,7 @@ img.Save("out.png");</dev:code>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -Content {
+        <dev:code>New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -WindowStyle WindowsTerminal -Content {
               New-ImageConsoleStoryCommand -Text 'Get-Service -Name WinRM'
               New-ImageConsoleStoryOutput -Text 'Status   Name               DisplayName' -Tone Accent
               New-ImageConsoleStoryOutput -Text 'Running  WinRM              Windows Remote Management' -Tone Success

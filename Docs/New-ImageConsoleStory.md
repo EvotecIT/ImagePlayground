@@ -16,12 +16,12 @@ New-ImageConsoleStory [-StoryScript] <scriptblock> -FilePath <string> [-FramesPe
 
 ### Content
 ```powershell
-New-ImageConsoleStory -Content <scriptblock> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Content <scriptblock> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Step
 ```powershell
-New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
@@ -31,7 +31,7 @@ New-ImageConsoleStory -Story <TerminalStory> -FilePath <string> [-FramesPerSecon
 
 ### Transcript
 ```powershell
-New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,7 +43,7 @@ The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion
 
 ### EXAMPLE 1
 ```powershell
-PS> New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -Content {
+PS> New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -WindowStyle WindowsTerminal -Content {
   New-ImageConsoleStoryCommand -Text 'Get-Service -Name WinRM'
   New-ImageConsoleStoryOutput -Text 'Status   Name               DisplayName' -Tone Accent
   New-ImageConsoleStoryOutput -Text 'Running  WinRM              Windows Remote Management' -Tone Success
@@ -444,17 +444,17 @@ Accept wildcard characters: False
 ```
 
 ### -Theme
-Built-in terminal theme used by composed and captured stories.
+Built-in terminal color palette used by composed and captured stories.
 
 ```yaml
 Type: String
 Parameter Sets: Content, Step, Transcript
 Aliases:
-Possible values: WindowsTerminal, PowerShell, Classic, Light
+Possible values: Dark, PowerShell, Classic, Light
 
 Required: False
 Position: named
-Default value: WindowsTerminal
+Default value: Dark
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -487,6 +487,24 @@ Possible values:
 Required: False
 Position: named
 Default value: 886
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -WindowStyle
+Visible terminal window chrome, independent of the color palette and prompt dialect.
+
+Possible values: MacOS, WindowsTerminal, Minimal, None
+
+```yaml
+Type: TerminalWindowStyle
+Parameter Sets: Content, Step, Transcript
+Aliases:
+Possible values: MacOS, WindowsTerminal, Minimal, None
+
+Required: False
+Position: named
+Default value: MacOS
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

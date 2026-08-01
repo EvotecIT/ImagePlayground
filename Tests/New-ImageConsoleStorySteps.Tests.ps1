@@ -19,6 +19,7 @@ Describe 'Image console story step cmdlets' {
             -Title 'pwsh - C:\OpenSource' `
             -WorkingDirectory 'C:\OpenSource' `
             -Theme PowerShell `
+            -WindowStyle WindowsTerminal `
             -Content {
                 New-ImageConsoleStoryCommand -Text 'Get-ActivePortfolio'
                 $projects | New-ImageConsoleStoryTable `
@@ -33,6 +34,7 @@ Describe 'Image console story step cmdlets' {
 
         $story | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
         $story.Title | Should -Be 'pwsh - C:\OpenSource'
+        $story.WindowStyle.ToString() | Should -Be 'WindowsTerminal'
         $story.Steps.Count | Should -Be 4
         $story.Steps[0].Kind.ToString() | Should -Be 'Command'
         $story.Steps[1].Kind.ToString() | Should -Be 'Table'
@@ -45,6 +47,29 @@ Describe 'Image console story step cmdlets' {
         $svg | Should -Match 'Get-ActivePortfolio'
         $svg | Should -Match 'ChartForgeX'
         $svg | Should -Match 'PASS  all checks'
+        $svg | Should -Match 'data-cfx-window-style="WindowsTerminal"'
+        $svg | Should -Match 'data-cfx-role="terminal-tab"'
+        $svg | Should -Not -Match 'data-cfx-role="terminal-macos-controls"'
+    }
+
+    It 'keeps dialect, color palette, and window chrome independent' {
+        foreach ($style in 'MacOS', 'WindowsTerminal', 'Minimal', 'None') {
+            $file = Join-Path -Path $TestDir -ChildPath "console-story-$($style.ToLowerInvariant()).svg"
+            $story = New-ImageConsoleStory `
+                -Dialect PowerShell `
+                -Theme Dark `
+                -WindowStyle $style `
+                -Content {
+                    New-ImageConsoleStoryCommand -Text 'Get-Date'
+                    New-ImageConsoleStoryOutput -Text 'Ready' -Tone Success
+                } `
+                -FilePath $file `
+                -PassThru
+
+            $story.Dialect.ToString() | Should -Be 'PowerShell'
+            $story.WindowStyle.ToString() | Should -Be $style
+            [System.IO.File]::ReadAllText($file) | Should -Match "data-cfx-window-style=`"$style`""
+        }
     }
 
     It 'accepts a reusable array of typed steps' {

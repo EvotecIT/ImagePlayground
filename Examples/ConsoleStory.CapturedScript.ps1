@@ -8,6 +8,7 @@ $story = $transcript | New-ImageConsoleStory `
     -Dialect PowerShell `
     -WorkingDirectory 'C:\Audit' `
     -Theme PowerShell `
+    -WindowStyle Minimal `
     -FilePath $svgOutput `
     -PassThru
 

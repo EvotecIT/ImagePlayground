@@ -14,7 +14,7 @@ namespace ImagePlayground.PowerShell;
 /// <example>
 ///   <summary>Author a PowerShell console presentation</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -Content {
+///   <code>New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -WindowStyle WindowsTerminal -Content {
 ///   New-ImageConsoleStoryCommand -Text 'Get-Service -Name WinRM'
 ///   New-ImageConsoleStoryOutput -Text 'Status   Name               DisplayName' -Tone Accent
 ///   New-ImageConsoleStoryOutput -Text 'Running  WinRM              Windows Remote Management' -Tone Success
@@ -99,12 +99,18 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = StepSet)]
     public string WorkingDirectory { get; set; } = @"C:\";
 
-    /// <summary>Built-in terminal theme used by composed and captured stories.</summary>
+    /// <summary>Built-in terminal color palette used by composed and captured stories.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
-    [ValidateSet("WindowsTerminal", "PowerShell", "Classic", "Light")]
-    public string Theme { get; set; } = "WindowsTerminal";
+    [ValidateSet("Dark", "PowerShell", "Classic", "Light")]
+    public string Theme { get; set; } = "Dark";
+
+    /// <summary>Visible terminal window chrome, independent of the color palette and prompt dialect.</summary>
+    [Parameter(ParameterSetName = TranscriptSet)]
+    [Parameter(ParameterSetName = ContentSet)]
+    [Parameter(ParameterSetName = StepSet)]
+    public TerminalWindowStyle WindowStyle { get; set; } = TerminalWindowStyle.MacOS;
 
     /// <summary>Logical terminal width used by composed and captured stories.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
@@ -302,6 +308,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             .WithDialect(Dialect, CustomPrompt)
             .WithWorkingDirectory(WorkingDirectory)
             .WithTheme(ResolveTheme())
+            .WithWindowStyle(WindowStyle)
             .WithWidth(Width)
             .WithTypography(FontSize, LineHeight)
             .WithTiming(InitialDelaySeconds, CharactersPerSecond, LineDelaySeconds)
@@ -311,7 +318,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
 
     private TerminalTheme ResolveTheme() {
         switch (Theme.ToUpperInvariant()) {
-            case "WINDOWSTERMINAL": return TerminalTheme.WindowsTerminal();
+            case "DARK": return TerminalTheme.Dark();
             case "POWERSHELL": return TerminalTheme.PowerShell();
             case "CLASSIC": return TerminalTheme.Classic();
             case "LIGHT": return TerminalTheme.Light();

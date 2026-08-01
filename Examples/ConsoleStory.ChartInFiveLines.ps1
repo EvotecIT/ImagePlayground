@@ -3,6 +3,8 @@ $output = Join-Path -Path $PSScriptRoot -ChildPath 'Output\chart-in-five-lines.g
 New-ImageConsoleStory `
     -Title 'dotnet run - ChartForgeX' `
     -Dialect CSharp `
+    -Theme Dark `
+    -WindowStyle WindowsTerminal `
     -Width 1000 `
     -Content {
         New-ImageConsoleStoryCommand -Text 'using ChartForgeX; using ChartForgeX.Core; using System.Linq;' -DurationSeconds 0.65
