@@ -128,7 +128,7 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void EndProcessing() {
         var story = BuildStory();
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
         var directory = Path.GetDirectoryName(output);
@@ -141,7 +141,7 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         else if (extension.Equals(".apng", System.StringComparison.OrdinalIgnoreCase)) story.SaveApng(output, BuildAnimationOptions());
         else story.SaveTranscript(output);
 
-        if (!string.IsNullOrWhiteSpace(BundlePath)) WriteBundle(story, Helpers.ResolvePath(BundlePath!));
+        if (!string.IsNullOrWhiteSpace(BundlePath)) WriteBundle(story, PowerShellPathResolver.ResolveFileSystemPath(this, BundlePath!));
         if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         if (PassThru.IsPresent) WriteObject(story);
     }

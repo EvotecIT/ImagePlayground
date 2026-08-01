@@ -225,7 +225,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void EndProcessing() {
         var story = BuildStory();
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
         var directory = Path.GetDirectoryName(output);

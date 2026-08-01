@@ -98,6 +98,12 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
                 break;
             }
         }
+        foreach (var candidate in ast.FindAll(node => node is InvokeMemberExpressionAst, true)) {
+            var invocation = (InvokeMemberExpressionAst)candidate;
+            if (invocation.Member is StringConstantExpressionAst) {
+                ranges.Add(RangeKey(invocation.Member.Extent.StartOffset, invocation.Member.Extent.EndOffset));
+            }
+        }
         return ranges;
     }
 

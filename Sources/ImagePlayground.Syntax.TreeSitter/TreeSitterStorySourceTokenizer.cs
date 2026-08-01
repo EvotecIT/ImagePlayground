@@ -125,12 +125,18 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (IsPreprocessorDirective(node)) return StorySyntaxKind.Keyword;
         if (IsReservedKeyword(node) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
         if (IsBashTestOperator(node)) return StorySyntaxKind.Operator;
-        if (IsOperator(text)) return StorySyntaxKind.Operator;
+        if ((Language == "csharp" || IsBashStructuralOperator(node)) && IsOperator(text)) return StorySyntaxKind.Operator;
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
+            if (IsCSharpDeclarationName(node, "method_declaration") ||
+                IsCSharpDeclarationName(node, "local_function_statement") ||
+                IsCSharpDeclarationName(node, "constructor_declaration") ||
+                IsCSharpDeclarationName(node, "destructor_declaration")) return StorySyntaxKind.Command;
+            if (IsCSharpDeclarationName(node, "property_declaration") ||
+                IsCSharpDeclarationName(node, "event_declaration")) return StorySyntaxKind.Property;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (Contains(parentType, "member_access") || Contains(parentType, "member_binding")) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
@@ -221,6 +227,9 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (Language != "csharp") return false;
         var current = node.Parent;
         while (current != null) {
+            if (string.Equals(current.Type, "type_argument_list", StringComparison.Ordinal)) {
+                return true;
+            }
             foreach (var field in current.Fields) {
                 if ((string.Equals(field.Key, "type", StringComparison.Ordinal) ||
                      string.Equals(field.Key, "return_type", StringComparison.Ordinal)) &&
@@ -232,6 +241,45 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             current = current.Parent;
         }
         return false;
+    }
+
+    private bool IsCSharpDeclarationName(Node node, string declarationType) {
+        if (Language != "csharp") return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (string.Equals(current.Type, declarationType, StringComparison.Ordinal)) {
+                foreach (var field in current.Fields) {
+                    if (string.Equals(field.Key, "name", StringComparison.Ordinal) &&
+                        field.Value.StartIndex <= node.StartIndex &&
+                        field.Value.EndIndex >= node.EndIndex) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if (Contains(current.Type, "declaration")) {
+                return false;
+            }
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private bool IsBashStructuralOperator(Node node) {
+        if (Language != "bash") {
+            return false;
+        }
+        var current = node;
+        while (current != null) {
+            if (string.Equals(current.Type, "word", StringComparison.Ordinal)) {
+                return false;
+            }
+            if (string.Equals(current.Type, "command", StringComparison.Ordinal)) {
+                break;
+            }
+            current = current.Parent;
+        }
+        return true;
     }
 
     private bool IsBashTestOperator(Node node) {

@@ -89,17 +89,29 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void CSharpRecognizesGenericInvocationsAndPreprocessorDirectives() {
-        const string source = "#nullable enable\n#if DEBUG\nclient.SendAsync<string>();\nWork<int>();\n#endif";
+        const string source = "#nullable enable\n#if DEBUG\nclient.SendAsync<string>();\nWork<Widget>();\n#endif";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
 
         foreach (var command in new[] { "SendAsync", "Work" }) {
             Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == command);
         }
         Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "client");
+        foreach (var typeName in new[] { "string", "Widget" }) {
+            Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == typeName);
+        }
         foreach (var directive in new[] { "#nullable", "#if", "#endif" }) {
             Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == directive);
         }
         Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == "DEBUG");
+    }
+
+    [Fact]
+    public void CSharpRecognizesDeclarationNamesByRole() {
+        const string source = "class Demo { void Work() { } int Count { get; } }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "Work");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Count");
     }
 
     [Fact]
@@ -121,7 +133,7 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void BashLeavesOrdinaryWordsPlain() {
-        const string source = "echo done\nprintf '%s' if\nif true; then echo ready; fi";
+        const string source = "echo done + % ^\nprintf '%s' if\nif true; then echo ready; fi";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
 
         Assert.DoesNotContain(result.Spans, span =>
@@ -138,6 +150,12 @@ public sealed class TreeSitterStorySourceTokenizerTests {
                 span.Kind == StorySyntaxKind.Keyword &&
                 Slice(result, span) == keyword &&
                 span.Start >= source.IndexOf("\nif true", StringComparison.Ordinal));
+        }
+        foreach (var literal in new[] { "+", "%", "^" }) {
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Operator &&
+                Slice(result, span) == literal &&
+                span.Start < source.IndexOf("\nprintf", StringComparison.Ordinal));
         }
     }
 
