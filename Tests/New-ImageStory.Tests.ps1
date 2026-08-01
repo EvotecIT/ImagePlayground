@@ -21,7 +21,7 @@ Describe 'Generic visual stories' {
     }
 
     It 'tokenizes PowerShell with the native parser without changing source text' {
-        $text = '$items = Get-Process | Sort-Object CPU -Descending > output.txt; Get-Process >> append.txt; Get-Process 2> error.txt; Get-Process 2>> errors.txt; Get-Process *> all.txt; Get-Process *>> all-append.txt # hottest'
+        $text = '$items = Get-Process | Sort-Object CPU -Descending > output.txt; $items.Count; [string]::Join(",", $items); Get-Process >> append.txt; Get-Process 2> error.txt; Get-Process 2>> errors.txt; Get-Process *> all.txt; Get-Process *>> all-append.txt # hottest'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
 
         $source.Text | Should -BeExactly $text
@@ -37,6 +37,12 @@ Describe 'Generic visual stories' {
             @($source.Spans | Where-Object {
                 $_.Kind.ToString() -eq 'Operator' -and
                 $source.Text.Substring($_.Start, $_.Length) -eq $redirection
+            }).Count | Should -Be 1
+        }
+        foreach ($punctuation in '.', '::') {
+            @($source.Spans | Where-Object {
+                $_.Kind.ToString() -eq 'Punctuation' -and
+                $source.Text.Substring($_.Start, $_.Length) -eq $punctuation
             }).Count | Should -Be 1
         }
     }

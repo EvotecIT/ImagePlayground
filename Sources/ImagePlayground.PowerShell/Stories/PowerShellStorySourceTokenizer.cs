@@ -60,6 +60,7 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         if ((flags & TokenFlags.TypeName) != 0 || (flags & TokenFlags.AttributeName) != 0) return StorySyntaxKind.Type;
         if ((flags & TokenFlags.CommandName) != 0) return StorySyntaxKind.Command;
         if ((flags & TokenFlags.MemberName) != 0) return StorySyntaxKind.Property;
+        if (IsPunctuation(token.Kind)) return StorySyntaxKind.Punctuation;
         if ((flags & (TokenFlags.BinaryOperator | TokenFlags.UnaryOperator | TokenFlags.AssignmentOperator | TokenFlags.PrefixOrPostfixOperator | TokenFlags.SpecialOperator)) != 0) return StorySyntaxKind.Operator;
         switch (token.Kind) {
             case TokenKind.Variable:
@@ -78,6 +79,13 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
             case TokenKind.HereStringLiteral:
             case TokenKind.HereStringExpandable:
                 return StorySyntaxKind.String;
+            default:
+                return StorySyntaxKind.Plain;
+        }
+    }
+
+    private static bool IsPunctuation(TokenKind kind) {
+        switch (kind) {
             case TokenKind.LParen:
             case TokenKind.RParen:
             case TokenKind.LCurly:
@@ -92,9 +100,9 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
             case TokenKind.Dot:
             case TokenKind.Colon:
             case TokenKind.ColonColon:
-                return StorySyntaxKind.Punctuation;
+                return true;
             default:
-                return StorySyntaxKind.Plain;
+                return false;
         }
     }
 

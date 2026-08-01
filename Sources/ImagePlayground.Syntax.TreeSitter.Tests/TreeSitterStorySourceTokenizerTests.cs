@@ -137,6 +137,23 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void BashRecognizesTestOperatorsWithoutColoringCommandFlags() {
+        const string source = "if [[ $count -eq 1 && $count -ne 2 && $count -lt 3 && $file -nt $other && -f $file && -n $name && $name =~ ^a ]]; then rm -f output.txt; fi";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        foreach (var operation in new[] { "-eq", "-ne", "-lt", "-nt", "-f", "-n", "=~" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Operator &&
+                Slice(result, span) == operation &&
+                span.Start < source.IndexOf("rm -f", StringComparison.Ordinal));
+        }
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Operator &&
+            Slice(result, span) == "-f" &&
+            span.Start > source.IndexOf("rm -f", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void UnsupportedLanguagesAreExplicit() {
         Assert.Throws<NotSupportedException>(() => TreeSitterStorySourceTokenizer.Create("powershell"));
     }

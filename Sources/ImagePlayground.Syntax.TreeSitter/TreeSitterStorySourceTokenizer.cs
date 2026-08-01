@@ -124,6 +124,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         var text = node.Text;
         if (IsPreprocessorDirective(node)) return StorySyntaxKind.Keyword;
         if (IsReservedKeyword(node) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
+        if (IsBashTestOperator(node)) return StorySyntaxKind.Operator;
         if (IsOperator(text)) return StorySyntaxKind.Operator;
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
@@ -209,6 +210,35 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "interface_declaration":
             case "enum_declaration":
             case "record_declaration":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private bool IsBashTestOperator(Node node) {
+        if (Language != "bash" || !IsBashTestOperatorText(node.Text)) return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (Contains(current.Type, "test") ||
+                Contains(current.Type, "binary_expression") ||
+                Contains(current.Type, "unary_expression")) {
+                return true;
+            }
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private static bool IsBashTestOperatorText(string value) {
+        switch (value) {
+            case "=~":
+            case "-eq": case "-ne": case "-lt": case "-le": case "-gt": case "-ge":
+            case "-nt": case "-ot": case "-ef":
+            case "-a": case "-b": case "-c": case "-d": case "-e": case "-f": case "-g":
+            case "-G": case "-h": case "-k": case "-L": case "-N": case "-O": case "-p":
+            case "-r": case "-R": case "-S": case "-s": case "-t": case "-u": case "-v":
+            case "-w": case "-x": case "-n": case "-z": case "-o":
                 return true;
             default:
                 return false;
