@@ -71,6 +71,20 @@ Describe 'New-ImageConsoleStory' {
         $bytes[3] | Should -Be 71
     }
 
+    It 'rejects multiple pipeline stories before writing a fixed output path' {
+        $file = Join-Path -Path $TestDir -ChildPath 'console-story-ambiguous.svg'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+        $first = [ChartForgeX.Terminal.TerminalStory]::Create().Command('Get-Date').Output('First')
+        $second = [ChartForgeX.Terminal.TerminalStory]::Create().Command('Get-Process').Output('Second')
+
+        {
+            @($first, $second) | Export-ImageConsoleStory -Path $file
+        } | Should -Throw '*exactly one terminal story*'
+        Test-Path -Path $file | Should -BeFalse
+    }
+
     It 'renders portable GIF and APNG files from the same story timeline' {
         $file = Join-Path -Path $TestDir -ChildPath 'console-story.gif'
         $apngFile = Join-Path -Path $TestDir -ChildPath 'console-story.apng'

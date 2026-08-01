@@ -61,6 +61,14 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
     }
 
     private void Collect(Node node, List<SemanticRange> output) {
+        if (Language == "bash" && string.Equals(node.Type, "function_definition", StringComparison.Ordinal)) {
+            foreach (var field in node.Fields) {
+                if (string.Equals(field.Key, "name", StringComparison.Ordinal)) {
+                    Add(output, field.Value, StorySyntaxKind.Command);
+                    break;
+                }
+            }
+        }
         var kind = ContainerKind(node);
         if (kind == StorySyntaxKind.String) {
             CollectString(node, output);
@@ -130,7 +138,9 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
             if (IsCSharpNamespaceName(node)) return StorySyntaxKind.Plain;
+            if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
+            if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
             if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
             if (IsCSharpDeclarationName(node, "method_declaration") ||
                 IsCSharpDeclarationName(node, "local_function_statement") ||
@@ -139,7 +149,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (IsCSharpDeclarationName(node, "property_declaration") ||
                 IsCSharpDeclarationName(node, "event_declaration")) return StorySyntaxKind.Property;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
-            if (Contains(parentType, "member_access") || Contains(parentType, "member_binding")) return StorySyntaxKind.Property;
+            if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
             return StorySyntaxKind.Variable;
         }
@@ -204,7 +214,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "/=": case "<<": case ">>": case ">>>": case "++": case "--": case "??=":
             case "%=": case "&=": case "|=": case "^=": case "<<=": case ">>=": case ">>>=":
             case "~": case "?": case "->": case "..": case ">&": case "&>": case "&>>": case ">|":
-            case "<&": case "<<<": case "<<-":
+            case "<&": case "<<<": case "<<-": case "|&": case ";;": case ";&": case ";;&":
                 return true;
             default:
                 return false;
@@ -239,6 +249,42 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                     return true;
                 }
             }
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private bool IsCSharpAttributeName(Node node) {
+        if (Language != "csharp") return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (Contains(current.Type, "attribute")) {
+                return IsInsideField(current, node, "name");
+            }
+            if (Contains(current.Type, "declaration")) return false;
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private bool IsCSharpMemberName(Node node) {
+        if (Language != "csharp") return false;
+        var parent = node.Parent;
+        if (parent == null ||
+            (!Contains(parent.Type, "member_access") && !Contains(parent.Type, "member_binding"))) {
+            return false;
+        }
+        return IsInsideField(parent, node, "name");
+    }
+
+    private bool IsCSharpMemberReceiverType(Node node) {
+        if (Language != "csharp" || node.Text.Length == 0 || !char.IsUpper(node.Text[0])) return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (Contains(current.Type, "member_access") && IsInsideField(current, node, "expression")) {
+                return true;
+            }
+            if (!Contains(current.Type, "member_access") && !Contains(current.Type, "member_binding")) break;
             current = current.Parent;
         }
         return false;
@@ -301,6 +347,17 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             current = current.Parent;
         }
         return true;
+    }
+
+    private static bool IsInsideField(Node owner, Node candidate, string fieldName) {
+        foreach (var field in owner.Fields) {
+            if (string.Equals(field.Key, fieldName, StringComparison.Ordinal) &&
+                field.Value.StartIndex <= candidate.StartIndex &&
+                field.Value.EndIndex >= candidate.EndIndex) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private bool IsBashTestOperator(Node node) {

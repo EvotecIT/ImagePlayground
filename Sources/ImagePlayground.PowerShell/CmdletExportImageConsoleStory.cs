@@ -24,6 +24,9 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsData.Export, "ImageConsoleStory")]
 [OutputType(typeof(TerminalStory))]
 public sealed class ExportImageConsoleStoryCmdlet : PSCmdlet {
+    private TerminalStory? _pipelineStory;
+    private int _pipelineStoryCount;
+
     /// <summary>Authored terminal story to export. Accepts pipeline input from New-ImageConsoleStory.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public TerminalStory? Story { get; set; }
@@ -68,12 +71,23 @@ public sealed class ExportImageConsoleStoryCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var story = Story ?? throw new PSArgumentException("Export-ImageConsoleStory requires a terminal story.", nameof(Story));
-        var output = ConsoleStoryExporter.Write(this, story, Path, BuildAnimationOptions());
+        _pipelineStoryCount++;
+        if (_pipelineStoryCount == 1) {
+            _pipelineStory = story;
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing() {
+        if (_pipelineStoryCount != 1 || _pipelineStory == null) {
+            throw new PSArgumentException("Export-ImageConsoleStory accepts exactly one terminal story for each output path.", nameof(Story));
+        }
+        var output = ConsoleStoryExporter.Write(this, _pipelineStory, Path, BuildAnimationOptions());
         if (Show.IsPresent) {
             Helpers.Open(output, true);
         }
         if (PassThru.IsPresent) {
-            WriteObject(story);
+            WriteObject(_pipelineStory);
         }
     }
 

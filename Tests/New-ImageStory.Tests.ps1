@@ -79,6 +79,28 @@ Describe 'Generic visual stories' {
             Should -Be 0
     }
 
+    It 'recognizes class members and expandable command names by their parser roles' {
+        $text = 'class Demo { Demo() {} [string] $Name; [void] Run() {} }; Get-$name -Value 1'
+        $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
+        $tokens = @($source.Spans | ForEach-Object {
+            [pscustomobject] @{
+                Kind = $_.Kind.ToString()
+                Text = $source.Text.Substring($_.Start, $_.Length)
+            }
+        })
+
+        foreach ($command in 'Demo', 'Run') {
+            @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -eq $command }).Count |
+                Should -Be 1
+        }
+        @($tokens | Where-Object { $_.Kind -eq 'Property' -and $_.Text -eq '$Name' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -eq 'Get-' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq '$name' }).Count |
+            Should -Be 1
+    }
+
     It 'distinguishes declared types and dot-sourcing from member punctuation' {
         $text = 'enum Color { Red }; [Color] $color = [Color]::Red; . ./profile.ps1; $color.ToString()'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell

@@ -115,6 +115,18 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpPreservesMemberReceiverRolesAndRecognizesAttributes() {
+        const string source = "[Obsolete] class Demo { void Run() { obj.Value.ToString(); Console.WriteLine(obj.Value); } }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Obsolete");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Console");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Variable && Slice(result, span) == "obj");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Value");
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "obj");
+    }
+
+    [Fact]
     public void CSharpLeavesNamespaceAndImportNamesPlain() {
         const string source = "namespace Company.Product; using System.Text; using Alias = Third.Party; class Demo { System.Text.StringBuilder field; }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
@@ -180,6 +192,22 @@ public sealed class TreeSitterStorySourceTokenizerTests {
             Assert.Contains(result.Spans, span =>
                 span.Kind == StorySyntaxKind.Operator &&
                 Slice(result, span) == operation);
+        }
+    }
+
+    [Fact]
+    public void BashRecognizesFunctionNamesAndCompoundOperators() {
+        const string source = "deploy() { build |& tee log; }\nfunction publish { true; }\ncase $mode in ready) ship ;;& *) stop ;; esac\ncase $mode in ready) ship ;& *) stop ;; esac";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        foreach (var command in new[] { "deploy", "publish" }) {
+            Assert.True(
+                result.Spans.Any(span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == command),
+                "Expected Bash function declaration name '" + command + "' to be a command. Spans: " +
+                string.Join(", ", result.Spans.Select(span => span.Kind + ":" + Slice(result, span))));
+        }
+        foreach (var operation in new[] { "|&", ";;", ";&", ";;&" }) {
+            Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Operator && Slice(result, span) == operation);
         }
     }
 
