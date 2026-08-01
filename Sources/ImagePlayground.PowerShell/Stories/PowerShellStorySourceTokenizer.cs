@@ -69,6 +69,8 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
                 return StorySyntaxKind.Parameter;
             case TokenKind.Number:
                 return StorySyntaxKind.Number;
+            case TokenKind.Redirection:
+                return StorySyntaxKind.Operator;
             case TokenKind.Comment:
                 return StorySyntaxKind.Comment;
             case TokenKind.StringLiteral:

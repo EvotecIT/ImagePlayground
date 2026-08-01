@@ -128,6 +128,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (IsPunctuation(text)) return StorySyntaxKind.Punctuation;
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
+            if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (Contains(parentType, "member_access") || Contains(parentType, "member_binding")) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
@@ -193,8 +194,21 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "|": case "&": case "^": case "??": case "?.": case "+=": case "-=": case "*=":
             case "/=": case "<<": case ">>": case ">>>": case "++": case "--": case "??=":
             case "%=": case "&=": case "|=": case "^=": case "<<=": case ">>=": case ">>>=":
-            case "~": case "->": case "..": case ">&": case "&>": case "&>>": case ">|":
+            case "~": case "?": case "->": case "..": case ">&": case "&>": case "&>>": case ">|":
             case "<&": case "<<<": case "<<-":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static bool IsDeclaredTypeName(string parentType) {
+        switch (parentType) {
+            case "class_declaration":
+            case "struct_declaration":
+            case "interface_declaration":
+            case "enum_declaration":
+            case "record_declaration":
                 return true;
             default:
                 return false;

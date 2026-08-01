@@ -23,16 +23,28 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void CSharpRecognizesContextualKeywordsAndOperators() {
-        const string source = "public partial record Demo { required int Value { get; init; } async Task Run() { await Work(); Value++; value ??= fallback; flags <<= 1; } }";
+        const string source = "public partial record Demo { required int Value { get; init; } async Task Run() { await Work(); Value++; value ??= fallback; flags <<= 1; var result = ready ? success : failure; } }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
 
         foreach (var keyword in new[] { "partial", "record", "required", "init", "async", "await" }) {
             Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Keyword && Slice(result, span) == keyword);
         }
-        foreach (var operation in new[] { "++", "??=", "<<=" }) {
+        foreach (var operation in new[] { "++", "??=", "<<=", "?" }) {
             Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Operator && Slice(result, span) == operation);
         }
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "Work");
+    }
+
+    [Fact]
+    public void CSharpRecognizesDeclaredTypeNames() {
+        const string source = "class ClassType { } struct StructType { } interface InterfaceType { } enum EnumType { Ready } record RecordType;";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var typeName in new[] { "ClassType", "StructType", "InterfaceType", "EnumType", "RecordType" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Type &&
+                Slice(result, span) == typeName);
+        }
     }
 
     [Fact]

@@ -21,7 +21,7 @@ Describe 'Generic visual stories' {
     }
 
     It 'tokenizes PowerShell with the native parser without changing source text' {
-        $text = '$items = Get-Process | Sort-Object CPU -Descending # hottest'
+        $text = '$items = Get-Process | Sort-Object CPU -Descending > output.txt; Get-Process >> append.txt; Get-Process 2> error.txt; Get-Process 2>> errors.txt; Get-Process *> all.txt; Get-Process *>> all-append.txt # hottest'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
 
         $source.Text | Should -BeExactly $text
@@ -33,6 +33,12 @@ Describe 'Generic visual stories' {
             $_.Kind.ToString() -eq 'Operator' -and
             $source.Text.Substring($_.Start, $_.Length) -eq '|'
         }).Count | Should -Be 1
+        foreach ($redirection in '>', '>>', '2>', '2>>', '*>', '*>>') {
+            @($source.Spans | Where-Object {
+                $_.Kind.ToString() -eq 'Operator' -and
+                $source.Text.Substring($_.Start, $_.Length) -eq $redirection
+            }).Count | Should -Be 1
+        }
     }
 
     It 'preserves nested expansions while leaving literal PowerShell arguments plain' {
