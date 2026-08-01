@@ -61,7 +61,7 @@ Describe 'New-ImageConsoleStory' {
         }
 
         $story = [ChartForgeX.Terminal.TerminalStory]::Create().Command('Get-Date').Output('Ready')
-        $result = $story | New-ImageConsoleStory -FilePath $file -PassThru
+        $result = $story | Export-ImageConsoleStory -Path $file -PassThru
 
         $result | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
         $bytes = [System.IO.File]::ReadAllBytes($file)
@@ -87,7 +87,7 @@ Describe 'New-ImageConsoleStory' {
             [void] $Console.Command('dotnet run', 0.05)
             [void] $Console.Output('Chart saved', [ChartForgeX.Terminal.TerminalTextTone]::Success)
         } -FilePath $file -FramesPerSecond 4 -EndHoldSeconds 0.1 -NoLoop -PassThru
-        $story | New-ImageConsoleStory -FilePath $apngFile -FramesPerSecond 4 -EndHoldSeconds 0.1
+        $story | Export-ImageConsoleStory -Path $apngFile -FramesPerSecond 4 -EndHoldSeconds 0.1
 
         $bytes = [System.IO.File]::ReadAllBytes($file)
         [System.Text.Encoding]::ASCII.GetString($bytes, 0, 6) | Should -Be 'GIF89a'
@@ -99,10 +99,11 @@ Describe 'New-ImageConsoleStory' {
 
     It 'rejects unsupported output extensions' {
         {
-            New-ImageConsoleStory -StoryScript {
+            $story = New-ImageConsoleStory -StoryScript {
                 param($Console)
                 [void] $Console.Command('Get-Date')
-            } -FilePath (Join-Path -Path $TestDir -ChildPath 'console-story.webp')
+            }
+            $story | Export-ImageConsoleStory -Path (Join-Path -Path $TestDir -ChildPath 'console-story.webp')
         } | Should -Throw
     }
 }

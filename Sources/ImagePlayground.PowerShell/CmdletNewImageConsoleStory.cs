@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Management.Automation;
 using ChartForgeX;
 using ChartForgeX.Terminal;
@@ -8,35 +7,57 @@ using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Creates a script-free animated console presentation from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.</summary>
+/// <summary>Creates a reusable script-free console story from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.</summary>
 /// <para>The recommended Content and Step parameter sets compose objects created by the New-ImageConsoleStoryCommand, Output, Table, BlankLine, Pause, Tab, and Select-ImageConsoleStoryTab cmdlets. StoryScript remains available as the low-level ChartForgeX builder escape hatch.</para>
 /// <para>The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion, and a completed PNG state. It never executes the displayed command: callers run scripts themselves and pipe captured output when they want a real execution transcript.</para>
 /// <example>
-///   <summary>Author a PowerShell console presentation</summary>
+///   <summary>Author a paced multi-tab Windows Terminal presentation</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -WindowStyle WindowsTerminal -Content {
-///   New-ImageConsoleStoryCommand -Text 'Get-Service -Name WinRM'
-///   New-ImageConsoleStoryOutput -Text 'Status   Name               DisplayName' -Tone Accent
-///   New-ImageConsoleStoryOutput -Text 'Running  WinRM              Windows Remote Management' -Tone Success
-/// } -FilePath '.\service-demo.svg'</code>
-///   <para>Creates a self-contained SVG with command typing, output reveals, a blinking cursor, and a completed reduced-motion state.</para>
+///   <code>$story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed Slow -Content {
+///   New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+///   New-ImageConsoleStoryCommand -Text 'dotnet build'
+///   New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+///
+///   New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
+///   Select-ImageConsoleStoryTab -Id WindowsPowerShell
+///   New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
+///   New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
+///
+///   New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
+///   Select-ImageConsoleStoryTab -Id Ubuntu
+///   New-ImageConsoleStoryCommand -Text './build.sh'
+///   New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
+/// }
+/// $story | Export-ImageConsoleStory -Path '.\demo.gif'</code>
+///   <para>Creates three persistent tab buffers, leaves readable time before each switch, and exports the shared story through Export-ImageConsoleStory.</para>
 /// </example>
 /// <example>
 ///   <summary>Render output captured from an actual script run</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$output = &amp; .\Invoke-EnvironmentAudit.ps1 2&gt;&amp;1 | Out-String -Stream -Width 110
-/// $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell -FilePath '.\audit-demo.svg'</code>
+/// $story = $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell
+/// $story | Export-ImageConsoleStory -Path '.\audit-demo.svg'</code>
 ///   <para>The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.</para>
 /// </example>
 /// <example>
 ///   <summary>Export a portable animated GIF for chat or documentation</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
+///   <code>$story = New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
 ///   New-ImageConsoleStoryCommand -Text 'var chart = Chart.Create().WithTitle("Weekly builds");'
 ///   New-ImageConsoleStoryCommand -Text 'chart.SavePng("weekly-builds.png");'
-///   New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png' -Tone Success
-/// } -FilePath '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5</code>
+///   New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png' -Style Success
+/// }
+/// $story | Export-ImageConsoleStory -Path '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5</code>
 ///   <para>GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.</para>
+/// </example>
+/// <example>
+///   <summary>Tune typing and tab reading time independently</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$story = New-ImageConsoleStory -Speed Normal -TypingSpeed 36 -TabHoldSeconds 2.5 -Content {
+///   New-ImageConsoleStoryCommand -Text 'Invoke-ProjectBuild'
+///   New-ImageConsoleStoryOutput -Text 'Build completed.' -Style Success
+/// }</code>
+///   <para>TypingSpeed is measured in visible characters per second. A command-level DurationSeconds value remains the most specific override.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageConsoleStory", DefaultParameterSetName = StoryScriptSet)]
 [OutputType(typeof(TerminalStory))]
@@ -146,12 +167,13 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [ValidateRange(0, 10)]
     public double InitialDelaySeconds { get; set; } = 0.35;
 
-    /// <summary>Simulated command typing speed.</summary>
+    /// <summary>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
+    [Alias("CharactersPerSecond")]
     [ValidateRange(5, 200)]
-    public double CharactersPerSecond { get; set; } = 42;
+    public double TypingSpeed { get; set; } = 42;
 
     /// <summary>Delay between output lines.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
@@ -159,6 +181,19 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = StepSet)]
     [ValidateRange(0, 3)]
     public double LineDelaySeconds { get; set; } = 0.08;
+
+    /// <summary>Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.</summary>
+    [Parameter(ParameterSetName = TranscriptSet)]
+    [Parameter(ParameterSetName = ContentSet)]
+    [Parameter(ParameterSetName = StepSet)]
+    public TerminalStoryPlaybackSpeed Speed { get; set; } = TerminalStoryPlaybackSpeed.Normal;
+
+    /// <summary>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</summary>
+    [Parameter(ParameterSetName = TranscriptSet)]
+    [Parameter(ParameterSetName = ContentSet)]
+    [Parameter(ParameterSetName = StepSet)]
+    [ValidateRange(0, 10)]
+    public double TabHoldSeconds { get; set; }
 
     /// <summary>Hide the final prompt and cursor in the completed story.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
@@ -174,8 +209,8 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     public int PngOutputScale { get; set; } = 2;
 
     /// <summary>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</summary>
-    [Parameter(Mandatory = true)]
-    public string FilePath { get; set; } = string.Empty;
+    [Parameter]
+    public string? FilePath { get; set; }
 
     /// <summary>Frame rate used for animated GIF and APNG output.</summary>
     [Parameter]
@@ -225,25 +260,15 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void EndProcessing() {
         var story = BuildStory();
-        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
-        var extension = Path.GetExtension(output);
-        ValidateExtension(extension, output);
-        var directory = Path.GetDirectoryName(output);
-        if (!string.IsNullOrWhiteSpace(directory)) {
-            Directory.CreateDirectory(directory!);
+        if (string.IsNullOrWhiteSpace(FilePath)) {
+            if (Show.IsPresent) {
+                throw new PSArgumentException("New-ImageConsoleStory -Show requires -FilePath, or pipe the story to Export-ImageConsoleStory -Show.", nameof(Show));
+            }
+            WriteObject(story);
+            return;
         }
 
-        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
-            story.SaveSvg(output);
-        } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
-            story.SaveHtml(output);
-        } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
-            story.SavePng(output);
-        } else if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
-            story.SaveGif(output, BuildAnimationOptions());
-        } else {
-            story.SaveApng(output, BuildAnimationOptions());
-        }
+        var output = ConsoleStoryExporter.Write(this, story, FilePath!, BuildAnimationOptions());
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
@@ -301,6 +326,20 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageConsoleStoryMissingStep", ErrorCategory.InvalidArgument, null));
         }
 
+        var initialTabIndex = -1;
+        for (var index = 0; index < _steps.Count; index++) {
+            if (!_steps[index].IsInitialTab) continue;
+            if (initialTabIndex >= 0) {
+                var exception = new PSArgumentException("New-ImageConsoleStory accepts one -Active tab declaration.");
+                ThrowTerminatingError(new ErrorRecord(exception, "NewImageConsoleStoryMultipleInitialTabs", ErrorCategory.InvalidData, _steps[index]));
+            }
+            initialTabIndex = index;
+        }
+        if (initialTabIndex > 0) {
+            var exception = new PSArgumentException("New-ImageConsoleStory requires the -Active tab declaration to be the first content step.");
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageConsoleStoryLateInitialTab", ErrorCategory.InvalidData, _steps[initialTabIndex]));
+        }
+
         var story = ConfigureStory();
         foreach (var step in _steps) {
             step.ApplyTo(story);
@@ -309,7 +348,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     }
 
     private TerminalStory ConfigureStory() {
-        return TerminalStory.Create()
+        var story = TerminalStory.Create()
             .WithTitle(Title)
             .WithDialect(Dialect, CustomPrompt)
             .WithWorkingDirectory(WorkingDirectory)
@@ -317,9 +356,18 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             .WithWindowStyle(WindowStyle)
             .WithWidth(Width)
             .WithTypography(FontSize, LineHeight)
-            .WithTiming(InitialDelaySeconds, CharactersPerSecond, LineDelaySeconds)
+            .WithPlaybackSpeed(Speed)
             .WithFinalPrompt(!NoFinalPrompt.IsPresent)
             .WithPngOutputScale(PngOutputScale);
+
+        var initialDelay = MyInvocation.BoundParameters.ContainsKey(nameof(InitialDelaySeconds)) ? InitialDelaySeconds : story.InitialDelaySeconds;
+        var charactersPerSecond = MyInvocation.BoundParameters.ContainsKey(nameof(TypingSpeed)) ? TypingSpeed : story.CharactersPerSecond;
+        var lineDelay = MyInvocation.BoundParameters.ContainsKey(nameof(LineDelaySeconds)) ? LineDelaySeconds : story.LineDelaySeconds;
+        story.WithTiming(initialDelay, charactersPerSecond, lineDelay);
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(TabHoldSeconds))) {
+            story.WithTabHold(TabHoldSeconds);
+        }
+        return story;
     }
 
     private TerminalTheme ResolveTheme() {
@@ -361,17 +409,4 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             .WithLoop(!NoLoop.IsPresent);
     }
 
-    private void ValidateExtension(string extension, string output) {
-        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".apng", StringComparison.OrdinalIgnoreCase)) {
-            return;
-        }
-
-        var exception = new PSArgumentException("Console story output supports only .svg, .html, .htm, .png, .gif, or .apng file extensions.");
-        ThrowTerminatingError(new ErrorRecord(exception, "NewImageConsoleStoryUnsupportedExtension", ErrorCategory.InvalidArgument, output));
-    }
 }

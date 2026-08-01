@@ -99,22 +99,30 @@ New-ImageChart {
 
 The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other chart-definition commands remain the normal PowerShell experience. Advanced scripts can also pass a native `ChartForgeX.Core.Chart` through `-Chart` or configure one through `-ChartScript`.
 
-Present an authored PowerShell session while keeping ChartForgeX as the reusable terminal renderer:
+Present a deliberately paced, multi-tab PowerShell session while keeping ChartForgeX as the reusable terminal renderer:
 
 ```powershell
-New-ImageConsoleStory `
-    -Title 'pwsh - C:\OpenSource' `
-    -WorkingDirectory 'C:\OpenSource' `
-    -Theme PowerShell `
-    -WindowStyle WindowsTerminal `
-    -Content {
-        New-ImageConsoleStoryCommand -Text '.\Invoke-ReleaseValidation.ps1'
-        New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success
-    } `
-    -FilePath '.\validation.gif'
+$story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed Slow -Content {
+    New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+    New-ImageConsoleStoryCommand -Text 'dotnet build'
+    New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+
+    New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
+    Select-ImageConsoleStoryTab -Id WindowsPowerShell
+    New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
+    New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
+
+    New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
+    Select-ImageConsoleStoryTab -Id Ubuntu
+    New-ImageConsoleStoryCommand -Text './build.sh'
+    New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
+}
+
+$story | Export-ImageConsoleStory -Path '.\demo.svg'
+$story | Export-ImageConsoleStory -Path '.\demo.gif'
 ```
 
-The authoring commands return reusable typed steps. `New-ImageConsoleStoryTable` accepts ordinary PowerShell objects, so examples do not need direct ChartForgeX builders or `[void]` output suppression.
+The authoring commands return reusable typed steps. `New-ImageConsoleStoryTable` accepts ordinary PowerShell objects, so examples do not need direct ChartForgeX builders, `[void]` output suppression, or line-continuation backticks. `-Speed Slow`, `Normal`, and `Fast` coordinate typing, output reveals, and readable tab dwell. Use `-TypingSpeed 36` to set visible characters per second and `-TabHoldSeconds 2.5` to set an exact minimum hold before each switch; `New-ImageConsoleStoryCommand -DurationSeconds` can override one command. Tab declarations and tab selection are separate on purpose: `-Active` names the initial tab, while `Select-ImageConsoleStoryTab` performs each later visible switch.
 
 To show a real script run, execute it explicitly, render the captured transcript to SVG, and reuse the same story for GIF:
 
@@ -122,21 +130,19 @@ To show a real script run, execute it explicitly, render the captured transcript
 $transcript = & .\Invoke-EnvironmentAudit.ps1 2>&1 |
     Out-String -Stream -Width 110
 
-$story = $transcript | New-ImageConsoleStory `
-    -CommandText '.\Invoke-EnvironmentAudit.ps1' `
-    -Dialect PowerShell `
-    -Theme PowerShell `
-    -WindowStyle Minimal `
-    -FilePath '.\audit-demo.svg' `
-    -PassThru
+$storyOptions = @{
+    CommandText = '.\Invoke-EnvironmentAudit.ps1'
+    Dialect     = 'PowerShell'
+    Theme       = 'PowerShell'
+    WindowStyle = 'Minimal'
+}
 
-$story | New-ImageConsoleStory `
-    -FilePath '.\audit-demo.gif' `
-    -FramesPerSecond 8 `
-    -EndHoldSeconds 1.5
+$story = $transcript | New-ImageConsoleStory @storyOptions
+$story | Export-ImageConsoleStory -Path '.\audit-demo.svg'
+$story | Export-ImageConsoleStory -Path '.\audit-demo.gif' -FramesPerSecond 8 -EndHoldSeconds 1.5
 ```
 
-`New-ImageConsoleStory` never executes `-CommandText`. It accepts PowerShell-native steps, captured transcript lines, the advanced `-StoryScript` builder, or a native `ChartForgeX.Terminal.TerminalStory`. `-Dialect` controls prompts, `-Theme` controls the color palette, and `-WindowStyle` independently selects `MacOS`, `WindowsTerminal`, `Minimal`, or `None` chrome. SVG and HTML use script-free command typing and output reveals; GIF and APNG export that same timeline for Discord, issue, and documentation embeds; PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
+`New-ImageConsoleStory` never executes `-CommandText`. It accepts PowerShell-native steps, captured transcript lines, the advanced `-StoryScript` builder, or a native `ChartForgeX.Terminal.TerminalStory`. `-Dialect` controls prompts, `-Theme` controls the color palette, and `-WindowStyle` independently selects `MacOS`, `WindowsTerminal`, `Minimal`, or `None` chrome. SVG and HTML use script-free command typing and output reveals; `Export-ImageConsoleStory` writes that same timeline as SVG, HTML, PNG, GIF, or APNG for Discord, issues, and documentation embeds. PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
 Long captured lines wrap within the terminal instead of being discarded. For a custom dialect, pair `-Dialect Custom` with `-CustomPrompt 'demo> '`.
 
 Build a general animated visual story from native ChartForgeX blocks:

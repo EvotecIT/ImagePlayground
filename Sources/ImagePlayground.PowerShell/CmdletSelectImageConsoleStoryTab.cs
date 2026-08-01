@@ -7,7 +7,7 @@ namespace ImagePlayground.PowerShell;
 /// <example>
 ///   <summary>Return to the initial PowerShell tab</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Select-ImageConsoleStoryTab -Id main</code>
+///   <code>Select-ImageConsoleStoryTab -Id WindowsPowerShell</code>
 ///   <para>Activates the initial tab without clearing its existing transcript buffer.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Select, "ImageConsoleStoryTab")]

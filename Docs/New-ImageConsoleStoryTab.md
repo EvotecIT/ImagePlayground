@@ -6,20 +6,27 @@ schema: 2.0.0
 ---
 # New-ImageConsoleStoryTab
 ## SYNOPSIS
-Declares and activates a persistent tab in an ImagePlayground console story.
+Declares a persistent tab in an ImagePlayground console story.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] [-Profile <string>] [-WorkingDirectory <string>] [-Active] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Declared tabs remain visible in tab-aware window chrome and can be revisited with Select-ImageConsoleStoryTab.
+Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Use Active for the initial tab and Select-ImageConsoleStoryTab for later visible switches.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
+```powershell
+PS> New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+```
+
+Names and styles the initial persistent tab without creating an extra transition.
+
+### EXAMPLE 2
 ```powershell
 PS> New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -Title Ubuntu -WorkingDirectory '~/src'
 ```
@@ -27,6 +34,22 @@ PS> New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -Title Ubuntu -WorkingDi
 Creates a typed story step that opens and activates an Ubuntu-styled Bash session.
 
 ## PARAMETERS
+
+### -Active
+Configure this declaration as the initial active tab. It must be the first content step.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Id
 Stable identifier used by later tab-selection steps.

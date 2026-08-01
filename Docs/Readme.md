@@ -37,6 +37,9 @@ Converts an image file into a Base64 encoded string.
 ### [ConvertTo-ImageStorySource](ConvertTo-ImageStorySource.md)
 Converts exact source text into renderer-neutral syntax spans for visual stories.
 
+### [Export-ImageConsoleStory](Export-ImageConsoleStory.md)
+Exports an authored ImagePlayground console story to SVG, HTML, PNG, GIF, or APNG.
+
 ### [Export-ImageMetadata](Export-ImageMetadata.md)
 Exports metadata from an image.
 
@@ -170,7 +173,7 @@ Creates waterfall chart data item.
 Creates word cloud chart term.
 
 ### [New-ImageConsoleStory](New-ImageConsoleStory.md)
-Creates a script-free animated console presentation from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.
+Creates a reusable script-free console story from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.
 
 ### [New-ImageConsoleStoryBlankLine](New-ImageConsoleStoryBlankLine.md)
 Creates a blank-line step for an ImagePlayground console story.
@@ -188,7 +191,7 @@ Creates a reusable terminal color palette for ImagePlayground console stories an
 Creates a silent timeline pause for an ImagePlayground console story.
 
 ### [New-ImageConsoleStoryTab](New-ImageConsoleStoryTab.md)
-Declares and activates a persistent tab in an ImagePlayground console story.
+Declares a persistent tab in an ImagePlayground console story.
 
 ### [New-ImageConsoleStoryTable](New-ImageConsoleStoryTable.md)
 Creates a typed table step from ordinary PowerShell objects.

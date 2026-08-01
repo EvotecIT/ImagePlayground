@@ -6,32 +6,32 @@ schema: 2.0.0
 ---
 # New-ImageConsoleStory
 ## SYNOPSIS
-Creates a script-free animated console presentation from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.
+Creates a reusable script-free console story from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.
 
 ## SYNTAX
 ### StoryScript (Default)
 ```powershell
-New-ImageConsoleStory [-StoryScript] <scriptblock> -FilePath <string> [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory [-StoryScript] <scriptblock> [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-New-ImageConsoleStory -Content <scriptblock> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Content <scriptblock> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Step
 ```powershell
-New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
 ```powershell
-New-ImageConsoleStory -Story <TerminalStory> -FilePath <string> [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Story <TerminalStory> [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Transcript
 ```powershell
-New-ImageConsoleStory -InputObject <string> -CommandText <string> -FilePath <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-CharactersPerSecond <double>] [-LineDelaySeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -InputObject <string> -CommandText <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,33 +43,56 @@ The cmdlet renders deterministic SVG or HTML motion, animated GIF or APNG motion
 
 ### EXAMPLE 1
 ```powershell
-PS> New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -WindowStyle WindowsTerminal -Content {
-  New-ImageConsoleStoryCommand -Text 'Get-Service -Name WinRM'
-  New-ImageConsoleStoryOutput -Text 'Status   Name               DisplayName' -Tone Accent
-  New-ImageConsoleStoryOutput -Text 'Running  WinRM              Windows Remote Management' -Tone Success
-} -FilePath '.\service-demo.svg'
+PS> $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed Slow -Content {
+  New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+  New-ImageConsoleStoryCommand -Text 'dotnet build'
+  New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+
+  New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
+  Select-ImageConsoleStoryTab -Id WindowsPowerShell
+  New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
+  New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
+
+  New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
+  Select-ImageConsoleStoryTab -Id Ubuntu
+  New-ImageConsoleStoryCommand -Text './build.sh'
+  New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
+}
+$story | Export-ImageConsoleStory -Path '.\demo.gif'
 ```
 
-Creates a self-contained SVG with command typing, output reveals, a blinking cursor, and a completed reduced-motion state.
+Creates three persistent tab buffers, leaves readable time before each switch, and exports the shared story through Export-ImageConsoleStory.
 
 ### EXAMPLE 2
 ```powershell
 PS> $output = & .\Invoke-EnvironmentAudit.ps1 2>&1 | Out-String -Stream -Width 110
-$output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell -FilePath '.\audit-demo.svg'
+$story = $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell
+$story | Export-ImageConsoleStory -Path '.\audit-demo.svg'
 ```
 
 The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.
 
 ### EXAMPLE 3
 ```powershell
-PS> New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
+PS> $story = New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
   New-ImageConsoleStoryCommand -Text 'var chart = Chart.Create().WithTitle("Weekly builds");'
   New-ImageConsoleStoryCommand -Text 'chart.SavePng("weekly-builds.png");'
-  New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png' -Tone Success
-} -FilePath '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5
+  New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png' -Style Success
+}
+$story | Export-ImageConsoleStory -Path '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5
 ```
 
 GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.
+
+### EXAMPLE 4
+```powershell
+PS> $story = New-ImageConsoleStory -Speed Normal -TypingSpeed 36 -TabHoldSeconds 2.5 -Content {
+  New-ImageConsoleStoryCommand -Text 'Invoke-ProjectBuild'
+  New-ImageConsoleStoryOutput -Text 'Build completed.' -Style Success
+}
+```
+
+TypingSpeed is measured in visible characters per second. A command-level DurationSeconds value remains the most specific override.
 
 ## PARAMETERS
 
@@ -85,22 +108,6 @@ Possible values:
 Required: False
 Position: named
 Default value: 1
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -CharactersPerSecond
-Simulated command typing speed.
-
-```yaml
-Type: Double
-Parameter Sets: Content, Step, Transcript
-Aliases:
-Possible values:
-
-Required: False
-Position: named
-Default value: 42
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -196,7 +203,7 @@ Parameter Sets: StoryScript, Content, Step, Story, Transcript
 Aliases:
 Possible values:
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -411,6 +418,24 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Speed
+Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.
+
+Possible values: Slow, Normal, Fast
+
+```yaml
+Type: TerminalStoryPlaybackSpeed
+Parameter Sets: Content, Step, Transcript
+Aliases:
+Possible values: Slow, Normal, Fast
+
+Required: False
+Position: named
+Default value: Normal
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Step
 Typed console story steps. Accepts pipeline input and arrays created by the console story step cmdlets.
 
@@ -459,6 +484,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -TabHoldSeconds
+Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.
+
+```yaml
+Type: Double
+Parameter Sets: Content, Step, Transcript
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Theme
 Built-in terminal color palette used by composed and captured stories.
 
@@ -487,6 +528,22 @@ Possible values:
 Required: False
 Position: named
 Default value: PowerShell
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TypingSpeed
+Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.
+
+```yaml
+Type: Double
+Parameter Sets: Content, Step, Transcript
+Aliases: CharactersPerSecond
+Possible values:
+
+Required: False
+Position: named
+Default value: 42
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

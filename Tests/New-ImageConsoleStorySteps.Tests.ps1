@@ -15,22 +15,21 @@ Describe 'Image console story step cmdlets' {
             [pscustomobject]@{ Name = 'ImagePlayground'; Stack = 'PowerShell'; Stars = 500 }
         )
 
-        $story = New-ImageConsoleStory `
-            -Title 'pwsh - C:\OpenSource' `
-            -WorkingDirectory 'C:\OpenSource' `
-            -Theme PowerShell `
-            -WindowStyle WindowsTerminal `
-            -Content {
+        $storyOptions = @{
+            Title            = 'pwsh - C:\OpenSource'
+            WorkingDirectory = 'C:\OpenSource'
+            Theme            = 'PowerShell'
+            WindowStyle      = 'WindowsTerminal'
+            Content          = {
                 New-ImageConsoleStoryCommand -Text 'Get-ActivePortfolio'
-                $projects | New-ImageConsoleStoryTable `
-                    -Property Name, Stack, Stars `
-                    -Header PROJECT, STACK, STARS `
-                    -Align @{ Stars = 'Right' }
+                $projects | New-ImageConsoleStoryTable -Property Name, Stack, Stars -Header PROJECT, STACK, STARS -Align @{ Stars = 'Right' }
                 New-ImageConsoleStoryBlankLine
-                New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success
-            } `
-            -FilePath $file `
-            -PassThru
+                New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Style Success
+            }
+        }
+
+        $story = New-ImageConsoleStory @storyOptions
+        $story | Export-ImageConsoleStory -Path $file
 
         $story | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
         $story.Title | Should -Be 'pwsh - C:\OpenSource'
@@ -55,16 +54,17 @@ Describe 'Image console story step cmdlets' {
     It 'keeps dialect, color palette, and window chrome independent' {
         foreach ($style in 'MacOS', 'WindowsTerminal', 'Minimal', 'None') {
             $file = Join-Path -Path $TestDir -ChildPath "console-story-$($style.ToLowerInvariant()).svg"
-            $story = New-ImageConsoleStory `
-                -Dialect PowerShell `
-                -Theme Dark `
-                -WindowStyle $style `
-                -Content {
+            $storyOptions = @{
+                Dialect     = 'PowerShell'
+                Theme       = 'Dark'
+                WindowStyle = $style
+                Content     = {
                     New-ImageConsoleStoryCommand -Text 'Get-Date'
-                    New-ImageConsoleStoryOutput -Text 'Ready' -Tone Success
-                } `
-                -FilePath $file `
-                -PassThru
+                    New-ImageConsoleStoryOutput -Text 'Ready' -Style Success
+                }
+            }
+            $story = New-ImageConsoleStory @storyOptions
+            $story | Export-ImageConsoleStory -Path $file
 
             $story.Dialect.ToString() | Should -Be 'PowerShell'
             $story.WindowStyle.ToString() | Should -Be $style
@@ -76,34 +76,32 @@ Describe 'Image console story step cmdlets' {
         $file = Join-Path -Path $TestDir -ChildPath 'console-story-tabs.svg'
         $ubuntuPalette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'
 
-        $story = New-ImageConsoleStory `
-            -Title 'PowerShell' `
-            -WorkingDirectory 'C:\Work' `
-            -Theme Campbell `
-            -WindowStyle WindowsTerminal `
-            -Content {
+        $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Speed Slow -Content {
+                New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
                 New-ImageConsoleStoryCommand -Text 'Get-ChildItem'
-                New-ImageConsoleStoryTab -Id windows-powershell -Profile WindowsPowerShell -WorkingDirectory 'C:\Legacy'
+                New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell -WorkingDirectory 'C:\Legacy'
+                Select-ImageConsoleStoryTab -Id WindowsPowerShell
                 New-ImageConsoleStoryCommand -Text '$PSVersionTable.PSVersion'
-                New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -WorkingDirectory '~/src' -Palette $ubuntuPalette
+                New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu -WorkingDirectory '~/src' -Palette $ubuntuPalette
+                Select-ImageConsoleStoryTab -Id Ubuntu
                 New-ImageConsoleStoryCommand -Text 'dotnet test'
-                Select-ImageConsoleStoryTab -Id main
-                New-ImageConsoleStoryOutput -Text 'Back in PowerShell' -Tone Success
-            } `
-            -FilePath $file `
-            -PassThru
+                Select-ImageConsoleStoryTab -Id PowerShell
+                New-ImageConsoleStoryOutput -Text 'Back in PowerShell' -Style Success
+            }
+        $story | Export-ImageConsoleStory -Path $file
 
         $story.Tabs.Count | Should -Be 3
-        $story.ActiveTabId | Should -Be 'main'
+        $story.ActiveTabId | Should -Be 'PowerShell'
+        $story.TabHoldSeconds | Should -Be 2
         $story.Tabs[1].Title | Should -Be 'Windows PowerShell'
         $story.Tabs[2].Dialect.ToString() | Should -Be 'Bash'
         $story.Tabs[2].Theme.Background.ToCss() | Should -Be '#24071B'
-        $story.Steps.Where({ $_.Kind.ToString() -eq 'OpenTab' }).Count | Should -Be 2
-        $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 1
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'DeclareTab' }).Count | Should -Be 2
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 3
 
         $svg = [System.IO.File]::ReadAllText($file)
-        $svg | Should -Match 'data-cfx-tab="windows-powershell"'
-        $svg | Should -Match 'data-cfx-tab="ubuntu"'
+        $svg | Should -Match 'data-cfx-tab="WindowsPowerShell"'
+        $svg | Should -Match 'data-cfx-tab="Ubuntu"'
         $svg | Should -Match '#24071B'
         $svg | Should -Match '\[Ubuntu\] ~/src \$ dotnet test'
         $svg | Should -Match 'cfx-terminal-tab-final'
@@ -114,7 +112,7 @@ Describe 'Image console story step cmdlets' {
         $steps = @(
             New-ImageConsoleStoryCommand -Text 'Get-Date'
             New-ImageConsoleStoryPause -Seconds 0.2
-            New-ImageConsoleStoryOutput -Text 'Ready' -Tone Accent
+            New-ImageConsoleStoryOutput -Text 'Ready' -Style Accent
         )
 
         $story = New-ImageConsoleStory -Step $steps -FilePath $file -PassThru
@@ -128,7 +126,7 @@ Describe 'Image console story step cmdlets' {
         $file = Join-Path -Path $TestDir -ChildPath 'console-story-step-pipeline.svg'
         $story = @(
             New-ImageConsoleStoryCommand -Text 'Get-Date'
-            New-ImageConsoleStoryOutput -Text 'Ready' -Tone Success
+            New-ImageConsoleStoryOutput -Text 'Ready' -Style Success
         ) | New-ImageConsoleStory -FilePath $file -PassThru
 
         $story.Steps.Count | Should -Be 2
@@ -142,14 +140,11 @@ Describe 'Image console story step cmdlets' {
         $gifFile = Join-Path -Path $TestDir -ChildPath 'console-story-steps-render.gif'
         $story = New-ImageConsoleStory -Content {
             New-ImageConsoleStoryCommand -Text '.\Invoke-EnvironmentAudit.ps1' -DurationSeconds 0.05
-            New-ImageConsoleStoryOutput -Text 'PASS  DNS' -Tone Success
-        } -FilePath $svgFile -PassThru
+            New-ImageConsoleStoryOutput -Text 'PASS  DNS' -Style Success
+        }
 
-        $story | New-ImageConsoleStory `
-            -FilePath $gifFile `
-            -FramesPerSecond 4 `
-            -EndHoldSeconds 0.1 `
-            -NoLoop
+        $story | Export-ImageConsoleStory -Path $svgFile
+        $story | Export-ImageConsoleStory -Path $gifFile -FramesPerSecond 4 -EndHoldSeconds 0.1 -NoLoop
 
         [System.IO.File]::ReadAllText($svgFile) | Should -Match 'PASS  DNS'
         $bytes = [System.IO.File]::ReadAllBytes($gifFile)
@@ -170,5 +165,55 @@ Describe 'Image console story step cmdlets' {
             [pscustomobject]@{ Name = 'ChartForgeX' } |
                 New-ImageConsoleStoryTable -Property Name, Status
         } | Should -Throw "*does not contain property 'Status'*"
+    }
+
+    It 'keeps Tone as a compatibility alias for Style' {
+        $step = New-ImageConsoleStoryOutput -Text 'Ready' -Tone Success
+
+        $step.Tone.ToString() | Should -Be 'Success'
+        (Get-Command New-ImageConsoleStoryOutput).Parameters['Style'].Aliases | Should -Contain 'Tone'
+    }
+
+    It 'supports overall pacing with independent typing and tab dwell overrides' {
+        $slow = New-ImageConsoleStory -Speed Slow -Content {
+            New-ImageConsoleStoryCommand -Text 'Get-Date'
+        }
+        $custom = New-ImageConsoleStory -Speed Slow -TypingSpeed 36 -TabHoldSeconds 2.5 -Content {
+            New-ImageConsoleStoryCommand -Text 'Get-Date'
+        }
+
+        $slow.CharactersPerSecond | Should -Be 28
+        $slow.TabHoldSeconds | Should -Be 2
+        $custom.CharactersPerSecond | Should -Be 36
+        $custom.TabHoldSeconds | Should -Be 2.5
+        (Get-Command New-ImageConsoleStory).Parameters['TypingSpeed'].Aliases | Should -Contain 'CharactersPerSecond'
+    }
+
+    It 'requires exactly one initial Active tab at the beginning of Content' {
+        {
+            New-ImageConsoleStory -Content {
+                New-ImageConsoleStoryCommand -Text 'Get-Date'
+                New-ImageConsoleStoryTab -Id PowerShell -Profile PowerShell -Active
+            }
+        } | Should -Throw '*first content step*'
+
+        {
+            New-ImageConsoleStory -Content {
+                New-ImageConsoleStoryTab -Id PowerShell -Profile PowerShell -Active
+                New-ImageConsoleStoryTab -Id Legacy -Profile WindowsPowerShell -Active
+            }
+        } | Should -Throw '*one -Active tab*'
+    }
+
+    It 'ships parseable console story examples without continuation backticks' {
+        $continuation = [regex]::Escape([string][char]96) + '\s*(?:\r?\n|$)'
+        foreach ($example in Get-ChildItem -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\Examples') -Filter 'ConsoleStory*.ps1') {
+            $tokens = $null
+            $errors = $null
+            [void] [System.Management.Automation.Language.Parser]::ParseFile($example.FullName, [ref] $tokens, [ref] $errors)
+
+            $errors | Should -BeNullOrEmpty -Because "$($example.Name) should parse on the current PowerShell parser"
+            [System.IO.File]::ReadAllText($example.FullName) | Should -Not -Match $continuation
+        }
     }
 }

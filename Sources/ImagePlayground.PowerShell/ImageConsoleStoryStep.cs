@@ -18,7 +18,8 @@ public sealed class ImageConsoleStoryStep {
         string tabWorkingDirectory = "",
         TerminalTheme? tabTheme = null,
         TerminalTabIcon tabIcon = TerminalTabIcon.Terminal,
-        string tabCustomPrompt = "") {
+        string tabCustomPrompt = "",
+        bool isInitialTab = false) {
         Kind = kind;
         Text = text;
         Tone = tone;
@@ -31,6 +32,7 @@ public sealed class ImageConsoleStoryStep {
         TabTheme = tabTheme;
         TabIcon = tabIcon;
         TabCustomPrompt = tabCustomPrompt;
+        IsInitialTab = isInitialTab;
     }
 
     /// <summary>Gets the kind of terminal story step.</summary>
@@ -69,6 +71,9 @@ public sealed class ImageConsoleStoryStep {
     /// <summary>Gets the custom prompt carried by an open-tab step.</summary>
     public string TabCustomPrompt { get; }
 
+    /// <summary>Gets whether this declaration configures the initial active tab.</summary>
+    public bool IsInitialTab { get; }
+
     internal void ApplyTo(TerminalStory story) {
         if (story == null) {
             throw new ArgumentNullException(nameof(story));
@@ -90,16 +95,38 @@ public sealed class ImageConsoleStoryStep {
             case TerminalStoryStepKind.Table:
                 story.Table(Table ?? throw new InvalidOperationException("Console story table steps require a table."));
                 break;
-            case TerminalStoryStepKind.OpenTab:
-                story.OpenTab(
+            case TerminalStoryStepKind.DeclareTab:
+                story.DeclareTab(
                     TabId,
                     TabTitle,
                     TabDialect,
                     TabWorkingDirectory,
                     TabTheme ?? throw new InvalidOperationException("Console story tab steps require a palette."),
                     TabIcon,
-                    string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt,
-                    DurationSeconds);
+                    string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt);
+                break;
+            case TerminalStoryStepKind.OpenTab:
+                var theme = TabTheme ?? throw new InvalidOperationException("Console story tab steps require a palette.");
+                if (IsInitialTab) {
+                    story.WithInitialTab(
+                        TabId,
+                        TabTitle,
+                        TabDialect,
+                        TabWorkingDirectory,
+                        theme,
+                        TabIcon,
+                        string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt);
+                } else {
+                    story.OpenTab(
+                        TabId,
+                        TabTitle,
+                        TabDialect,
+                        TabWorkingDirectory,
+                        theme,
+                        TabIcon,
+                        string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt,
+                        DurationSeconds);
+                }
                 break;
             case TerminalStoryStepKind.SelectTab:
                 story.SelectTab(TabId, DurationSeconds);

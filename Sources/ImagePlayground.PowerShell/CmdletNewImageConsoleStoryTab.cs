@@ -4,8 +4,14 @@ using ChartForgeX.Terminal;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Declares and activates a persistent tab in an ImagePlayground console story.</summary>
-/// <para>Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Declared tabs remain visible in tab-aware window chrome and can be revisited with Select-ImageConsoleStoryTab.</para>
+/// <summary>Declares a persistent tab in an ImagePlayground console story.</summary>
+/// <para>Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Use Active for the initial tab and Select-ImageConsoleStoryTab for later visible switches.</para>
+/// <example>
+///   <summary>Define the initial active PowerShell tab</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active</code>
+///   <para>Names and styles the initial persistent tab without creating an extra transition.</para>
+/// </example>
 /// <example>
 ///   <summary>Open an Ubuntu tab</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -31,6 +37,10 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
     /// <summary>Working directory shown by this tab. Defaults to C:\ for Windows profiles and ~ for POSIX profiles.</summary>
     [Parameter]
     public string? WorkingDirectory { get; set; }
+
+    /// <summary>Configure this declaration as the initial active tab. It must be the first content step.</summary>
+    [Parameter]
+    public SwitchParameter Active { get; set; }
 
     /// <summary>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</summary>
     [Parameter]
@@ -78,7 +88,7 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
         }
 
         WriteObject(new ImageConsoleStoryStep(
-            TerminalStoryStepKind.OpenTab,
+            Active.IsPresent ? TerminalStoryStepKind.OpenTab : TerminalStoryStepKind.DeclareTab,
             string.Empty,
             TerminalTextTone.Default,
             TransitionSeconds,
@@ -88,6 +98,7 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
             dialect,
             string.IsNullOrWhiteSpace(WorkingDirectory) ? defaultDirectory : WorkingDirectory!,
             Palette ?? ConsoleStoryPaletteResolver.Resolve(defaultPalette),
-            icon));
+            icon,
+            isInitialTab: Active.IsPresent));
     }
 }

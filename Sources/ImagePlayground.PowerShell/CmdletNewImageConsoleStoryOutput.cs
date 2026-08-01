@@ -7,7 +7,7 @@ namespace ImagePlayground.PowerShell;
 /// <example>
 ///   <summary>Show successful script output</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success</code>
+///   <code>New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Style Success</code>
 ///   <para>The semantic tone is rendered consistently across SVG, HTML, PNG, GIF, and APNG output.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageConsoleStoryOutput")]
@@ -20,14 +20,15 @@ public sealed class NewImageConsoleStoryOutputCmdlet : PSCmdlet {
 
     /// <summary>Semantic output color.</summary>
     [Parameter]
-    public TerminalTextTone Tone { get; set; } = TerminalTextTone.Default;
+    [Alias("Tone")]
+    public TerminalTextTone Style { get; set; } = TerminalTextTone.Default;
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
         WriteObject(new ImageConsoleStoryStep(
             TerminalStoryStepKind.Output,
             Text,
-            Tone,
+            Style,
             0,
             null));
     }

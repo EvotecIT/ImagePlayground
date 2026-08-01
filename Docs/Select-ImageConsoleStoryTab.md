@@ -21,7 +21,7 @@ Switches an ImagePlayground console story to a previously declared persistent ta
 
 ### EXAMPLE 1
 ```powershell
-PS> Select-ImageConsoleStoryTab -Id main
+PS> Select-ImageConsoleStoryTab -Id WindowsPowerShell
 ```
 
 Activates the initial tab without clearing its existing transcript buffer.

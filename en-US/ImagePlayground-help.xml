@@ -1915,6 +1915,283 @@ img.Save("out.png");</dev:code>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Export-ImageConsoleStory</command:name>
+      <command:verb>Export</command:verb>
+      <command:noun>ImageConsoleStory</command:noun>
+      <maml:description>
+        <maml:para>Exports an authored ImagePlayground console story to SVG, HTML, PNG, GIF, or APNG.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Use New-ImageConsoleStory to compose the reusable story once, then pipe it to this cmdlet for each required format. Export never executes displayed commands.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Export-ImageConsoleStory</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AnimationScale</maml:name>
+          <maml:description>
+            <maml:para>Raster density multiplier used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>EndHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Completed-state hold time used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1,2</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>FramesPerSecond</maml:name>
+          <maml:description>
+            <maml:para>Frame rate used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>10</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumFrames</maml:name>
+          <maml:description>
+            <maml:para>Maximum frame budget used for animated GIF and APNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>240</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoLoop</maml:name>
+          <maml:description>
+            <maml:para>Produce a single-play animated GIF or APNG instead of a repeating animation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the exported story back to the pipeline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Show</maml:name>
+          <maml:description>
+            <maml:para>Open the generated presentation after export.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
+          <maml:name>Story</maml:name>
+          <maml:description>
+            <maml:para>Authored terminal story to export. Accepts pipeline input from New-ImageConsoleStory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TerminalStory</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStory</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AnimationScale</maml:name>
+        <maml:description>
+          <maml:para>Raster density multiplier used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>EndHoldSeconds</maml:name>
+        <maml:description>
+          <maml:para>Completed-state hold time used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1,2</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>FramesPerSecond</maml:name>
+        <maml:description>
+          <maml:para>Frame rate used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>10</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaximumFrames</maml:name>
+        <maml:description>
+          <maml:para>Maximum frame budget used for animated GIF and APNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>240</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NoLoop</maml:name>
+        <maml:description>
+          <maml:para>Produce a single-play animated GIF or APNG instead of a repeating animation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Write the exported story back to the pipeline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Show</maml:name>
+        <maml:description>
+          <maml:para>Open the generated presentation after export.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
+        <maml:name>Story</maml:name>
+        <maml:description>
+          <maml:para>Authored terminal story to export. Accepts pipeline input from New-ImageConsoleStory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TerminalStory</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalStory</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ChartForgeX.Terminal.TerminalStory</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Terminal.TerminalStory</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Export a reusable console story to GIF  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed Slow -Content {
+              New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+              New-ImageConsoleStoryCommand -Text 'dotnet build'
+              New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+              New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
+              Select-ImageConsoleStoryTab -Id Ubuntu
+              New-ImageConsoleStoryCommand -Text './build.sh'
+              New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
+            }
+            $story | Export-ImageConsoleStory -Path '.\demo.gif'</dev:code>
+        <dev:remarks>
+          <maml:para>Creates a Discord-friendly animated GIF while retaining the story object for other exports.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Export-ImageMetadata</command:name>
       <command:verb>Export</command:verb>
       <command:noun>ImageMetadata</command:noun>
@@ -8862,7 +9139,7 @@ img.Save("out.png");</dev:code>
       <command:verb>New</command:verb>
       <command:noun>ImageConsoleStory</command:noun>
       <maml:description>
-        <maml:para>Creates a script-free animated console presentation from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.</maml:para>
+        <maml:para>Creates a reusable script-free console story from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
@@ -8896,12 +9173,12 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1,2</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
@@ -8995,18 +9272,6 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>CharactersPerSecond</maml:name>
-          <maml:description>
-            <maml:para>Simulated command typing speed.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
-          <dev:type>
-            <maml:name>Double</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>42</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Content</maml:name>
           <maml:description>
@@ -9064,12 +9329,12 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1,2</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
@@ -9221,6 +9486,36 @@ img.Save("out.png");</dev:code>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Speed</maml:name>
+          <maml:description>
+            <maml:para>Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.</maml:para>
+            <maml:para>Possible values: Slow, Normal, Fast</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStoryPlaybackSpeed</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Slow</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalStoryPlaybackSpeed</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Normal</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TabHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Theme</maml:name>
           <maml:description>
             <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
@@ -9252,6 +9547,18 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>PowerShell</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="CharactersPerSecond">
+          <maml:name>TypingSpeed</maml:name>
+          <maml:description>
+            <maml:para>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>42</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Width</maml:name>
@@ -9312,18 +9619,6 @@ img.Save("out.png");</dev:code>
           <dev:defaultValue>1</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>CharactersPerSecond</maml:name>
-          <maml:description>
-            <maml:para>Simulated command typing speed.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
-          <dev:type>
-            <maml:name>Double</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>42</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>CustomPrompt</maml:name>
           <maml:description>
             <maml:para>Prompt text used when Dialect is Custom.</maml:para>
@@ -9368,12 +9663,12 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1,2</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
@@ -9524,6 +9819,24 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Speed</maml:name>
+          <maml:description>
+            <maml:para>Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.</maml:para>
+            <maml:para>Possible values: Slow, Normal, Fast</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStoryPlaybackSpeed</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Slow</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalStoryPlaybackSpeed</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Normal</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
           <maml:name>Step</maml:name>
           <maml:description>
@@ -9535,6 +9848,18 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TabHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Theme</maml:name>
@@ -9568,6 +9893,18 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>PowerShell</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="CharactersPerSecond">
+          <maml:name>TypingSpeed</maml:name>
+          <maml:description>
+            <maml:para>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>42</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Width</maml:name>
@@ -9639,12 +9976,12 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1,2</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
@@ -9738,18 +10075,6 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>CharactersPerSecond</maml:name>
-          <maml:description>
-            <maml:para>Simulated command typing speed.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
-          <dev:type>
-            <maml:name>Double</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>42</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>CommandText</maml:name>
           <maml:description>
@@ -9807,12 +10132,12 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>1,2</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
@@ -9976,6 +10301,36 @@ img.Save("out.png");</dev:code>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Speed</maml:name>
+          <maml:description>
+            <maml:para>Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.</maml:para>
+            <maml:para>Possible values: Slow, Normal, Fast</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStoryPlaybackSpeed</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Slow</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalStoryPlaybackSpeed</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Normal</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TabHoldSeconds</maml:name>
+          <maml:description>
+            <maml:para>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Theme</maml:name>
           <maml:description>
             <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
@@ -10007,6 +10362,18 @@ img.Save("out.png");</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>PowerShell</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="CharactersPerSecond">
+          <maml:name>TypingSpeed</maml:name>
+          <maml:description>
+            <maml:para>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>42</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Width</maml:name>
@@ -10065,18 +10432,6 @@ img.Save("out.png");</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>1</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>CharactersPerSecond</maml:name>
-        <maml:description>
-          <maml:para>Simulated command typing speed.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
-        <dev:type>
-          <maml:name>Double</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>42</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>CommandText</maml:name>
@@ -10147,12 +10502,12 @@ img.Save("out.png");</dev:code>
         </dev:type>
         <dev:defaultValue>1,2</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>FilePath</maml:name>
         <maml:description>
           <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
@@ -10315,6 +10670,24 @@ img.Save("out.png");</dev:code>
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Speed</maml:name>
+        <maml:description>
+          <maml:para>Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.</maml:para>
+          <maml:para>Possible values: Slow, Normal, Fast</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalStoryPlaybackSpeed</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Slow</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TerminalStoryPlaybackSpeed</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>Normal</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
         <maml:name>Step</maml:name>
         <maml:description>
@@ -10352,6 +10725,18 @@ img.Save("out.png");</dev:code>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TabHoldSeconds</maml:name>
+        <maml:description>
+          <maml:para>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Theme</maml:name>
         <maml:description>
           <maml:para>Built-in terminal color palette used by composed and captured stories.</maml:para>
@@ -10383,6 +10768,18 @@ img.Save("out.png");</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>PowerShell</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="CharactersPerSecond">
+        <maml:name>TypingSpeed</maml:name>
+        <maml:description>
+          <maml:para>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>42</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Width</maml:name>
@@ -10462,17 +10859,28 @@ img.Save("out.png");</dev:code>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>----------  Example 1: Author a PowerShell console presentation  ----------</maml:title>
+        <maml:title>----------  Example 1: Author a paced multi-tab Windows Terminal presentation  ----------</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageConsoleStory -Title 'pwsh - C:\OpenSource' -WorkingDirectory 'C:\OpenSource' -Theme PowerShell -WindowStyle WindowsTerminal -Content {
-              New-ImageConsoleStoryCommand -Text 'Get-Service -Name WinRM'
-              New-ImageConsoleStoryOutput -Text 'Status   Name               DisplayName' -Tone Accent
-              New-ImageConsoleStoryOutput -Text 'Running  WinRM              Windows Remote Management' -Tone Success
-            } -FilePath '.\service-demo.svg'</dev:code>
+        <dev:code>$story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed Slow -Content {
+               New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+               New-ImageConsoleStoryCommand -Text 'dotnet build'
+               New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+
+               New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
+               Select-ImageConsoleStoryTab -Id WindowsPowerShell
+               New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
+               New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
+
+               New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
+               Select-ImageConsoleStoryTab -Id Ubuntu
+               New-ImageConsoleStoryCommand -Text './build.sh'
+               New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
+             }
+             $story | Export-ImageConsoleStory -Path '.\demo.gif'</dev:code>
         <dev:remarks>
-          <maml:para>Creates a self-contained SVG with command typing, output reveals, a blinking cursor, and a completed reduced-motion state.</maml:para>
+          <maml:para>Creates three persistent tab buffers, leaves readable time before each switch, and exports the shared story through Export-ImageConsoleStory.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -10481,7 +10889,8 @@ img.Save("out.png");</dev:code>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$output = &amp; .\Invoke-EnvironmentAudit.ps1 2&gt;&amp;1 | Out-String -Stream -Width 110
-            $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell -FilePath '.\audit-demo.svg'</dev:code>
+             $story = $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell
+             $story | Export-ImageConsoleStory -Path '.\audit-demo.svg'</dev:code>
         <dev:remarks>
           <maml:para>The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.</maml:para>
         </dev:remarks>
@@ -10491,13 +10900,27 @@ img.Save("out.png");</dev:code>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
-              New-ImageConsoleStoryCommand -Text 'var chart = Chart.Create().WithTitle("Weekly builds");'
-              New-ImageConsoleStoryCommand -Text 'chart.SavePng("weekly-builds.png");'
-              New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png' -Tone Success
-            } -FilePath '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5</dev:code>
+        <dev:code>$story = New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
+               New-ImageConsoleStoryCommand -Text 'var chart = Chart.Create().WithTitle("Weekly builds");'
+               New-ImageConsoleStoryCommand -Text 'chart.SavePng("weekly-builds.png");'
+               New-ImageConsoleStoryOutput -Text 'Saved weekly-builds.png' -Style Success
+             }
+             $story | Export-ImageConsoleStory -Path '.\chart-demo.gif' -FramesPerSecond 10 -EndHoldSeconds 1.5</dev:code>
         <dev:remarks>
           <maml:para>GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----------  Example 4: Tune typing and tab reading time independently  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$story = New-ImageConsoleStory -Speed Normal -TypingSpeed 36 -TabHoldSeconds 2.5 -Content {
+               New-ImageConsoleStoryCommand -Text 'Invoke-ProjectBuild'
+               New-ImageConsoleStoryOutput -Text 'Build completed.' -Style Success
+             }</dev:code>
+        <dev:remarks>
+          <maml:para>TypingSpeed is measured in visible characters per second. A command-level DurationSeconds value remains the most specific override.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -10663,20 +11086,8 @@ img.Save("out.png");</dev:code>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-ImageConsoleStoryOutput</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
-          <maml:name>Text</maml:name>
-          <maml:description>
-            <maml:para>One or more lines of terminal output.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>Tone</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Tone">
+          <maml:name>Style</maml:name>
           <maml:description>
             <maml:para>Semantic output color.</maml:para>
             <maml:para>Possible values: Default, Muted, Accent, Success, Warning, Error</maml:para>
@@ -10696,23 +11107,23 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>Default</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
+          <maml:name>Text</maml:name>
+          <maml:description>
+            <maml:para>One or more lines of terminal output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
-        <maml:name>Text</maml:name>
-        <maml:description>
-          <maml:para>One or more lines of terminal output.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>Tone</maml:name>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Tone">
+        <maml:name>Style</maml:name>
         <maml:description>
           <maml:para>Semantic output color.</maml:para>
           <maml:para>Possible values: Default, Muted, Accent, Success, Warning, Error</maml:para>
@@ -10731,6 +11142,18 @@ img.Save("out.png");</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>Default</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
+        <maml:name>Text</maml:name>
+        <maml:description>
+          <maml:para>One or more lines of terminal output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -10761,7 +11184,7 @@ img.Save("out.png");</dev:code>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Tone Success</dev:code>
+        <dev:code>New-ImageConsoleStoryOutput -Text 'PASS  all checks' -Style Success</dev:code>
         <dev:remarks>
           <maml:para>The semantic tone is rendered consistently across SVG, HTML, PNG, GIF, and APNG output.</maml:para>
         </dev:remarks>
@@ -11224,15 +11647,27 @@ img.Save("out.png");</dev:code>
       <command:verb>New</command:verb>
       <command:noun>ImageConsoleStoryTab</command:noun>
       <maml:description>
-        <maml:para>Declares and activates a persistent tab in an ImagePlayground console story.</maml:para>
+        <maml:para>Declares a persistent tab in an ImagePlayground console story.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Declared tabs remain visible in tab-aware window chrome and can be revisited with Select-ImageConsoleStoryTab.</maml:para>
+      <maml:para>Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Use Active for the initial tab and Select-ImageConsoleStoryTab for later visible switches.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-ImageConsoleStoryTab</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Active</maml:name>
+          <maml:description>
+            <maml:para>Configure this declaration as the initial active tab. It must be the first content step.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="none">
           <maml:name>Id</maml:name>
           <maml:description>
@@ -11315,6 +11750,18 @@ img.Save("out.png");</dev:code>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Active</maml:name>
+        <maml:description>
+          <maml:para>Configure this declaration as the initial active tab. It must be the first content step.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="none">
         <maml:name>Id</maml:name>
         <maml:description>
@@ -11413,7 +11860,17 @@ img.Save("out.png");</dev:code>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>----------  Example 1: Open an Ubuntu tab  ----------</maml:title>
+        <maml:title>----------  Example 1: Define the initial active PowerShell tab  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active</dev:code>
+        <dev:remarks>
+          <maml:para>Names and styles the initial persistent tab without creating an extra transition.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----------  Example 2: Open an Ubuntu tab  ----------</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
@@ -26228,7 +26685,7 @@ polygonal areas.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Select-ImageConsoleStoryTab -Id main</dev:code>
+        <dev:code>Select-ImageConsoleStoryTab -Id WindowsPowerShell</dev:code>
         <dev:remarks>
           <maml:para>Activates the initial tab without clearing its existing transcript buffer.</maml:para>
         </dev:remarks>
