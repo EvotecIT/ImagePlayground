@@ -92,7 +92,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
 
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$true -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$true -SkipFallbackExamples -SyncExternalHelpToProjectRoot -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf #-ImportRequiredModules
 
@@ -146,6 +146,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.VisualBlocks.VisualGrid'
             'CodeGlyphX.QrPixelDecodeOptions'
             'ImagePlayground.Image'
+            'ImagePlayground.PowerShell.ImageConsoleStoryStep'
             'SixLabors.Fonts.HorizontalAlignment'
             'SixLabors.Fonts.VerticalAlignment'
             'SixLabors.ImageSharp.Color'

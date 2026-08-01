@@ -5,6 +5,7 @@
 - Added `New-ImageVisualStory` and `New-ImageVisualMotionCue` as thin PowerShell adapters over ChartForgeX visual grids and motion timelines. SVG and HTML keep script-free motion; PNG renders the same completed state.
 - Added `ConvertTo-ImageStorySource`, `New-ImageStoryPanel`, `New-ImageStoryScene`, `New-ImageStoryOutcome`, and `New-ImageStory` for generic source/terminal/media/result presentations whose completed scene must visibly satisfy every declared outcome.
 - Added native PowerShell syntax spans through `System.Management.Automation` and the optional `ImagePlayground.Syntax.TreeSitter` package for AST-backed C# and Bash highlighting without adding its native runtime payload to the normal module.
+- Added PowerShell-native `New-ImageConsoleStoryCommand`, `New-ImageConsoleStoryOutput`, `New-ImageConsoleStoryTable`, `New-ImageConsoleStoryBlankLine`, and `New-ImageConsoleStoryPause` definitions for composing terminal SVG, GIF, APNG, HTML, and PNG stories without direct fluent-builder calls.
 
 ### Breaking changes
 

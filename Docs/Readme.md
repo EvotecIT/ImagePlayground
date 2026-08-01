@@ -170,7 +170,22 @@ Creates waterfall chart data item.
 Creates word cloud chart term.
 
 ### [New-ImageConsoleStory](New-ImageConsoleStory.md)
-Creates a script-free animated console presentation from authored steps, captured transcript lines, or a native ChartForgeX terminal story.
+Creates a script-free animated console presentation from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.
+
+### [New-ImageConsoleStoryBlankLine](New-ImageConsoleStoryBlankLine.md)
+Creates a blank-line step for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryCommand](New-ImageConsoleStoryCommand.md)
+Creates a typed command step for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryOutput](New-ImageConsoleStoryOutput.md)
+Creates a typed output step for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryPause](New-ImageConsoleStoryPause.md)
+Creates a silent timeline pause for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryTable](New-ImageConsoleStoryTable.md)
+Creates a typed table step from ordinary PowerShell objects.
 
 ### [New-ImageCrop](New-ImageCrop.md)
 Creates a cropped version of an image using rectangular, circular or polygonal areas.
