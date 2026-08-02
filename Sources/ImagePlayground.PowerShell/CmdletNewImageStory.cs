@@ -135,6 +135,11 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         var bundle = string.IsNullOrWhiteSpace(BundlePath)
             ? null
             : PowerShellPathResolver.ResolveFileSystemPath(this, BundlePath!);
+        if (bundle != null && File.Exists(bundle)) {
+            throw new PSArgumentException(
+                $"BundlePath must resolve to a directory, but an existing file was found: {bundle}",
+                nameof(BundlePath));
+        }
         var story = BuildStory();
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);

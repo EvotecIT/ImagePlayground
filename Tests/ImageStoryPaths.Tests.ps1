@@ -107,4 +107,21 @@ Describe 'Image story output paths' {
         } | Should -Throw '*FileSystem provider*'
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
     }
+
+    It 'rejects an existing file as the generic story bundle before overwriting the primary output' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'existing-file-bundle-story.svg'
+        $bundleFile = Join-Path -Path $TestDrive -ChildPath 'bundle-target'
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        [System.IO.File]::WriteAllText($bundleFile, 'existing bundle file')
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Provider path' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath $bundleFile -BundleFormats Transcript
+        } | Should -Throw '*must resolve to a directory*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
+        Get-Content -LiteralPath $bundleFile -Raw | Should -BeExactly 'existing bundle file'
+    }
 }

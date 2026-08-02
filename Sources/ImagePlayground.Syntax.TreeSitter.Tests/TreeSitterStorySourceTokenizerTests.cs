@@ -37,14 +37,17 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void CSharpRecognizesDeclaredTypeNames() {
-        const string source = "class ClassType { } struct StructType { } interface InterfaceType { } enum EnumType { Ready } record RecordType;";
+        const string source = "class ClassType { } struct StructType { } interface InterfaceType { } enum EnumType { Ready } record RecordType; delegate void Callback();";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
 
-        foreach (var typeName in new[] { "ClassType", "StructType", "InterfaceType", "EnumType", "RecordType" }) {
+        foreach (var typeName in new[] { "ClassType", "StructType", "InterfaceType", "EnumType", "RecordType", "Callback" }) {
             Assert.Contains(result.Spans, span =>
                 span.Kind == StorySyntaxKind.Type &&
                 Slice(result, span) == typeName);
         }
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property &&
+            Slice(result, span) == "Ready");
     }
 
     [Fact]

@@ -189,7 +189,8 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 IsCSharpDeclarationName(node, "destructor_declaration")) return StorySyntaxKind.Command;
             if (IsCSharpDeclarationName(node, "property_declaration") ||
                 IsCSharpDeclarationName(node, "event_declaration") ||
-                IsCSharpEventFieldName(node)) return StorySyntaxKind.Property;
+                IsCSharpEventFieldName(node) ||
+                IsCSharpDeclarationName(node, "enum_member_declaration")) return StorySyntaxKind.Property;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
@@ -270,6 +271,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "interface_declaration":
             case "enum_declaration":
             case "record_declaration":
+            case "delegate_declaration":
                 return true;
             default:
                 return false;
