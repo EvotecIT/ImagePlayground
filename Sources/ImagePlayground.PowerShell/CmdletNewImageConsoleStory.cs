@@ -182,11 +182,12 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [ValidateRange(0, 10)]
     public double InitialDelaySeconds { get; set; } = 0.35;
 
-    /// <summary>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</summary>
+    /// <summary>Optional simulated command typing speed in visible characters per second. When omitted, Speed selects the rate: Slow 28, Normal 42, or Fast 72 characters per second.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
     [Alias("CharactersPerSecond")]
+    [PSDefaultValue(Value = "Derived from Speed", Help = "Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second")]
     [ValidateRange(5, 200)]
     public double TypingSpeed { get; set; } = 42;
 

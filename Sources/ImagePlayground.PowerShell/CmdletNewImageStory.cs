@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Win32.SafeHandles;
 using ChartForgeX;
 using ChartForgeX.Stories;
 using ImagePlayground.PowerShell.Stories;
@@ -316,11 +314,11 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
     }
 
     private static bool IsSameAsOrNestedBelowFilePath(string filePath, string bundlePath) {
-        var normalizedFile = GetCanonicalPath(filePath)
+        var normalizedFile = FileSystemPathIdentity.GetCanonicalPath(filePath)
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        var normalizedBundle = GetCanonicalPath(bundlePath)
+        var normalizedBundle = FileSystemPathIdentity.GetCanonicalPath(bundlePath)
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        var comparison = GetFileSystemPathComparison(normalizedFile);
+        var comparison = FileSystemPathIdentity.GetPathComparison(normalizedFile);
         if (string.Equals(normalizedFile, normalizedBundle, comparison)) {
             return true;
         }
@@ -329,116 +327,4 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         return normalizedBundle.StartsWith(filePrefix, comparison);
     }
 
-    private static string GetCanonicalPath(string path) {
-        var fullPath = Path.GetFullPath(path);
-        var suffix = new List<string>();
-        var existingPath = fullPath;
-        while (!File.Exists(existingPath) && !Directory.Exists(existingPath)) {
-            var name = Path.GetFileName(existingPath);
-            var parent = Path.GetDirectoryName(existingPath);
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(parent)) break;
-            suffix.Insert(0, name);
-            existingPath = parent;
-        }
-
-        var canonical = File.Exists(existingPath) || Directory.Exists(existingPath)
-            ? ResolveExistingPath(existingPath)
-            : existingPath;
-        foreach (var segment in suffix) canonical = Path.Combine(canonical, segment);
-        return Path.GetFullPath(canonical);
-    }
-
-    private static string ResolveExistingPath(string path) {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-            using var handle = CreateFile(
-                path,
-                0,
-                FileShare.ReadWrite | FileShare.Delete,
-                IntPtr.Zero,
-                FileMode.Open,
-                FileFlagBackupSemantics,
-                IntPtr.Zero);
-            if (handle.IsInvalid) {
-                throw new IOException($"Unable to resolve the output path identity: {path}",
-                    Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
-            }
-
-            var required = GetFinalPathNameByHandle(handle, null, 0, 0);
-            if (required == 0) {
-                throw new IOException($"Unable to resolve the output path identity: {path}",
-                    Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
-            }
-            var buffer = new System.Text.StringBuilder((int)required + 1);
-            if (GetFinalPathNameByHandle(handle, buffer, buffer.Capacity, 0) == 0) {
-                throw new IOException($"Unable to resolve the output path identity: {path}",
-                    Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
-            }
-            var resolved = buffer.ToString();
-            if (resolved.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase)) {
-                return @"\\" + resolved.Substring(8);
-            }
-            return resolved.StartsWith(@"\\?\", StringComparison.OrdinalIgnoreCase)
-                ? resolved.Substring(4)
-                : resolved;
-        }
-
-        var pointer = RealPath(path, IntPtr.Zero);
-        if (pointer == IntPtr.Zero) {
-            throw new IOException($"Unable to resolve the output path identity: {path}");
-        }
-        try {
-            return Marshal.PtrToStringAnsi(pointer) ?? path;
-        } finally {
-            Free(pointer);
-        }
-    }
-
-    private const int FileFlagBackupSemantics = 0x02000000;
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    private static extern SafeFileHandle CreateFile(
-        string fileName,
-        int desiredAccess,
-        FileShare shareMode,
-        IntPtr securityAttributes,
-        FileMode creationDisposition,
-        int flagsAndAttributes,
-        IntPtr templateFile);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    private static extern uint GetFinalPathNameByHandle(
-        SafeFileHandle file,
-        System.Text.StringBuilder? path,
-        int pathLength,
-        int flags);
-
-    [DllImport("libc", EntryPoint = "realpath", SetLastError = true)]
-    private static extern IntPtr RealPath(string path, IntPtr resolvedPath);
-
-    [DllImport("libc", EntryPoint = "free")]
-    private static extern void Free(IntPtr pointer);
-
-    private static System.StringComparison GetFileSystemPathComparison(string path) {
-        var directory = Path.GetDirectoryName(path);
-        while (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory)) {
-            directory = Path.GetDirectoryName(directory);
-        }
-        if (string.IsNullOrWhiteSpace(directory)) directory = Path.GetPathRoot(path);
-        if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory)) {
-            return System.StringComparison.Ordinal;
-        }
-
-        var probeName = ".imageplayground-case-probe-" + System.Guid.NewGuid().ToString("N");
-        var probePath = Path.Combine(directory!, probeName);
-        var alternatePath = Path.Combine(directory!, probeName.ToUpperInvariant());
-        try {
-            using (new FileStream(probePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete)) {
-            }
-            return File.Exists(alternatePath)
-                ? System.StringComparison.OrdinalIgnoreCase
-                : System.StringComparison.Ordinal;
-        } finally {
-            if (File.Exists(probePath)) File.Delete(probePath);
-        }
-    }
 }

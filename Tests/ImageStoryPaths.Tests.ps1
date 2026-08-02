@@ -205,6 +205,36 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
     }
 
+    It 'rejects bundle collisions reached through a dangling symbolic file alias before writing output' {
+        $realRoot = Join-Path -Path $TestDrive -ChildPath 'dangling-real-root'
+        $realOutput = Join-Path -Path $realRoot -ChildPath 'story.svg'
+        $aliasOutput = Join-Path -Path $TestDrive -ChildPath 'dangling-story.svg'
+        $bundle = Join-Path -Path $realOutput -ChildPath 'bundle'
+        New-Item -ItemType Directory -Path $realRoot -Force | Out-Null
+        try {
+            New-Item -ItemType SymbolicLink -Path $aliasOutput -Target $realOutput -ErrorAction Stop | Out-Null
+        } catch {
+            Set-ItResult -Skipped -Because "Symbolic link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+        $parameters = @{
+            Title         = 'Dangling aliased bundle path'
+            Scenes        = $scene
+            Outcomes      = $outcome
+            FilePath      = $aliasOutput
+            BundlePath    = $bundle
+            BundleFormats = 'Transcript'
+        }
+
+        { New-ImageStory @parameters } | Should -Throw '*nested beneath*'
+        Test-Path -LiteralPath $realOutput | Should -BeFalse
+        Test-Path -LiteralPath $bundle | Should -BeFalse
+    }
+
     It 'uses the target volume case sensitivity when comparing output and bundle paths' {
         $probe = Join-Path -Path $TestDrive -ChildPath 'case-probe'
         New-Item -ItemType Directory -Path $probe | Out-Null
@@ -234,6 +264,29 @@ Describe 'Image story output paths' {
             New-ImageStory @parameters
             Test-Path -LiteralPath $output | Should -BeTrue
             Test-Path -LiteralPath (Join-Path -Path $bundle -ChildPath 'story.json') | Should -BeTrue
+        }
+    }
+
+    It 'compares story paths without writing a probe into the target directory' -Skip:($IsWindows -or $env:OS -eq 'Windows_NT') {
+        $readOnlyRoot = Join-Path -Path $TestDrive -ChildPath 'read-only-path-comparison'
+        New-Item -ItemType Directory -Path $readOnlyRoot | Out-Null
+        $originalMode = [System.IO.File]::GetUnixFileMode($readOnlyRoot)
+        try {
+            $readOnlyMode = [System.IO.UnixFileMode]::UserRead -bor [System.IO.UnixFileMode]::UserExecute `
+                -bor [System.IO.UnixFileMode]::GroupRead -bor [System.IO.UnixFileMode]::GroupExecute `
+                -bor [System.IO.UnixFileMode]::OtherRead -bor [System.IO.UnixFileMode]::OtherExecute
+            [System.IO.File]::SetUnixFileMode($readOnlyRoot, $readOnlyMode)
+            $output = Join-Path -Path $readOnlyRoot -ChildPath 'story.svg'
+            $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+            $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+            $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+            {
+                New-ImageStory -Title 'Read-only comparison' -Scenes $scene -Outcomes $outcome `
+                    -FilePath $output -BundlePath $output -BundleFormats Transcript
+            } | Should -Throw '*must not resolve to the same path*'
+        } finally {
+            [System.IO.File]::SetUnixFileMode($readOnlyRoot, $originalMode)
         }
     }
 

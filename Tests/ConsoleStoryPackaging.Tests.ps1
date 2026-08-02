@@ -31,6 +31,12 @@ Describe 'Image console story packaging contracts' {
         $parameterNames | Should -Contain 'TabHoldSeconds'
         $parameterNames | Should -Contain 'TypingSpeed'
 
+        $typingSpeedDefaults = @($consoleStory.SelectNodes(".//*[local-name()='parameter'][*[local-name()='name' and text()='TypingSpeed']]/*[local-name()='defaultValue']") | ForEach-Object InnerText)
+        $typingSpeedDefaults.Count | Should -BeGreaterThan 0
+        foreach ($typingSpeedDefault in $typingSpeedDefaults) {
+            $typingSpeedDefault | Should -Be 'Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second'
+        }
+
         $exampleText = @($consoleStory.SelectNodes(".//*[local-name()='example']") | ForEach-Object InnerText) -join "`n"
         $exampleText | Should -Match 'WindowsTerminal'
         $exampleText | Should -Match 'New-ImageConsoleStoryTab'

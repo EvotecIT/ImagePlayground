@@ -167,4 +167,25 @@ Describe 'New-ImageVisualStory' {
             Remove-Variable -Name ImagePlaygroundVisualStoryConflictInvoked -Scope Global -ErrorAction SilentlyContinue
         }
     }
+
+    It 'rejects multiple native grids before invoking the motion definition' {
+        $file = Join-Path -Path $TestDir -ChildPath 'multiple-grids-before-motion.svg'
+        $global:ImagePlaygroundVisualStoryGridMotionInvoked = $false
+        $first = [ChartForgeX.VisualBlocks.VisualGrid]::Create()
+        $second = [ChartForgeX.VisualBlocks.VisualGrid]::Create()
+
+        try {
+            {
+                @($first, $second) | New-ImageVisualStory -MotionDefinition {
+                    $global:ImagePlaygroundVisualStoryGridMotionInvoked = $true
+                    New-ImageVisualMotionCue -TargetId metric -Effect Fade
+                } -FilePath $file
+            } | Should -Throw '*accepts one ChartForgeX VisualGrid*'
+
+            $global:ImagePlaygroundVisualStoryGridMotionInvoked | Should -BeFalse
+            Test-Path -Path $file | Should -BeFalse
+        } finally {
+            Remove-Variable -Name ImagePlaygroundVisualStoryGridMotionInvoked -Scope Global -ErrorAction SilentlyContinue
+        }
+    }
 }

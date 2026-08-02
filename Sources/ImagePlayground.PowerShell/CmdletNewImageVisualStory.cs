@@ -74,6 +74,7 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
         PowerShellPathResolver.ValidateFileDestination(output, nameof(FilePath), nameof(FilePath));
+        ValidateGridInput();
 
         var motion = BuildMotion();
         var grid = BuildGrid();
@@ -111,6 +112,20 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
         ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleMotionSources", ErrorCategory.InvalidArgument, null));
     }
 
+    private void ValidateGridInput() {
+        if (StoryScript != null) {
+            return;
+        }
+        if (_grids.Count == 0) {
+            var exception = new PSArgumentException("New-ImageVisualStory requires one ChartForgeX VisualGrid.");
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMissingGrid", ErrorCategory.InvalidArgument, null));
+        }
+        if (_grids.Count > 1) {
+            var exception = new PSArgumentException("New-ImageVisualStory accepts one ChartForgeX VisualGrid per output path.");
+            ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleGrids", ErrorCategory.InvalidArgument, null));
+        }
+    }
+
     private VisualGrid BuildGrid() {
         if (StoryScript != null) {
             var grid = VisualGrid.Create();
@@ -122,15 +137,6 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             }
 
             return grid;
-        }
-
-        if (_grids.Count == 0) {
-            var exception = new PSArgumentException("New-ImageVisualStory requires one ChartForgeX VisualGrid.");
-            ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMissingGrid", ErrorCategory.InvalidArgument, null));
-        }
-        if (_grids.Count > 1) {
-            var exception = new PSArgumentException("New-ImageVisualStory accepts one ChartForgeX VisualGrid per output path.");
-            ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleGrids", ErrorCategory.InvalidArgument, null));
         }
 
         return _grids[0];

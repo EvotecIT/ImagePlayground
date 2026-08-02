@@ -9465,7 +9465,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>42</dev:defaultValue>
+          <dev:defaultValue>Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: Width -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9747,7 +9747,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>42</dev:defaultValue>
+          <dev:defaultValue>Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: Width -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -10128,7 +10128,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>42</dev:defaultValue>
+          <dev:defaultValue>Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: Width -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -10406,14 +10406,14 @@ img.Save("out.png");</dev:code>
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named" aliases="CharactersPerSecond">
         <maml:name>TypingSpeed</maml:name>
         <maml:description>
-          <maml:para>Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.</maml:para>
+          <maml:para>Optional simulated command typing speed in visible characters per second. When omitted, Speed selects the rate: Slow 28, Normal 42, or Fast 72 characters per second.</maml:para>
         </maml:description>
         <command:parameterValue required="true">double</command:parameterValue>
         <dev:type>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>42</dev:defaultValue>
+        <dev:defaultValue>Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second</dev:defaultValue>
       </command:parameter>
       <!-- Parameter: LineDelaySeconds -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">

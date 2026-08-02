@@ -217,7 +217,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 IsCSharpDeclarationName(node, "destructor_declaration")) return StorySyntaxKind.Command;
             if (IsCSharpDeclarationName(node, "property_declaration") ||
                 IsCSharpDeclarationName(node, "event_declaration") ||
-                IsCSharpEventFieldName(node) ||
+                IsCSharpFieldName(node) ||
                 IsCSharpDeclarationName(node, "enum_member_declaration") ||
                 IsCSharpInitializerMemberName(node)) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
@@ -372,7 +372,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         return false;
     }
 
-    private bool IsCSharpEventFieldName(Node node) {
+    private bool IsCSharpFieldName(Node node) {
         var parent = node.Parent;
         if (Language != "csharp" ||
             parent == null ||
@@ -383,7 +383,8 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
         var current = parent.Parent;
         while (current != null) {
-            if (string.Equals(current.Type, "event_field_declaration", StringComparison.Ordinal)) {
+            if (string.Equals(current.Type, "field_declaration", StringComparison.Ordinal) ||
+                string.Equals(current.Type, "event_field_declaration", StringComparison.Ordinal)) {
                 return true;
             }
             if (!string.Equals(current.Type, "variable_declaration", StringComparison.Ordinal) &&

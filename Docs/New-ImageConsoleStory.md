@@ -548,7 +548,7 @@ Accept wildcard characters: False
 ```
 
 ### -TypingSpeed
-Simulated command typing speed in visible characters per second. Overrides the selected Speed preset.
+Optional simulated command typing speed in visible characters per second. When omitted, Speed selects the rate: Slow 28, Normal 42, or Fast 72 characters per second.
 
 ```yaml
 Type: Double
@@ -558,7 +558,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 42
+Default value: Slow: 28 characters/second; Normal: 42 characters/second; Fast: 72 characters/second
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

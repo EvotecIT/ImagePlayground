@@ -110,11 +110,13 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void CSharpRecognizesDeclarationNamesByRole() {
-        const string source = "class Demo { void Work() { } int Count { get; } }";
+        const string source = "class Demo { void Work() { } int Count { get; } public int Total; void Reset() { int local = 0; } }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
 
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "Work");
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Count");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Total");
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "local");
     }
 
     [Fact]
