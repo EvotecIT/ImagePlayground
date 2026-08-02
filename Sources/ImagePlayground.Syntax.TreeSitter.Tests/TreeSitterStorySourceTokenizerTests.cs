@@ -115,6 +115,29 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpRecognizesGenericEventAndTupleDeclarationRoles() {
+        const string source = "class Box<T> { public event EventHandler Changed; public (int count, string name) Value; public T Item; void Map<TItem>(TItem value) { } }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var typeParameter in new[] { "T", "TItem" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Type &&
+                Slice(result, span) == typeParameter);
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Variable &&
+                Slice(result, span) == typeParameter);
+        }
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property &&
+            Slice(result, span) == "Changed");
+        foreach (var tupleLabel in new[] { "count", "name" }) {
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Type &&
+                Slice(result, span) == tupleLabel);
+        }
+    }
+
+    [Fact]
     public void CSharpRecognizesNamedArgumentsAsParameters() {
         const string source = "client.Send(timeout: 30, cancellationToken: token);";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);

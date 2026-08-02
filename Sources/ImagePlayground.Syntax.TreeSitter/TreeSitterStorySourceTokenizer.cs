@@ -177,6 +177,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             var parentType = node.Parent?.Type ?? string.Empty;
             if (IsCSharpNamespaceName(node)) return StorySyntaxKind.Plain;
             if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
+            if (IsCSharpTypeParameterDeclaration(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
             if (IsCSharpFormalParameter(node)) return StorySyntaxKind.Parameter;
@@ -187,7 +188,8 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 IsCSharpDeclarationName(node, "constructor_declaration") ||
                 IsCSharpDeclarationName(node, "destructor_declaration")) return StorySyntaxKind.Command;
             if (IsCSharpDeclarationName(node, "property_declaration") ||
-                IsCSharpDeclarationName(node, "event_declaration")) return StorySyntaxKind.Property;
+                IsCSharpDeclarationName(node, "event_declaration") ||
+                IsCSharpEventFieldName(node)) return StorySyntaxKind.Property;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
@@ -276,6 +278,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private bool IsCSharpTypeReference(Node node) {
         if (Language != "csharp") return false;
+        if (IsCSharpTupleElementName(node)) return false;
         var current = node.Parent;
         while (current != null) {
             if (string.Equals(current.Type, "type_argument_list", StringComparison.Ordinal)) {
@@ -292,6 +295,45 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             current = current.Parent;
         }
         return false;
+    }
+
+    private bool IsCSharpTypeParameterDeclaration(Node node) {
+        var parent = node.Parent;
+        return Language == "csharp" &&
+               parent != null &&
+               string.Equals(parent.Type, "type_parameter", StringComparison.Ordinal) &&
+               IsInsideField(parent, node, "name");
+    }
+
+    private bool IsCSharpEventFieldName(Node node) {
+        var parent = node.Parent;
+        if (Language != "csharp" ||
+            parent == null ||
+            !string.Equals(parent.Type, "variable_declarator", StringComparison.Ordinal) ||
+            !IsInsideField(parent, node, "name")) {
+            return false;
+        }
+
+        var current = parent.Parent;
+        while (current != null) {
+            if (string.Equals(current.Type, "event_field_declaration", StringComparison.Ordinal)) {
+                return true;
+            }
+            if (!string.Equals(current.Type, "variable_declaration", StringComparison.Ordinal) &&
+                Contains(current.Type, "declaration")) {
+                return false;
+            }
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private bool IsCSharpTupleElementName(Node node) {
+        var parent = node.Parent;
+        return Language == "csharp" &&
+               parent != null &&
+               string.Equals(parent.Type, "tuple_element", StringComparison.Ordinal) &&
+               IsInsideField(parent, node, "name");
     }
 
     private bool IsCSharpAttributeName(Node node) {

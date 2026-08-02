@@ -276,22 +276,25 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void EndProcessing() {
-        var story = BuildStory();
         if (string.IsNullOrWhiteSpace(FilePath)) {
             if (Show.IsPresent) {
                 throw new PSArgumentException("New-ImageConsoleStory -Show requires -FilePath, or pipe the story to Export-ImageConsoleStory -Show.", nameof(Show));
             }
+
+            var story = BuildStory();
             WriteObject(story);
             return;
         }
 
-        var output = ConsoleStoryExporter.Write(this, story, FilePath!, BuildAnimationOptions());
+        var output = ConsoleStoryExporter.ResolveOutputPath(this, FilePath!);
+        var storyWithOutput = BuildStory();
+        ConsoleStoryExporter.Write(this, storyWithOutput, output, BuildAnimationOptions());
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
         }
         if (PassThru.IsPresent) {
-            WriteObject(story);
+            WriteObject(storyWithOutput);
         }
     }
 

@@ -67,10 +67,44 @@ Describe 'Image story output paths' {
     }
 
     It 'rejects non-FileSystem providers for story output' {
+        $marker = Join-Path -Path $TestDrive -ChildPath 'console-story-content-ran.txt'
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
         {
-            New-ImageConsoleStory -Content {
-                New-ImageConsoleStoryOutput -Text 'ready'
-            } -FilePath 'Variable:\provider-console.svg'
+            New-ImageConsoleStory -Content $content -FilePath 'Variable:\provider-console.svg'
         } | Should -Throw '*FileSystem provider*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+    }
+
+    It 'validates console story options before invoking Content' {
+        $marker = Join-Path -Path $TestDrive -ChildPath 'invalid-console-content-ran.txt'
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
+        { New-ImageConsoleStory -Content $content -FilePath (Join-Path -Path $TestDrive -ChildPath 'story.txt') } |
+            Should -Throw '*supports only*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+
+        { New-ImageConsoleStory -Content $content -Show } | Should -Throw '*requires -FilePath*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+    }
+
+    It 'validates the generic story bundle before overwriting the primary output' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'existing-story.svg'
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Provider path' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath 'Variable:\provider-bundle' -BundleFormats Transcript
+        } | Should -Throw '*FileSystem provider*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
     }
 }

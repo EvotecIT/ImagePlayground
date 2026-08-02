@@ -8,6 +8,14 @@ namespace ImagePlayground.PowerShell;
 
 /// <summary>Writes one terminal story through the shared ChartForgeX format renderers.</summary>
 internal static class ConsoleStoryExporter {
+    internal static string ResolveOutputPath(PSCmdlet cmdlet, string path) {
+        if (cmdlet == null) throw new ArgumentNullException(nameof(cmdlet));
+
+        var output = PowerShellPathResolver.ResolveFileSystemPath(cmdlet, path);
+        ValidateExtension(Path.GetExtension(output));
+        return output;
+    }
+
     internal static string Write(
         PSCmdlet cmdlet,
         TerminalStory story,
@@ -17,9 +25,8 @@ internal static class ConsoleStoryExporter {
         if (story == null) throw new ArgumentNullException(nameof(story));
         if (animationOptions == null) throw new ArgumentNullException(nameof(animationOptions));
 
-        var output = PowerShellPathResolver.ResolveFileSystemPath(cmdlet, path);
+        var output = ResolveOutputPath(cmdlet, path);
         var extension = Path.GetExtension(output);
-        ValidateExtension(extension);
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) {
             Directory.CreateDirectory(directory!);
