@@ -225,6 +225,17 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpPreservesTypesInQualifiedStaticMemberChains() {
+        const string source = "System.Console.WriteLine(); obj.Factory.Create();";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Console");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "WriteLine");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Factory");
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Factory");
+    }
+
+    [Fact]
     public void CSharpLeavesNamespaceAndImportNamesPlain() {
         const string source = "namespace Company.Product; using System.Text; using Alias = Third.Party; class Demo { System.Text.StringBuilder field; }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
@@ -320,6 +331,20 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.True(result.Spans.Any(span =>
             span.Kind == StorySyntaxKind.Command &&
             Slice(result, span) == "compute"), DescribeSpans(result));
+    }
+
+    [Fact]
+    public void BashPreservesVariablesInsideStringsNestedInExpansions() {
+        const string source = "printf '%s' \"${value:-$(printf '%s' \"$fallback\")}\"";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Variable &&
+            Slice(result, span) == "$fallback");
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.String &&
+            span.Start <= source.IndexOf("$fallback", StringComparison.Ordinal) &&
+            span.End >= source.IndexOf("$fallback", StringComparison.Ordinal) + "$fallback".Length);
     }
 
     [Fact]

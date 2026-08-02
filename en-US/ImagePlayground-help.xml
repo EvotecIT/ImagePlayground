@@ -10451,14 +10451,14 @@ img.Save("out.png");</dev:code>
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
         <maml:name>TabHoldSeconds</maml:name>
         <maml:description>
-          <maml:para>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</maml:para>
+          <maml:para>Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="true">double</command:parameterValue>
         <dev:type>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
+        <dev:defaultValue>Slow: 2 seconds; Normal: 0.9 seconds; Fast: 0.35 seconds</dev:defaultValue>
       </command:parameter>
       <!-- Parameter: NoFinalPrompt -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">

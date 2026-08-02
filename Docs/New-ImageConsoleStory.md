@@ -500,7 +500,7 @@ Accept wildcard characters: False
 ```
 
 ### -TabHoldSeconds
-Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.
+Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.
 
 ```yaml
 Type: Double
@@ -510,7 +510,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: Slow: 2 seconds; Normal: 0.9 seconds; Fast: 0.35 seconds
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

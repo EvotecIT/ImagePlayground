@@ -153,6 +153,40 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
     }
 
+    It 'rejects bundle collisions reached through a symbolic directory alias before overwriting output' {
+        $realRoot = Join-Path -Path $TestDrive -ChildPath 'real-story-root'
+        $aliasRoot = Join-Path -Path $TestDrive -ChildPath 'story-alias'
+        New-Item -ItemType Directory -Path $realRoot -Force | Out-Null
+        try {
+            if ($IsWindows -or $env:OS -eq 'Windows_NT') {
+                New-Item -ItemType Junction -Path $aliasRoot -Target $realRoot -ErrorAction Stop | Out-Null
+            } else {
+                New-Item -ItemType SymbolicLink -Path $aliasRoot -Target $realRoot -ErrorAction Stop | Out-Null
+            }
+        } catch {
+            Set-ItResult -Skipped -Because "Symbolic link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+
+        $output = Join-Path -Path $aliasRoot -ChildPath 'story.svg'
+        $bundle = Join-Path -Path $realRoot -ChildPath 'story.svg\bundle'
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+        $parameters = @{
+            Title         = 'Aliased bundle path'
+            Scenes        = $scene
+            Outcomes      = $outcome
+            FilePath      = $output
+            BundlePath    = $bundle
+            BundleFormats = 'Transcript'
+        }
+
+        { New-ImageStory @parameters } | Should -Throw '*nested beneath*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
+    }
+
     It 'uses the target volume case sensitivity when comparing output and bundle paths' {
         $probe = Join-Path -Path $TestDrive -ChildPath 'case-probe'
         New-Item -ItemType Directory -Path $probe | Out-Null

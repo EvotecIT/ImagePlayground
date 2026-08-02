@@ -126,6 +126,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private void CollectBashExpansionOverrides(Node node, List<SemanticRange> output) {
         var kind = ContainerKind(node);
+        if (kind == StorySyntaxKind.String) {
+            CollectString(node, output);
+            return;
+        }
         if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.Variable) {
             Add(output, node, kind);
             return;
@@ -201,6 +205,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (IsCSharpTypeParameterConstraint(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
+            if (IsCSharpQualifiedTypeMemberName(node)) return StorySyntaxKind.Type;
             if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
             if (IsCSharpFormalParameter(node)) return StorySyntaxKind.Parameter;
@@ -431,6 +436,39 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             return false;
         }
         return IsInsideField(parent, node, "name");
+    }
+
+    private bool IsCSharpQualifiedTypeMemberName(Node node) {
+        if (!IsCSharpMemberName(node)) return false;
+        var memberAccess = node.Parent;
+        var outerMemberAccess = memberAccess?.Parent;
+        if (memberAccess == null ||
+            outerMemberAccess == null ||
+            !Contains(outerMemberAccess.Type, "member_access") ||
+            !IsInsideField(outerMemberAccess, memberAccess, "expression")) {
+            return false;
+        }
+
+        Node? receiver = null;
+        foreach (var field in memberAccess.Fields) {
+            if (!string.Equals(field.Key, "expression", StringComparison.Ordinal)) continue;
+            receiver = field.Value;
+            break;
+        }
+        if (receiver == null) return false;
+        while (Contains(receiver.Type, "member_access")) {
+            Node? next = null;
+            foreach (var field in receiver.Fields) {
+                if (!string.Equals(field.Key, "expression", StringComparison.Ordinal)) continue;
+                next = field.Value;
+                break;
+            }
+            if (next == null || ReferenceEquals(next, receiver)) break;
+            receiver = next;
+        }
+        return receiver.Type == "identifier" &&
+               receiver.Text.Length > 0 &&
+               char.IsUpper(receiver.Text[0]);
     }
 
     private bool IsCSharpNamedArgument(Node node) {

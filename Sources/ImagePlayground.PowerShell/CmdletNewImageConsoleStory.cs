@@ -204,10 +204,11 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = StepSet)]
     public TerminalStoryPlaybackSpeed Speed { get; set; } = TerminalStoryPlaybackSpeed.Normal;
 
-    /// <summary>Optional minimum reading time after content appears and before the active tab changes. Overrides the selected Speed preset.</summary>
+    /// <summary>Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
+    [PSDefaultValue(Value = "Derived from Speed", Help = "Slow: 2 seconds; Normal: 0.9 seconds; Fast: 0.35 seconds")]
     [ValidateRange(0, 10)]
     public double TabHoldSeconds { get; set; }
 
