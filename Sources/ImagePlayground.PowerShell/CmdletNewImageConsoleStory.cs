@@ -178,6 +178,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
+    [PSDefaultValue(Value = 0.35, Help = "0.35")]
     [ValidateRange(0, 10)]
     public double InitialDelaySeconds { get; set; } = 0.35;
 
@@ -193,6 +194,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
+    [PSDefaultValue(Value = 0.08, Help = "0.08")]
     [ValidateRange(0, 3)]
     public double LineDelaySeconds { get; set; } = 0.08;
 
@@ -233,6 +235,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
 
     /// <summary>Completed-state hold time used for animated GIF and APNG output.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 1.2, Help = "1.2")]
     [ValidateRange(0, 10)]
     public double EndHoldSeconds { get; set; } = 1.2;
 

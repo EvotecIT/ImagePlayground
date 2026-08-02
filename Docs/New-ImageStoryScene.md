@@ -37,7 +37,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 2,5
+Default value: 2.5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

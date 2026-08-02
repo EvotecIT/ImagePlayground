@@ -90,11 +90,13 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
 
     /// <summary>Completed-scene hold time for GIF and APNG output.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 1.5, Help = "1.5")]
     [ValidateRange(0, 10)]
     public double EndHoldSeconds { get; set; } = 1.5;
 
     /// <summary>Cross-fade duration between scenes.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 0.24, Help = "0.24")]
     [ValidateRange(0, 1)]
     public double TransitionSeconds { get; set; } = 0.24;
 

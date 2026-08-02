@@ -63,6 +63,7 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
 
     /// <summary>Duration of the visual switch from the previously active tab.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 0.2, Help = "0.2")]
     [ValidateRange(0, 2)]
     public double TransitionSeconds { get; set; } = 0.2;
 

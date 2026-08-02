@@ -28,6 +28,7 @@ public sealed class NewImageStorySceneCmdlet : PSCmdlet {
 
     /// <summary>Scene display duration.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 2.5, Help = "2.5")]
     [ValidateRange(0.25, 60)]
     public double DurationSeconds { get; set; } = 2.5;
 

@@ -1966,7 +1966,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,2</dev:defaultValue>
+          <dev:defaultValue>1.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: FramesPerSecond -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -2070,7 +2070,7 @@ img.Save("out.png");</dev:code>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>1,2</dev:defaultValue>
+        <dev:defaultValue>1.2</dev:defaultValue>
       </command:parameter>
       <!-- Parameter: AnimationScale -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9163,7 +9163,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,2</dev:defaultValue>
+          <dev:defaultValue>1.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: FilePath -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9282,7 +9282,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,2</dev:defaultValue>
+          <dev:defaultValue>1.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: FilePath -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9321,7 +9321,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,35</dev:defaultValue>
+          <dev:defaultValue>0.35</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: LineDelaySeconds -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9331,7 +9331,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,08</dev:defaultValue>
+          <dev:defaultValue>0.08</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: LineHeight -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9564,7 +9564,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,2</dev:defaultValue>
+          <dev:defaultValue>1.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: FilePath -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9603,7 +9603,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,35</dev:defaultValue>
+          <dev:defaultValue>0.35</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: LineDelaySeconds -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9613,7 +9613,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,08</dev:defaultValue>
+          <dev:defaultValue>0.08</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: LineHeight -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9816,7 +9816,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,2</dev:defaultValue>
+          <dev:defaultValue>1.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: FilePath -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9945,7 +9945,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,2</dev:defaultValue>
+          <dev:defaultValue>1.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: FilePath -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9984,7 +9984,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,35</dev:defaultValue>
+          <dev:defaultValue>0.35</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: LineDelaySeconds -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -9994,7 +9994,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,08</dev:defaultValue>
+          <dev:defaultValue>0.08</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: LineHeight -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -10400,7 +10400,7 @@ img.Save("out.png");</dev:code>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0,35</dev:defaultValue>
+        <dev:defaultValue>0.35</dev:defaultValue>
       </command:parameter>
       <!-- Parameter: TypingSpeed -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named" aliases="CharactersPerSecond">
@@ -10426,7 +10426,7 @@ img.Save("out.png");</dev:code>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0,08</dev:defaultValue>
+        <dev:defaultValue>0.08</dev:defaultValue>
       </command:parameter>
       <!-- Parameter: Speed -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -10522,7 +10522,7 @@ img.Save("out.png");</dev:code>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>1,2</dev:defaultValue>
+        <dev:defaultValue>1.2</dev:defaultValue>
       </command:parameter>
       <!-- Parameter: AnimationScale -->
       <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -11492,7 +11492,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,2</dev:defaultValue>
+          <dev:defaultValue>0.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: WorkingDirectory -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -11563,7 +11563,7 @@ img.Save("out.png");</dev:code>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,2</dev:defaultValue>
+          <dev:defaultValue>0.2</dev:defaultValue>
         </command:parameter>
         <!-- Parameter: WorkingDirectory -->
         <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
@@ -11676,7 +11676,7 @@ img.Save("out.png");</dev:code>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0,2</dev:defaultValue>
+        <dev:defaultValue>0.2</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />
@@ -20478,7 +20478,7 @@ polygonal areas.</maml:para>
             <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,5</dev:defaultValue>
+          <dev:defaultValue>1.5</dev:defaultValue>
         </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
@@ -20622,7 +20622,7 @@ polygonal areas.</maml:para>
             <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,24</dev:defaultValue>
+          <dev:defaultValue>0.24</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Width</maml:name>
@@ -20705,7 +20705,7 @@ polygonal areas.</maml:para>
             <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>1,5</dev:defaultValue>
+          <dev:defaultValue>1.5</dev:defaultValue>
         </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilePath</maml:name>
@@ -20801,7 +20801,7 @@ polygonal areas.</maml:para>
             <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,24</dev:defaultValue>
+          <dev:defaultValue>0.24</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -20884,7 +20884,7 @@ polygonal areas.</maml:para>
           <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>1,5</dev:defaultValue>
+        <dev:defaultValue>1.5</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>FilePath</maml:name>
@@ -21040,7 +21040,7 @@ polygonal areas.</maml:para>
           <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0,24</dev:defaultValue>
+        <dev:defaultValue>0.24</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Width</maml:name>
@@ -21922,7 +21922,7 @@ polygonal areas.</maml:para>
             <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>2,5</dev:defaultValue>
+          <dev:defaultValue>2.5</dev:defaultValue>
         </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Id</maml:name>
@@ -21991,7 +21991,7 @@ polygonal areas.</maml:para>
           <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>2,5</dev:defaultValue>
+        <dev:defaultValue>2.5</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Id</maml:name>
@@ -25199,7 +25199,7 @@ polygonal areas.</maml:para>
             <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,7</dev:defaultValue>
+          <dev:defaultValue>0.7</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Easing</maml:name>
@@ -25289,7 +25289,7 @@ polygonal areas.</maml:para>
           <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0,7</dev:defaultValue>
+        <dev:defaultValue>0.7</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Easing</maml:name>
@@ -26471,7 +26471,7 @@ polygonal areas.</maml:para>
             <maml:name>System.Double</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0,2</dev:defaultValue>
+          <dev:defaultValue>0.2</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -26500,7 +26500,7 @@ polygonal areas.</maml:para>
           <maml:name>System.Double</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0,2</dev:defaultValue>
+        <dev:defaultValue>0.2</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />

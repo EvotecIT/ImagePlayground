@@ -70,15 +70,16 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
     /// <inheritdoc />
     protected override void EndProcessing() {
         ValidateMotionSources();
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
+        var extension = Path.GetExtension(output);
+        ValidateExtension(extension, output);
+
         var grid = BuildGrid();
         var motion = BuildMotion();
         if (motion != null) {
             grid.WithMotion(motion);
         }
 
-        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
-        var extension = Path.GetExtension(output);
-        ValidateExtension(extension, output);
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) {
             Directory.CreateDirectory(directory!);

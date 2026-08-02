@@ -55,14 +55,41 @@ Describe 'New-ImageVisualStory' {
         $bytes[3] | Should -Be 71
     }
 
-    It 'rejects unsupported output extensions' {
+    It 'rejects unsupported output extensions before invoking the story script' {
         $file = Join-Path -Path $TestDir -ChildPath 'visual-story.gif'
-        {
-            New-ImageVisualStory -StoryScript {
-                param($Story)
-                [void] $Story.Add([ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
-            } -FilePath $file
-        } | Should -Throw
+        $global:ImagePlaygroundVisualStoryPathInvoked = $false
+
+        try {
+            {
+                New-ImageVisualStory -StoryScript {
+                    param($Story)
+                    $global:ImagePlaygroundVisualStoryPathInvoked = $true
+                    [void] $Story.Add([ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
+                } -FilePath $file
+            } | Should -Throw
+
+            $global:ImagePlaygroundVisualStoryPathInvoked | Should -BeFalse
+        } finally {
+            Remove-Variable -Name ImagePlaygroundVisualStoryPathInvoked -Scope Global -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'rejects non-file-system output paths before invoking the story script' {
+        $global:ImagePlaygroundVisualStoryProviderInvoked = $false
+
+        try {
+            {
+                New-ImageVisualStory -StoryScript {
+                    param($Story)
+                    $global:ImagePlaygroundVisualStoryProviderInvoked = $true
+                    [void] $Story.Add([ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
+                } -FilePath 'Env:\ImagePlaygroundVisualStory.svg'
+            } | Should -Throw
+
+            $global:ImagePlaygroundVisualStoryProviderInvoked | Should -BeFalse
+        } finally {
+            Remove-Variable -Name ImagePlaygroundVisualStoryProviderInvoked -Scope Global -ErrorAction SilentlyContinue
+        }
     }
 
     It 'rejects multiple timelines emitted by one motion definition' {

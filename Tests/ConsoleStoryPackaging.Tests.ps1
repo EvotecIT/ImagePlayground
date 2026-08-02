@@ -47,6 +47,32 @@ Describe 'Image console story packaging contracts' {
         $outputParameterNames | Should -Contain 'Style'
     }
 
+    It 'keeps fractional story defaults culture-invariant in external help' {
+        $helpPath = Join-Path -Path $PSScriptRoot -ChildPath '..\en-US\ImagePlayground-help.xml'
+        [xml] $help = Get-Content -Path $helpPath -Raw
+        $expectedDefaults = @(
+            @{ Command = 'Export-ImageConsoleStory'; Parameter = 'EndHoldSeconds'; Value = '1.2' }
+            @{ Command = 'New-ImageConsoleStory'; Parameter = 'InitialDelaySeconds'; Value = '0.35' }
+            @{ Command = 'New-ImageConsoleStory'; Parameter = 'LineDelaySeconds'; Value = '0.08' }
+            @{ Command = 'New-ImageConsoleStory'; Parameter = 'EndHoldSeconds'; Value = '1.2' }
+            @{ Command = 'New-ImageConsoleStoryTab'; Parameter = 'TransitionSeconds'; Value = '0.2' }
+            @{ Command = 'Select-ImageConsoleStoryTab'; Parameter = 'TransitionSeconds'; Value = '0.2' }
+            @{ Command = 'New-ImageStoryScene'; Parameter = 'DurationSeconds'; Value = '2.5' }
+            @{ Command = 'New-ImageStory'; Parameter = 'EndHoldSeconds'; Value = '1.5' }
+            @{ Command = 'New-ImageStory'; Parameter = 'TransitionSeconds'; Value = '0.24' }
+            @{ Command = 'New-ImageVisualMotionCue'; Parameter = 'DurationSeconds'; Value = '0.7' }
+        )
+
+        foreach ($expected in $expectedDefaults) {
+            $command = $help.SelectSingleNode("//*[local-name()='command'][*[local-name()='details']/*[local-name()='name' and text()='$($expected.Command)']]")
+            $parameters = @($command.SelectNodes(".//*[local-name()='parameter'][*[local-name()='name' and text()='$($expected.Parameter)']]"))
+            $parameters.Count | Should -BeGreaterThan 0
+            foreach ($parameter in $parameters) {
+                $parameter.SelectSingleNode("./*[local-name()='defaultValue']").InnerText | Should -Be $expected.Value
+            }
+        }
+    }
+
     It 'declares the story step type accelerator for packaged imports' {
         $buildScript = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath '..\Build\Build-Module.ps1') -Raw
 

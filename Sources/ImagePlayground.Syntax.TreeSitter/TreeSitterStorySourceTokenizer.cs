@@ -69,6 +69,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 }
             }
         }
+        if (Language == "bash" && Contains(node.Type, "expansion")) {
+            CollectBashExpansion(node, output);
+            return;
+        }
         var kind = ContainerKind(node);
         if (kind == StorySyntaxKind.String) {
             CollectString(node, output);
@@ -84,6 +88,35 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         }
         kind = LeafKind(node);
         if (kind != StorySyntaxKind.Plain) Add(output, node, kind);
+    }
+
+    private void CollectBashExpansion(Node node, List<SemanticRange> output) {
+        var overrides = new List<SemanticRange>();
+        foreach (var child in node.Children) CollectBashExpansionOverrides(child, overrides);
+        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
+
+        var cursor = node.StartIndex;
+        foreach (var range in overrides) {
+            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
+            Add(output, cursor, range.StartByte, StorySyntaxKind.Variable);
+            Add(output, range.StartByte, range.EndByte, range.Kind);
+            cursor = range.EndByte;
+        }
+        Add(output, cursor, node.EndIndex, StorySyntaxKind.Variable);
+    }
+
+    private void CollectBashExpansionOverrides(Node node, List<SemanticRange> output) {
+        var kind = ContainerKind(node);
+        if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.Variable) {
+            Add(output, node, kind);
+            return;
+        }
+        if (node.Children.Count > 0) {
+            foreach (var child in node.Children) CollectBashExpansionOverrides(child, output);
+            return;
+        }
+        kind = LeafKind(node);
+        if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.Variable) Add(output, node, kind);
     }
 
     private void CollectString(Node node, List<SemanticRange> output) {
@@ -102,6 +135,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
     }
 
     private void CollectStringOverrides(Node node, List<SemanticRange> output) {
+        if (Language == "bash" && Contains(node.Type, "expansion")) {
+            CollectBashExpansion(node, output);
+            return;
+        }
         var kind = ContainerKind(node);
         if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.String) {
             Add(output, node, kind);
@@ -121,6 +158,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (Contains(type, "string") || Contains(type, "character_literal") || Contains(type, "heredoc")) return StorySyntaxKind.String;
         if (Contains(type, "integer_literal") || Contains(type, "real_literal") || Contains(type, "number")) return StorySyntaxKind.Number;
         if (Contains(type, "type_identifier") || Contains(type, "predefined_type")) return StorySyntaxKind.Type;
+        if (Language == "csharp" && string.Equals(type, "implicit_parameter", StringComparison.Ordinal)) return StorySyntaxKind.Parameter;
         if (Language == "bash") {
             if (Contains(type, "command_name")) return StorySyntaxKind.Command;
             if (Contains(type, "expansion") || Contains(type, "variable_name")) return StorySyntaxKind.Variable;
@@ -289,10 +327,20 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private bool IsCSharpFormalParameter(Node node) {
         var parent = node.Parent;
-        return Language == "csharp" &&
-               parent != null &&
-               string.Equals(parent.Type, "parameter", StringComparison.Ordinal) &&
-               IsInsideField(parent, node, "name");
+        if (Language != "csharp" || parent == null) return false;
+        if (string.Equals(parent.Type, "parameter", StringComparison.Ordinal) &&
+            IsInsideField(parent, node, "name")) {
+            return true;
+        }
+        if (!string.Equals(parent.Type, "lambda_expression", StringComparison.Ordinal)) return false;
+        foreach (var field in parent.Fields) {
+            if (string.Equals(field.Key, "parameters", StringComparison.Ordinal) &&
+                field.Value.StartIndex == node.StartIndex &&
+                field.Value.EndIndex == node.EndIndex) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private bool IsCSharpMemberReceiverType(Node node) {

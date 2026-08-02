@@ -132,7 +132,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 1,5
+Default value: 1.5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -340,7 +340,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 0,24
+Default value: 0.24
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -29,6 +29,7 @@ public sealed class NewImageVisualMotionCueCmdlet : PSCmdlet {
 
     /// <summary>Cue duration, in seconds.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 0.7, Help = "0.7")]
     [ValidateRange(0.01, 60)]
     public double DurationSeconds { get; set; } = 0.7;
 

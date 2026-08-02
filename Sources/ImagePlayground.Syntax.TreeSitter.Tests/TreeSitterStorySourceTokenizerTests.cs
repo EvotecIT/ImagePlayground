@@ -146,6 +146,22 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpRecognizesSingleIdentifierLambdaParameters() {
+        const string source = "var names = items.Select(item => item.Name);";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+        var declarationStart = source.IndexOf("item =>", StringComparison.Ordinal);
+
+        Assert.True(result.Spans.Any(span =>
+            span.Kind == StorySyntaxKind.Parameter &&
+            span.Start == declarationStart &&
+            Slice(result, span) == "item"), DescribeSpans(result));
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Variable &&
+            span.Start > declarationStart &&
+            Slice(result, span) == "item");
+    }
+
+    [Fact]
     public void CSharpPreservesMemberReceiverRolesAndRecognizesAttributes() {
         const string source = "[Obsolete] class Demo { void Run() { obj.Value.ToString(); Console.WriteLine(obj.Value); } }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
@@ -243,6 +259,19 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void BashPreservesNestedSyntaxInsideCompoundExpansions() {
+        const string source = "printf '%s' \"${value:-$(compute --fallback)}\"";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        Assert.True(result.Spans.Any(span =>
+            span.Kind == StorySyntaxKind.Variable &&
+            Slice(result, span).Contains("${value:-$(", StringComparison.Ordinal)), DescribeSpans(result));
+        Assert.True(result.Spans.Any(span =>
+            span.Kind == StorySyntaxKind.Command &&
+            Slice(result, span) == "compute"), DescribeSpans(result));
+    }
+
+    [Fact]
     public void BashRecognizesTestOperatorsWithoutColoringCommandFlags() {
         const string source = "if [[ $count -eq 1 && $count -ne 2 && $count -lt 3 && $file -nt $other && -f $file && -n $name && $name =~ ^a && $(rm -f nested.txt) ]]; then rm -f output.txt; fi";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
@@ -267,4 +296,7 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     private static string Slice(StorySourceText source, StorySourceSpan span) =>
         source.Text.Substring(span.Start, span.Length);
+
+    private static string DescribeSpans(StorySourceText source) =>
+        string.Join(", ", source.Spans.Select(span => $"{span.Kind}:{span.Start}:{Slice(source, span)}"));
 }

@@ -42,6 +42,7 @@ public sealed class ExportImageConsoleStoryCmdlet : PSCmdlet {
 
     /// <summary>Completed-state hold time used for animated GIF and APNG output.</summary>
     [Parameter]
+    [PSDefaultValue(Value = 1.2, Help = "1.2")]
     [ValidateRange(0, 10)]
     public double EndHoldSeconds { get; set; } = 1.2;
 

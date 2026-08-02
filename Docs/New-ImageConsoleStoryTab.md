@@ -160,7 +160,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 0,2
+Default value: 0.2
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
