@@ -132,9 +132,10 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         foreach (var candidate in ast.FindAll(node => node is PropertyMemberAst, true)) {
             var property = (PropertyMemberAst)candidate;
             foreach (var token in tokens) {
-                if (token.Kind != TokenKind.Variable ||
+                if (!(token is VariableToken variable) ||
                     token.Extent.StartOffset < property.Extent.StartOffset ||
-                    token.Extent.EndOffset > property.Extent.EndOffset) {
+                    token.Extent.EndOffset > property.Extent.EndOffset ||
+                    !string.Equals(variable.VariablePath.UserPath, property.Name, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
                 ranges.Add(RangeKey(token.Extent.StartOffset, token.Extent.EndOffset));

@@ -96,4 +96,26 @@ Describe 'New-ImageVisualStory' {
 
         Test-Path -Path $file | Should -BeFalse
     }
+
+    It 'rejects conflicting motion sources before invoking the story script' {
+        $file = Join-Path -Path $TestDir -ChildPath 'conflicting-motion-sources.svg'
+        $global:ImagePlaygroundVisualStoryConflictInvoked = $false
+
+        try {
+            {
+                New-ImageVisualStory -StoryScript {
+                    param($Story)
+                    $global:ImagePlaygroundVisualStoryConflictInvoked = $true
+                    [void] $Story.Add('metric', [ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
+                } -Motion ([ChartForgeX.Motion.VisualMotionTimeline]::Create()) -MotionDefinition {
+                    New-ImageVisualMotionCue -TargetId metric -Effect Fade
+                } -FilePath $file
+            } | Should -Throw '*either Motion or MotionDefinition*'
+
+            $global:ImagePlaygroundVisualStoryConflictInvoked | Should -BeFalse
+            Test-Path -Path $file | Should -BeFalse
+        } finally {
+            Remove-Variable -Name ImagePlaygroundVisualStoryConflictInvoked -Scope Global -ErrorAction SilentlyContinue
+        }
+    }
 }

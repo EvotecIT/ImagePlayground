@@ -141,6 +141,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
+            if (IsCSharpFormalParameter(node)) return StorySyntaxKind.Parameter;
             if (IsCSharpNamedArgument(node)) return StorySyntaxKind.Parameter;
             if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
             if (IsCSharpDeclarationName(node, "method_declaration") ||
@@ -283,6 +284,14 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         return Language == "csharp" &&
                parent != null &&
                string.Equals(parent.Type, "argument", StringComparison.Ordinal) &&
+               IsInsideField(parent, node, "name");
+    }
+
+    private bool IsCSharpFormalParameter(Node node) {
+        var parent = node.Parent;
+        return Language == "csharp" &&
+               parent != null &&
+               string.Equals(parent.Type, "parameter", StringComparison.Ordinal) &&
                IsInsideField(parent, node, "name");
     }
 

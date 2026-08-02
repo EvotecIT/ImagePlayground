@@ -131,6 +131,21 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpRecognizesFormalParameterNamesAsParameters() {
+        const string source = "class Demo { void Send(int timeout, CancellationToken cancellationToken) { } }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        foreach (var parameter in new[] { "timeout", "cancellationToken" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Parameter &&
+                Slice(result, span) == parameter);
+            Assert.DoesNotContain(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Variable &&
+                Slice(result, span) == parameter);
+        }
+    }
+
+    [Fact]
     public void CSharpPreservesMemberReceiverRolesAndRecognizesAttributes() {
         const string source = "[Obsolete] class Demo { void Run() { obj.Value.ToString(); Console.WriteLine(obj.Value); } }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);

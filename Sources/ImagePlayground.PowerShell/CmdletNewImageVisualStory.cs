@@ -69,6 +69,7 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void EndProcessing() {
+        ValidateMotionSources();
         var grid = BuildGrid();
         var motion = BuildMotion();
         if (motion != null) {
@@ -99,6 +100,15 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
         }
     }
 
+    private void ValidateMotionSources() {
+        if (Motion == null || MotionDefinition == null) {
+            return;
+        }
+
+        var exception = new PSArgumentException("Use either Motion or MotionDefinition, not both.");
+        ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleMotionSources", ErrorCategory.InvalidArgument, null));
+    }
+
     private VisualGrid BuildGrid() {
         if (StoryScript != null) {
             var grid = VisualGrid.Create();
@@ -125,10 +135,6 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
     }
 
     private VisualMotionTimeline? BuildMotion() {
-        if (Motion != null && MotionDefinition != null) {
-            var exception = new PSArgumentException("Use either Motion or MotionDefinition, not both.");
-            ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryMultipleMotionSources", ErrorCategory.InvalidArgument, null));
-        }
         if (Motion != null || MotionDefinition == null) {
             return Motion;
         }
