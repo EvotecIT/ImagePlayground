@@ -134,24 +134,16 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
-        if (Directory.Exists(output)) {
-            throw new PSArgumentException(
-                $"FilePath must resolve to a file, but an existing directory was found: {output}",
-                nameof(FilePath));
-        }
+        PowerShellPathResolver.ValidateFileDestination(output, nameof(FilePath), nameof(FilePath));
         var bundle = string.IsNullOrWhiteSpace(BundlePath)
             ? null
             : PowerShellPathResolver.ResolveFileSystemPath(this, BundlePath!);
-        if (bundle != null && File.Exists(bundle)) {
-            throw new PSArgumentException(
-                $"BundlePath must resolve to a directory, but an existing file was found: {bundle}",
-                nameof(BundlePath));
-        }
         if (bundle != null && IsSameAsOrNestedBelowFilePath(output, bundle)) {
             throw new PSArgumentException(
                 "FilePath and BundlePath must not resolve to the same path or place BundlePath nested beneath FilePath.",
                 nameof(BundlePath));
         }
+        if (bundle != null) PowerShellPathResolver.ValidateDirectoryDestination(bundle, nameof(BundlePath), nameof(BundlePath));
         var bundleArtifacts = bundle == null
             ? System.Array.Empty<BundleArtifact>()
             : GetBundleArtifacts(bundle, output);

@@ -124,6 +124,28 @@ Describe 'New-ImageVisualStory' {
         Test-Path -Path $file | Should -BeFalse
     }
 
+    It 'rejects invalid motion output before invoking the story script' {
+        $file = Join-Path -Path $TestDir -ChildPath 'invalid-motion-before-story.svg'
+        $global:ImagePlaygroundVisualStoryMotionOrderInvoked = $false
+
+        try {
+            {
+                New-ImageVisualStory -StoryScript {
+                    param($Story)
+                    $global:ImagePlaygroundVisualStoryMotionOrderInvoked = $true
+                    [void] $Story.Add('metric', [ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
+                } -MotionDefinition {
+                    'unsupported motion output'
+                } -FilePath $file
+            } | Should -Throw '*unsupported output*'
+
+            $global:ImagePlaygroundVisualStoryMotionOrderInvoked | Should -BeFalse
+            Test-Path -Path $file | Should -BeFalse
+        } finally {
+            Remove-Variable -Name ImagePlaygroundVisualStoryMotionOrderInvoked -Scope Global -ErrorAction SilentlyContinue
+        }
+    }
+
     It 'rejects conflicting motion sources before invoking the story script' {
         $file = Join-Path -Path $TestDir -ChildPath 'conflicting-motion-sources.svg'
         $global:ImagePlaygroundVisualStoryConflictInvoked = $false

@@ -271,4 +271,43 @@ Describe 'Image story output paths' {
         Test-Path -LiteralPath $marker | Should -BeFalse
         (Get-Item -LiteralPath $output).PSIsContainer | Should -BeTrue
     }
+
+    It 'rejects a file-valued console output ancestor before invoking Content' {
+        $blockedParent = Join-Path -Path $TestDrive -ChildPath 'console-parent'
+        $output = Join-Path -Path $blockedParent -ChildPath 'story.svg'
+        $marker = Join-Path -Path $TestDrive -ChildPath 'file-parent-content-ran.txt'
+        [System.IO.File]::WriteAllText($blockedParent, 'existing file')
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
+        { New-ImageConsoleStory -Content $content -FilePath $output } |
+            Should -Throw '*parent path is an existing file*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+        Get-Content -LiteralPath $blockedParent -Raw | Should -BeExactly 'existing file'
+    }
+
+    It 'rejects a file-valued bundle ancestor before overwriting the primary output' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'blocked-bundle-story.svg'
+        $blockedParent = Join-Path -Path $TestDrive -ChildPath 'bundle-parent'
+        $bundle = Join-Path -Path $blockedParent -ChildPath 'bundle'
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        [System.IO.File]::WriteAllText($blockedParent, 'existing parent file')
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+        $parameters = @{
+            Title         = 'Blocked bundle parent'
+            Scenes        = $scene
+            Outcomes      = $outcome
+            FilePath      = $output
+            BundlePath    = $bundle
+            BundleFormats = 'Transcript'
+        }
+
+        { New-ImageStory @parameters } | Should -Throw '*parent path is an existing file*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
+        Get-Content -LiteralPath $blockedParent -Raw | Should -BeExactly 'existing parent file'
+    }
 }

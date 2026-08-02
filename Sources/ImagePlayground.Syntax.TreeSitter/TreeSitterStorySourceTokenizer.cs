@@ -359,7 +359,13 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
         var current = assignment.Parent;
         while (current != null) {
-            if (string.Equals(current.Type, "initializer_expression", StringComparison.Ordinal)) return true;
+            if (string.Equals(current.Type, "initializer_expression", StringComparison.Ordinal)) {
+                var owner = current.Parent;
+                return owner != null &&
+                       (string.Equals(owner.Type, "object_creation_expression", StringComparison.Ordinal) ||
+                        string.Equals(owner.Type, "implicit_object_creation_expression", StringComparison.Ordinal) ||
+                        string.Equals(owner.Type, "with_expression", StringComparison.Ordinal));
+            }
             if (Contains(current.Type, "statement") || Contains(current.Type, "declaration")) return false;
             current = current.Parent;
         }

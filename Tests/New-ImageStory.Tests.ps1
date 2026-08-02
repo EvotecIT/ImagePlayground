@@ -121,6 +121,24 @@ Describe 'Generic visual stories' {
             Should -Be 0
     }
 
+    It 'does not inherit outer command styling inside a nested command subexpression' {
+        $text = 'Get-$(Write-Output ready)'
+        $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
+        $tokens = @($source.Spans | ForEach-Object {
+            [pscustomobject] @{
+                Kind = $_.Kind.ToString()
+                Text = $source.Text.Substring($_.Start, $_.Length)
+            }
+        })
+
+        @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -eq 'Get-' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -eq 'Write-Output' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -match 'ready' }).Count |
+            Should -Be 0
+    }
+
     It 'matches a declared class property instead of variables in its attributes' {
         $text = 'class Demo { [ValidateScript({ $Name })] [string] $Name = $Name }'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell

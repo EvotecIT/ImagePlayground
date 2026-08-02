@@ -73,14 +73,10 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
         var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
-        if (Directory.Exists(output)) {
-            throw new PSArgumentException(
-                $"FilePath must resolve to a file, but an existing directory was found: {output}",
-                nameof(FilePath));
-        }
+        PowerShellPathResolver.ValidateFileDestination(output, nameof(FilePath), nameof(FilePath));
 
-        var grid = BuildGrid();
         var motion = BuildMotion();
+        var grid = BuildGrid();
         if (motion != null) {
             grid.WithMotion(motion);
         }

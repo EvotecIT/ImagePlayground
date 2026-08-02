@@ -162,6 +162,23 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpDoesNotTreatArrayInitializerAssignmentsAsObjectMembers() {
+        const string source = "var values = new[] { value = 1 }; var widget = new Widget { Name = \"ready\" };";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+        var arrayValue = source.IndexOf("value = 1", StringComparison.Ordinal);
+        var objectName = source.IndexOf("Name =", StringComparison.Ordinal);
+
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property &&
+            Slice(result, span) == "value" &&
+            span.Start == arrayValue);
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property &&
+            Slice(result, span) == "Name" &&
+            span.Start == objectName);
+    }
+
+    [Fact]
     public void CSharpRecognizesNamedArgumentsAsParameters() {
         const string source = "client.Send(timeout: 30, cancellationToken: token);";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);

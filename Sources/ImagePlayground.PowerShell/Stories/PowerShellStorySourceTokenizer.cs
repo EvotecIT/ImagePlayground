@@ -28,7 +28,9 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         var previousEnd = 0;
         foreach (var range in ranges) {
             if (range.Start < previousEnd || range.End <= range.Start || range.End > source.Length) continue;
-            result.AddSpan(range.Start, range.End - range.Start, range.Kind);
+            if (range.Kind != StorySyntaxKind.Plain) {
+                result.AddSpan(range.Start, range.End - range.Start, range.Kind);
+            }
             previousEnd = range.End;
         }
         return result;
@@ -84,12 +86,27 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         foreach (var nestedToken in nestedTokens) {
             Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, declaredPropertyNames, declaredParameterNames, semanticOperators);
         }
+        nested.Sort((left, right) => left.Start.CompareTo(right.Start));
+        var cursor = 0;
         foreach (var range in nested) {
-            Add(
-                output,
+            if (range.Start < cursor || range.End > token.Text.Length || range.End <= range.Start) continue;
+            if (range.Start > cursor) {
+                output.Add(new SemanticRange(
+                    token.Extent.StartOffset + cursor,
+                    token.Extent.StartOffset + range.Start,
+                    StorySyntaxKind.Plain));
+            }
+            output.Add(new SemanticRange(
                 token.Extent.StartOffset + range.Start,
                 token.Extent.StartOffset + range.End,
-                range.Kind);
+                range.Kind));
+            cursor = range.End;
+        }
+        if (cursor < token.Text.Length) {
+            output.Add(new SemanticRange(
+                token.Extent.StartOffset + cursor,
+                token.Extent.StartOffset + token.Text.Length,
+                StorySyntaxKind.Plain));
         }
     }
 
