@@ -141,6 +141,27 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpRecognizesConstraintAndInitializerMemberRoles() {
+        const string source = "class Box<T> where T : IDisposable { Widget Value = new Widget { Name = \"ready\" }; void Reset() { Name = \"later\"; } }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+        var initializerName = source.IndexOf("Name = \"ready\"", StringComparison.Ordinal);
+        var assignmentName = source.IndexOf("Name = \"later\"", StringComparison.Ordinal);
+
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Type &&
+            Slice(result, span) == "T" &&
+            span.Start == source.IndexOf("T :", StringComparison.Ordinal));
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property &&
+            Slice(result, span) == "Name" &&
+            span.Start == initializerName);
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property &&
+            Slice(result, span) == "Name" &&
+            span.Start == assignmentName);
+    }
+
+    [Fact]
     public void CSharpRecognizesNamedArgumentsAsParameters() {
         const string source = "client.Send(timeout: 30, cancellationToken: token);";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
@@ -295,6 +316,22 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.True(result.Spans.Any(span =>
             span.Kind == StorySyntaxKind.Command &&
             Slice(result, span) == "compute"), DescribeSpans(result));
+    }
+
+    [Fact]
+    public void BashPreservesExpansionsInsideCommandNames() {
+        const string source = "run-$suffix --ready";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Command &&
+            Slice(result, span) == "run-");
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Variable &&
+            Slice(result, span) == "$suffix");
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Command &&
+            Slice(result, span).Contains("$suffix", StringComparison.Ordinal));
     }
 
     [Fact]

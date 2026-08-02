@@ -101,6 +101,26 @@ Describe 'Generic visual stories' {
             Should -Be 1
     }
 
+    It 'preserves nested semantics in subexpressions inside expandable command names' {
+        $text = 'Get-$($name.ToUpper())'
+        $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
+        $tokens = @($source.Spans | ForEach-Object {
+            [pscustomobject] @{
+                Kind = $_.Kind.ToString()
+                Text = $source.Text.Substring($_.Start, $_.Length)
+            }
+        })
+
+        @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -eq 'Get-' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq '$name' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'Command' -and $_.Text -eq 'ToUpper' }).Count |
+            Should -Be 1
+        @($tokens | Where-Object { $_.Kind -eq 'String' -and $_.Text -match '\$name|ToUpper' }).Count |
+            Should -Be 0
+    }
+
     It 'matches a declared class property instead of variables in its attributes' {
         $text = 'class Demo { [Obsolete($true)] [string] $Name }'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell

@@ -132,12 +132,22 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
+        if (Directory.Exists(output)) {
+            throw new PSArgumentException(
+                $"FilePath must resolve to a file, but an existing directory was found: {output}",
+                nameof(FilePath));
+        }
         var bundle = string.IsNullOrWhiteSpace(BundlePath)
             ? null
             : PowerShellPathResolver.ResolveFileSystemPath(this, BundlePath!);
         if (bundle != null && File.Exists(bundle)) {
             throw new PSArgumentException(
                 $"BundlePath must resolve to a directory, but an existing file was found: {bundle}",
+                nameof(BundlePath));
+        }
+        if (bundle != null && PathsEqual(output, bundle)) {
+            throw new PSArgumentException(
+                "FilePath and BundlePath must not resolve to the same path.",
                 nameof(BundlePath));
         }
         var story = BuildStory();
@@ -265,5 +275,15 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
             extension.Equals(".txt", System.StringComparison.OrdinalIgnoreCase)) return;
         var exception = new PSArgumentException("Image story output supports only .svg, .html, .htm, .png, .gif, .apng, or .txt file extensions.");
         ThrowTerminatingError(new ErrorRecord(exception, "NewImageStoryUnsupportedExtension", ErrorCategory.InvalidArgument, output));
+    }
+
+    private static bool PathsEqual(string left, string right) {
+        var comparison = Path.DirectorySeparatorChar == '\\'
+            ? System.StringComparison.OrdinalIgnoreCase
+            : System.StringComparison.Ordinal;
+        return string.Equals(
+            left.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+            right.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+            comparison);
     }
 }

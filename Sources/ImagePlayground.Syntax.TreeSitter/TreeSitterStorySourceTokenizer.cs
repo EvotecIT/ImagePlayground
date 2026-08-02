@@ -73,6 +73,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             CollectBashExpansion(node, output);
             return;
         }
+        if (Language == "bash" && Contains(node.Type, "command_name") && node.Children.Count > 0) {
+            CollectBashCommandName(node, output);
+            return;
+        }
         var kind = ContainerKind(node);
         if (kind == StorySyntaxKind.String) {
             CollectString(node, output);
@@ -103,6 +107,21 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             cursor = range.EndByte;
         }
         Add(output, cursor, node.EndIndex, StorySyntaxKind.Variable);
+    }
+
+    private void CollectBashCommandName(Node node, List<SemanticRange> output) {
+        var overrides = new List<SemanticRange>();
+        foreach (var child in node.Children) Collect(child, overrides);
+        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
+
+        var cursor = node.StartIndex;
+        foreach (var range in overrides) {
+            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
+            Add(output, cursor, range.StartByte, StorySyntaxKind.Command);
+            Add(output, range.StartByte, range.EndByte, range.Kind);
+            cursor = range.EndByte;
+        }
+        Add(output, cursor, node.EndIndex, StorySyntaxKind.Command);
     }
 
     private void CollectBashExpansionOverrides(Node node, List<SemanticRange> output) {
@@ -178,6 +197,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (IsCSharpNamespaceName(node)) return StorySyntaxKind.Plain;
             if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeParameterDeclaration(node)) return StorySyntaxKind.Type;
+            if (IsCSharpTypeParameterConstraint(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
             if (IsCSharpFormalParameter(node)) return StorySyntaxKind.Parameter;
@@ -190,7 +210,8 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (IsCSharpDeclarationName(node, "property_declaration") ||
                 IsCSharpDeclarationName(node, "event_declaration") ||
                 IsCSharpEventFieldName(node) ||
-                IsCSharpDeclarationName(node, "enum_member_declaration")) return StorySyntaxKind.Property;
+                IsCSharpDeclarationName(node, "enum_member_declaration") ||
+                IsCSharpInitializerMemberName(node)) return StorySyntaxKind.Property;
             if (IsInvokedMember(node)) return StorySyntaxKind.Command;
             if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
@@ -305,6 +326,38 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                parent != null &&
                string.Equals(parent.Type, "type_parameter", StringComparison.Ordinal) &&
                IsInsideField(parent, node, "name");
+    }
+
+    private bool IsCSharpTypeParameterConstraint(Node node) {
+        var parent = node.Parent;
+        if (Language != "csharp" ||
+            parent == null ||
+            !string.Equals(parent.Type, "type_parameter_constraints_clause", StringComparison.Ordinal)) {
+            return false;
+        }
+        foreach (var child in parent.Children) {
+            if (!string.Equals(child.Type, "identifier", StringComparison.Ordinal)) continue;
+            return child.StartIndex == node.StartIndex && child.EndIndex == node.EndIndex;
+        }
+        return false;
+    }
+
+    private bool IsCSharpInitializerMemberName(Node node) {
+        if (Language != "csharp") return false;
+        var assignment = node.Parent;
+        if (assignment == null ||
+            !string.Equals(assignment.Type, "assignment_expression", StringComparison.Ordinal) ||
+            !IsInsideField(assignment, node, "left")) {
+            return false;
+        }
+
+        var current = assignment.Parent;
+        while (current != null) {
+            if (string.Equals(current.Type, "initializer_expression", StringComparison.Ordinal)) return true;
+            if (Contains(current.Type, "statement") || Contains(current.Type, "declaration")) return false;
+            current = current.Parent;
+        }
+        return false;
     }
 
     private bool IsCSharpEventFieldName(Node node) {

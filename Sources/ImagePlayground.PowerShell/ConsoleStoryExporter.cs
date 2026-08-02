@@ -13,6 +13,11 @@ internal static class ConsoleStoryExporter {
 
         var output = PowerShellPathResolver.ResolveFileSystemPath(cmdlet, path);
         ValidateExtension(Path.GetExtension(output));
+        if (Directory.Exists(output)) {
+            throw new PSArgumentException(
+                $"Console story output must resolve to a file, but an existing directory was found: {output}",
+                "Path");
+        }
         return output;
     }
 

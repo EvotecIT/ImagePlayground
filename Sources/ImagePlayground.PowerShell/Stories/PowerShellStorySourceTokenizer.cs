@@ -40,6 +40,10 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         HashSet<long> declaredTypeNames,
         HashSet<long> declaredPropertyNames,
         HashSet<long> semanticOperators) {
+        if (IsUnscannedSubExpression(token)) {
+            CollectUnscannedSubExpression(token, output);
+            return;
+        }
         if (token is StringExpandableToken expandable && expandable.NestedTokens != null && expandable.NestedTokens.Count > 0) {
             var nested = new List<SemanticRange>();
             foreach (var nestedToken in expandable.NestedTokens) {
@@ -59,6 +63,31 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         }
 
         Add(output, token.Extent.StartOffset, token.Extent.EndOffset, Map(token, declaredCommandNames, declaredTypeNames, declaredPropertyNames, semanticOperators));
+    }
+
+    private static bool IsUnscannedSubExpression(Token token) =>
+        token.Kind == TokenKind.StringLiteral &&
+        string.Equals(token.GetType().Name, "UnscannedSubExprToken", StringComparison.Ordinal) &&
+        token.Text.StartsWith("$(", StringComparison.Ordinal) &&
+        token.Text.EndsWith(")", StringComparison.Ordinal);
+
+    private static void CollectUnscannedSubExpression(Token token, List<SemanticRange> output) {
+        var ast = Parser.ParseInput(token.Text, out var nestedTokens, out _);
+        var declaredCommandNames = DeclaredCommandNames(ast, nestedTokens);
+        var declaredTypeNames = DeclaredTypeNames(ast, nestedTokens);
+        var declaredPropertyNames = DeclaredPropertyNames(ast, nestedTokens);
+        var semanticOperators = SemanticOperators(ast, nestedTokens);
+        var nested = new List<SemanticRange>();
+        foreach (var nestedToken in nestedTokens) {
+            Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, declaredPropertyNames, semanticOperators);
+        }
+        foreach (var range in nested) {
+            Add(
+                output,
+                token.Extent.StartOffset + range.Start,
+                token.Extent.StartOffset + range.End,
+                range.Kind);
+        }
     }
 
     private static void Add(List<SemanticRange> output, int start, int end, StorySyntaxKind kind) {

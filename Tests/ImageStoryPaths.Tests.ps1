@@ -124,4 +124,32 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
         Get-Content -LiteralPath $bundleFile -Raw | Should -BeExactly 'existing bundle file'
     }
+
+    It 'rejects colliding generic story output and bundle paths before writing either artifact' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'colliding-story.svg'
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Provider path' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath $output -BundleFormats Transcript
+        } | Should -Throw '*must not resolve to the same path*'
+        Test-Path -LiteralPath $output | Should -BeFalse
+    }
+
+    It 'rejects a directory console output before invoking Content' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'directory-output.svg'
+        $marker = Join-Path -Path $TestDrive -ChildPath 'directory-output-content-ran.txt'
+        $null = New-Item -Path $output -ItemType Directory
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
+        { New-ImageConsoleStory -Content $content -FilePath $output } |
+            Should -Throw '*must resolve to a file*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+        (Get-Item -LiteralPath $output).PSIsContainer | Should -BeTrue
+    }
 }
