@@ -154,8 +154,7 @@ Describe 'Generic visual stories' {
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-scene="complete"'
         $svg | Should -Match 'prefers-reduced-motion:reduce'
-        ([ChartForgeX.Stories.VisualStoryTranscriptRenderer]::new().Render($story)) |
-            Should -Match 'The ready result is visible'
+        $svg | Should -Match 'The ready result is visible'
     }
 
     It 'rejects stories that promise an outcome absent from the completed scene' {
