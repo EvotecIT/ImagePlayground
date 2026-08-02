@@ -120,7 +120,7 @@ internal static class FileSystemPathIdentity {
         }
     }
 
-    private static bool TryResolveSymbolicLink(string path, out string target) {
+    internal static bool TryResolveSymbolicLink(string path, out string target) {
         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? TryResolveWindowsSymbolicLink(path, out target)
             : TryResolveUnixSymbolicLink(path, out target);
@@ -128,6 +128,50 @@ internal static class FileSystemPathIdentity {
 
     internal static bool IsSymbolicLink(string path) {
         return TryResolveSymbolicLink(Path.GetFullPath(path), out _);
+    }
+
+    internal static bool AreSameExistingFile(string left, string right) {
+        if (!File.Exists(left) || !File.Exists(right)) return false;
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? TryGetWindowsFileIdentity(left, out var leftVolume, out var leftIndex) &&
+              TryGetWindowsFileIdentity(right, out var rightVolume, out var rightIndex) &&
+              leftVolume == rightVolume && leftIndex == rightIndex
+            : TryGetUnixFileIdentity(left, out var leftDevice, out var leftInode) &&
+              TryGetUnixFileIdentity(right, out var rightDevice, out var rightInode) &&
+              leftDevice == rightDevice && leftInode == rightInode;
+    }
+
+    private static bool TryGetWindowsFileIdentity(string path, out uint volume, out ulong index) {
+        volume = 0;
+        index = 0;
+        using var handle = CreateFile(
+            path,
+            0,
+            FileShare.ReadWrite | FileShare.Delete,
+            IntPtr.Zero,
+            FileMode.Open,
+            FileFlagBackupSemantics,
+            IntPtr.Zero);
+        if (handle.IsInvalid || !GetFileInformationByHandle(handle, out var information)) return false;
+        volume = information.VolumeSerialNumber;
+        index = ((ulong)information.FileIndexHigh << 32) | information.FileIndexLow;
+        return true;
+    }
+
+    private static bool TryGetUnixFileIdentity(string path, out ulong device, out ulong inode) {
+        device = 0;
+        inode = 0;
+        var buffer = Marshal.AllocHGlobal(512);
+        try {
+            if (Stat(path, buffer) != 0) return false;
+            device = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? unchecked((uint)Marshal.ReadInt32(buffer, 0))
+                : unchecked((ulong)Marshal.ReadInt64(buffer, 0));
+            inode = unchecked((ulong)Marshal.ReadInt64(buffer, 8));
+            return true;
+        } finally {
+            Marshal.FreeHGlobal(buffer);
+        }
     }
 
     private static bool TryResolveWindowsSymbolicLink(string path, out string target) {
@@ -236,11 +280,34 @@ internal static class FileSystemPathIdentity {
         out int bytesReturned,
         IntPtr overlapped);
 
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetFileInformationByHandle(
+        SafeFileHandle file,
+        out ByHandleFileInformation information);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ByHandleFileInformation {
+        internal uint FileAttributes;
+        internal System.Runtime.InteropServices.ComTypes.FILETIME CreationTime;
+        internal System.Runtime.InteropServices.ComTypes.FILETIME LastAccessTime;
+        internal System.Runtime.InteropServices.ComTypes.FILETIME LastWriteTime;
+        internal uint VolumeSerialNumber;
+        internal uint FileSizeHigh;
+        internal uint FileSizeLow;
+        internal uint NumberOfLinks;
+        internal uint FileIndexHigh;
+        internal uint FileIndexLow;
+    }
+
     [DllImport("libc", EntryPoint = "realpath", SetLastError = true)]
     private static extern IntPtr RealPath(string path, IntPtr resolvedPath);
 
     [DllImport("libc", EntryPoint = "readlink", SetLastError = true)]
     private static extern IntPtr ReadLink(string path, byte[] buffer, UIntPtr bufferSize);
+
+    [DllImport("libc", EntryPoint = "stat", SetLastError = true)]
+    private static extern int Stat(string path, IntPtr buffer);
 
     [DllImport("libc", EntryPoint = "free")]
     private static extern void Free(IntPtr pointer);

@@ -255,6 +255,29 @@ public sealed class TreeSitterStorySourceTokenizerTests {
     }
 
     [Fact]
+    public void CSharpKeepsStaticPropertiesOutOfQualifiedTypeSpans() {
+        const string source = "System.Console.Out.WriteLine();";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Console");
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Out");
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Out");
+    }
+
+    [Fact]
+    public void CSharpRecognizesPropertyPatternNames() {
+        const string source = "if (value is Widget { Name: \"ready\" }) { }";
+        var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
+
+        Assert.True(
+            result.Spans.Any(span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Name"),
+            DescribeSpans(result));
+    }
+
+    [Fact]
     public void CSharpLeavesNamespaceAndImportNamesPlain() {
         const string source = "namespace Company.Product; using System.Text; using Alias = Third.Party; class Demo { System.Text.StringBuilder field; }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
@@ -386,6 +409,30 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.DoesNotContain(result.Spans, span =>
             span.Kind == StorySyntaxKind.Command &&
             Slice(result, span).Contains("$suffix", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void BashSegmentsDynamicCommandNamesInsideQuotedSubstitutions() {
+        const string source = "echo \"$(run-$suffix)\"";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        Assert.True(
+            result.Spans.Any(span => span.Kind == StorySyntaxKind.Command && Slice(result, span) == "run-"),
+            DescribeSpans(result));
+        Assert.True(
+            result.Spans.Any(span => span.Kind == StorySyntaxKind.Variable && Slice(result, span) == "$suffix"),
+            DescribeSpans(result));
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Command && Slice(result, span).Contains("$suffix", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void BashPreservesOperatorsInArithmeticExpansionsEmbeddedInWords() {
+        const string source = "echo result=$((count + 1))";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Operator && Slice(result, span) == "+");
     }
 
     [Fact]

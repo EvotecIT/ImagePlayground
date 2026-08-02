@@ -145,7 +145,7 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         var bundleArtifacts = bundle == null
             ? System.Array.Empty<BundleArtifact>()
             : GetBundleArtifacts(bundle, output);
-        if (bundle != null) ValidateBundleDestinations(bundle, bundleArtifacts);
+        if (bundle != null) ValidateBundleDestinations(output, bundle, bundleArtifacts);
         var story = BuildStory();
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
@@ -255,7 +255,10 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         return artifacts.ToArray();
     }
 
-    private static void ValidateBundleDestinations(string bundlePath, IReadOnlyList<BundleArtifact> bundleArtifacts) {
+    private static void ValidateBundleDestinations(
+        string outputPath,
+        string bundlePath,
+        IReadOnlyList<BundleArtifact> bundleArtifacts) {
         foreach (var artifact in bundleArtifacts) {
             if (!Directory.Exists(artifact.Path)) continue;
             throw new PSArgumentException(
@@ -267,6 +270,17 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
             throw new PSArgumentException(
                 $"Bundle manifest destination must resolve to a file, but an existing directory was found: {manifestPath}",
                 nameof(BundlePath));
+        }
+
+        var destinations = new List<string> { outputPath, manifestPath };
+        destinations.AddRange(bundleArtifacts.Select(static artifact => artifact.Path));
+        for (var leftIndex = 0; leftIndex < destinations.Count; leftIndex++) {
+            for (var rightIndex = leftIndex + 1; rightIndex < destinations.Count; rightIndex++) {
+                if (!FileSystemPathIdentity.AreSameExistingFile(destinations[leftIndex], destinations[rightIndex])) continue;
+                throw new PSArgumentException(
+                    $"Image story destinations must not reference the same existing file identity: {destinations[leftIndex]} and {destinations[rightIndex]}",
+                    nameof(BundlePath));
+            }
         }
     }
 

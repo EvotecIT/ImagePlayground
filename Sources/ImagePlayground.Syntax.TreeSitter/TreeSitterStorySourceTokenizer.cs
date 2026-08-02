@@ -9,7 +9,7 @@ namespace ImagePlayground.Syntax.TreeSitter;
 /// <summary>
 /// Uses an optional native Tree-sitter grammar to map C# or Bash syntax into renderer-neutral story spans.
 /// </summary>
-public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
+public sealed partial class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
     private readonly string _grammar;
 
     private TreeSitterStorySourceTokenizer(string language, string grammar) {
@@ -45,6 +45,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         using var tree = parser.Parse(source) ?? throw new InvalidOperationException("Tree-sitter did not return a syntax tree.");
         var ranges = new List<SemanticRange>();
         Collect(tree.RootNode, ranges);
+        if (Language == "bash") ranges = SplitDynamicBashCommandRanges(source, ranges);
         ranges.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
         var sourceText = StorySourceText.Create(source, Language);
         var indexesAreUtf16 = tree.RootNode.EndIndex == source.Length;
@@ -73,11 +74,15 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             CollectBashExpansion(node, output);
             return;
         }
-        if (Language == "bash" && Contains(node.Type, "command_name") && node.Children.Count > 0) {
+        if (Language == "bash" && Contains(node.Type, "command_name")) {
             CollectBashCommandName(node, output);
             return;
         }
         var kind = ContainerKind(node);
+        if (kind == StorySyntaxKind.Command) {
+            CollectBashCommandName(node, output);
+            return;
+        }
         if (kind == StorySyntaxKind.String) {
             CollectString(node, output);
             return;
@@ -92,103 +97,6 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         }
         kind = LeafKind(node);
         if (kind != StorySyntaxKind.Plain) Add(output, node, kind);
-    }
-
-    private void CollectBashExpansion(Node node, List<SemanticRange> output) {
-        var overrides = new List<SemanticRange>();
-        foreach (var child in node.Children) CollectBashExpansionOverrides(child, overrides);
-        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
-
-        var cursor = node.StartIndex;
-        foreach (var range in overrides) {
-            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
-            Add(output, cursor, range.StartByte, StorySyntaxKind.Variable);
-            Add(output, range.StartByte, range.EndByte, range.Kind);
-            cursor = range.EndByte;
-        }
-        Add(output, cursor, node.EndIndex, StorySyntaxKind.Variable);
-    }
-
-    private void CollectBashCommandName(Node node, List<SemanticRange> output) {
-        var overrides = new List<SemanticRange>();
-        foreach (var child in node.Children) Collect(child, overrides);
-        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
-
-        var cursor = node.StartIndex;
-        foreach (var range in overrides) {
-            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
-            Add(output, cursor, range.StartByte, StorySyntaxKind.Command);
-            Add(output, range.StartByte, range.EndByte, range.Kind);
-            cursor = range.EndByte;
-        }
-        Add(output, cursor, node.EndIndex, StorySyntaxKind.Command);
-    }
-
-    private void CollectBashExpansionOverrides(Node node, List<SemanticRange> output) {
-        if (Contains(node.Type, "command_substitution")) {
-            CollectBashCommandSubstitution(node, output);
-            return;
-        }
-        var kind = ContainerKind(node);
-        if (kind == StorySyntaxKind.String) {
-            CollectString(node, output);
-            return;
-        }
-        if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.Variable) {
-            Add(output, node, kind);
-            return;
-        }
-        if (node.Children.Count > 0) {
-            foreach (var child in node.Children) CollectBashExpansionOverrides(child, output);
-            return;
-        }
-        kind = LeafKind(node);
-        if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.Variable) Add(output, node, kind);
-    }
-
-    private void CollectBashCommandSubstitution(Node node, List<SemanticRange> output) {
-        var overrides = new List<SemanticRange>();
-        foreach (var child in node.Children) CollectBashCommandSubstitutionOverrides(child, overrides);
-        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
-
-        var cursor = node.StartIndex;
-        var hasOverride = false;
-        foreach (var range in overrides) {
-            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
-            if (hasOverride) Add(output, cursor, range.StartByte, StorySyntaxKind.Plain);
-            Add(output, range.StartByte, range.EndByte, range.Kind);
-            cursor = range.EndByte;
-            hasOverride = true;
-        }
-        if (hasOverride) Add(output, cursor, node.EndIndex, StorySyntaxKind.Plain);
-    }
-
-    private void CollectBashCommandSubstitutionOverrides(Node node, List<SemanticRange> output) {
-        if (Contains(node.Type, "command_name") && node.Children.Count > 0) {
-            CollectBashCommandName(node, output);
-            return;
-        }
-        if (Contains(node.Type, "expansion")) {
-            CollectBashExpansion(node, output);
-            return;
-        }
-
-        var kind = ContainerKind(node);
-        if (kind == StorySyntaxKind.String) {
-            CollectString(node, output);
-            return;
-        }
-        if (kind != StorySyntaxKind.Plain) {
-            Add(output, node, kind);
-            return;
-        }
-        if (node.Children.Count > 0) {
-            foreach (var child in node.Children) CollectBashCommandSubstitutionOverrides(child, output);
-            return;
-        }
-
-        if (node.Text == "$(") return;
-        Add(output, node, LeafKind(node));
     }
 
     private void CollectString(Node node, List<SemanticRange> output) {
@@ -250,6 +158,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             var parentType = node.Parent?.Type ?? string.Empty;
             if (IsCSharpNamespaceName(node)) return StorySyntaxKind.Plain;
             if (IsCSharpAttributeArgumentName(node)) return StorySyntaxKind.Property;
+            if (IsCSharpPropertyPatternName(node)) return StorySyntaxKind.Property;
             if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeParameterDeclaration(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeParameterConstraint(node)) return StorySyntaxKind.Type;
@@ -512,20 +421,27 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             receiver = field.Value;
             break;
         }
-        if (receiver == null) return false;
-        while (Contains(receiver.Type, "member_access")) {
-            Node? next = null;
-            foreach (var field in receiver.Fields) {
-                if (!string.Equals(field.Key, "expression", StringComparison.Ordinal)) continue;
-                next = field.Value;
-                break;
-            }
-            if (next == null || ReferenceEquals(next, receiver)) break;
-            receiver = next;
-        }
-        return receiver.Type == "identifier" &&
+        return receiver != null &&
+               receiver.Type == "identifier" &&
                receiver.Text.Length > 0 &&
                char.IsUpper(receiver.Text[0]);
+    }
+
+    private bool IsCSharpPropertyPatternName(Node node) {
+        if (Language != "csharp") return false;
+        var current = node.Parent;
+        while (current != null) {
+            if (string.Equals(current.Type, "subpattern", StringComparison.Ordinal)) {
+                if (IsInsideField(current, node, "name")) return true;
+                foreach (var child in current.Children) {
+                    if (child.Text == ":" && node.EndIndex <= child.StartIndex) return true;
+                }
+                return false;
+            }
+            if (Contains(current.Type, "statement") || Contains(current.Type, "declaration")) return false;
+            current = current.Parent;
+        }
+        return false;
     }
 
     private bool IsCSharpNamedArgument(Node node) {
@@ -609,23 +525,6 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         return false;
     }
 
-    private bool IsBashStructuralOperator(Node node) {
-        if (Language != "bash") {
-            return false;
-        }
-        var current = node;
-        while (current != null) {
-            if (string.Equals(current.Type, "word", StringComparison.Ordinal)) {
-                return false;
-            }
-            if (string.Equals(current.Type, "command", StringComparison.Ordinal)) {
-                break;
-            }
-            current = current.Parent;
-        }
-        return true;
-    }
-
     private static bool IsInsideField(Node owner, Node candidate, string fieldName) {
         foreach (var field in owner.Fields) {
             if (string.Equals(field.Key, fieldName, StringComparison.Ordinal) &&
@@ -635,39 +534,6 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             }
         }
         return false;
-    }
-
-    private bool IsBashTestOperator(Node node) {
-        if (Language != "bash" || !IsBashTestOperatorText(node.Text)) return false;
-        var current = node.Parent;
-        while (current != null) {
-            if (Contains(current.Type, "test") ||
-                Contains(current.Type, "binary_expression") ||
-                Contains(current.Type, "unary_expression")) {
-                return true;
-            }
-            if (string.Equals(current.Type, "command", StringComparison.Ordinal) ||
-                Contains(current.Type, "command_substitution")) {
-                return false;
-            }
-            current = current.Parent;
-        }
-        return false;
-    }
-
-    private static bool IsBashTestOperatorText(string value) {
-        switch (value) {
-            case "=~":
-            case "-eq": case "-ne": case "-lt": case "-le": case "-gt": case "-ge":
-            case "-nt": case "-ot": case "-ef":
-            case "-a": case "-b": case "-c": case "-d": case "-e": case "-f": case "-g":
-            case "-G": case "-h": case "-k": case "-L": case "-N": case "-O": case "-p":
-            case "-r": case "-R": case "-S": case "-s": case "-t": case "-u": case "-v":
-            case "-w": case "-x": case "-n": case "-z": case "-o":
-                return true;
-            default:
-                return false;
-        }
     }
 
     private static bool IsPunctuation(string value) {

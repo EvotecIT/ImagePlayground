@@ -76,6 +76,13 @@ internal static class PowerShellPathResolver {
     private static void ValidateAncestors(string path, string label, string parameterName) {
         var current = Path.GetDirectoryName(path);
         while (!string.IsNullOrWhiteSpace(current)) {
+            if (FileSystemPathIdentity.TryResolveSymbolicLink(current, out var target) &&
+                !File.Exists(target) &&
+                !Directory.Exists(target)) {
+                throw new PSArgumentException(
+                    $"{label} cannot use a dangling symbolic-link ancestor whose target does not exist: {current}",
+                    parameterName);
+            }
             if (File.Exists(current)) {
                 throw new PSArgumentException(
                     $"{label} cannot be created because a parent path is an existing file: {current}",

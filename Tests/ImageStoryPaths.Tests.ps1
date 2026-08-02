@@ -408,4 +408,50 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
         Get-Content -LiteralPath $blockedParent -Raw | Should -BeExactly 'existing parent file'
     }
+
+    It 'rejects a dangling symbolic-link ancestor before invoking console authoring' {
+        $missingTarget = Join-Path -Path $TestDrive -ChildPath 'missing-console-root'
+        $aliasRoot = Join-Path -Path $TestDrive -ChildPath 'dangling-console-root'
+        $output = Join-Path -Path $aliasRoot -ChildPath 'story.svg'
+        $marker = Join-Path -Path $TestDrive -ChildPath 'dangling-ancestor-content-ran.txt'
+        try {
+            New-Item -ItemType SymbolicLink -Path $aliasRoot -Target $missingTarget -ErrorAction Stop | Out-Null
+        } catch {
+            Set-ItResult -Skipped -Because "Symbolic link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
+        { New-ImageConsoleStory -Content $content -FilePath $output } |
+            Should -Throw '*dangling symbolic-link ancestor*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+        Test-Path -LiteralPath $missingTarget | Should -BeFalse
+    }
+
+    It 'rejects hard-linked story destinations before overwriting the primary output' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'hard-linked-story.svg'
+        $bundle = Join-Path -Path $TestDrive -ChildPath 'hard-linked-bundle'
+        $manifest = Join-Path -Path $bundle -ChildPath 'story.json'
+        New-Item -ItemType Directory -Path $bundle | Out-Null
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        try {
+            New-Item -ItemType HardLink -Path $manifest -Target $output -ErrorAction Stop | Out-Null
+        } catch {
+            Set-ItResult -Skipped -Because "Hard-link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Hard-linked destinations' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath $bundle -BundleFormats Transcript
+        } | Should -Throw '*same existing file identity*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
+        Get-Content -LiteralPath $manifest -Raw | Should -BeExactly 'existing output'
+    }
 }
