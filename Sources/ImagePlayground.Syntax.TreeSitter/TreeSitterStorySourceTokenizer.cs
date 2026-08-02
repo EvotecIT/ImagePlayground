@@ -195,10 +195,13 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         if (node.Type == "identifier") {
             var parentType = node.Parent?.Type ?? string.Empty;
             if (IsCSharpNamespaceName(node)) return StorySyntaxKind.Plain;
+            if (IsCSharpAttributeArgumentName(node)) return StorySyntaxKind.Property;
             if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeParameterDeclaration(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeParameterConstraint(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
+            if (IsInvokedMember(node)) return StorySyntaxKind.Command;
+            if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
             if (IsCSharpFormalParameter(node)) return StorySyntaxKind.Parameter;
             if (IsCSharpNamedArgument(node)) return StorySyntaxKind.Parameter;
@@ -212,8 +215,6 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
                 IsCSharpEventFieldName(node) ||
                 IsCSharpDeclarationName(node, "enum_member_declaration") ||
                 IsCSharpInitializerMemberName(node)) return StorySyntaxKind.Property;
-            if (IsInvokedMember(node)) return StorySyntaxKind.Command;
-            if (IsCSharpMemberName(node)) return StorySyntaxKind.Property;
             if (Contains(parentType, "invocation")) return StorySyntaxKind.Command;
             return StorySyntaxKind.Variable;
         }
@@ -278,7 +279,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             case "/=": case "<<": case ">>": case ">>>": case "++": case "--": case "??=":
             case "%=": case "&=": case "|=": case "^=": case "<<=": case ">>=": case ">>>=":
             case "~": case "?": case "->": case "..": case ">&": case "&>": case "&>>": case ">|":
-            case "<&": case "<<<": case "<<-": case "|&": case ";;": case ";&": case ";;&":
+            case "<&": case "<>": case "<<<": case "<<-": case "|&": case ";;": case ";&": case ";;&":
                 return true;
             default:
                 return false;
@@ -397,6 +398,24 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         while (current != null) {
             if (Contains(current.Type, "attribute")) {
                 return IsInsideField(current, node, "name");
+            }
+            if (Contains(current.Type, "declaration")) return false;
+            current = current.Parent;
+        }
+        return false;
+    }
+
+    private bool IsCSharpAttributeArgumentName(Node node) {
+        if (Language != "csharp") return false;
+        var current = node.Parent;
+        var isAssignedName = false;
+        while (current != null) {
+            if (string.Equals(current.Type, "assignment_expression", StringComparison.Ordinal)) {
+                isAssignedName = IsInsideField(current, node, "left");
+                if (!isAssignedName) return false;
+            }
+            if (string.Equals(current.Type, "attribute_argument", StringComparison.Ordinal)) {
+                return IsInsideField(current, node, "name") || isAssignedName;
             }
             if (Contains(current.Type, "declaration")) return false;
             current = current.Parent;

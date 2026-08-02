@@ -278,18 +278,40 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
     }
 
     private static bool IsSameAsOrNestedBelowFilePath(string filePath, string bundlePath) {
-        var comparison = Path.DirectorySeparatorChar == '\\'
-            ? System.StringComparison.OrdinalIgnoreCase
-            : System.StringComparison.Ordinal;
         var normalizedFile = Path.GetFullPath(filePath)
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         var normalizedBundle = Path.GetFullPath(bundlePath)
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var comparison = GetFileSystemPathComparison(normalizedFile);
         if (string.Equals(normalizedFile, normalizedBundle, comparison)) {
             return true;
         }
 
         var filePrefix = normalizedFile + Path.DirectorySeparatorChar;
         return normalizedBundle.StartsWith(filePrefix, comparison);
+    }
+
+    private static System.StringComparison GetFileSystemPathComparison(string path) {
+        var directory = Path.GetDirectoryName(path);
+        while (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory)) {
+            directory = Path.GetDirectoryName(directory);
+        }
+        if (string.IsNullOrWhiteSpace(directory)) directory = Path.GetPathRoot(path);
+        if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory)) {
+            return System.StringComparison.Ordinal;
+        }
+
+        var probeName = ".imageplayground-case-probe-" + System.Guid.NewGuid().ToString("N");
+        var probePath = Path.Combine(directory!, probeName);
+        var alternatePath = Path.Combine(directory!, probeName.ToUpperInvariant());
+        try {
+            using (new FileStream(probePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete)) {
+            }
+            return File.Exists(alternatePath)
+                ? System.StringComparison.OrdinalIgnoreCase
+                : System.StringComparison.Ordinal;
+        } finally {
+            if (File.Exists(probePath)) File.Delete(probePath);
+        }
     }
 }

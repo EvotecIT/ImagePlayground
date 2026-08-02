@@ -153,6 +153,38 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
     }
 
+    It 'uses the target volume case sensitivity when comparing output and bundle paths' {
+        $probe = Join-Path -Path $TestDrive -ChildPath 'case-probe'
+        New-Item -ItemType Directory -Path $probe | Out-Null
+        $lower = Join-Path -Path $probe -ChildPath 'marker'
+        Set-Content -LiteralPath $lower -Value 'probe'
+        $caseInsensitive = Test-Path -LiteralPath (Join-Path -Path $probe -ChildPath 'MARKER')
+        Remove-Item -LiteralPath $lower
+
+        $output = Join-Path -Path $TestDrive -ChildPath 'Story.svg'
+        $bundle = Join-Path -Path $TestDrive -ChildPath 'story.svg'
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+        $parameters = @{
+            Title         = 'Case-sensitive paths'
+            Scenes        = $scene
+            Outcomes      = $outcome
+            FilePath      = $output
+            BundlePath    = $bundle
+            BundleFormats = 'Transcript'
+        }
+
+        if ($caseInsensitive) {
+            { New-ImageStory @parameters } | Should -Throw '*must not resolve to the same path*'
+            Test-Path -LiteralPath $output | Should -BeFalse
+        } else {
+            New-ImageStory @parameters
+            Test-Path -LiteralPath $output | Should -BeTrue
+            Test-Path -LiteralPath (Join-Path -Path $bundle -ChildPath 'story.json') | Should -BeTrue
+        }
+    }
+
     It 'rejects a directory visual story output before invoking authoring blocks' {
         $output = Join-Path -Path $TestDrive -ChildPath 'directory-visual.svg'
         $storyMarker = Join-Path -Path $TestDrive -ChildPath 'directory-visual-story-ran.txt'

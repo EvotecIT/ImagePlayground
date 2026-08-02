@@ -210,12 +210,16 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void CSharpPreservesMemberReceiverRolesAndRecognizesAttributes() {
-        const string source = "[Obsolete] class Demo { void Run() { obj.Value.ToString(); Console.WriteLine(obj.Value); } }";
+        const string source = "[Demo(Name = \"ready\")] class Demo { void Run() { obj.Factory.Create(); obj.Value.ToString(); Console.WriteLine(obj.Value); } }";
         var result = TreeSitterStorySourceTokenizer.Create("csharp").Tokenize(source);
 
-        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Obsolete");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Demo");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Name");
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Name");
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Console");
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Variable && Slice(result, span) == "obj");
+        Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Factory");
+        Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Type && Slice(result, span) == "Factory");
         Assert.Contains(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "Value");
         Assert.DoesNotContain(result.Spans, span => span.Kind == StorySyntaxKind.Property && Slice(result, span) == "obj");
     }
@@ -279,10 +283,10 @@ public sealed class TreeSitterStorySourceTokenizerTests {
 
     [Fact]
     public void BashRecognizesRedirectionOperators() {
-        const string source = "run 2>&1\nrun &>out\nrun &>>out\nrun >|out\nrun 3<&0\ncat <<< \"$value\"\ncat <<-EOF\nready\nEOF";
+        const string source = "run 2>&1\nrun &>out\nrun &>>out\nrun >|out\nrun 3<&0\nexec 3<>state\ncat <<< \"$value\"\ncat <<-EOF\nready\nEOF";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
 
-        foreach (var operation in new[] { ">&", "&>", "&>>", ">|", "<&", "<<<", "<<-" }) {
+        foreach (var operation in new[] { ">&", "&>", "&>>", ">|", "<&", "<>", "<<<", "<<-" }) {
             Assert.Contains(result.Spans, span =>
                 span.Kind == StorySyntaxKind.Operator &&
                 Slice(result, span) == operation);
