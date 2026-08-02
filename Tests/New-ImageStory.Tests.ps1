@@ -122,7 +122,7 @@ Describe 'Generic visual stories' {
     }
 
     It 'matches a declared class property instead of variables in its attributes' {
-        $text = 'class Demo { [Obsolete($true)] [string] $Name }'
+        $text = 'class Demo { [ValidateScript({ $Name })] [string] $Name = $Name }'
         $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
         $tokens = @($source.Spans | ForEach-Object {
             [pscustomobject] @{
@@ -133,10 +133,24 @@ Describe 'Generic visual stories' {
 
         @($tokens | Where-Object { $_.Kind -eq 'Property' -and $_.Text -eq '$Name' }).Count |
             Should -Be 1
-        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq '$true' }).Count |
+        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq '$Name' }).Count |
+            Should -Be 2
+    }
+
+    It 'classifies formal PowerShell parameter declarations by their AST role' {
+        $text = 'param([string] $Name); Write-Output $Name'
+        $source = ConvertTo-ImageStorySource -Text $text -Language PowerShell
+        $tokens = @($source.Spans | ForEach-Object {
+            [pscustomobject] @{
+                Kind = $_.Kind.ToString()
+                Text = $source.Text.Substring($_.Start, $_.Length)
+            }
+        })
+
+        @($tokens | Where-Object { $_.Kind -eq 'Parameter' -and $_.Text -eq '$Name' }).Count |
             Should -Be 1
-        @($tokens | Where-Object { $_.Kind -eq 'Property' -and $_.Text -eq '$true' }).Count |
-            Should -Be 0
+        @($tokens | Where-Object { $_.Kind -eq 'Variable' -and $_.Text -eq '$Name' }).Count |
+            Should -Be 1
     }
 
     It 'distinguishes declared types and dot-sourcing from member punctuation' {

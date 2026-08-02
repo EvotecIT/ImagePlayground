@@ -152,6 +152,10 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
                 "FilePath and BundlePath must not resolve to the same path or place BundlePath nested beneath FilePath.",
                 nameof(BundlePath));
         }
+        var bundleArtifacts = bundle == null
+            ? System.Array.Empty<BundleArtifact>()
+            : GetBundleArtifacts(bundle, output);
+        if (bundle != null) ValidateBundleDestinations(bundle, bundleArtifacts);
         var story = BuildStory();
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
@@ -164,7 +168,7 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         else story.SaveTranscript(output);
 
         if (bundle != null) {
-            WriteBundle(story, bundle, output);
+            WriteBundle(story, bundle, output, bundleArtifacts);
         }
         if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         if (PassThru.IsPresent) WriteObject(story);
@@ -194,25 +198,18 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         .WithMaximumFrames(MaximumFrames)
         .WithLoop(!NoLoop.IsPresent);
 
-    private void WriteBundle(VisualStory story, string bundlePath, string resolvedOutputPath) {
+    private void WriteBundle(
+        VisualStory story,
+        string bundlePath,
+        string resolvedOutputPath,
+        IReadOnlyList<BundleArtifact> bundleArtifacts) {
         Directory.CreateDirectory(bundlePath);
         var baseName = Path.GetFileNameWithoutExtension(resolvedOutputPath);
         if (string.IsNullOrWhiteSpace(baseName)) baseName = "visual-story";
-        var requested = new HashSet<string>(BundleFormats ?? System.Array.Empty<string>(), System.StringComparer.OrdinalIgnoreCase) {
-            "Png"
-        };
         var artifacts = new List<object>();
-        foreach (var format in new[] { "Svg", "Html", "Png", "Gif", "Apng", "Transcript" }) {
-            if (!requested.Contains(format)) continue;
-            var extension = format switch {
-                "Svg" => ".svg",
-                "Html" => ".html",
-                "Png" => ".png",
-                "Gif" => ".gif",
-                "Apng" => ".apng",
-                _ => ".txt"
-            };
-            var path = Path.Combine(bundlePath, baseName + extension);
+        foreach (var artifact in bundleArtifacts) {
+            var format = artifact.Format;
+            var path = artifact.Path;
             if (format == "Svg") story.SaveSvg(path);
             else if (format == "Html") File.WriteAllText(path, story.ToHtmlPage());
             else if (format == "Png") story.SavePng(path);
@@ -244,6 +241,53 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
                 WriteIndented = true,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             }));
+    }
+
+    private BundleArtifact[] GetBundleArtifacts(string bundlePath, string resolvedOutputPath) {
+        var baseName = Path.GetFileNameWithoutExtension(resolvedOutputPath);
+        if (string.IsNullOrWhiteSpace(baseName)) baseName = "visual-story";
+        var requested = new HashSet<string>(BundleFormats ?? System.Array.Empty<string>(), System.StringComparer.OrdinalIgnoreCase) {
+            "Png"
+        };
+        var artifacts = new List<BundleArtifact>();
+        foreach (var format in new[] { "Svg", "Html", "Png", "Gif", "Apng", "Transcript" }) {
+            if (!requested.Contains(format)) continue;
+            var extension = format switch {
+                "Svg" => ".svg",
+                "Html" => ".html",
+                "Png" => ".png",
+                "Gif" => ".gif",
+                "Apng" => ".apng",
+                _ => ".txt"
+            };
+            artifacts.Add(new BundleArtifact(format, Path.Combine(bundlePath, baseName + extension)));
+        }
+        return artifacts.ToArray();
+    }
+
+    private static void ValidateBundleDestinations(string bundlePath, IReadOnlyList<BundleArtifact> bundleArtifacts) {
+        foreach (var artifact in bundleArtifacts) {
+            if (!Directory.Exists(artifact.Path)) continue;
+            throw new PSArgumentException(
+                $"Bundle artifact destination must resolve to a file, but an existing directory was found: {artifact.Path}",
+                nameof(BundlePath));
+        }
+        var manifestPath = Path.Combine(bundlePath, "story.json");
+        if (Directory.Exists(manifestPath)) {
+            throw new PSArgumentException(
+                $"Bundle manifest destination must resolve to a file, but an existing directory was found: {manifestPath}",
+                nameof(BundlePath));
+        }
+    }
+
+    private readonly struct BundleArtifact {
+        internal BundleArtifact(string format, string path) {
+            Format = format;
+            Path = path;
+        }
+
+        internal string Format { get; }
+        internal string Path { get; }
     }
 
     private static string BuildProducerName() {

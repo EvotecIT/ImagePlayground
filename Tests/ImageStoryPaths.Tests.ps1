@@ -125,6 +125,24 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $bundleFile -Raw | Should -BeExactly 'existing bundle file'
     }
 
+    It 'rejects directory-valued bundle artifacts before overwriting the primary output' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'existing-artifact-story.svg'
+        $bundle = Join-Path -Path $TestDrive -ChildPath 'artifact-bundle'
+        $artifactDirectory = Join-Path -Path $bundle -ChildPath 'existing-artifact-story.png'
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        New-Item -Path $artifactDirectory -ItemType Directory -Force | Out-Null
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Invalid artifact destination' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath $bundle -BundleFormats Transcript
+        } | Should -Throw '*artifact destination must resolve to a file*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
+        (Get-Item -LiteralPath $artifactDirectory).PSIsContainer | Should -BeTrue
+    }
+
     It 'rejects colliding generic story output and bundle paths before writing either artifact' {
         $output = Join-Path -Path $TestDrive -ChildPath 'colliding-story.svg'
         $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized

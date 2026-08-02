@@ -18,10 +18,11 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         var declaredCommandNames = DeclaredCommandNames(ast, tokens);
         var declaredTypeNames = DeclaredTypeNames(ast, tokens);
         var declaredPropertyNames = DeclaredPropertyNames(ast, tokens);
+        var declaredParameterNames = DeclaredParameterNames(ast);
         var semanticOperators = SemanticOperators(ast, tokens);
         var ranges = new List<SemanticRange>();
         foreach (var token in tokens) {
-            Collect(token, ranges, declaredCommandNames, declaredTypeNames, declaredPropertyNames, semanticOperators);
+            Collect(token, ranges, declaredCommandNames, declaredTypeNames, declaredPropertyNames, declaredParameterNames, semanticOperators);
         }
         ranges.Sort((left, right) => left.Start.CompareTo(right.Start));
         var previousEnd = 0;
@@ -39,6 +40,7 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         HashSet<long> declaredCommandNames,
         HashSet<long> declaredTypeNames,
         HashSet<long> declaredPropertyNames,
+        HashSet<long> declaredParameterNames,
         HashSet<long> semanticOperators) {
         if (IsUnscannedSubExpression(token)) {
             CollectUnscannedSubExpression(token, output);
@@ -47,7 +49,7 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         if (token is StringExpandableToken expandable && expandable.NestedTokens != null && expandable.NestedTokens.Count > 0) {
             var nested = new List<SemanticRange>();
             foreach (var nestedToken in expandable.NestedTokens) {
-                Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, declaredPropertyNames, semanticOperators);
+                Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, declaredPropertyNames, declaredParameterNames, semanticOperators);
             }
             nested.Sort((left, right) => left.Start.CompareTo(right.Start));
 
@@ -62,7 +64,7 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
             return;
         }
 
-        Add(output, token.Extent.StartOffset, token.Extent.EndOffset, Map(token, declaredCommandNames, declaredTypeNames, declaredPropertyNames, semanticOperators));
+        Add(output, token.Extent.StartOffset, token.Extent.EndOffset, Map(token, declaredCommandNames, declaredTypeNames, declaredPropertyNames, declaredParameterNames, semanticOperators));
     }
 
     private static bool IsUnscannedSubExpression(Token token) =>
@@ -76,10 +78,11 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         var declaredCommandNames = DeclaredCommandNames(ast, nestedTokens);
         var declaredTypeNames = DeclaredTypeNames(ast, nestedTokens);
         var declaredPropertyNames = DeclaredPropertyNames(ast, nestedTokens);
+        var declaredParameterNames = DeclaredParameterNames(ast);
         var semanticOperators = SemanticOperators(ast, nestedTokens);
         var nested = new List<SemanticRange>();
         foreach (var nestedToken in nestedTokens) {
-            Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, declaredPropertyNames, semanticOperators);
+            Collect(nestedToken, nested, declaredCommandNames, declaredTypeNames, declaredPropertyNames, declaredParameterNames, semanticOperators);
         }
         foreach (var range in nested) {
             Add(
@@ -100,11 +103,13 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         HashSet<long> declaredCommandNames,
         HashSet<long> declaredTypeNames,
         HashSet<long> declaredPropertyNames,
+        HashSet<long> declaredParameterNames,
         HashSet<long> semanticOperators) {
         var rangeKey = RangeKey(token.Extent.StartOffset, token.Extent.EndOffset);
         if (declaredTypeNames.Contains(rangeKey)) return StorySyntaxKind.Type;
         if (declaredCommandNames.Contains(rangeKey)) return StorySyntaxKind.Command;
         if (declaredPropertyNames.Contains(rangeKey)) return StorySyntaxKind.Property;
+        if (declaredParameterNames.Contains(rangeKey)) return StorySyntaxKind.Parameter;
         var flags = token.TokenFlags;
         if ((flags & TokenFlags.Keyword) != 0) return StorySyntaxKind.Keyword;
         if ((flags & TokenFlags.TypeName) != 0 || (flags & TokenFlags.AttributeName) != 0) return StorySyntaxKind.Type;
@@ -160,16 +165,30 @@ public sealed class PowerShellStorySourceTokenizer : IStorySourceTokenizer {
         var ranges = new HashSet<long>();
         foreach (var candidate in ast.FindAll(node => node is PropertyMemberAst, true)) {
             var property = (PropertyMemberAst)candidate;
+            var declarationStart = property.PropertyType?.Extent.EndOffset ?? property.Extent.StartOffset;
+            foreach (var attribute in property.Attributes) {
+                declarationStart = Math.Max(declarationStart, attribute.Extent.EndOffset);
+            }
+            var declarationEnd = property.InitialValue?.Extent.StartOffset ?? property.Extent.EndOffset;
             foreach (var token in tokens) {
                 if (!(token is VariableToken variable) ||
-                    token.Extent.StartOffset < property.Extent.StartOffset ||
-                    token.Extent.EndOffset > property.Extent.EndOffset ||
+                    token.Extent.StartOffset < declarationStart ||
+                    token.Extent.EndOffset > declarationEnd ||
                     !string.Equals(variable.VariablePath.UserPath, property.Name, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
                 ranges.Add(RangeKey(token.Extent.StartOffset, token.Extent.EndOffset));
                 break;
             }
+        }
+        return ranges;
+    }
+
+    private static HashSet<long> DeclaredParameterNames(ScriptBlockAst ast) {
+        var ranges = new HashSet<long>();
+        foreach (var candidate in ast.FindAll(node => node is ParameterAst, true)) {
+            var parameter = (ParameterAst)candidate;
+            ranges.Add(RangeKey(parameter.Name.Extent.StartOffset, parameter.Name.Extent.EndOffset));
         }
         return ranges;
     }
