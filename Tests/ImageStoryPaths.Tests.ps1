@@ -341,6 +341,51 @@ Describe 'Image story output paths' {
         Get-Content -LiteralPath $blockedParent -Raw | Should -BeExactly 'existing file'
     }
 
+    It 'rejects a dangling final console output link with a missing target parent before invoking Content' {
+        $missingParent = Join-Path -Path $TestDrive -ChildPath 'missing-link-target-parent'
+        $target = Join-Path -Path $missingParent -ChildPath 'story.svg'
+        $output = Join-Path -Path $TestDrive -ChildPath 'dangling-console-story.svg'
+        $marker = Join-Path -Path $TestDrive -ChildPath 'dangling-console-content-ran.txt'
+        try {
+            New-Item -ItemType SymbolicLink -Path $output -Target $target -ErrorAction Stop | Out-Null
+        } catch {
+            Set-ItResult -Skipped -Because "Symbolic link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
+        { New-ImageConsoleStory -Content $content -FilePath $output } |
+            Should -Throw '*target parent does not exist*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+        Test-Path -LiteralPath $missingParent | Should -BeFalse
+    }
+
+    It 'rejects a dangling final console output link whose target parent is a file before invoking Content' {
+        $blockedParent = Join-Path -Path $TestDrive -ChildPath 'link-target-parent-file'
+        $target = Join-Path -Path $blockedParent -ChildPath 'story.svg'
+        $output = Join-Path -Path $TestDrive -ChildPath 'blocked-link-console-story.svg'
+        $marker = Join-Path -Path $TestDrive -ChildPath 'blocked-link-console-content-ran.txt'
+        [System.IO.File]::WriteAllText($blockedParent, 'existing file')
+        try {
+            New-Item -ItemType SymbolicLink -Path $output -Target $target -ErrorAction Stop | Out-Null
+        } catch {
+            Set-ItResult -Skipped -Because "Symbolic link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+        $content = {
+            [System.IO.File]::WriteAllText($marker, 'executed')
+            New-ImageConsoleStoryOutput -Text 'ready'
+        }.GetNewClosure()
+
+        { New-ImageConsoleStory -Content $content -FilePath $output } |
+            Should -Throw '*parent path is an existing file*'
+        Test-Path -LiteralPath $marker | Should -BeFalse
+        Get-Content -LiteralPath $blockedParent -Raw | Should -BeExactly 'existing file'
+    }
+
     It 'rejects a file-valued bundle ancestor before overwriting the primary output' {
         $output = Join-Path -Path $TestDrive -ChildPath 'blocked-bundle-story.svg'
         $blockedParent = Join-Path -Path $TestDrive -ChildPath 'bundle-parent'

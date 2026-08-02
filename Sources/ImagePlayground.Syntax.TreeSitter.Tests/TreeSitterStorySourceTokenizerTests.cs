@@ -350,6 +350,12 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.True(result.Spans.Any(span =>
             span.Kind == StorySyntaxKind.Command &&
             Slice(result, span) == "compute"), DescribeSpans(result));
+        Assert.True(result.Spans.Any(span =>
+            span.Kind == StorySyntaxKind.Plain &&
+            Slice(result, span).Contains("--fallback", StringComparison.Ordinal)), DescribeSpans(result));
+        Assert.DoesNotContain(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Variable &&
+            Slice(result, span).Contains("--fallback", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -398,6 +404,10 @@ public sealed class TreeSitterStorySourceTokenizerTests {
             Slice(result, span) == "-f" &&
             (span.Start == source.IndexOf("rm -f nested", StringComparison.Ordinal) + 3 ||
              span.Start == source.LastIndexOf("rm -f", StringComparison.Ordinal) + 3));
+        Assert.True(result.Spans.Count(span =>
+            span.Kind == StorySyntaxKind.Punctuation &&
+            (Slice(result, span) == "[[" || Slice(result, span).StartsWith("]]", StringComparison.Ordinal))) == 2,
+            DescribeSpans(result));
     }
 
     [Fact]

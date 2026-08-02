@@ -60,6 +60,12 @@ internal static class FileSystemPathIdentity {
             if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(parent)) {
                 var alternateName = ToggleCase(name);
                 if (!string.Equals(name, alternateName, StringComparison.Ordinal)) {
+                    var matchingEntries = Directory.EnumerateFileSystemEntries(parent)
+                        .Count(entry => string.Equals(
+                            Path.GetFileName(entry),
+                            name,
+                            StringComparison.OrdinalIgnoreCase));
+                    if (matchingEntries > 1) return StringComparison.Ordinal;
                     return Directory.Exists(Path.Combine(parent, alternateName))
                         ? StringComparison.OrdinalIgnoreCase
                         : StringComparison.Ordinal;
@@ -118,6 +124,10 @@ internal static class FileSystemPathIdentity {
         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? TryResolveWindowsSymbolicLink(path, out target)
             : TryResolveUnixSymbolicLink(path, out target);
+    }
+
+    internal static bool IsSymbolicLink(string path) {
+        return TryResolveSymbolicLink(Path.GetFullPath(path), out _);
     }
 
     private static bool TryResolveWindowsSymbolicLink(string path, out string target) {

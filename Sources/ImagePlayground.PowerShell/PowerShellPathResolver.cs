@@ -23,6 +23,15 @@ internal static class PowerShellPathResolver {
     }
 
     internal static void ValidateFileDestination(string path, string label, string parameterName) {
+        ValidateFileDestinationCore(path, label, parameterName);
+        var canonicalPath = FileSystemPathIdentity.GetCanonicalPath(path);
+        if (!string.Equals(canonicalPath, Path.GetFullPath(path), StringComparison.Ordinal)) {
+            ValidateResolvedSymbolicLinkTarget(path, canonicalPath, label, parameterName);
+            ValidateFileDestinationCore(canonicalPath, label, parameterName);
+        }
+    }
+
+    private static void ValidateFileDestinationCore(string path, string label, string parameterName) {
         if (Directory.Exists(path)) {
             throw new PSArgumentException(
                 $"{label} must resolve to a file, but an existing directory was found: {path}",
@@ -32,12 +41,36 @@ internal static class PowerShellPathResolver {
     }
 
     internal static void ValidateDirectoryDestination(string path, string label, string parameterName) {
+        ValidateDirectoryDestinationCore(path, label, parameterName);
+        var canonicalPath = FileSystemPathIdentity.GetCanonicalPath(path);
+        if (!string.Equals(canonicalPath, Path.GetFullPath(path), StringComparison.Ordinal)) {
+            ValidateResolvedSymbolicLinkTarget(path, canonicalPath, label, parameterName);
+            ValidateDirectoryDestinationCore(canonicalPath, label, parameterName);
+        }
+    }
+
+    private static void ValidateDirectoryDestinationCore(string path, string label, string parameterName) {
         if (File.Exists(path)) {
             throw new PSArgumentException(
                 $"{label} must resolve to a directory, but an existing file was found: {path}",
                 parameterName);
         }
         ValidateAncestors(path, label, parameterName);
+    }
+
+    private static void ValidateResolvedSymbolicLinkTarget(
+        string path,
+        string canonicalPath,
+        string label,
+        string parameterName) {
+        if (!FileSystemPathIdentity.IsSymbolicLink(path)) return;
+
+        var parent = Path.GetDirectoryName(canonicalPath);
+        if (!string.IsNullOrWhiteSpace(parent) && !Directory.Exists(parent) && !File.Exists(parent)) {
+            throw new PSArgumentException(
+                $"{label} cannot use a dangling symbolic link whose target parent does not exist: {parent}",
+                parameterName);
+        }
     }
 
     private static void ValidateAncestors(string path, string label, string parameterName) {

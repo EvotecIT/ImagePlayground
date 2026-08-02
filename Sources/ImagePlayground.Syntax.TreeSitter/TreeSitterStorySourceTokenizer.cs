@@ -125,6 +125,10 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
     }
 
     private void CollectBashExpansionOverrides(Node node, List<SemanticRange> output) {
+        if (Contains(node.Type, "command_substitution")) {
+            CollectBashCommandSubstitution(node, output);
+            return;
+        }
         var kind = ContainerKind(node);
         if (kind == StorySyntaxKind.String) {
             CollectString(node, output);
@@ -140,6 +144,51 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
         }
         kind = LeafKind(node);
         if (kind != StorySyntaxKind.Plain && kind != StorySyntaxKind.Variable) Add(output, node, kind);
+    }
+
+    private void CollectBashCommandSubstitution(Node node, List<SemanticRange> output) {
+        var overrides = new List<SemanticRange>();
+        foreach (var child in node.Children) CollectBashCommandSubstitutionOverrides(child, overrides);
+        overrides.Sort((left, right) => left.StartByte.CompareTo(right.StartByte));
+
+        var cursor = node.StartIndex;
+        var hasOverride = false;
+        foreach (var range in overrides) {
+            if (range.StartByte < cursor || range.EndByte > node.EndIndex || range.EndByte <= range.StartByte) continue;
+            if (hasOverride) Add(output, cursor, range.StartByte, StorySyntaxKind.Plain);
+            Add(output, range.StartByte, range.EndByte, range.Kind);
+            cursor = range.EndByte;
+            hasOverride = true;
+        }
+        if (hasOverride) Add(output, cursor, node.EndIndex, StorySyntaxKind.Plain);
+    }
+
+    private void CollectBashCommandSubstitutionOverrides(Node node, List<SemanticRange> output) {
+        if (Contains(node.Type, "command_name") && node.Children.Count > 0) {
+            CollectBashCommandName(node, output);
+            return;
+        }
+        if (Contains(node.Type, "expansion")) {
+            CollectBashExpansion(node, output);
+            return;
+        }
+
+        var kind = ContainerKind(node);
+        if (kind == StorySyntaxKind.String) {
+            CollectString(node, output);
+            return;
+        }
+        if (kind != StorySyntaxKind.Plain) {
+            Add(output, node, kind);
+            return;
+        }
+        if (node.Children.Count > 0) {
+            foreach (var child in node.Children) CollectBashCommandSubstitutionOverrides(child, output);
+            return;
+        }
+
+        if (node.Text == "$(") return;
+        Add(output, node, LeafKind(node));
     }
 
     private void CollectString(Node node, List<SemanticRange> output) {
@@ -191,6 +240,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private StorySyntaxKind LeafKind(Node node) {
         var text = node.Text;
+        if (Language == "bash" && (text == "[[" || text == "]]")) return StorySyntaxKind.Punctuation;
         if (IsPreprocessorDirective(node)) return StorySyntaxKind.Keyword;
         if (IsReservedKeyword(node) || IsContextualKeyword(node)) return StorySyntaxKind.Keyword;
         if (IsBashTestOperator(node)) return StorySyntaxKind.Operator;
@@ -622,7 +672,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
 
     private static bool IsPunctuation(string value) {
         switch (value) {
-            case "(": case ")": case "{": case "}": case "[": case "]": case ";": case ",":
+            case "(": case ")": case "{": case "}": case "[": case "]": case "[[": case "]]": case ";": case ",":
             case ".": case ":": case "::":
                 return true;
             default:
