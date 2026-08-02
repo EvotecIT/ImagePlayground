@@ -77,4 +77,23 @@ Describe 'New-ImageVisualStory' {
             } -FilePath $file
         } | Should -Throw '*at most one VisualMotionTimeline*'
     }
+
+    It 'rejects unsupported output mixed into a motion definition' {
+        $file = Join-Path -Path $TestDir -ChildPath 'unsupported-motion-output.svg'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        {
+            New-ImageVisualStory -StoryScript {
+                param($Story)
+                [void] $Story.Add('metric', [ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Ready', 'Yes'))
+            } -MotionDefinition {
+                New-ImageVisualMotionCue -TargetId metric -Effect Fade
+                'misspelled helper output'
+            } -FilePath $file
+        } | Should -Throw '*unsupported output*'
+
+        Test-Path -Path $file | Should -BeFalse
+    }
 }

@@ -26,7 +26,6 @@ PS> $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Spe
   New-ImageConsoleStoryCommand -Text 'dotnet build'
   New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
   New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
-  Select-ImageConsoleStoryTab -Id Ubuntu
   New-ImageConsoleStoryCommand -Text './build.sh'
   New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
 }
@@ -43,7 +42,7 @@ Raster density multiplier used for animated GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -59,7 +58,7 @@ Completed-state hold time used for animated GIF and APNG output.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -75,7 +74,7 @@ Frame rate used for animated GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -91,7 +90,7 @@ Maximum frame budget used for animated GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -107,7 +106,7 @@ Produce a single-play animated GIF or APNG instead of a repeating animation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -123,7 +122,7 @@ Write the exported story back to the pipeline.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -155,7 +154,7 @@ Open the generated presentation after export.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -171,7 +170,7 @@ Authored terminal story to export. Accepts pipeline input from New-ImageConsoleS
 ```yaml
 Type: TerminalStory
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True

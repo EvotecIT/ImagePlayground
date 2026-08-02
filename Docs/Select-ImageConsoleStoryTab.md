@@ -15,16 +15,18 @@ Select-ImageConsoleStoryTab [-Id] <string> [-TransitionSeconds <double>] [<Commo
 ```
 
 ## DESCRIPTION
-Switches an ImagePlayground console story to a previously declared persistent tab.
+Selection is always an intentional timeline action. The target tab keeps its transcript, working directory, profile, and palette, so the story can pause on a ready session or continue writing exactly where that session stopped.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Select-ImageConsoleStoryTab -Id WindowsPowerShell
+PS> Select-ImageConsoleStoryTab -Id PowerShell
+            New-ImageConsoleStoryPause -Seconds 1.5
+            New-ImageConsoleStoryCommand -Text 'Get-ChildItem .\artifacts'
 ```
 
-Activates the initial tab without clearing its existing transcript buffer.
+Returns to the retained PowerShell buffer, holds it in a ready state, then continues the same session.
 
 ## PARAMETERS
 
@@ -34,7 +36,7 @@ Identifier of a tab declared earlier in the story. The initial tab is named main
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -50,7 +52,7 @@ Duration of the visual switch to the selected tab.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -69,7 +71,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.ImageConsoleStoryStep` — Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
+- `ImagePlayground.PowerShell.ImageConsoleStoryStep`: Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
 
 ## RELATED LINKS
 

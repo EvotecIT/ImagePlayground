@@ -6,16 +6,26 @@ schema: 2.0.0
 ---
 # New-ImageConsoleStoryTab
 ## SYNOPSIS
-Declares a persistent tab in an ImagePlayground console story.
+Creates a persistent tab in an ImagePlayground console story.
 
 ## SYNTAX
-### __AllParameterSets
+### Open (Default)
 ```powershell
-New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] [-Profile <string>] [-WorkingDirectory <string>] [-Active] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+```
+
+### Initial
+```powershell
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] -Active [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+```
+
+### Background
+```powershell
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] -Background [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Use Active for the initial tab and Select-ImageConsoleStoryTab for later visible switches.
+By default, the new tab opens and becomes active after the current tab's configured reading dwell. Use Active for the initial tab, Background to pre-stage a visible inactive tab, and Select-ImageConsoleStoryTab to revisit any existing tab without clearing its buffer.
 
 ## EXAMPLES
 
@@ -31,7 +41,15 @@ Names and styles the initial persistent tab without creating an extra transition
 PS> New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -Title Ubuntu -WorkingDirectory '~/src'
 ```
 
-Creates a typed story step that opens and activates an Ubuntu-styled Bash session.
+Opens and activates an Ubuntu-styled Bash session only after the previous tab has finished its configured reading dwell.
+
+### EXAMPLE 3
+```powershell
+PS> New-ImageConsoleStoryTab -Id logs -Title Logs -Profile PowerShell -Background
+            Select-ImageConsoleStoryTab -Id logs
+```
+
+The declaration makes the tab available in the strip without interrupting the active session. Selection later activates its retained buffer.
 
 ## PARAMETERS
 
@@ -40,11 +58,27 @@ Configure this declaration as the initial active tab. It must be the first conte
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Initial
+Aliases: None
 Possible values:
 
-Required: False
+Required: True
+Position: named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Background
+Declare the tab without activating it. Use Select-ImageConsoleStoryTab for the later intentional switch.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Background
+Aliases: None
+Possible values:
+
+Required: True
 Position: named
 Default value: False
 Accept pipeline input: False
@@ -56,8 +90,8 @@ Stable identifier used by later tab-selection steps.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Open, Initial, Background
+Aliases: None
 Possible values:
 
 Required: True
@@ -72,8 +106,8 @@ Optional custom palette, normally created by New-ImageConsoleStoryPalette.
 
 ```yaml
 Type: TerminalTheme
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Open, Initial, Background
+Aliases: None
 Possible values:
 
 Required: False
@@ -88,8 +122,8 @@ Built-in profile that supplies prompt behavior, default working directory, palet
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Open, Initial, Background
+Aliases: None
 Possible values: PowerShell, WindowsPowerShell, Ubuntu, Bash, CommandPrompt
 
 Required: False
@@ -104,8 +138,8 @@ Visible tab title. Defaults to the selected profile name.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Open, Initial, Background
+Aliases: None
 Possible values:
 
 Required: False
@@ -120,8 +154,8 @@ Duration of the visual switch from the previously active tab.
 
 ```yaml
 Type: Double
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Open, Initial, Background
+Aliases: None
 Possible values:
 
 Required: False
@@ -136,8 +170,8 @@ Working directory shown by this tab. Defaults to C:\ for Windows profiles and ~ 
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
-Aliases:
+Parameter Sets: Open, Initial, Background
+Aliases: None
 Possible values:
 
 Required: False
@@ -156,7 +190,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.ImageConsoleStoryStep` — Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
+- `ImagePlayground.PowerShell.ImageConsoleStoryStep`: Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
 
 ## RELATED LINKS
 

@@ -141,6 +141,7 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             if (IsCSharpAttributeName(node)) return StorySyntaxKind.Type;
             if (IsCSharpTypeReference(node)) return StorySyntaxKind.Type;
             if (IsCSharpMemberReceiverType(node)) return StorySyntaxKind.Type;
+            if (IsCSharpNamedArgument(node)) return StorySyntaxKind.Parameter;
             if (IsDeclaredTypeName(parentType)) return StorySyntaxKind.Type;
             if (IsCSharpDeclarationName(node, "method_declaration") ||
                 IsCSharpDeclarationName(node, "local_function_statement") ||
@@ -275,6 +276,14 @@ public sealed class TreeSitterStorySourceTokenizer : IStorySourceTokenizer {
             return false;
         }
         return IsInsideField(parent, node, "name");
+    }
+
+    private bool IsCSharpNamedArgument(Node node) {
+        var parent = node.Parent;
+        return Language == "csharp" &&
+               parent != null &&
+               string.Equals(parent.Type, "argument", StringComparison.Ordinal) &&
+               IsInsideField(parent, node, "name");
     }
 
     private bool IsCSharpMemberReceiverType(Node node) {

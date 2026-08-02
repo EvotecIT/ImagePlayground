@@ -49,21 +49,36 @@ PS> $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Spe
   New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
 
   New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
-  Select-ImageConsoleStoryTab -Id WindowsPowerShell
   New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
   New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
 
   New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
-  Select-ImageConsoleStoryTab -Id Ubuntu
   New-ImageConsoleStoryCommand -Text './build.sh'
   New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
 }
 $story | Export-ImageConsoleStory -Path '.\demo.gif'
 ```
 
-Creates three persistent tab buffers, leaves readable time before each switch, and exports the shared story through Export-ImageConsoleStory.
+Creates three persistent tab buffers. Each new tab opens atomically after the previous tab's reading dwell, then the shared story is exported through Export-ImageConsoleStory.
 
 ### EXAMPLE 2
+```powershell
+PS> $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Speed Slow -Content {
+  New-ImageConsoleStoryTab -Id PowerShell -Profile PowerShell -Active
+  New-ImageConsoleStoryTab -Id Logs -Title 'Build logs' -Profile PowerShell -Background
+  New-ImageConsoleStoryCommand -Text 'dotnet build'
+  Select-ImageConsoleStoryTab -Id Logs
+  New-ImageConsoleStoryOutput -Text 'Waiting for integration tests...' -Style Muted
+  New-ImageConsoleStoryPause -Seconds 1.5
+  Select-ImageConsoleStoryTab -Id PowerShell
+  New-ImageConsoleStoryCommand -Text 'Get-ChildItem .\artifacts'
+}
+$story | Export-ImageConsoleStory -Path '.\navigation.gif'
+```
+
+Background prepares an inactive tab. Each Select step deliberately switches to a retained buffer; a pause can show that session ready and a later command continues it.
+
+### EXAMPLE 3
 ```powershell
 PS> $output = & .\Invoke-EnvironmentAudit.ps1 2>&1 | Out-String -Stream -Width 110
 $story = $output | New-ImageConsoleStory -CommandText '.\Invoke-EnvironmentAudit.ps1' -Dialect PowerShell
@@ -72,7 +87,7 @@ $story | Export-ImageConsoleStory -Path '.\audit-demo.svg'
 
 The caller controls execution; the cmdlet only turns the captured lines into a deterministic presentation.
 
-### EXAMPLE 3
+### EXAMPLE 4
 ```powershell
 PS> $story = New-ImageConsoleStory -Dialect CSharp -Title 'dotnet run - ChartForgeX' -Content {
   New-ImageConsoleStoryCommand -Text 'var chart = Chart.Create().WithTitle("Weekly builds");'
@@ -84,7 +99,7 @@ $story | Export-ImageConsoleStory -Path '.\chart-demo.gif' -FramesPerSecond 10 -
 
 GIF and APNG export sample the same deterministic terminal timeline used by SVG and HTML.
 
-### EXAMPLE 4
+### EXAMPLE 5
 ```powershell
 PS> $story = New-ImageConsoleStory -Speed Normal -TypingSpeed 36 -TabHoldSeconds 2.5 -Content {
   New-ImageConsoleStoryCommand -Text 'Invoke-ProjectBuild'
@@ -102,7 +117,7 @@ Raster density multiplier used for animated GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -118,7 +133,7 @@ Command text shown before captured transcript lines.
 ```yaml
 Type: String
 Parameter Sets: Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -134,7 +149,7 @@ PowerShell-native authoring block that emits command, output, table, pause, tab 
 ```yaml
 Type: ScriptBlock
 Parameter Sets: Content
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -150,7 +165,7 @@ Prompt text used when Dialect is Custom.
 ```yaml
 Type: String
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -168,7 +183,7 @@ Possible values: PowerShell, Bash, CommandPrompt, Python, CSharp, Custom
 ```yaml
 Type: TerminalDialect
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values: PowerShell, Bash, CommandPrompt, Python, CSharp, Custom
 
 Required: False
@@ -184,7 +199,7 @@ Completed-state hold time used for animated GIF and APNG output.
 ```yaml
 Type: Double
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -200,7 +215,7 @@ Output file path. Supported extensions are SVG, HTML, HTM, PNG, GIF, and APNG.
 ```yaml
 Type: String
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -216,7 +231,7 @@ Terminal font size used by composed and captured stories.
 ```yaml
 Type: Double
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -232,7 +247,7 @@ Frame rate used for animated GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -248,7 +263,7 @@ Delay before the first animated step.
 ```yaml
 Type: Double
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -264,7 +279,7 @@ One captured output line. Accepts pipeline input and never executes the displaye
 ```yaml
 Type: String
 Parameter Sets: Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -280,7 +295,7 @@ Delay between output lines.
 ```yaml
 Type: Double
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -296,7 +311,7 @@ Terminal line height used by composed and captured stories.
 ```yaml
 Type: Double
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -312,7 +327,7 @@ Maximum frame budget used for animated GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -328,7 +343,7 @@ Hide the final prompt and cursor in the completed story.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -344,7 +359,7 @@ Produce a single-play animated GIF or APNG instead of a repeating animation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -360,7 +375,7 @@ Optional custom palette, normally created by New-ImageConsoleStoryPalette.
 ```yaml
 Type: TerminalTheme
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -376,7 +391,7 @@ Write the configured ChartForgeX TerminalStory to the pipeline.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -392,7 +407,7 @@ PNG output density multiplier used by composed and captured stories.
 ```yaml
 Type: Int32
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -408,7 +423,7 @@ Open the generated presentation after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: StoryScript, Content, Step, Story, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -426,7 +441,7 @@ Possible values: Slow, Normal, Fast
 ```yaml
 Type: TerminalStoryPlaybackSpeed
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values: Slow, Normal, Fast
 
 Required: False
@@ -442,7 +457,7 @@ Typed console story steps. Accepts pipeline input and arrays created by the cons
 ```yaml
 Type: ImageConsoleStoryStep[]
 Parameter Sets: Step
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -458,7 +473,7 @@ Native ChartForgeX terminal story to render.
 ```yaml
 Type: TerminalStory
 Parameter Sets: Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -474,7 +489,7 @@ Script block that receives and configures a new ChartForgeX TerminalStory.
 ```yaml
 Type: ScriptBlock
 Parameter Sets: StoryScript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -490,7 +505,7 @@ Optional minimum reading time after content appears and before the active tab ch
 ```yaml
 Type: Double
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -506,7 +521,7 @@ Built-in terminal color palette used by composed and captured stories.
 ```yaml
 Type: String
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values: Dark, PowerShell, WindowsPowerShell, Ubuntu, Campbell, Classic, Light
 
 Required: False
@@ -522,7 +537,7 @@ Terminal title shown for captured transcript presentations.
 ```yaml
 Type: String
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -554,7 +569,7 @@ Logical terminal width used by composed and captured stories.
 ```yaml
 Type: Int32
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -572,7 +587,7 @@ Possible values: MacOS, WindowsTerminal, Minimal, None
 ```yaml
 Type: TerminalWindowStyle
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values: MacOS, WindowsTerminal, Minimal, None
 
 Required: False
@@ -588,7 +603,7 @@ Working directory shown in shell prompts for captured transcript presentations.
 ```yaml
 Type: String
 Parameter Sets: Content, Step, Transcript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -603,7 +618,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `ImagePlayground.PowerShell.ImageConsoleStoryStep[]` — Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
+- `ImagePlayground.PowerShell.ImageConsoleStoryStep[]`: Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
 - `ChartForgeX.Terminal.TerminalStory`
 - `System.String`
 

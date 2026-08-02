@@ -143,6 +143,10 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
                 returnedTimelineCount++;
             } else if (value is VisualMotionCue cue) {
                 cues.Add(cue);
+            } else if (value != null) {
+                var exception = new PSArgumentException(
+                    $"MotionDefinition emitted unsupported output of type '{value.GetType().FullName}'. Emit only VisualMotionCue objects or one VisualMotionTimeline.");
+                ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryUnsupportedMotionOutput", ErrorCategory.InvalidArgument, value));
             }
         }
 
