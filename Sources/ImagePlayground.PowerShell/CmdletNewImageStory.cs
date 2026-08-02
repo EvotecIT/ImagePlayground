@@ -145,9 +145,9 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
                 $"BundlePath must resolve to a directory, but an existing file was found: {bundle}",
                 nameof(BundlePath));
         }
-        if (bundle != null && PathsEqual(output, bundle)) {
+        if (bundle != null && IsSameAsOrNestedBelowFilePath(output, bundle)) {
             throw new PSArgumentException(
-                "FilePath and BundlePath must not resolve to the same path.",
+                "FilePath and BundlePath must not resolve to the same path or place BundlePath nested beneath FilePath.",
                 nameof(BundlePath));
         }
         var story = BuildStory();
@@ -277,13 +277,19 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         ThrowTerminatingError(new ErrorRecord(exception, "NewImageStoryUnsupportedExtension", ErrorCategory.InvalidArgument, output));
     }
 
-    private static bool PathsEqual(string left, string right) {
+    private static bool IsSameAsOrNestedBelowFilePath(string filePath, string bundlePath) {
         var comparison = Path.DirectorySeparatorChar == '\\'
             ? System.StringComparison.OrdinalIgnoreCase
             : System.StringComparison.Ordinal;
-        return string.Equals(
-            left.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
-            right.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
-            comparison);
+        var normalizedFile = Path.GetFullPath(filePath)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var normalizedBundle = Path.GetFullPath(bundlePath)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        if (string.Equals(normalizedFile, normalizedBundle, comparison)) {
+            return true;
+        }
+
+        var filePrefix = normalizedFile + Path.DirectorySeparatorChar;
+        return normalizedBundle.StartsWith(filePrefix, comparison);
     }
 }

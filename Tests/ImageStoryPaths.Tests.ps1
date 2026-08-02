@@ -138,6 +138,41 @@ Describe 'Image story output paths' {
         Test-Path -LiteralPath $output | Should -BeFalse
     }
 
+    It 'rejects a generic story bundle nested below the output file before overwriting it' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'parent-story.svg'
+        $bundle = Join-Path -Path $output -ChildPath 'bundle'
+        [System.IO.File]::WriteAllText($output, 'existing output')
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Nested bundle path' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath $bundle -BundleFormats Transcript
+        } | Should -Throw '*nested beneath*'
+        Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
+    }
+
+    It 'rejects a directory visual story output before invoking authoring blocks' {
+        $output = Join-Path -Path $TestDrive -ChildPath 'directory-visual.svg'
+        $storyMarker = Join-Path -Path $TestDrive -ChildPath 'directory-visual-story-ran.txt'
+        $motionMarker = Join-Path -Path $TestDrive -ChildPath 'directory-visual-motion-ran.txt'
+        $null = New-Item -Path $output -ItemType Directory
+        $storyScript = {
+            [System.IO.File]::WriteAllText($storyMarker, 'executed')
+        }.GetNewClosure()
+        $motionDefinition = {
+            [System.IO.File]::WriteAllText($motionMarker, 'executed')
+        }.GetNewClosure()
+
+        {
+            New-ImageVisualStory -StoryScript $storyScript -MotionDefinition $motionDefinition -FilePath $output
+        } | Should -Throw '*must resolve to a file*'
+        Test-Path -LiteralPath $storyMarker | Should -BeFalse
+        Test-Path -LiteralPath $motionMarker | Should -BeFalse
+        (Get-Item -LiteralPath $output).PSIsContainer | Should -BeTrue
+    }
+
     It 'rejects a directory console output before invoking Content' {
         $output = Join-Path -Path $TestDrive -ChildPath 'directory-output.svg'
         $marker = Join-Path -Path $TestDrive -ChildPath 'directory-output-content-ran.txt'
