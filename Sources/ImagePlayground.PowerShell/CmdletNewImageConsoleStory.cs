@@ -19,17 +19,31 @@ namespace ImagePlayground.PowerShell;
 ///   New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
 ///
 ///   New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
-///   Select-ImageConsoleStoryTab -Id WindowsPowerShell
 ///   New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
 ///   New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
 ///
 ///   New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
-///   Select-ImageConsoleStoryTab -Id Ubuntu
 ///   New-ImageConsoleStoryCommand -Text './build.sh'
 ///   New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
 /// }
 /// $story | Export-ImageConsoleStory -Path '.\demo.gif'</code>
-///   <para>Creates three persistent tab buffers, leaves readable time before each switch, and exports the shared story through Export-ImageConsoleStory.</para>
+///   <para>Creates three persistent tab buffers. Each new tab opens atomically after the previous tab's reading dwell, then the shared story is exported through Export-ImageConsoleStory.</para>
+/// </example>
+/// <example>
+///   <summary>Jump between retained sessions intentionally</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Speed Slow -Content {
+///   New-ImageConsoleStoryTab -Id PowerShell -Profile PowerShell -Active
+///   New-ImageConsoleStoryTab -Id Logs -Title 'Build logs' -Profile PowerShell -Background
+///   New-ImageConsoleStoryCommand -Text 'dotnet build'
+///   Select-ImageConsoleStoryTab -Id Logs
+///   New-ImageConsoleStoryOutput -Text 'Waiting for integration tests...' -Style Muted
+///   New-ImageConsoleStoryPause -Seconds 1.5
+///   Select-ImageConsoleStoryTab -Id PowerShell
+///   New-ImageConsoleStoryCommand -Text 'Get-ChildItem .\artifacts'
+/// }
+/// $story | Export-ImageConsoleStory -Path '.\navigation.gif'</code>
+///   <para>Background prepares an inactive tab. Each Select step deliberately switches to a retained buffer; a pause can show that session ready and a later command continues it.</para>
 /// </example>
 /// <example>
 ///   <summary>Render output captured from an actual script run</summary>

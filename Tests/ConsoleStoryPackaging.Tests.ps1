@@ -40,6 +40,7 @@ Describe 'Image console story packaging contracts' {
         $tab = $help.SelectSingleNode("//*[local-name()='command'][*[local-name()='details']/*[local-name()='name' and text()='New-ImageConsoleStoryTab']]")
         $tabParameterNames = @($tab.SelectNodes(".//*[local-name()='parameter']/*[local-name()='name']") | ForEach-Object InnerText)
         $tabParameterNames | Should -Contain 'Active'
+        $tabParameterNames | Should -Contain 'Background'
 
         $output = $help.SelectSingleNode("//*[local-name()='command'][*[local-name()='details']/*[local-name()='name' and text()='New-ImageConsoleStoryOutput']]")
         $outputParameterNames = @($output.SelectNodes(".//*[local-name()='parameter']/*[local-name()='name']") | ForEach-Object InnerText)

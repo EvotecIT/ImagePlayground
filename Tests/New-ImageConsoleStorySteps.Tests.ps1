@@ -72,7 +72,7 @@ Describe 'Image console story step cmdlets' {
         }
     }
 
-    It 'authors persistent profile tabs and switches back without losing buffers' {
+    It 'opens new profile tabs atomically and switches back without losing buffers' {
         $file = Join-Path -Path $TestDir -ChildPath 'console-story-tabs.svg'
         $ubuntuPalette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'
 
@@ -80,10 +80,8 @@ Describe 'Image console story step cmdlets' {
                 New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
                 New-ImageConsoleStoryCommand -Text 'Get-ChildItem'
                 New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell -WorkingDirectory 'C:\Legacy'
-                Select-ImageConsoleStoryTab -Id WindowsPowerShell
                 New-ImageConsoleStoryCommand -Text '$PSVersionTable.PSVersion'
                 New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu -WorkingDirectory '~/src' -Palette $ubuntuPalette
-                Select-ImageConsoleStoryTab -Id Ubuntu
                 New-ImageConsoleStoryCommand -Text 'dotnet test'
                 Select-ImageConsoleStoryTab -Id PowerShell
                 New-ImageConsoleStoryOutput -Text 'Back in PowerShell' -Style Success
@@ -96,8 +94,9 @@ Describe 'Image console story step cmdlets' {
         $story.Tabs[1].Title | Should -Be 'Windows PowerShell'
         $story.Tabs[2].Dialect.ToString() | Should -Be 'Bash'
         $story.Tabs[2].Theme.Background.ToCss() | Should -Be '#24071B'
-        $story.Steps.Where({ $_.Kind.ToString() -eq 'DeclareTab' }).Count | Should -Be 2
-        $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 3
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'OpenTab' }).Count | Should -Be 2
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'DeclareTab' }).Count | Should -Be 0
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 1
 
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-tab="WindowsPowerShell"'
@@ -105,6 +104,27 @@ Describe 'Image console story step cmdlets' {
         $svg | Should -Match '#24071B'
         $svg | Should -Match '\[Ubuntu\] ~/src \$ dotnet test'
         $svg | Should -Match 'cfx-terminal-tab-final'
+    }
+
+    It 'prepares background tabs and makes every jump intentional' {
+        $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Speed Slow -Content {
+            New-ImageConsoleStoryTab -Id PowerShell -Profile PowerShell -Active
+            New-ImageConsoleStoryTab -Id Logs -Title 'Build logs' -Profile PowerShell -Background
+            New-ImageConsoleStoryCommand -Text 'dotnet build'
+            New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+            Select-ImageConsoleStoryTab -Id Logs
+            New-ImageConsoleStoryOutput -Text 'Waiting for integration tests...' -Style Muted
+            New-ImageConsoleStoryPause -Seconds 1.5
+            Select-ImageConsoleStoryTab -Id PowerShell
+            New-ImageConsoleStoryCommand -Text 'Get-ChildItem .\artifacts'
+        }
+
+        $story.ActiveTabId | Should -Be 'PowerShell'
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'DeclareTab' }).Count | Should -Be 1
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 2
+        $story.Steps.Where({ $_.Kind.ToString() -eq 'Pause' }).Count | Should -Be 1
+        $story.Tabs.Where({ $_.Id -eq 'PowerShell' })[0].Id | Should -Be 'PowerShell'
+        $story.Tabs.Where({ $_.Id -eq 'Logs' })[0].Title | Should -Be 'Build logs'
     }
 
     It 'accepts a reusable array of typed steps' {
@@ -203,6 +223,10 @@ Describe 'Image console story step cmdlets' {
                 New-ImageConsoleStoryTab -Id Legacy -Profile WindowsPowerShell -Active
             }
         } | Should -Throw '*one -Active tab*'
+
+        {
+            New-ImageConsoleStoryTab -Id Invalid -Profile PowerShell -Active -Background
+        } | Should -Throw
     }
 
     It 'ships parseable console story examples without continuation backticks' {

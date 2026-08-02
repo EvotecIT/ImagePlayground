@@ -14,7 +14,6 @@ namespace ImagePlayground.PowerShell;
 ///   New-ImageConsoleStoryCommand -Text 'dotnet build'
 ///   New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
 ///   New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
-///   Select-ImageConsoleStoryTab -Id Ubuntu
 ///   New-ImageConsoleStoryCommand -Text './build.sh'
 ///   New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
 /// }

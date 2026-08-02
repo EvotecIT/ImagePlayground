@@ -7,12 +7,10 @@ $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed S
     New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
 
     New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
-    Select-ImageConsoleStoryTab -Id WindowsPowerShell
     New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
     New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
 
     New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
-    Select-ImageConsoleStoryTab -Id Ubuntu
     New-ImageConsoleStoryCommand -Text './build.sh'
     New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
 }

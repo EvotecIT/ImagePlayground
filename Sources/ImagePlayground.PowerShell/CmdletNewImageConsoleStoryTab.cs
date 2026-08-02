@@ -4,8 +4,8 @@ using ChartForgeX.Terminal;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Declares a persistent tab in an ImagePlayground console story.</summary>
-/// <para>Each tab owns its title, prompt dialect, working directory, palette, icon, and transcript buffer. Use Active for the initial tab and Select-ImageConsoleStoryTab for later visible switches.</para>
+/// <summary>Creates a persistent tab in an ImagePlayground console story.</summary>
+/// <para>By default, the new tab opens and becomes active after the current tab's configured reading dwell. Use Active for the initial tab, Background to pre-stage a visible inactive tab, and Select-ImageConsoleStoryTab to revisit any existing tab without clearing its buffer.</para>
 /// <example>
 ///   <summary>Define the initial active PowerShell tab</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -16,11 +16,22 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Open an Ubuntu tab</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageConsoleStoryTab -Id ubuntu -Profile Ubuntu -Title Ubuntu -WorkingDirectory '~/src'</code>
-///   <para>Creates a typed story step that opens and activates an Ubuntu-styled Bash session.</para>
+///   <para>Opens and activates an Ubuntu-styled Bash session only after the previous tab has finished its configured reading dwell.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "ImageConsoleStoryTab")]
+/// <example>
+///   <summary>Prepare a background tab for a later jump</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageConsoleStoryTab -Id logs -Title Logs -Profile PowerShell -Background
+/// Select-ImageConsoleStoryTab -Id logs</code>
+///   <para>The declaration makes the tab available in the strip without interrupting the active session. Selection later activates its retained buffer.</para>
+/// </example>
+[Cmdlet(VerbsCommon.New, "ImageConsoleStoryTab", DefaultParameterSetName = OpenSet)]
 [OutputType(typeof(ImageConsoleStoryStep))]
 public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
+    private const string OpenSet = "Open";
+    private const string InitialSet = "Initial";
+    private const string BackgroundSet = "Background";
+
     /// <summary>Stable identifier used by later tab-selection steps.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Id { get; set; } = string.Empty;
@@ -39,8 +50,12 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
     public string? WorkingDirectory { get; set; }
 
     /// <summary>Configure this declaration as the initial active tab. It must be the first content step.</summary>
-    [Parameter]
+    [Parameter(Mandatory = true, ParameterSetName = InitialSet)]
     public SwitchParameter Active { get; set; }
+
+    /// <summary>Declare the tab without activating it. Use Select-ImageConsoleStoryTab for the later intentional switch.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = BackgroundSet)]
+    public SwitchParameter Background { get; set; }
 
     /// <summary>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</summary>
     [Parameter]
@@ -87,8 +102,9 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
                 break;
         }
 
+        var isInitialTab = Active.IsPresent;
         WriteObject(new ImageConsoleStoryStep(
-            Active.IsPresent ? TerminalStoryStepKind.OpenTab : TerminalStoryStepKind.DeclareTab,
+            Background.IsPresent ? TerminalStoryStepKind.DeclareTab : TerminalStoryStepKind.OpenTab,
             string.Empty,
             TerminalTextTone.Default,
             TransitionSeconds,
@@ -99,6 +115,6 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
             string.IsNullOrWhiteSpace(WorkingDirectory) ? defaultDirectory : WorkingDirectory!,
             Palette ?? ConsoleStoryPaletteResolver.Resolve(defaultPalette),
             icon,
-            isInitialTab: Active.IsPresent));
+            isInitialTab: isInitialTab));
     }
 }

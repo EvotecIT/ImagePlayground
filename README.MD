@@ -108,12 +108,10 @@ $story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed S
     New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
 
     New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
-    Select-ImageConsoleStoryTab -Id WindowsPowerShell
     New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
     New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
 
     New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
-    Select-ImageConsoleStoryTab -Id Ubuntu
     New-ImageConsoleStoryCommand -Text './build.sh'
     New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
 }
@@ -122,7 +120,16 @@ $story | Export-ImageConsoleStory -Path '.\demo.svg'
 $story | Export-ImageConsoleStory -Path '.\demo.gif'
 ```
 
-The authoring commands return reusable typed steps. `New-ImageConsoleStoryTable` accepts ordinary PowerShell objects, so examples do not need direct ChartForgeX builders, `[void]` output suppression, or line-continuation backticks. `-Speed Slow`, `Normal`, and `Fast` coordinate typing, output reveals, and readable tab dwell. Use `-TypingSpeed 36` to set visible characters per second and `-TabHoldSeconds 2.5` to set an exact minimum hold before each switch; `New-ImageConsoleStoryCommand -DurationSeconds` can override one command. Tab declarations and tab selection are separate on purpose: `-Active` names the initial tab, while `Select-ImageConsoleStoryTab` performs each later visible switch.
+The authoring commands return reusable typed steps. `New-ImageConsoleStoryTable` accepts ordinary PowerShell objects, so examples do not need direct ChartForgeX builders, `[void]` output suppression, or line-continuation backticks. `-Speed Slow`, `Normal`, and `Fast` coordinate typing, output reveals, and readable tab dwell. Use `-TypingSpeed 36` to set visible characters per second and `-TabHoldSeconds 2.5` to set an exact minimum hold before each switch; `New-ImageConsoleStoryCommand -DurationSeconds` can override one command.
+
+Tab navigation is explicit and stateful:
+
+- `New-ImageConsoleStoryTab -Active` defines the initial active session.
+- A later `New-ImageConsoleStoryTab` opens and activates the new session atomically after the current tab's reading dwell.
+- `New-ImageConsoleStoryTab -Background` pre-stages an inactive tab without interrupting the current session.
+- `Select-ImageConsoleStoryTab` deliberately jumps to an existing session without clearing its transcript. Add `New-ImageConsoleStoryPause` to show the session ready, or add another command to continue where it stopped.
+
+See `Examples/ConsoleStory.TabNavigation.ps1` for background preparation, intentional tab jumps, a ready-state pause, and continued output in a retained session.
 
 To show a real script run, execute it explicitly, render the captured transcript to SVG, and reuse the same story for GIF:
 
