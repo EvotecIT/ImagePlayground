@@ -64,6 +64,67 @@ public partial class ImageHelper {
             OutputPath = outputPath;
         }
     }
+
+    /// <summary>
+    /// Reads supported metadata profiles and provenance indicators from an image.
+    /// </summary>
+    /// <param name="filePath">Path to the image to inspect.</param>
+    /// <returns>A metadata snapshot containing supported profiles and provenance indicators.</returns>
+    public static ImageMetadataInfo InspectMetadata(string filePath) {
+        string fullPath = Helpers.ResolvePath(filePath);
+        byte[]? exifProfile;
+        byte[]? xmpProfile;
+        byte[]? iccProfile = null;
+        byte[]? iptcProfile = null;
+        double? horizontalResolution = null;
+        double? verticalResolution = null;
+        PixelResolutionUnit? resolutionUnits = null;
+
+        if (Helpers.IsHeifExtension(fullPath)) {
+            if (HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
+                exifProfile = heifProfile?.ToByteArray();
+            } else if (HeifMetadataReader.HasExifItem(fullPath)) {
+                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
+            } else {
+                exifProfile = null;
+            }
+
+            if (HeifMetadataReader.TryReadXmp(fullPath, out string? heifXmp)) {
+                xmpProfile = heifXmp is null ? null : Encoding.UTF8.GetBytes(heifXmp);
+            } else if (HeifMetadataReader.HasXmpItem(fullPath)) {
+                throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
+            } else {
+                xmpProfile = null;
+            }
+        } else {
+            IImageInfo? imageInfo = SixLabors.ImageSharp.Image.Identify(fullPath);
+            if (imageInfo is null) {
+                throw new InvalidDataException($"Unable to identify image metadata: {fullPath}");
+            }
+
+            ImageMetadata metadata = imageInfo.Metadata;
+            horizontalResolution = metadata.HorizontalResolution;
+            verticalResolution = metadata.VerticalResolution;
+            resolutionUnits = metadata.ResolutionUnits;
+            exifProfile = metadata.ExifProfile?.ToByteArray();
+            xmpProfile = metadata.XmpProfile?.ToByteArray();
+            iccProfile = metadata.IccProfile?.ToByteArray();
+            iptcProfile = metadata.IptcProfile?.Data;
+        }
+
+        ImageProvenanceInfo provenance = InspectProvenanceCore(fullPath, xmpProfile);
+        return new ImageMetadataInfo(
+            fullPath,
+            horizontalResolution,
+            verticalResolution,
+            resolutionUnits,
+            exifProfile,
+            xmpProfile,
+            iccProfile,
+            iptcProfile,
+            provenance);
+    }
+
     /// <summary>
     /// Exports metadata from an image to a JSON string.
     /// </summary>
@@ -200,28 +261,12 @@ public partial class ImageHelper {
     }
 
     /// <summary>
-    /// Removes all metadata profiles from an image and saves it to the specified path.
+    /// Removes all supported metadata from an image and saves it to the specified path.
     /// </summary>
     /// <param name="filePath">Source image path.</param>
     /// <param name="outFilePath">Destination image path.</param>
-    public static void RemoveMetadata(string filePath, string outFilePath) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        if (Helpers.IsHeifExtension(fullPath)) {
-            RemoveHeifMetadata(fullPath, outFullPath);
-            return;
-        }
-
-        using var img = Image.Load(fullPath);
-        var meta = img.Metadata;
-        meta.ExifProfile = null;
-        meta.XmpProfile = null;
-        meta.IccProfile = null;
-        meta.IptcProfile = null;
-        img.Save(outFullPath);
-    }
+    public static void RemoveMetadata(string filePath, string outFilePath) =>
+        RemoveMetadata(new ImageMetadataRemovalOptions(filePath, outFilePath));
 
     private static void ImportHeifMetadata(string fullPath, string outFullPath, SerializedImageMetadata data) {
         string currentPath = fullPath;
@@ -267,13 +312,22 @@ public partial class ImageHelper {
         }
     }
 
-    private static void RemoveHeifMetadata(string fullPath, string outFullPath) {
+    private static ImageMetadataType RemoveHeifMetadata(
+        string fullPath,
+        string outFullPath,
+        ImageMetadataType requested) {
+        ImageMetadataType unsupported = requested & ~(ImageMetadataType.Exif | ImageMetadataType.Xmp);
+        if (unsupported != ImageMetadataType.None && requested != ImageMetadataType.All) {
+            throw new NotSupportedException($"HEIF and HEIC metadata removal currently supports EXIF and XMP, not {unsupported}.");
+        }
+
         string currentPath = fullPath;
         bool wroteMetadata = false;
+        ImageMetadataType removed = ImageMetadataType.None;
         var temporaryFiles = new List<string>();
 
         try {
-            if (HeifMetadataReader.HasExifItem(currentPath)) {
+            if ((requested & ImageMetadataType.Exif) != 0 && HeifMetadataReader.HasExifItem(currentPath)) {
                 string temporaryPath = GetTemporaryHeifPath(outFullPath);
                 temporaryFiles.Add(temporaryPath);
                 if (!HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, null)) {
@@ -282,9 +336,10 @@ public partial class ImageHelper {
 
                 currentPath = temporaryPath;
                 wroteMetadata = true;
+                removed |= ImageMetadataType.Exif;
             }
 
-            if (HeifMetadataReader.HasXmpItem(currentPath)) {
+            if ((requested & ImageMetadataType.Xmp) != 0 && HeifMetadataReader.HasXmpItem(currentPath)) {
                 string temporaryPath = GetTemporaryHeifPath(outFullPath);
                 temporaryFiles.Add(temporaryPath);
                 if (!HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, null)) {
@@ -293,6 +348,7 @@ public partial class ImageHelper {
 
                 currentPath = temporaryPath;
                 wroteMetadata = true;
+                removed |= ImageMetadataType.Xmp;
             }
 
             if (wroteMetadata) {
@@ -303,6 +359,8 @@ public partial class ImageHelper {
         } finally {
             DeleteTemporaryFiles(temporaryFiles);
         }
+
+        return removed;
     }
 
     private static string GetTemporaryHeifPath(string outFullPath) =>
