@@ -45,17 +45,23 @@ Describe 'Remove-ImageMetadata' {
     It 'removes only selected metadata and reports the result with PassThru' {
         $source = Join-Path $TestDir 'metadata-selected-source.jpg'
         $output = Join-Path $TestDir 'metadata-selected-clean.jpg'
+        $metadataPath = Join-Path $TestDir 'metadata-selected.json'
 
         if (Test-Path $source) { Remove-Item $source }
         if (Test-Path $output) { Remove-Item $output }
+        if (Test-Path $metadataPath) { Remove-Item $metadataPath }
 
         $img = [ImagePlayground.Image]::new()
         $img.Create($source, 10, 10)
         $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
-        $img.Metadata.XmpProfile = [SixLabors.ImageSharp.Metadata.Profiles.Xmp.XmpProfile]::new(
-            [Text.Encoding]::UTF8.GetBytes('<x:xmpmeta xmlns:x="adobe:ns:meta/" />'))
         $img.Save()
         $img.Dispose()
+
+        $metadata = Export-ImageMetadata -FilePath $source | ConvertFrom-Json
+        $metadata.XmpProfile = [Convert]::ToBase64String(
+            [Text.Encoding]::UTF8.GetBytes('<x:xmpmeta xmlns:x="adobe:ns:meta/" />'))
+        [IO.File]::WriteAllText($metadataPath, ($metadata | ConvertTo-Json -Depth 5))
+        Import-ImageMetadata -FilePath $source -MetadataPath $metadataPath
 
         $result = Remove-ImageMetadata -FilePath $source -OutputPath $output -MetadataType Exif -PassThru
         $metadata = Get-ImageMetadata -FilePath $output
