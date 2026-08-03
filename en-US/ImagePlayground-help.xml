@@ -2690,6 +2690,167 @@ img.Save("out.png");</dev:code>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Get-ImageMetadata</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ImageMetadata</command:noun>
+      <maml:description>
+        <maml:para>Gets supported metadata profiles and provenance indicators from an image.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The result includes resolution, EXIF, XMP, ICC, IPTC, and lightweight C2PA provenance detection where supported.</maml:para>
+      <maml:para>C2PA presence does not by itself mean that an image was made with AI, and this command does not cryptographically validate C2PA claims.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-ImageMetadata</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Path to the image file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <maml:name>FilePath</maml:name>
+        <maml:description>
+          <maml:para>Path to the image file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.ImageMetadataInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Inspect all supported image metadata</maml:title>
+        <dev:code>Get-ImageMetadata -FilePath image.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Check metadata for AI provenance indicators</maml:title>
+        <dev:code>$metadata = Get-ImageMetadata -FilePath image.png&#xD;
+            $metadata.Provenance.HasC2paManifest&#xD;
+            $metadata.Provenance.HasXmpAiDeclaration</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Get-ImageProvenance</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ImageProvenance</command:noun>
+      <maml:description>
+        <maml:para>Gets embedded C2PA containers and direct XMP generative-AI declarations from an image.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>This command does not interpret the active C2PA manifest or cryptographically validate C2PA signatures, trust chains, or asset hashes.</maml:para>
+      <maml:para>A C2PA container records provenance but does not by itself mean that the image was made with AI. Use a conforming C2PA validator to inspect its active claim.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-ImageProvenance</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Path to the image file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <maml:name>FilePath</maml:name>
+        <maml:description>
+          <maml:para>Path to the image file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Check whether an image declares AI provenance</maml:title>
+        <dev:code>Get-ImageProvenance -FilePath image.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Remove all metadata when direct XMP metadata declares generative AI</maml:title>
+        <dev:code>$info = Get-ImageProvenance -FilePath image.png&#xD;
+            if ($info.HasXmpAiDeclaration) {&#xD;
+                Remove-ImageMetadata -FilePath image.png -OutputPath image-clean.png&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Get-ImageQRCode</command:name>
       <command:verb>Get</command:verb>
       <command:noun>ImageQRCode</command:noun>
@@ -26489,15 +26650,27 @@ polygonal areas.</maml:para>
       <command:verb>Remove</command:verb>
       <command:noun>ImageMetadata</command:noun>
       <maml:description>
-        <maml:para>Removes metadata from an image.</maml:para>
+        <maml:para>Removes selected metadata from an image.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Removes metadata from an image.</maml:para>
+      <maml:para>JPEG and PNG files are rewritten without re-encoding their compressed image data. Choose individual metadata families, or use All for the compatibility behavior that removes every supported family. HEIF and HEIC cleanup is limited to EXIF and XMP.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Remove-ImageMetadata</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>All</maml:name>
+          <maml:description>
+            <maml:para>Remove every metadata family supported by the image format.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -26506,6 +26679,27 @@ polygonal areas.</maml:para>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MetadataType</maml:name>
+          <maml:description>
+            <maml:para>Metadata families to remove. When omitted, all supported metadata is removed for backward compatibility.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ImageMetadataType[]</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Exif</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Xmp</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Iptc</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Icc</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">C2pa</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">All</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>ImageMetadataType[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -26522,9 +26716,33 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Return a result describing which metadata was removed and whether re-encoding occurred.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>All</maml:name>
+        <maml:description>
+          <maml:para>Remove every metadata family supported by the image format.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
@@ -26537,6 +26755,27 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MetadataType</maml:name>
+        <maml:description>
+          <maml:para>Metadata families to remove. When omitted, all supported metadata is removed for backward compatibility.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ImageMetadataType[]</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Exif</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Xmp</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Iptc</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Icc</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">C2pa</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">All</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>ImageMetadataType[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>OutputPath</maml:name>
         <maml:description>
@@ -26545,6 +26784,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Return a result describing which metadata was removed and whether re-encoding occurred.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -26566,7 +26817,14 @@ polygonal areas.</maml:para>
     <command:examples>
       <command:example>
         <maml:title>Save a copy without metadata</maml:title>
-        <dev:code>Remove-ImageMetadata -FilePath in.jpg -OutputPath out.jpg</dev:code>
+        <dev:code>Remove-ImageMetadata -FilePath in.jpg -OutputPath out.jpg -All</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Remove C2PA Content Credentials but preserve EXIF, XMP, IPTC, and ICC metadata</maml:title>
+        <dev:code>Remove-ImageMetadata -FilePath in.jpg -OutputPath out.jpg -MetadataType C2pa</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>

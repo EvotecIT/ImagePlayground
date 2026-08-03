@@ -2,7 +2,7 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.2.2
+Help Version: 3.2.1
 Locale: en-US
 ---
 # ImagePlayground Module
@@ -58,6 +58,12 @@ Gets HEIF container metadata without decoding image pixels.
 
 ### [Get-ImageHeifXmp](Get-ImageHeifXmp.md)
 Gets the XMP metadata packet from a HEIF or HEIC file.
+
+### [Get-ImageMetadata](Get-ImageMetadata.md)
+Gets supported metadata profiles and provenance indicators from an image.
+
+### [Get-ImageProvenance](Get-ImageProvenance.md)
+Gets embedded C2PA containers and direct XMP generative-AI declarations from an image.
 
 ### [Get-ImageQRCode](Get-ImageQRCode.md)
 Reads QR code information from an image file.
@@ -304,7 +310,7 @@ Removes EXIF metadata from an image.
 Removes the XMP metadata packet from a HEIF or HEIC file.
 
 ### [Remove-ImageMetadata](Remove-ImageMetadata.md)
-Removes metadata from an image.
+Removes selected metadata from an image.
 
 ### [Resize-Image](Resize-Image.md)
 Resizes an image.
