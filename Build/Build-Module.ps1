@@ -21,7 +21,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion          = '3.0.0'
+        ModuleVersion          = '3.2.0'
         AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
         # Author of this module
         Author                 = 'Przemyslaw Klys'
@@ -30,9 +30,9 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # Copyright statement for this module
         Copyright              = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
         # Description of the functionality provided by this module
-        Description            = 'Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.'
+        Description            = 'Unified PowerShell commands for image processing, charts, topology diagrams, visual stories, QR codes, and barcodes.'
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags                   = @('windows', 'image', 'image-processing', 'charts', 'topology', 'qrcodes', 'barcodes')
+        Tags                   = @('windows', 'image', 'image-processing', 'charts', 'topology', 'visual-stories', 'demos', 'qrcodes', 'barcodes')
         # A URL to the main website for this project.
         ProjectUri             = 'https://github.com/EvotecIT/ImagePlayground'
 
@@ -92,7 +92,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
 
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$true -SkipFallbackExamples -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$true -SkipFallbackExamples -SyncExternalHelpToProjectRoot -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf #-ImportRequiredModules
 
@@ -125,14 +125,28 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # that are intentionally part of the PowerShell scripting surface.
         NETAssemblyTypeAccelerators       = @(
             'ChartForgeX.Core.Chart'
+            'ChartForgeX.Core.ChartCalendarHeatmapItem'
+            'ChartForgeX.Motion.VisualMotionCue'
+            'ChartForgeX.Motion.VisualMotionTimeline'
             'ChartForgeX.Primitives.ChartColor'
             'ChartForgeX.Primitives.ChartPoint'
+            'ChartForgeX.Stories.StorySourceText'
+            'ChartForgeX.Stories.VisualStory'
+            'ChartForgeX.Stories.VisualStoryTheme'
+            'ChartForgeX.Terminal.TerminalStory'
+            'ChartForgeX.Terminal.TerminalTable'
+            'ChartForgeX.Terminal.TerminalTheme'
+            'ChartForgeX.Themes.ChartTheme'
             'ChartForgeX.Topology.TopologyChart'
             'ChartForgeX.Topology.TopologyEdge'
             'ChartForgeX.Topology.TopologyGroup'
             'ChartForgeX.Topology.TopologyNode'
+            'ChartForgeX.VisualBlocks.MetricCard'
+            'ChartForgeX.VisualBlocks.ChartTable'
+            'ChartForgeX.VisualBlocks.VisualGrid'
             'CodeGlyphX.QrPixelDecodeOptions'
             'ImagePlayground.Image'
+            'ImagePlayground.PowerShell.ImageConsoleStoryStep'
             'SixLabors.Fonts.HorizontalAlignment'
             'SixLabors.Fonts.VerticalAlignment'
             'SixLabors.ImageSharp.Color'

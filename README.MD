@@ -99,6 +99,97 @@ New-ImageChart {
 
 The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other chart-definition commands remain the normal PowerShell experience. Advanced scripts can also pass a native `ChartForgeX.Core.Chart` through `-Chart` or configure one through `-ChartScript`.
 
+Present a deliberately paced, multi-tab PowerShell session while keeping ChartForgeX as the reusable terminal renderer:
+
+```powershell
+$story = New-ImageConsoleStory -WindowStyle WindowsTerminal -Width 1100 -Speed Slow -Content {
+    New-ImageConsoleStoryTab -Id PowerShell -Title 'PowerShell' -Profile PowerShell -Active
+    New-ImageConsoleStoryCommand -Text 'dotnet build'
+    New-ImageConsoleStoryOutput -Text 'Build succeeded.' -Style Success
+
+    New-ImageConsoleStoryTab -Id WindowsPowerShell -Title 'Windows PowerShell' -Profile WindowsPowerShell
+    New-ImageConsoleStoryCommand -Text '.\Invoke-LegacyTests.ps1'
+    New-ImageConsoleStoryOutput -Text 'PS 5.1 compatibility passed.' -Style Success
+
+    New-ImageConsoleStoryTab -Id Ubuntu -Title 'Ubuntu' -Profile Ubuntu
+    New-ImageConsoleStoryCommand -Text './build.sh'
+    New-ImageConsoleStoryOutput -Text 'Linux package ready.' -Style Success
+}
+
+$story | Export-ImageConsoleStory -Path '.\demo.svg'
+$story | Export-ImageConsoleStory -Path '.\demo.gif'
+```
+
+The authoring commands return reusable typed steps. `New-ImageConsoleStoryTable` accepts ordinary PowerShell objects, so examples do not need direct ChartForgeX builders, `[void]` output suppression, or line-continuation backticks. `-Speed Slow`, `Normal`, and `Fast` coordinate typing, output reveals, and readable tab dwell. Use `-TypingSpeed 36` to set visible characters per second and `-TabHoldSeconds 2.5` to set an exact minimum hold before each switch; `New-ImageConsoleStoryCommand -DurationSeconds` can override one command.
+
+Tab navigation is explicit and stateful:
+
+- `New-ImageConsoleStoryTab -Active` defines the initial active session.
+- A later `New-ImageConsoleStoryTab` opens and activates the new session atomically after the current tab's reading dwell.
+- `New-ImageConsoleStoryTab -Background` pre-stages an inactive tab without interrupting the current session.
+- `Select-ImageConsoleStoryTab` deliberately jumps to an existing session without clearing its transcript. Add `New-ImageConsoleStoryPause` to show the session ready, or add another command to continue where it stopped.
+
+See `Examples/ConsoleStory.TabNavigation.ps1` for background preparation, intentional tab jumps, a ready-state pause, and continued output in a retained session.
+
+To show a real script run, execute it explicitly, render the captured transcript to SVG, and reuse the same story for GIF:
+
+```powershell
+$transcript = & .\Invoke-EnvironmentAudit.ps1 2>&1 |
+    Out-String -Stream -Width 110
+
+$storyOptions = @{
+    CommandText = '.\Invoke-EnvironmentAudit.ps1'
+    Dialect     = 'PowerShell'
+    Theme       = 'PowerShell'
+    WindowStyle = 'Minimal'
+}
+
+$story = $transcript | New-ImageConsoleStory @storyOptions
+$story | Export-ImageConsoleStory -Path '.\audit-demo.svg'
+$story | Export-ImageConsoleStory -Path '.\audit-demo.gif' -FramesPerSecond 8 -EndHoldSeconds 1.5
+```
+
+`New-ImageConsoleStory` never executes `-CommandText`. It accepts PowerShell-native steps, captured transcript lines, the advanced `-StoryScript` builder, or a native `ChartForgeX.Terminal.TerminalStory`. `-Dialect` controls prompts, `-Theme` controls the color palette, and `-WindowStyle` independently selects `MacOS`, `WindowsTerminal`, `Minimal`, or `None` chrome. SVG and HTML use script-free command typing and output reveals; `Export-ImageConsoleStory` writes that same timeline as SVG, HTML, PNG, GIF, or APNG for Discord, issues, and documentation embeds. PNG, print, and reduced-motion output show the completed transcript. Use `-FramesPerSecond`, `-EndHoldSeconds`, `-AnimationScale`, `-MaximumFrames`, and `-NoLoop` to tune animated raster output.
+Long captured lines wrap within the terminal instead of being discarded. For a custom dialect, pair `-Dialect Custom` with `-CustomPrompt 'demo> '`.
+
+Build a general animated visual story from native ChartForgeX blocks:
+
+```powershell
+New-ImageVisualStory -StoryScript {
+    param($Story)
+
+    $projects = [ChartForgeX.VisualBlocks.MetricCard]::Create()
+    [void] $projects.WithMetric('Maintained projects', '24').WithCaption('reusable libraries')
+    [void] $Story.WithTitle('Engineering portfolio').WithColumns(1)
+    [void] $Story.Add('projects', $projects)
+} -MotionDefinition {
+    New-ImageVisualMotionCue -TargetId title -Effect Reveal -DurationSeconds 0.65
+    New-ImageVisualMotionCue -TargetId projects -Effect Rise -DelaySeconds 0.25
+} -FilePath '.\portfolio.svg'
+```
+
+SVG and HTML preserve the script-free story. PNG renders the exact completed state, while reduced-motion and print users see all content immediately.
+
+For complete source-to-result demonstrations, use the generic story commands. The final scene must contain every declared outcome, so a demo that promises a chart cannot finish at “Saved chart.png”:
+
+```powershell
+$chartPath = '.\weekly-builds.png'
+New-ImageChart {
+    New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
+} -FilePath $chartPath -Width 900 -Height 500
+
+$code = Get-Content '.\Create-WeeklyBuilds.ps1' -Raw
+$source = ConvertTo-ImageStorySource -Text $code -Language PowerShell
+$codePanel = New-ImageStoryPanel -Id code -Source $source
+$chartPanel = New-ImageStoryPanel -Id chart -MediaPath $chartPath -AccessibleText 'Weekly builds chart'
+$write = New-ImageStoryScene -Id write -Title 'Write five lines' -Panels $codePanel
+$result = New-ImageStoryScene -Id result -Title 'See the chart' -Layout Split -Panels $codePanel, $chartPanel
+$outcome = New-ImageStoryOutcome -Id chart -Label 'The weekly builds chart is visible.' -PanelId chart
+New-ImageStory -Title 'Chart in five lines' -Scenes $write, $result -Outcomes $outcome -FilePath '.\chart-story.gif'
+```
+
+`New-ImageStory` consumes already resolved text, terminal output, images, SVG, and other media; it never executes showcased code. Run a producer explicitly when you want a real result, then pass the captured artifact into the story. PowerShell highlighting uses the native PowerShell parser. C# and Bash can use the separate optional `ImagePlayground.Syntax.TreeSitter` package; there is intentionally no regex-coloring fallback and no Tree-sitter native payload in the normal PowerShell module.
+
 PowerShell commands have one execution path. Commands that can use asynchronous file APIs do so internally and honor pipeline cancellation; there is no `-Async` switch because a PowerShell command invocation still completes before returning control to the caller.
 
 See [the generated command reference](Docs/Readme.md) and the focused scripts under [`Examples`](Examples).

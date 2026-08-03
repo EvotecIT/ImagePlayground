@@ -41,6 +41,9 @@ jobs:
       - name: Run tests
         run: dotnet test Sources/ImagePlayground.Tests/ImagePlayground.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --framework net8.0 --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
+      - name: Run Tree-sitter tests
+        run: dotnet test Sources/ImagePlayground.Syntax.TreeSitter.Tests/ImagePlayground.Syntax.TreeSitter.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal --logger trx
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -83,6 +86,9 @@ jobs:
       - name: Run tests
         run: dotnet test Sources/ImagePlayground.Tests/ImagePlayground.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --framework net8.0 --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
+      - name: Run Tree-sitter tests
+        run: dotnet test Sources/ImagePlayground.Syntax.TreeSitter.Tests/ImagePlayground.Syntax.TreeSitter.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal --logger trx
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -124,6 +130,9 @@ jobs:
 
       - name: Run tests
         run: dotnet test Sources/ImagePlayground.Tests/ImagePlayground.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --framework net8.0 --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+      - name: Run Tree-sitter tests
+        run: dotnet test Sources/ImagePlayground.Syntax.TreeSitter.Tests/ImagePlayground.Syntax.TreeSitter.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal --logger trx
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

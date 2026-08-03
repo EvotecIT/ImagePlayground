@@ -2,17 +2,16 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.0.0
+Help Version: 3.2.0
 Locale: en-US
 ---
 # ImagePlayground Module
 ## Description
-Unified PowerShell commands for image processing, charts, topology diagrams, QR codes, and barcodes.
+Unified PowerShell commands for image processing, charts, topology diagrams, visual stories, QR codes, and barcodes.
 
 ## ImagePlayground Cmdlets
 ### [Add-ImageText](Add-ImageText.md)
-Adds text to an image at the provided coordinates and writes the updated
-image to disk.
+Adds text to an image at the provided coordinates and writes the updated image to disk.
 
 ### [Add-ImageTextBox](Add-ImageTextBox.md)
 Adds wrapped text to an image within a box.
@@ -34,6 +33,12 @@ Converts an image to a different format.
 
 ### [ConvertTo-ImageBase64](ConvertTo-ImageBase64.md)
 Converts an image file into a Base64 encoded string.
+
+### [ConvertTo-ImageStorySource](ConvertTo-ImageStorySource.md)
+Converts exact source text into renderer-neutral syntax spans for visual stories.
+
+### [Export-ImageConsoleStory](Export-ImageConsoleStory.md)
+Exports an authored ImagePlayground console story to SVG, HTML, PNG, GIF, or APNG.
 
 ### [Export-ImageMetadata](Export-ImageMetadata.md)
 Exports metadata from an image.
@@ -167,9 +172,32 @@ Creates waterfall chart data item.
 ### [New-ImageChartWordCloud](New-ImageChartWordCloud.md)
 Creates word cloud chart term.
 
+### [New-ImageConsoleStory](New-ImageConsoleStory.md)
+Creates a reusable script-free console story from PowerShell-native steps, captured transcript lines, or a native ChartForgeX terminal story.
+
+### [New-ImageConsoleStoryBlankLine](New-ImageConsoleStoryBlankLine.md)
+Creates a blank-line step for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryCommand](New-ImageConsoleStoryCommand.md)
+Creates a typed command step for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryOutput](New-ImageConsoleStoryOutput.md)
+Creates a typed output step for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryPalette](New-ImageConsoleStoryPalette.md)
+Creates a reusable terminal color palette for ImagePlayground console stories and tabs.
+
+### [New-ImageConsoleStoryPause](New-ImageConsoleStoryPause.md)
+Creates a silent timeline pause for an ImagePlayground console story.
+
+### [New-ImageConsoleStoryTab](New-ImageConsoleStoryTab.md)
+Declares a persistent tab in an ImagePlayground console story.
+
+### [New-ImageConsoleStoryTable](New-ImageConsoleStoryTable.md)
+Creates a typed table step from ordinary PowerShell objects.
+
 ### [New-ImageCrop](New-ImageCrop.md)
-Creates a cropped version of an image using rectangular, circular or
-polygonal areas.
+Creates a cropped version of an image using rectangular, circular or polygonal areas.
 
 ### [New-ImageGif](New-ImageGif.md)
 Creates an animated GIF from existing images.
@@ -234,6 +262,18 @@ Creates a WiFi QR code image.
 ### [New-ImageQRContact](New-ImageQRContact.md)
 Generates a QR code image containing the provided contact details.
 
+### [New-ImageStory](New-ImageStory.md)
+Creates a generic source-to-result visual story from resolved scenes and declared outcomes.
+
+### [New-ImageStoryOutcome](New-ImageStoryOutcome.md)
+Declares a result that must be visible in the completed visual-story scene.
+
+### [New-ImageStoryPanel](New-ImageStoryPanel.md)
+Creates one resolved source, terminal, media, or text panel for a generic visual story.
+
+### [New-ImageStoryScene](New-ImageStoryScene.md)
+Groups resolved panels into one timed visual-story scene.
+
 ### [New-ImageThumbnail](New-ImageThumbnail.md)
 Creates thumbnails for all images in a directory.
 
@@ -249,6 +289,12 @@ Creates a topology group definition.
 ### [New-ImageTopologyNode](New-ImageTopologyNode.md)
 Creates a topology node definition.
 
+### [New-ImageVisualMotionCue](New-ImageVisualMotionCue.md)
+Creates one named motion cue for an animated ChartForgeX visual story.
+
+### [New-ImageVisualStory](New-ImageVisualStory.md)
+Creates a script-free animated visual story from a ChartForgeX visual grid.
+
 ### [Remove-ImageExif](Remove-ImageExif.md)
 Removes EXIF metadata from an image.
 
@@ -263,6 +309,9 @@ Resizes an image.
 
 ### [Save-Image](Save-Image.md)
 Saves an image to disk or returns its encoded bytes as a stream.
+
+### [Select-ImageConsoleStoryTab](Select-ImageConsoleStoryTab.md)
+Switches an ImagePlayground console story to a previously declared persistent tab.
 
 ### [Set-ImageAdjust](Set-ImageAdjust.md)
 Adjusts image properties.
