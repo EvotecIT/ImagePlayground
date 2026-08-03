@@ -32,7 +32,7 @@ Stable outcome identifier.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -48,7 +48,7 @@ Human-readable outcome label.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -64,7 +64,7 @@ Panel identifier that must be present in the completed scene.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -83,7 +83,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.Stories.ImageStoryOutcomeSpec` — PowerShell-friendly completed-outcome specification for New-ImageStory.
+- `ImagePlayground.PowerShell.Stories.ImageStoryOutcomeSpec`: PowerShell-friendly completed-outcome specification for New-ImageStory.
 
 ## RELATED LINKS
 

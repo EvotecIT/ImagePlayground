@@ -11,7 +11,7 @@ Generates a Swiss QR payment code.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSwiss [-Iban] <string> [-CreditorName] <string> [[-CreditorStreet] <string>] [[-CreditorHouseNumber] <string>] [[-CreditorPostalCode] <string>] [[-CreditorCity] <string>] [-FilePath] <string> [-IbanType <SwissQrIbanType>] [-Currency <SwissQrCurrency>] [-CreditorAddressType <SwissQrAddressType>] [-CreditorAddressLine1 <string>] [-CreditorAddressLine2 <string>] [-CreditorCountry <string>] [-ReferenceType <SwissQrReferenceType>] [-Reference <string>] [-Amount <decimal>] [-UnstructuredMessage <string>] [-BillInformation <string>] [-AlternativeProcedure1 <string>] [-AlternativeProcedure2 <string>] [-DebtorName <string>] [-DebtorAddressType <SwissQrAddressType>] [-DebtorStreet <string>] [-DebtorHouseNumber <string>] [-DebtorPostalCode <string>] [-DebtorCity <string>] [-DebtorAddressLine1 <string>] [-DebtorAddressLine2 <string>] [-DebtorCountry <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeSwiss [-Iban] <string> [-CreditorName] <string> [[-CreditorStreet] <string>] [[-CreditorHouseNumber] <string>] [[-CreditorPostalCode] <string>] [[-CreditorCity] <string>] [-FilePath] <string> [-IbanType <SwissQrIbanType>] [-Currency <SwissQrCurrency>] [-CreditorAddressType <SwissQrAddressType>] [-CreditorAddressLine1 <string>] [-CreditorAddressLine2 <string>] [-CreditorCountry <string>] [-ReferenceType <SwissQrReferenceType>] [-Reference <string>] [-Amount <Decimal>] [-UnstructuredMessage <string>] [-BillInformation <string>] [-AlternativeProcedure1 <string>] [-AlternativeProcedure2 <string>] [-DebtorName <string>] [-DebtorAddressType <SwissQrAddressType>] [-DebtorStreet <string>] [-DebtorHouseNumber <string>] [-DebtorPostalCode <string>] [-DebtorCity <string>] [-DebtorAddressLine1 <string>] [-DebtorAddressLine2 <string>] [-DebtorCountry <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AlternativeProcedure2
@@ -64,14 +64,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Amount
 Optional payment amount.
 
 ```yaml
-Type: Nullable`1
+Type: Decimal
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -80,7 +80,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
@@ -96,7 +96,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BillInformation
@@ -112,7 +112,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorAddressLine1
@@ -128,7 +128,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorAddressLine2
@@ -144,7 +144,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorAddressType
@@ -160,7 +160,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorCity
@@ -176,7 +176,7 @@ Required: False
 Position: 5
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorCountry
@@ -192,7 +192,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorHouseNumber
@@ -208,7 +208,7 @@ Required: False
 Position: 3
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorName
@@ -224,7 +224,7 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorPostalCode
@@ -240,7 +240,7 @@ Required: False
 Position: 4
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorStreet
@@ -256,7 +256,7 @@ Required: False
 Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Currency
@@ -272,7 +272,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorAddressLine1
@@ -288,7 +288,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorAddressLine2
@@ -304,7 +304,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorAddressType
@@ -320,7 +320,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorCity
@@ -336,7 +336,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorCountry
@@ -352,7 +352,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorHouseNumber
@@ -368,7 +368,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorName
@@ -384,7 +384,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorPostalCode
@@ -400,7 +400,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DebtorStreet
@@ -416,7 +416,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FilePath
@@ -432,7 +432,7 @@ Required: True
 Position: 6
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ForegroundColor
@@ -448,7 +448,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Iban
@@ -464,7 +464,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IbanType
@@ -480,7 +480,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PixelSize
@@ -496,7 +496,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Reference
@@ -512,7 +512,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ReferenceType
@@ -528,7 +528,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -544,7 +544,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -UnstructuredMessage
@@ -560,7 +560,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -572,7 +572,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

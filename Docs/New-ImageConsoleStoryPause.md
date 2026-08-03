@@ -34,12 +34,12 @@ Pause duration in seconds.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 0
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -53,7 +53,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.ImageConsoleStoryStep` — Use the New-ImageConsoleStoryCommand, New-ImageConsoleStoryOutput, New-ImageConsoleStoryTable, New-ImageConsoleStoryBlankLine, and New-ImageConsoleStoryPause cmdlets to create steps.
+- `ImagePlayground.PowerShell.ImageConsoleStoryStep`: Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
 
 ## RELATED LINKS
 

@@ -62,7 +62,7 @@ Accessible alternative for terminal or media content.
 ```yaml
 Type: String
 Parameter Sets: Terminal, MediaPath, MediaBytes, MediaImage
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -78,12 +78,12 @@ Give text content stronger visual emphasis.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Text
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -94,7 +94,7 @@ Stable panel identifier referenced by completed outcomes.
 ```yaml
 Type: String
 Parameter Sets: Source, SourceText, Terminal, MediaPath, MediaBytes, MediaImage, Text
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -110,12 +110,12 @@ Language identifier used for SourceText.
 ```yaml
 Type: String
 Parameter Sets: SourceText
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: PowerShell
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -126,7 +126,7 @@ Resolved raster image bytes to reveal.
 ```yaml
 Type: Byte[]
 Parameter Sets: MediaBytes
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -142,12 +142,12 @@ Resolved RGBA image to reveal.
 ```yaml
 Type: RgbaImage
 Parameter Sets: MediaImage
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: named
-Default value: ChartForgeX.Raster.RgbaImage
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -158,7 +158,7 @@ Raster image file to reveal.
 ```yaml
 Type: String
 Parameter Sets: MediaPath
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -174,7 +174,7 @@ Optional resolved SVG representation paired with MediaBytes or MediaImage.
 ```yaml
 Type: String
 Parameter Sets: MediaBytes, MediaImage
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -190,7 +190,7 @@ Exact source text with optional renderer-neutral syntax spans.
 ```yaml
 Type: StorySourceText
 Parameter Sets: Source
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -206,7 +206,7 @@ Exact source text to tokenize or preserve.
 ```yaml
 Type: String
 Parameter Sets: SourceText
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -222,7 +222,7 @@ Resolved deterministic terminal presentation.
 ```yaml
 Type: TerminalStory
 Parameter Sets: Terminal
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -238,7 +238,7 @@ Explanatory prose or a short status.
 ```yaml
 Type: String
 Parameter Sets: Text
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -254,7 +254,7 @@ Optional visible panel title.
 ```yaml
 Type: String
 Parameter Sets: Source, SourceText, Terminal, MediaPath, MediaBytes, MediaImage, Text
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -270,7 +270,7 @@ Optional language tokenizer for SourceText.
 ```yaml
 Type: IStorySourceTokenizer
 Parameter Sets: SourceText
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -286,12 +286,12 @@ Relative size in split or stacked scenes.
 ```yaml
 Type: Double
 Parameter Sets: Source, SourceText, Terminal, MediaPath, MediaBytes, MediaImage, Text
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -306,7 +306,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.Stories.ImageStoryPanelSpec` — PowerShell-friendly resolved panel specification for New-ImageStoryScene.
+- `ImagePlayground.PowerShell.Stories.ImageStoryPanelSpec`: PowerShell-friendly resolved panel specification for New-ImageStoryScene.
 
 ## RELATED LINKS
 

@@ -47,12 +47,12 @@ Raster density multiplier for GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -63,12 +63,12 @@ Formats emitted into BundlePath. The completed PNG is always included.
 ```yaml
 Type: String[]
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values: Svg, Html, Png, Gif, Apng, Transcript
 
 Required: False
 Position: named
-Default value: Svg, Png, Gif, Transcript
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -79,7 +79,7 @@ Optional directory that receives a portable PowerForge-compatible story bundle a
 ```yaml
 Type: String
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -93,9 +93,9 @@ Accept wildcard characters: False
 Optional capture time recorded in the portable bundle. Omit it for deterministic bundle manifests.
 
 ```yaml
-Type: Nullable`1
+Type: DateTimeOffset
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -111,7 +111,7 @@ Accessible story description.
 ```yaml
 Type: String
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -127,7 +127,7 @@ Completed-scene hold time for GIF and APNG output.
 ```yaml
 Type: Double
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -143,7 +143,7 @@ Output path. Supports SVG, HTML, PNG, GIF, APNG, and TXT.
 ```yaml
 Type: String
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -159,12 +159,12 @@ Frame rate for GIF and APNG output.
 ```yaml
 Type: Int32
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 6
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -175,12 +175,12 @@ Logical output height.
 ```yaml
 Type: Int32
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 675
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -191,12 +191,12 @@ Maximum animated frame budget.
 ```yaml
 Type: Int32
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 240
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -207,12 +207,12 @@ Produce a single-play GIF or APNG.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -223,7 +223,7 @@ Outcomes that the completed scene must reveal.
 ```yaml
 Type: ImageStoryOutcomeSpec[]
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -239,12 +239,12 @@ Write the resolved native story to the pipeline.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -255,7 +255,7 @@ Resolved scenes in display order.
 ```yaml
 Type: ImageStorySceneSpec[]
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -271,12 +271,12 @@ Open the generated story after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -287,7 +287,7 @@ Native resolved ChartForgeX visual story.
 ```yaml
 Type: VisualStory
 Parameter Sets: Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -303,7 +303,7 @@ Optional visual-story theme.
 ```yaml
 Type: VisualStoryTheme
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -319,7 +319,7 @@ Story title.
 ```yaml
 Type: String
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -335,7 +335,7 @@ Cross-fade duration between scenes.
 ```yaml
 Type: Double
 Parameter Sets: Parts, Story
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -351,12 +351,12 @@ Logical output width.
 ```yaml
 Type: Int32
 Parameter Sets: Parts
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 1200
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

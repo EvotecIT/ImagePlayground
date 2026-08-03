@@ -64,7 +64,7 @@ Possible values:
 
 Required: True
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -80,7 +80,7 @@ Possible values:
 
 Required: True
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -128,7 +128,7 @@ Possible values: PowerShell, WindowsPowerShell, Ubuntu, Bash, CommandPrompt
 
 Required: False
 Position: named
-Default value: PowerShell
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

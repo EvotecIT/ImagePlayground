@@ -31,8 +31,6 @@ The semantic tone is rendered consistently across SVG, HTML, PNG, GIF, and APNG 
 ### -Style
 Semantic output color.
 
-Possible values: Default, Muted, Accent, Success, Warning, Error
-
 ```yaml
 Type: TerminalTextTone
 Parameter Sets: __AllParameterSets
@@ -41,7 +39,7 @@ Possible values: Default, Muted, Accent, Success, Warning, Error
 
 Required: False
 Position: named
-Default value: Default
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -52,7 +50,7 @@ One or more lines of terminal output.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -71,7 +69,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.ImageConsoleStoryStep` — Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
+- `ImagePlayground.PowerShell.ImageConsoleStoryStep`: Use the console story command, output, table, blank-line, pause, tab, and tab-selection cmdlets to create steps.
 
 ## RELATED LINKS
 

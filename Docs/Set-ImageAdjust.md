@@ -11,7 +11,7 @@ Adjusts image properties.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-ImageAdjust [-FilePath] <string> [-OutputPath] <string> [-Brightness <float>] [-Contrast <float>] [-Lightness <float>] [-Opacity <float>] [-Saturation <float>] [-Sepia <float>] [<CommonParameters>]
+Set-ImageAdjust [-FilePath] <string> [-OutputPath] <string> [-Brightness <Single>] [-Contrast <Single>] [-Lightness <Single>] [-Opacity <Single>] [-Saturation <Single>] [-Sepia <Single>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ Set-ImageAdjust -FilePath in.png -OutputPath out.png -Brightness 1.2 -Contrast 1
 Brightness adjustment factor.
 
 ```yaml
-Type: Nullable`1
+Type: Single
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -40,14 +40,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Contrast
 Contrast adjustment factor.
 
 ```yaml
-Type: Nullable`1
+Type: Single
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -56,7 +56,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FilePath
@@ -72,14 +72,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Lightness
 Lightness adjustment factor.
 
 ```yaml
-Type: Nullable`1
+Type: Single
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -88,14 +88,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Opacity
 Opacity adjustment factor.
 
 ```yaml
-Type: Nullable`1
+Type: Single
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -104,7 +104,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -120,14 +120,14 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Saturation
 Saturation adjustment factor.
 
 ```yaml
-Type: Nullable`1
+Type: Single
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -136,14 +136,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sepia
 Sepia adjustment factor.
 
 ```yaml
-Type: Nullable`1
+Type: Single
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -152,7 +152,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -164,7 +164,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

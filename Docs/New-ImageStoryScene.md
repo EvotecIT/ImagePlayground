@@ -32,7 +32,7 @@ Scene display duration.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -48,7 +48,7 @@ Stable scene identifier.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -61,17 +61,15 @@ Accept wildcard characters: False
 ### -Layout
 Panel arrangement.
 
-Possible values: Focus, Split, Stacked
-
 ```yaml
 Type: VisualStorySceneLayout
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Focus, Split, Stacked
 
 Required: False
 Position: named
-Default value: Focus
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -82,7 +80,7 @@ Resolved panels in display order.
 ```yaml
 Type: ImageStoryPanelSpec[]
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -98,7 +96,7 @@ Visible scene heading.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -113,11 +111,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `ImagePlayground.PowerShell.Stories.ImageStoryPanelSpec[]` — PowerShell-friendly resolved panel specification for New-ImageStoryScene.
+- `ImagePlayground.PowerShell.Stories.ImageStoryPanelSpec[]`: PowerShell-friendly resolved panel specification for New-ImageStoryScene.
 
 ## OUTPUTS
 
-- `ImagePlayground.PowerShell.Stories.ImageStorySceneSpec` — PowerShell-friendly resolved scene specification for New-ImageStory.
+- `ImagePlayground.PowerShell.Stories.ImageStorySceneSpec`: PowerShell-friendly resolved scene specification for New-ImageStory.
 
 ## RELATED LINKS
 

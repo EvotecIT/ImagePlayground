@@ -11,7 +11,7 @@ Generates a Slovenian UPN QR payment code.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <datetime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <DateTime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Required: True
 Position: 8
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
@@ -64,7 +64,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Code
@@ -80,14 +80,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Deadline
 Payment deadline.
 
 ```yaml
-Type: Nullable`1
+Type: DateTime
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -96,7 +96,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Description
@@ -112,7 +112,7 @@ Required: True
 Position: 7
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FilePath
@@ -128,7 +128,7 @@ Required: True
 Position: 9
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ForegroundColor
@@ -144,7 +144,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PayerAddress
@@ -160,7 +160,7 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PayerName
@@ -176,7 +176,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PayerPlace
@@ -192,7 +192,7 @@ Required: True
 Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PixelSize
@@ -208,7 +208,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RecipientAddress
@@ -224,7 +224,7 @@ Required: True
 Position: 4
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RecipientIban
@@ -240,7 +240,7 @@ Required: True
 Position: 6
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RecipientName
@@ -256,7 +256,7 @@ Required: True
 Position: 3
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RecipientPlace
@@ -272,7 +272,7 @@ Required: True
 Position: 5
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RecipientSiModel
@@ -288,7 +288,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RecipientSiReference
@@ -304,7 +304,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -320,7 +320,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -332,7 +332,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

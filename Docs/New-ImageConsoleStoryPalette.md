@@ -34,7 +34,7 @@ Prompt and command accent color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -50,7 +50,7 @@ Terminal content color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -66,7 +66,7 @@ Frame and divider color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -82,7 +82,7 @@ Cursor color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -98,7 +98,7 @@ Error text color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -114,7 +114,7 @@ CSS font-family stack shared by every tab in the story.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -130,7 +130,7 @@ Title-bar color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -146,7 +146,7 @@ Muted text color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -162,7 +162,7 @@ Outer page color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -178,12 +178,12 @@ Built-in palette used as the customization baseline.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Dark, PowerShell, WindowsPowerShell, Ubuntu, Campbell, Classic, Light
 
 Required: False
 Position: named
-Default value: Dark
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -194,7 +194,7 @@ Success text color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -210,7 +210,7 @@ Normal text color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -226,7 +226,7 @@ Warning text color in hexadecimal notation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False

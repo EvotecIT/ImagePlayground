@@ -34,12 +34,12 @@ Language identifier. PowerShell uses its native parser; Plain preserves text wit
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: PowerShell
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -50,7 +50,7 @@ Exact source text, including whitespace and line endings.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -66,7 +66,7 @@ Optional tokenizer adapter for C#, Bash, or another language.
 ```yaml
 Type: IStorySourceTokenizer
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False

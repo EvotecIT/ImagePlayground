@@ -11,7 +11,8 @@ Unified PowerShell commands for image processing, charts, topology diagrams, vis
 
 ## ImagePlayground Cmdlets
 ### [Add-ImageText](Add-ImageText.md)
-Adds text to an image at the provided coordinates and writes the updated image to disk.
+Adds text to an image at the provided coordinates and writes the updated
+image to disk.
 
 ### [Add-ImageTextBox](Add-ImageTextBox.md)
 Adds wrapped text to an image within a box.
@@ -191,13 +192,14 @@ Creates a reusable terminal color palette for ImagePlayground console stories an
 Creates a silent timeline pause for an ImagePlayground console story.
 
 ### [New-ImageConsoleStoryTab](New-ImageConsoleStoryTab.md)
-Declares a persistent tab in an ImagePlayground console story.
+Creates a persistent tab in an ImagePlayground console story.
 
 ### [New-ImageConsoleStoryTable](New-ImageConsoleStoryTable.md)
 Creates a typed table step from ordinary PowerShell objects.
 
 ### [New-ImageCrop](New-ImageCrop.md)
-Creates a cropped version of an image using rectangular, circular or polygonal areas.
+Creates a cropped version of an image using rectangular, circular or
+polygonal areas.
 
 ### [New-ImageGif](New-ImageGif.md)
 Creates an animated GIF from existing images.

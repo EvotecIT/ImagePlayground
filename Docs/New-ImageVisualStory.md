@@ -47,14 +47,14 @@ Output file path. Supported extensions are SVG, HTML, HTM, and PNG.
 ```yaml
 Type: String
 Parameter Sets: StoryScript, Grid
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Grid
@@ -63,14 +63,14 @@ Native ChartForgeX visual grid to render.
 ```yaml
 Type: VisualGrid
 Parameter Sets: Grid
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Motion
@@ -79,14 +79,14 @@ Ready-to-use ChartForgeX motion timeline.
 ```yaml
 Type: VisualMotionTimeline
 Parameter Sets: StoryScript, Grid
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MotionDefinition
@@ -95,14 +95,14 @@ Script block that emits New-ImageVisualMotionCue results or one VisualMotionTime
 ```yaml
 Type: ScriptBlock
 Parameter Sets: StoryScript, Grid
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -111,14 +111,14 @@ Write the configured ChartForgeX VisualGrid to the pipeline.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: StoryScript, Grid
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -127,14 +127,14 @@ Open the generated visual after creation.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: StoryScript, Grid
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StoryScript
@@ -143,14 +143,14 @@ Script block that receives and configures a new ChartForgeX VisualGrid.
 ```yaml
 Type: ScriptBlock
 Parameter Sets: StoryScript
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

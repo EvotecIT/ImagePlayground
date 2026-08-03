@@ -2,10 +2,16 @@
   "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/Schemas/project.build.schema.json",
   "RootPath": "..",
   "ExpectedVersion": null,
-  "ExpectedVersionMap": {
-    "ImagePlayground": "3.0.X",
-    "ImagePlayground.Syntax.TreeSitter": "3.2.X"
+  "VersionTracks": {
+    "ImagePlayground": {
+      "ExpectedVersion": "3.2.X",
+      "AnchorProject": "ImagePlayground",
+      "Projects": [
+        "ImagePlayground.Syntax.TreeSitter"
+      ]
+    }
   },
+  "AlignPackageVersions": true,
   "ExpectedVersionMapAsInclude": true,
   "ExpectedVersionMapUseWildcards": false,
   "ExcludeProjects": [
@@ -25,7 +31,7 @@
   "PublishNuget": false,
   "PublishGitHub": false,
   "CreateReleaseZip": true,
-  "CertificateThumbprint": "483292C9E317AA13B07BB7A96AE9D1A5ED9E7703",
+  "CertificateThumbprint": "92e95fb58effa6a4a75e77a33cdd6bfe6dd30f1a",
   "CertificateStore": "CurrentUser",
   "TimeStampServer": "http://timestamp.digicert.com",
   "PublishSource": "https://api.nuget.org/v3/index.json",

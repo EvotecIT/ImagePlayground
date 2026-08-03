@@ -34,14 +34,14 @@ Delay before the cue starts, in seconds.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DistancePixels
@@ -50,14 +50,14 @@ Travel distance used by positional effects, in pixels.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: 12
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DurationSeconds
@@ -66,50 +66,46 @@ Cue duration, in seconds.
 ```yaml
 Type: Double
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
 Position: named
 Default value: 0.7
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Easing
 Timing curve used by the cue.
 
-Possible values: Linear, EaseOut, EaseInOut, Emphasized
-
 ```yaml
 Type: VisualMotionEasing
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Linear, EaseOut, EaseInOut, Emphasized
 
 Required: False
 Position: named
-Default value: Emphasized
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Effect
 Entrance or emphasis effect.
 
-Possible values: Fade, Rise, Reveal, Scale, Pulse
-
 ```yaml
 Type: VisualMotionEffect
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values: Fade, Rise, Reveal, Scale, Pulse
 
 Required: True
 Position: 1
-Default value: Fade
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetId
@@ -118,14 +114,14 @@ Stable panel id, or the built-in title or subtitle target.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

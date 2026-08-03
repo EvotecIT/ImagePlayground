@@ -21,32 +21,32 @@ New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> 
 
 ### NonSepaPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <decimal> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <datetime>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <DateTime>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### SepaPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <decimal> [-Reason <string>] [-Currency <string>] [-ExecutionDate <datetime>] [-SepaReference <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> [-Reason <string>] [-Currency <string>] [-ExecutionDate <DateTime>] [-SepaReference <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### NonSepaDirectDebit
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <datetime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <datetime>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <DateTime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <DateTime>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### SepaDirectDebit
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <datetime> [-Reason <string>] [-Currency <string>] [-ExecutionDate <datetime>] [-SepaReference <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <DateTime> [-Reason <string>] [-Currency <string>] [-ExecutionDate <DateTime>] [-SepaReference <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### NonSepaPeriodicPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <decimal> -PeriodicUnitRotation <int> -PeriodicFirstExecutionDate <datetime> -PeriodicLastExecutionDate <datetime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> -PeriodicUnitRotation <Int32> -PeriodicFirstExecutionDate <DateTime> -PeriodicLastExecutionDate <DateTime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### SepaPeriodicPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <decimal> -PeriodicUnitRotation <int> -PeriodicFirstExecutionDate <datetime> -PeriodicLastExecutionDate <datetime> [-Reason <string>] [-Currency <string>] [-SepaReference <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> -PeriodicUnitRotation <Int32> -PeriodicFirstExecutionDate <DateTime> -PeriodicLastExecutionDate <DateTime> [-Reason <string>] [-Currency <string>] [-SepaReference <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -83,14 +83,14 @@ Required: True
 Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Amount
 Payment amount for payment authorities.
 
 ```yaml
-Type: Nullable`1
+Type: Decimal
 Parameter Sets: NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
 Aliases: None
 Possible values:
@@ -99,7 +99,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Authority
@@ -115,7 +115,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
@@ -131,7 +131,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Bic
@@ -147,7 +147,7 @@ Required: True
 Position: 3
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Bnc
@@ -163,7 +163,7 @@ Required: True
 Position: 3
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreditorId
@@ -179,7 +179,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Currency
@@ -195,14 +195,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DateOfSignature
 Mandate signature date for direct-debit authorities.
 
 ```yaml
-Type: Nullable`1
+Type: DateTime
 Parameter Sets: NonSepaDirectDebit, SepaDirectDebit
 Aliases: None
 Possible values:
@@ -211,14 +211,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExecutionDate
 Execution date for single-payment and direct-debit authorities.
 
 ```yaml
-Type: Nullable`1
+Type: DateTime
 Parameter Sets: NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit
 Aliases: None
 Possible values:
@@ -227,7 +227,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FilePath
@@ -243,7 +243,7 @@ Required: True
 Position: 4
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ForegroundColor
@@ -259,7 +259,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Iban
@@ -275,7 +275,7 @@ Required: True
 Position: 2
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MandateId
@@ -291,7 +291,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -307,14 +307,14 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PeriodicFirstExecutionDate
 First execution date for periodic-payment authorities.
 
 ```yaml
-Type: Nullable`1
+Type: DateTime
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
 Aliases: None
 Possible values:
@@ -323,14 +323,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PeriodicLastExecutionDate
 Last execution date for periodic-payment authorities.
 
 ```yaml
-Type: Nullable`1
+Type: DateTime
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
 Aliases: None
 Possible values:
@@ -339,7 +339,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PeriodicUnit
@@ -355,14 +355,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PeriodicUnitRotation
 Periodic unit rotation for periodic-payment authorities.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: NonSepaPeriodicPayment, SepaPeriodicPayment
 Aliases: None
 Possible values:
@@ -371,7 +371,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PixelSize
@@ -387,7 +387,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PostingKey
@@ -403,7 +403,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Reason
@@ -419,7 +419,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SepaReference
@@ -435,7 +435,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -451,7 +451,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -463,7 +463,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

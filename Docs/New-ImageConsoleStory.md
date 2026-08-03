@@ -122,7 +122,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -178,8 +178,6 @@ Accept wildcard characters: False
 ### -Dialect
 Prompt dialect used for captured transcript presentations.
 
-Possible values: PowerShell, Bash, CommandPrompt, Python, CSharp, Custom
-
 ```yaml
 Type: TerminalDialect
 Parameter Sets: Content, Step, Transcript
@@ -188,7 +186,7 @@ Possible values: PowerShell, Bash, CommandPrompt, Python, CSharp, Custom
 
 Required: False
 Position: named
-Default value: PowerShell
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -236,7 +234,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 14
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -252,7 +250,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 10
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -316,7 +314,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 22
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -332,7 +330,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 240
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -348,7 +346,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -364,7 +362,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -396,7 +394,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -412,7 +410,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 2
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -428,15 +426,13 @@ Possible values:
 
 Required: False
 Position: named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Speed
 Reusable playback pace. Slow leaves the most reading time, Normal is balanced, and Fast is intended for short demos.
-
-Possible values: Slow, Normal, Fast
 
 ```yaml
 Type: TerminalStoryPlaybackSpeed
@@ -446,7 +442,7 @@ Possible values: Slow, Normal, Fast
 
 Required: False
 Position: named
-Default value: Normal
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -526,7 +522,7 @@ Possible values: Dark, PowerShell, WindowsPowerShell, Ubuntu, Campbell, Classic,
 
 Required: False
 Position: named
-Default value: Dark
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -542,7 +538,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: PowerShell
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -574,15 +570,13 @@ Possible values:
 
 Required: False
 Position: named
-Default value: 886
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -WindowStyle
 Visible terminal window chrome, independent of the color palette and prompt dialect.
-
-Possible values: MacOS, WindowsTerminal, Minimal, None
 
 ```yaml
 Type: TerminalWindowStyle
@@ -592,7 +586,7 @@ Possible values: MacOS, WindowsTerminal, Minimal, None
 
 Required: False
 Position: named
-Default value: MacOS
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -608,7 +602,7 @@ Possible values:
 
 Required: False
 Position: named
-Default value: C:\
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
