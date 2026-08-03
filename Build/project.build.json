@@ -36,7 +36,7 @@
   "TimeStampServer": "http://timestamp.digicert.com",
   "PublishSource": "https://api.nuget.org/v3/index.json",
   "PublishApiKeyFilePath": "C:\\Support\\Important\\NugetOrgEvotec.txt",
-  "SkipDuplicate": true,
+  "SkipDuplicate": false,
   "PublishFailFast": true,
   "GitHubAccessTokenFilePath": "C:\\Support\\Important\\GithubAPI.txt",
   "GitHubUsername": "EvotecIT",
