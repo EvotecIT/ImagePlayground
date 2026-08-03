@@ -367,9 +367,10 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         const string source = "printf '%s' \"${value:-$(compute --fallback)}\"";
         var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
 
-        Assert.True(result.Spans.Any(span =>
-            span.Kind == StorySyntaxKind.Variable &&
-            Slice(result, span).Contains("${value:-$(", StringComparison.Ordinal)), DescribeSpans(result));
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Operator && Slice(result, span) == ":-");
+        Assert.Contains(result.Spans, span =>
+            span.Kind == StorySyntaxKind.Punctuation && Slice(result, span) == "$(");
         Assert.True(result.Spans.Any(span =>
             span.Kind == StorySyntaxKind.Command &&
             Slice(result, span) == "compute"), DescribeSpans(result));
@@ -379,6 +380,17 @@ public sealed class TreeSitterStorySourceTokenizerTests {
         Assert.DoesNotContain(result.Spans, span =>
             span.Kind == StorySyntaxKind.Variable &&
             Slice(result, span).Contains("--fallback", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void BashRecognizesParameterExpansionOperators() {
+        const string source = "echo ${a:-x} ${b:=x} ${c:?x} ${d:+x}";
+        var result = TreeSitterStorySourceTokenizer.Create("bash").Tokenize(source);
+
+        foreach (var operation in new[] { ":-", ":=", ":?", ":+" }) {
+            Assert.Contains(result.Spans, span =>
+                span.Kind == StorySyntaxKind.Operator && Slice(result, span) == operation);
+        }
     }
 
     [Fact]

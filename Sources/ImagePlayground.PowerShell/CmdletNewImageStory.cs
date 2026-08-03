@@ -276,12 +276,20 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         destinations.AddRange(bundleArtifacts.Select(static artifact => artifact.Path));
         for (var leftIndex = 0; leftIndex < destinations.Count; leftIndex++) {
             for (var rightIndex = leftIndex + 1; rightIndex < destinations.Count; rightIndex++) {
-                if (!FileSystemPathIdentity.AreSameExistingFile(destinations[leftIndex], destinations[rightIndex])) continue;
+                if (!AreSameDestination(destinations[leftIndex], destinations[rightIndex])) continue;
                 throw new PSArgumentException(
-                    $"Image story destinations must not reference the same existing file identity: {destinations[leftIndex]} and {destinations[rightIndex]}",
+                    $"Image story destinations must not reference the same canonical file identity: {destinations[leftIndex]} and {destinations[rightIndex]}",
                     nameof(BundlePath));
             }
         }
+    }
+
+    private static bool AreSameDestination(string left, string right) {
+        if (FileSystemPathIdentity.AreSameExistingFile(left, right)) return true;
+        var canonicalLeft = FileSystemPathIdentity.GetCanonicalPath(left);
+        var canonicalRight = FileSystemPathIdentity.GetCanonicalPath(right);
+        var comparison = FileSystemPathIdentity.GetPathComparison(canonicalLeft);
+        return string.Equals(canonicalLeft, canonicalRight, comparison);
     }
 
     private readonly struct BundleArtifact {

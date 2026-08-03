@@ -198,7 +198,10 @@ public sealed partial class TreeSitterStorySourceTokenizer {
             return;
         }
 
-        if (node.Text == "$(") return;
+        if (node.Text == "$(") {
+            Add(output, node, StorySyntaxKind.Punctuation);
+            return;
+        }
         Add(output, node, LeafKind(node));
     }
 

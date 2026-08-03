@@ -244,6 +244,7 @@ public sealed partial class TreeSitterStorySourceTokenizer : IStorySourceTokeniz
             case "%=": case "&=": case "|=": case "^=": case "<<=": case ">>=": case ">>>=":
             case "~": case "?": case "->": case "..": case ">&": case "&>": case "&>>": case ">|":
             case "<&": case "<>": case "<<<": case "<<-": case "|&": case ";;": case ";&": case ";;&":
+            case ":-": case ":=": case ":?": case ":+":
                 return true;
             default:
                 return false;

@@ -450,8 +450,30 @@ Describe 'Image story output paths' {
         {
             New-ImageStory -Title 'Hard-linked destinations' -Scenes $scene -Outcomes $outcome `
                 -FilePath $output -BundlePath $bundle -BundleFormats Transcript
-        } | Should -Throw '*same existing file identity*'
+        } | Should -Throw '*same canonical file identity*'
         Get-Content -LiteralPath $output -Raw | Should -BeExactly 'existing output'
         Get-Content -LiteralPath $manifest -Raw | Should -BeExactly 'existing output'
+    }
+
+    It 'rejects a dangling output link that targets the planned bundle manifest' {
+        $bundle = Join-Path -Path $TestDrive -ChildPath 'dangling-collision-bundle'
+        $manifest = Join-Path -Path $bundle -ChildPath 'story.json'
+        $output = Join-Path -Path $TestDrive -ChildPath 'dangling-story-output.svg'
+        New-Item -ItemType Directory -Path $bundle | Out-Null
+        try {
+            New-Item -ItemType SymbolicLink -Path $output -Target $manifest -ErrorAction Stop | Out-Null
+        } catch {
+            Set-ItResult -Skipped -Because "Symbolic link creation is unavailable: $($_.Exception.Message)"
+            return
+        }
+        $panel = New-ImageStoryPanel -Id result -Text 'ready' -Emphasized
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+
+        {
+            New-ImageStory -Title 'Dangling destination collision' -Scenes $scene -Outcomes $outcome `
+                -FilePath $output -BundlePath $bundle -BundleFormats Transcript
+        } | Should -Throw '*same canonical file identity*'
+        Test-Path -LiteralPath $manifest | Should -BeFalse
     }
 }
