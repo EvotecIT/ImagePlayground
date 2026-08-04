@@ -2,14 +2,14 @@ param(
     [ValidateSet('Manifest', 'Documentation', 'Build', 'Publish')]
     [string] $RunMode = 'Build',
 
-    [bool] $SignModule = $false,
+    [bool] $SignModule = $true,
 
     [string] $PowerShellGalleryApiKeyPath = 'C:\Support\Important\PowerShellGalleryAPI.txt',
 
     [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
 )
 
-Import-Module PSPublishModule -Force -ErrorAction Stop
+Import-Module PSPublishModule -MinimumVersion 3.0.93 -Force -ErrorAction Stop
 
 Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
     # Usual defaults as per standard module
@@ -21,7 +21,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # ID used to uniquely identify this module
         GUID                   = 'ff5469f2-c542-4318-909e-fd054d16821f'
         # Version number of this module.
-        ModuleVersion          = '3.2.0'
+        ModuleVersion          = '3.2.X'
         AliasesToExport        = @('New-QRCode', 'New-QRCodeWiFi')
         # Author of this module
         Author                 = 'Przemyslaw Klys'
