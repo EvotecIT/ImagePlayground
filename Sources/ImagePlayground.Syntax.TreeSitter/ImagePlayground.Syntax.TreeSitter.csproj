@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>3.2.4</VersionPrefix>
+    <VersionPrefix>3.2.5</VersionPrefix>
     <AssemblyName>ImagePlayground.Syntax.TreeSitter</AssemblyName>
     <Description>Optional Tree-sitter syntax adapter for ChartForgeX visual stories authored with ImagePlayground.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
