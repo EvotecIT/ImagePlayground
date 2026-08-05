@@ -2,7 +2,7 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.2.5
+Help Version: 3.2.6
 Locale: en-US
 ---
 # ImagePlayground Module
