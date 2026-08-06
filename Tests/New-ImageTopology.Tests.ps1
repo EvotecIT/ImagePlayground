@@ -97,11 +97,15 @@ Describe 'New-ImageTopology' {
     It 'rejects unsupported output extensions' {
         $file = Join-Path -Path $TestDir -ChildPath 'topology.jpg'
 
+        $script:topologyDefinitionInvoked = $false
+
         {
             New-ImageTopology -TopologyDefinition {
+                $script:topologyDefinitionInvoked = $true
                 New-ImageTopologyNode -Id 'api' -Label 'API'
             } -FilePath $file
         } | Should -Throw
+        $script:topologyDefinitionInvoked | Should -BeFalse
     }
 
     It 'generates unique default edge identifiers for parallel edges' {
@@ -111,5 +115,49 @@ Describe 'New-ImageTopology' {
         $first.Id | Should -Not -Be $second.Id
         $first.Id | Should -Match '^api-db-\d+$'
         $second.Id | Should -Match '^api-db-\d+$'
+    }
+
+    It 'renders scenario controls and script-free route motion' {
+        $file = Join-Path -Path $TestDir -ChildPath 'topology-scenario.html'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        $edge = New-ImageTopologyEdge -Id 'api-db' -SourceNodeId 'api' -TargetNodeId 'db' -Direction Forward
+        $scenario = New-ImageTopologyScenario -Id request -Label 'Request flow' -StepDefinition {
+            New-ImageTopologyScenarioStep -Id api -Kind Node -Label 'API receives request'
+            New-ImageTopologyScenarioStep -Id api-db -Kind Edge -Label 'Database call'
+        } -AutoPlay -Spotlight
+        $motion = New-ImageTopologyMotion -ScenarioId request -DurationSeconds 1 -FramesPerSecond 2 -MaximumRasterFrames 4 -NoLoop
+
+        New-ImageTopology -Node @(
+            New-ImageTopologyNode -Id api -Label API
+            New-ImageTopologyNode -Id db -Label Database
+        ) -Edge $edge -Scenario $scenario -Motion $motion -ActiveScenarioId request -InteractiveHtml -ScenarioUrlState -FilePath $file
+
+        Test-Path -Path $file | Should -BeTrue
+        $html = Get-Content -Path $file -Raw
+        $html | Should -Match 'data-cfx-topology-scenario="request"'
+        $html | Should -Match 'data-cfx-active-scenario="request"'
+    }
+
+    It 'exports animated topology GIF and APNG files' {
+        $gif = Join-Path -Path $TestDir -ChildPath 'topology-route.gif'
+        $apng = Join-Path -Path $TestDir -ChildPath 'topology-route.apng'
+        Remove-Item -Path $gif, $apng -ErrorAction SilentlyContinue
+        $nodes = @(
+            New-ImageTopologyNode -Id api -Label API
+            New-ImageTopologyNode -Id db -Label Database
+        )
+        $edge = New-ImageTopologyEdge -Id 'api-db' -SourceNodeId api -TargetNodeId db -Direction Forward
+        $motion = New-ImageTopologyMotion -EdgeId api-db -DurationSeconds 0.5 -FramesPerSecond 2 -MaximumRasterFrames 2 -NoLoop
+
+        New-ImageTopology -Node $nodes -Edge $edge -Motion $motion -FilePath $gif -Width 320 -Height 200 -NoTitle
+        New-ImageTopology -Node $nodes -Edge $edge -Motion $motion -FilePath $apng -Width 320 -Height 200 -NoTitle
+
+        [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($gif), 0, 3) | Should -Be 'GIF'
+        $apngBytes = [System.IO.File]::ReadAllBytes($apng)
+        $apngBytes[0] | Should -Be 137
+        [System.Text.Encoding]::ASCII.GetString($apngBytes) | Should -Match 'acTL'
     }
 }

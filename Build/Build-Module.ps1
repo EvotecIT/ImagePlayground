@@ -124,6 +124,10 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         # Enums are registered from the assemblies above. This list is only for non-enum types
         # that are intentionally part of the PowerShell scripting surface.
         NETAssemblyTypeAccelerators       = @(
+            'ChartForgeX.Composition.VisualCanvas'
+            'ChartForgeX.Composition.VisualCanvasInfoTileLayer'
+            'ChartForgeX.Composition.VisualCanvasLayer'
+            'ChartForgeX.Composition.VisualCanvasTextLayer'
             'ChartForgeX.Core.Chart'
             'ChartForgeX.Core.ChartCalendarHeatmapItem'
             'ChartForgeX.Motion.VisualMotionCue'
@@ -141,9 +145,17 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Topology.TopologyEdge'
             'ChartForgeX.Topology.TopologyGroup'
             'ChartForgeX.Topology.TopologyNode'
+            'ChartForgeX.Topology.TopologyMotionOptions'
+            'ChartForgeX.Topology.TopologyScenario'
+            'ChartForgeX.Topology.TopologyScenarioStep'
+            'ChartForgeX.Topology.TopologyTeamMember'
+            'ChartForgeX.VisualBlocks.ActivityTimelineBlock'
+            'ChartForgeX.VisualBlocks.ActivityTimelineItem'
+            'ChartForgeX.VisualBlocks.ChartList'
             'ChartForgeX.VisualBlocks.MetricCard'
             'ChartForgeX.VisualBlocks.ChartTable'
             'ChartForgeX.VisualBlocks.VisualGrid'
+            'ChartForgeX.VisualBlocks.VisualGridItem'
             'CodeGlyphX.QrPixelDecodeOptions'
             'ImagePlayground.Image'
             'ImagePlayground.PowerShell.ImageConsoleStoryStep'
