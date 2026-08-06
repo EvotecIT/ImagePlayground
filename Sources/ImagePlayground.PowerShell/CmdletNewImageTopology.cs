@@ -1,4 +1,5 @@
 using ChartForgeX.Topology;
+using ChartForgeX.Interactivity.Html;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     private readonly List<TopologyGroup> _groups = new();
     private readonly List<TopologyNode> _nodes = new();
     private readonly List<TopologyEdge> _edges = new();
+    private readonly List<TopologyScenario> _scenarios = new();
     private TopologyChart? _chart;
 
     /// <para>Script block that emits topology groups, nodes, edges, or a topology chart.</para>
@@ -51,6 +53,14 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     /// <para>Topology groups provided directly.</para>
     [Parameter(ParameterSetName = DefinitionSet)]
     public TopologyGroup[] Group { get; set; } = Array.Empty<TopologyGroup>();
+
+    /// <para>Topology scenarios provided directly.</para>
+    [Parameter(ParameterSetName = DefinitionSet)]
+    public TopologyScenario[] Scenario { get; set; } = Array.Empty<TopologyScenario>();
+
+    /// <para>Script block that emits topology scenarios.</para>
+    [Parameter]
+    public ScriptBlock? ScenarioDefinition { get; set; }
 
     /// <para>Topology title.</para>
     [Parameter]
@@ -132,6 +142,30 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     [Parameter]
     public SwitchParameter InteractiveHtml { get; set; }
 
+    /// <para>Scenario activated for static highlighting or when interactive HTML first loads.</para>
+    [Parameter]
+    public string ActiveScenarioId { get; set; } = string.Empty;
+
+    /// <para>Script-free route motion used by SVG, GIF, APNG, and sampled PNG output.</para>
+    [Parameter]
+    public TopologyMotionOptions? Motion { get; set; }
+
+    /// <para>Hide scenario controls in interactive HTML output.</para>
+    [Parameter]
+    public SwitchParameter NoScenarioControls { get; set; }
+
+    /// <para>Scenario control presentation used by interactive HTML output.</para>
+    [Parameter]
+    public TopologyHtmlScenarioControlMode ScenarioControlMode { get; set; } = TopologyHtmlScenarioControlMode.Buttons;
+
+    /// <para>Hide the compact scenario detail panel in interactive HTML output.</para>
+    [Parameter]
+    public SwitchParameter NoScenarioPanel { get; set; }
+
+    /// <para>Synchronize the active scenario with the HTML page query string.</para>
+    [Parameter]
+    public SwitchParameter ScenarioUrlState { get; set; }
+
     /// <para>Output file path. The extension selects PNG, SVG, or HTML output.</para>
     [Parameter(Mandatory = true, ParameterSetName = ScriptBlockSet)]
     [Parameter(Mandatory = true, ParameterSetName = DefinitionSet)]
@@ -154,6 +188,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
         AddDefinitions(Group);
         AddDefinitions(Node);
         AddDefinitions(Edge);
+        AddDefinitions(Scenario);
     }
 
     /// <inheritdoc />
@@ -163,28 +198,34 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
 
     /// <inheritdoc />
     protected override void EndProcessing() {
+        var output = Helpers.ResolvePath(FilePath);
+        var extension = Path.GetExtension(output);
+        ValidateExtension(extension, output);
         if (TopologyDefinition != null) {
             AddDefinitions(TopologyDefinition.Invoke());
+        }
+        if (ScenarioDefinition != null) {
+            AddDefinitions(ScenarioDefinition.Invoke());
         }
 
         var chart = BuildChart();
         var options = BuildRenderOptions();
-        var output = Helpers.ResolvePath(FilePath);
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) {
             Directory.CreateDirectory(directory!);
         }
 
-        var extension = Path.GetExtension(output);
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
             chart.SaveSvg(output, options);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
-            chart.SaveHtml(output, options);
+            if (InteractiveHtml.IsPresent) chart.SaveInteractiveHtml(output, options);
+            else chart.SaveHtml(output, options);
         } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
             chart.SavePng(output, options);
-        } else {
-            var exception = new PSArgumentException("Topology output supports only .png, .svg, .html, or .htm file extensions.");
-            ThrowTerminatingError(new ErrorRecord(exception, "NewImageTopologyUnsupportedExtension", ErrorCategory.InvalidArgument, output));
+        } else if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
+            chart.SaveGif(output, options);
+        } else if (extension.Equals(".apng", StringComparison.OrdinalIgnoreCase)) {
+            chart.SaveApng(output, options);
         }
 
         if (Show.IsPresent) {
@@ -193,6 +234,17 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
         if (PassThru.IsPresent) {
             WriteObject(chart);
         }
+    }
+
+    private void ValidateExtension(string extension, string output) {
+        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
+            extension.Equals(".apng", StringComparison.OrdinalIgnoreCase)) return;
+        var exception = new PSArgumentException("Topology output supports only .png, .svg, .html, .htm, .gif, or .apng file extensions.");
+        ThrowTerminatingError(new ErrorRecord(exception, "NewImageTopologyUnsupportedExtension", ErrorCategory.InvalidArgument, output));
     }
 
     private void AddDefinitions(IEnumerable<PSObject>? items) {
@@ -229,6 +281,9 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
                 break;
             case TopologyEdge edge:
                 _edges.Add(edge);
+                break;
+            case TopologyScenario scenario:
+                _scenarios.Add(scenario);
                 break;
         }
     }
@@ -276,6 +331,9 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
         foreach (var edge in _edges) {
             chart.Edges.Add(edge);
         }
+        foreach (var scenario in _scenarios) {
+            chart.Scenarios.Add(scenario);
+        }
 
         if (chart.Nodes.Count == 0) {
             var exception = new PSArgumentException("At least one topology node must be specified.");
@@ -296,6 +354,12 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             EnableHtmlInteractions = InteractiveHtml.IsPresent,
             EnableHtmlViewportControls = InteractiveHtml.IsPresent,
             EnableHtmlExportControls = InteractiveHtml.IsPresent,
+            EnableHtmlScenarioControls = InteractiveHtml.IsPresent && !NoScenarioControls.IsPresent,
+            HtmlScenarioControlMode = ScenarioControlMode,
+            EnableHtmlScenarioPanel = InteractiveHtml.IsPresent && !NoScenarioPanel.IsPresent,
+            EnableHtmlScenarioUrlState = InteractiveHtml.IsPresent && ScenarioUrlState.IsPresent,
+            ActiveScenarioId = string.IsNullOrWhiteSpace(ActiveScenarioId) ? null : ActiveScenarioId,
+            Motion = Motion,
             NodeDisplayMode = NodeDisplayMode,
             VisualStyle = VisualStyle,
             CanvasSurfaceStyle = Transparent.IsPresent ? TopologyCanvasSurfaceStyle.Plain : CanvasSurfaceStyle

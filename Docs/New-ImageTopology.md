@@ -11,12 +11,12 @@ Creates a topology diagram image.
 ## SYNTAX
 ### ScriptBlock (Default)
 ```powershell
-New-ImageTopology [-TopologyDefinition] <scriptblock> -FilePath <string> [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageTopology [-TopologyDefinition] <scriptblock> -FilePath <string> [-ScenarioDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-ActiveScenarioId <string>] [-Motion <TopologyMotionOptions>] [-NoScenarioControls] [-ScenarioControlMode <TopologyHtmlScenarioControlMode>] [-NoScenarioPanel] [-ScenarioUrlState] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Definition
 ```powershell
-New-ImageTopology -FilePath <string> [-Definition <Object[]>] [-Chart <TopologyChart>] [-Node <TopologyNode[]>] [-Edge <TopologyEdge[]>] [-Group <TopologyGroup[]>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageTopology -FilePath <string> [-Definition <Object[]>] [-Chart <TopologyChart>] [-Node <TopologyNode[]>] [-Edge <TopologyEdge[]>] [-Group <TopologyGroup[]>] [-Scenario <TopologyScenario[]>] [-ScenarioDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-ActiveScenarioId <string>] [-Motion <TopologyMotionOptions>] [-NoScenarioControls] [-ScenarioControlMode <TopologyHtmlScenarioControlMode>] [-NoScenarioPanel] [-ScenarioUrlState] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,6 +36,22 @@ PS> New-ImageTopology -TopologyDefinition {
 Creates a transparent-ready PNG topology diagram from a PowerShell DSL.
 
 ## PARAMETERS
+
+### -ActiveScenarioId
+Scenario activated for static highlighting or when interactive HTML first loads.
+
+```yaml
+Type: String
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -CanvasSurfaceStyle
 Canvas surface style.
@@ -213,6 +229,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Motion
+Script-free route motion used by SVG, GIF, APNG, and sampled PNG output.
+
+```yaml
+Type: TopologyMotionOptions
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Node
 Topology nodes provided directly.
 
@@ -293,6 +325,38 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -NoScenarioControls
+Hide scenario controls in interactive HTML output.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoScenarioPanel
+Hide the compact scenario detail panel in interactive HTML output.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -NoStatusBadges
 Hide status badges.
 
@@ -343,6 +407,70 @@ Accept wildcard characters: False
 
 ### -PassThru
 Write the generated topology chart to the pipeline after rendering.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Scenario
+Topology scenarios provided directly.
+
+```yaml
+Type: TopologyScenario[]
+Parameter Sets: Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ScenarioControlMode
+Scenario control presentation used by interactive HTML output.
+
+```yaml
+Type: TopologyHtmlScenarioControlMode
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values: Buttons, Checkboxes
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ScenarioDefinition
+Script block that emits topology scenarios.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ScenarioUrlState
+Synchronize the active scenario with the HTML page query string.
 
 ```yaml
 Type: SwitchParameter

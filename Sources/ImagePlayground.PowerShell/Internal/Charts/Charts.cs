@@ -226,7 +226,7 @@ internal static class Charts {
         SaveChart(chart, filePath);
     }
 
-    private static CfxTheme CreateTheme(ChartTheme theme) => theme == ChartTheme.Dark ? CfxTheme.ReportDark() : CfxTheme.ReportLight();
+    private static CfxTheme CreateTheme(ChartTheme theme) => ChartThemeResolver.Resolve(theme);
 
     private static void ApplyRenderOptions(CfxChart chart, ChartRenderOptions? options) {
         if (options == null) {

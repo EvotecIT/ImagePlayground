@@ -169,7 +169,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         $independentReferences = @($projectXml.Project.ItemGroup.ProjectReference | Where-Object Include -Match 'CodeGlyphX|ChartForgeX')
         $expectedProperties = @('Version', 'VersionPrefix', 'VersionSuffix', 'PackageVersion', 'AssemblyVersion', 'FileVersion', 'InformationalVersion')
 
-        $independentReferences | Should -HaveCount 4
+        $independentReferences | Should -HaveCount 5
         foreach ($reference in $independentReferences) {
             $propertiesToRemove = @($reference.GlobalPropertiesToRemove -split ';')
             foreach ($property in $expectedProperties) {
