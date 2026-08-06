@@ -88,7 +88,7 @@ jobs:
 
       - name: Build module layout
         shell: pwsh
-        run: .\Build\Build-Module.ps1 -RunMode Build
+        run: .\Build\Build-Module.ps1 -RunMode Build -SignModule:$false
 
       - name: Upload packaged module
         uses: actions/upload-artifact@v4
