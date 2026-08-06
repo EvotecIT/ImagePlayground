@@ -8,7 +8,7 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates a topology diagram image.</summary>
-/// <para>Renders ChartForgeX topology definitions to PNG, SVG, or HTML output.</para>
+/// <para>Renders ChartForgeX topology definitions to PNG, SVG, HTML, GIF, or APNG output. GIF and APNG sample the route configured by <c>Motion</c>.</para>
 /// <example>
 ///   <summary>Create a service topology diagram</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -166,7 +166,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     [Parameter]
     public SwitchParameter ScenarioUrlState { get; set; }
 
-    /// <para>Output file path. The extension selects PNG, SVG, or HTML output.</para>
+    /// <para>Output file path. The extension selects PNG, SVG, HTML, GIF, or APNG output.</para>
     [Parameter(Mandatory = true, ParameterSetName = ScriptBlockSet)]
     [Parameter(Mandatory = true, ParameterSetName = DefinitionSet)]
     public string FilePath { get; set; } = string.Empty;

@@ -20,7 +20,7 @@ New-ImageTopology -FilePath <string> [-Definition <Object[]>] [-Chart <TopologyC
 ```
 
 ## DESCRIPTION
-Renders ChartForgeX topology definitions to PNG, SVG, or HTML output.
+Renders ChartForgeX topology definitions to PNG, SVG, HTML, GIF, or APNG output. GIF and APNG sample the route configured by Motion.
 
 ## EXAMPLES
 
@@ -134,7 +134,7 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-Output file path. The extension selects PNG, SVG, or HTML output.
+Output file path. The extension selects PNG, SVG, HTML, GIF, or APNG output.
 
 ```yaml
 Type: String

@@ -27352,7 +27352,7 @@ polygonal areas.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Renders ChartForgeX topology definitions to PNG, SVG, or HTML output.</maml:para>
+      <maml:para>Renders ChartForgeX topology definitions to PNG, SVG, HTML, GIF, or APNG output. GIF and APNG sample the route configured by Motion.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="ScriptBlock">
@@ -27407,7 +27407,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Output file path. The extension selects PNG, SVG, or HTML output.</maml:para>
+            <maml:para>Output file path. The extension selects PNG, SVG, HTML, GIF, or APNG output.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -27851,7 +27851,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Output file path. The extension selects PNG, SVG, or HTML output.</maml:para>
+            <maml:para>Output file path. The extension selects PNG, SVG, HTML, GIF, or APNG output.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -28319,7 +28319,7 @@ polygonal areas.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>Output file path. The extension selects PNG, SVG, or HTML output.</maml:para>
+          <maml:para>Output file path. The extension selects PNG, SVG, HTML, GIF, or APNG output.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>

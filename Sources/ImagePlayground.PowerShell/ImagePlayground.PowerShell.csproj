@@ -36,8 +36,13 @@
         <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
     </ItemGroup>
 
+    <PropertyGroup Condition="'$(ChartForgeXProjectPath)' != '' And '$(ChartForgeXInteractivityHtmlProjectPath)' == ''">
+        <ChartForgeXInteractivityHtmlProjectPath>$([MSBuild]::NormalizePath('$(ChartForgeXProjectPath)', '..', '..', 'ChartForgeX.Interactivity.Html', 'ChartForgeX.Interactivity.Html.csproj'))</ChartForgeXInteractivityHtmlProjectPath>
+    </PropertyGroup>
+
     <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
         <ProjectReference Include="$(ChartForgeXProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
+        <ProjectReference Include="$(ChartForgeXInteractivityHtmlProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(CodeGlyphXProjectPath)' != ''">
