@@ -34,4 +34,9 @@ These examples are selected from the ImagePlayground repository because they sho
     <h3>Present a PowerShell script run</h3>
     <p>Turn authored commands or caller-captured output into a polished script-free console animation.</p>
   </a>
+  <a class="ev-example-card" href="./organization-hierarchy/">
+    <span class="ev-example-card__eyebrow">Organization</span>
+    <h3>Render an organization hierarchy</h3>
+    <p>Model reporting relationships and choose branch-level hierarchy layouts.</p>
+  </a>
 </div>

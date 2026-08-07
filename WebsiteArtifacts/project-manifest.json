@@ -1,0 +1,29 @@
+{
+  "slug": "imageplayground",
+  "name": "ImagePlayground",
+  "description": "Automate image processing, codes, metadata, charts, topology, and visual stories from PowerShell.",
+  "mode": "hub-full",
+  "contentMode": "hybrid",
+  "status": "active",
+  "listed": true,
+  "sourceRef": "master",
+  "links": {
+    "source": "https://github.com/EvotecIT/ImagePlayground",
+    "powerShellGallery": "https://www.powershellgallery.com/packages/ImagePlayground",
+    "nuget": "https://www.nuget.org/packages/ImagePlayground",
+    "releases": "https://github.com/EvotecIT/ImagePlayground/releases"
+  },
+  "surfaces": {
+    "docs": true,
+    "apiPowerShell": true,
+    "apiDotNet": false,
+    "examples": true,
+    "downloads": true,
+    "releases": true,
+    "changelog": true
+  },
+  "artifacts": {
+    "docs": "Website/content/project-docs",
+    "examples": "Website/content/examples"
+  }
+}
