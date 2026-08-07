@@ -21,8 +21,9 @@ Creates circle status chart data item.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartCircle
+New-ImageChartCircle -Name 'Availability' -Value 99.9 -Minimum 0 -Maximum 100 -Color '#2DD4BF'
 ```
+
 
 ## PARAMETERS
 

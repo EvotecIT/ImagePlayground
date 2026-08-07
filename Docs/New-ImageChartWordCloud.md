@@ -21,8 +21,9 @@ Creates word cloud chart term.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartWordCloud
+New-ImageChartWordCloud -Text 'PowerShell' -Weight 12 -Color '#2DD4BF'
 ```
+
 
 ## PARAMETERS
 

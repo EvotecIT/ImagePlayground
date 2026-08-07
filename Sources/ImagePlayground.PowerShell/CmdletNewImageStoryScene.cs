@@ -5,6 +5,11 @@ using ImagePlayground.PowerShell.Stories;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Groups resolved panels into one timed visual-story scene.</summary>
+/// <example>
+///   <summary>Create a scene from a resolved text panel</summary>
+///   <code>$panel = New-ImageStoryPanel -Id 'summary' -Text 'Deployment completed.' -Emphasized
+/// New-ImageStoryScene -Id 'result' -Title 'Deployment result' -Panels $panel -DurationSeconds 3</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageStoryScene")]
 [OutputType(typeof(ImageStorySceneSpec))]
 public sealed class NewImageStorySceneCmdlet : PSCmdlet {

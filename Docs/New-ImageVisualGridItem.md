@@ -26,8 +26,10 @@ Creates one chart or visual-block placement for a visual grid.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageVisualGridItem
+$card = New-ImageMetricCard -Label 'Requests' -Value 12840 -Trend '+12%'
+New-ImageVisualGridItem -TargetId 'requests' -Block $card -ColumnSpan 2
 ```
+
 
 ## PARAMETERS
 

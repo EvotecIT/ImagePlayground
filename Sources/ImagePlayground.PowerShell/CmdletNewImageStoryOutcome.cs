@@ -4,6 +4,10 @@ using ImagePlayground.PowerShell.Stories;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Declares a result that must be visible in the completed visual-story scene.</summary>
+/// <example>
+///   <summary>Require the chart panel in the completed scene</summary>
+///   <code>New-ImageStoryOutcome -Id 'chart-created' -Label 'The chart is visible' -PanelId 'chart'</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageStoryOutcome")]
 [OutputType(typeof(ImageStoryOutcomeSpec))]
 public sealed class NewImageStoryOutcomeCmdlet : PSCmdlet {

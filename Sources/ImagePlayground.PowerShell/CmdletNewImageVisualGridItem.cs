@@ -5,6 +5,11 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates one chart or visual-block placement for a visual grid.</summary>
+/// <example>
+///   <summary>Place a metric card across two grid columns</summary>
+///   <code>$card = New-ImageMetricCard -Label 'Requests' -Value 12840 -Trend '+12%'
+/// New-ImageVisualGridItem -TargetId 'requests' -Block $card -ColumnSpan 2</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageVisualGridItem", DefaultParameterSetName = BlockSet)]
 [OutputType(typeof(VisualGridItem))]
 public sealed class NewImageVisualGridItemCmdlet : PSCmdlet {

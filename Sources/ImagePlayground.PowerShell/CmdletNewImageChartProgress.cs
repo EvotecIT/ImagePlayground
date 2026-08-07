@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates progress-bar chart row.</summary>
+/// <example>
+///   <summary>Create a deployment progress row</summary>
+///   <code>New-ImageChartProgress -Name 'Deployment' -Value 78 -Color '#8B5CF6'</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartProgress")]
 public sealed class NewImageChartProgressCmdlet : PSCmdlet {
     /// <summary>Label for the progress row.</summary>
