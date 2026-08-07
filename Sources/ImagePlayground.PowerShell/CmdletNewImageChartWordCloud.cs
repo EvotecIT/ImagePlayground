@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates word cloud chart term.</summary>
+/// <example>
+///   <summary>Create a weighted word-cloud term</summary>
+///   <code>New-ImageChartWordCloud -Text 'PowerShell' -Weight 12 -Color '#2DD4BF'</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartWordCloud")]
 public sealed class NewImageChartWordCloudCmdlet : PSCmdlet {
     /// <summary>Term text.</summary>

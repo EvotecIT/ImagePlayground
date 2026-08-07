@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates renderer options for New-ImageChart.</summary>
+/// <example>
+///   <summary>Create options for a labeled chart with a right-side legend</summary>
+///   <code>New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -Palette '#8B5CF6','#2DD4BF'</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartOptions")]
 [OutputType(typeof(ChartRenderOptions))]
 public sealed class NewImageChartOptionsCmdlet : PSCmdlet {

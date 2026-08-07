@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates donut chart data item.</summary>
+/// <example>
+///   <summary>Create a completed-work donut slice</summary>
+///   <code>New-ImageChartDonut -Name 'Completed' -Value 72 -Color Green</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartDonut")]
 public sealed class NewImageChartDonutCmdlet : PSCmdlet {
     /// <summary>Label for the slice.</summary>

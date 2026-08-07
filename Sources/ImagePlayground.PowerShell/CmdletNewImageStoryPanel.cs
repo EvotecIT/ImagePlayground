@@ -8,6 +8,10 @@ using ImagePlayground.PowerShell.Stories;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates one resolved source, terminal, media, or text panel for a generic visual story.</summary>
+/// <example>
+///   <summary>Create an emphasized result panel</summary>
+///   <code>New-ImageStoryPanel -Id 'summary' -Title 'Result' -Text 'Deployment completed.' -Emphasized</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageStoryPanel", DefaultParameterSetName = SourceSet)]
 [OutputType(typeof(ImageStoryPanelSpec))]
 public sealed class NewImageStoryPanelCmdlet : PSCmdlet {

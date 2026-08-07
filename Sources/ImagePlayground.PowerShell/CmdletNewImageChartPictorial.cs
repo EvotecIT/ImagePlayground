@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates pictorial chart row.</summary>
+/// <example>
+///   <summary>Create a pictorial row for active users</summary>
+///   <code>New-ImageChartPictorial -Name 'Active users' -Value 42 -Color Blue</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartPictorial")]
 public sealed class NewImageChartPictorialCmdlet : PSCmdlet {
     /// <summary>Label for the pictorial row.</summary>

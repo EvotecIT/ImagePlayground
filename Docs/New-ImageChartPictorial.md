@@ -21,8 +21,9 @@ Creates pictorial chart row.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartPictorial
+New-ImageChartPictorial -Name 'Active users' -Value 42 -Color Blue
 ```
+
 
 ## PARAMETERS
 

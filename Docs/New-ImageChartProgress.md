@@ -21,8 +21,9 @@ Creates progress-bar chart row.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartProgress
+New-ImageChartProgress -Name 'Deployment' -Value 78 -Color '#8B5CF6'
 ```
+
 
 ## PARAMETERS
 

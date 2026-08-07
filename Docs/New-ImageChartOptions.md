@@ -21,8 +21,9 @@ Creates renderer options for New-ImageChart.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartOptions
+New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -Palette '#8B5CF6','#2DD4BF'
 ```
+
 
 ## PARAMETERS
 

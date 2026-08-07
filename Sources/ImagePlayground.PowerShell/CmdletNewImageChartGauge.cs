@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates gauge chart data item.</summary>
+/// <example>
+///   <summary>Create a capacity gauge</summary>
+///   <code>New-ImageChartGauge -Name 'Capacity' -Value 68 -Minimum 0 -Maximum 100 -Color Orange</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartGauge")]
 public sealed class NewImageChartGaugeCmdlet : PSCmdlet {
     /// <summary>Label for the gauge.</summary>

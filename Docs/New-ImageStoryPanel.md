@@ -51,8 +51,9 @@ Creates one resolved source, terminal, media, or text panel for a generic visual
 
 ### EXAMPLE 1
 ```powershell
-New-ImageStoryPanel
+New-ImageStoryPanel -Id 'summary' -Title 'Result' -Text 'Deployment completed.' -Emphasized
 ```
+
 
 ## PARAMETERS
 

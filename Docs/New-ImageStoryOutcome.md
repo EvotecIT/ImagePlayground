@@ -21,8 +21,9 @@ Declares a result that must be visible in the completed visual-story scene.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageStoryOutcome
+New-ImageStoryOutcome -Id 'chart-created' -Label 'The chart is visible' -PanelId 'chart'
 ```
+
 
 ## PARAMETERS
 

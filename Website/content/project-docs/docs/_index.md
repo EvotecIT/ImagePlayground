@@ -16,6 +16,8 @@ ImagePlayground helps PowerShell and .NET workflows generate and process visual 
 
 - [Installation](./install/)
 - [Project overview](./overview/)
+- [Image workflows](./workflows/)
+- [Charts, hierarchy, topology, and visual reporting](./visual-reporting/)
 - [Curated examples](/projects/imageplayground/examples/)
 - [Back to project overview](/projects/imageplayground/)
 

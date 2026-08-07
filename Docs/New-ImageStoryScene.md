@@ -21,8 +21,10 @@ Groups resolved panels into one timed visual-story scene.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageStoryScene
+$panel = New-ImageStoryPanel -Id 'summary' -Text 'Deployment completed.' -Emphasized
+New-ImageStoryScene -Id 'result' -Title 'Deployment result' -Panels $panel -DurationSeconds 3
 ```
+
 
 ## PARAMETERS
 
