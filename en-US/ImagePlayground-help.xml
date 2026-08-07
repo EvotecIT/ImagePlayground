@@ -16079,7 +16079,7 @@ polygonal areas.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Maps PowerShell-authored team members into the shared ChartForgeX hierarchy engine, including compact child buckets and orthogonal parent-child routing.</maml:para>
+      <maml:para>Maps PowerShell-authored team members into the shared ChartForgeX hierarchy engine, including inherited standard, compact, and vertical subtree layouts.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Definition">
@@ -16122,6 +16122,24 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LayoutPolicy</maml:name>
+          <maml:description>
+            <maml:para>Default sibling layout inherited by organization members that do not specify their own policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyHierarchyLayoutPolicy</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Standard</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Vertical</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyHierarchyLayoutPolicy</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -16366,6 +16384,24 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LayoutPolicy</maml:name>
+          <maml:description>
+            <maml:para>Default sibling layout inherited by organization members that do not specify their own policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyHierarchyLayoutPolicy</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Standard</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Vertical</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyHierarchyLayoutPolicy</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaxLevel</maml:name>
           <maml:description>
             <maml:para>Highest hierarchy level to include.</maml:para>
@@ -16600,6 +16636,24 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
           <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>LayoutPolicy</maml:name>
+        <maml:description>
+          <maml:para>Default sibling layout inherited by organization members that do not specify their own policy.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyHierarchyLayoutPolicy</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Standard</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Vertical</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyHierarchyLayoutPolicy</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -16884,6 +16938,24 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LayoutPolicy</maml:name>
+          <maml:description>
+            <maml:para>Sibling layout applied to this member's direct reports and inherited by its subtree.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyHierarchyLayoutPolicy</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Standard</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Vertical</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyHierarchyLayoutPolicy</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Level</maml:name>
           <maml:description>
             <maml:para>Optional explicit hierarchy level.</maml:para>
@@ -16985,6 +17057,24 @@ polygonal areas.</maml:para>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>LayoutPolicy</maml:name>
+        <maml:description>
+          <maml:para>Sibling layout applied to this member's direct reports and inherited by its subtree.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyHierarchyLayoutPolicy</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Standard</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Vertical</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyHierarchyLayoutPolicy</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>

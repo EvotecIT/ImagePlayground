@@ -38,6 +38,10 @@ public sealed class NewImageOrganizationMemberCmdlet : PSCmdlet {
     [Parameter]
     public TopologyHealthStatus Status { get; set; } = TopologyHealthStatus.Unknown;
 
+    /// <summary>Sibling layout applied to this member's direct reports and inherited by its subtree.</summary>
+    [Parameter]
+    public TopologyHierarchyLayoutPolicy LayoutPolicy { get; set; } = TopologyHierarchyLayoutPolicy.Auto;
+
     /// <summary>Optional ChartForgeX topology icon identifier.</summary>
     [Parameter]
     public string IconId { get; set; } = string.Empty;
@@ -54,6 +58,7 @@ public sealed class NewImageOrganizationMemberCmdlet : PSCmdlet {
             IconId = string.IsNullOrWhiteSpace(IconId) ? null : IconId
         };
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Level))) member.Level = Level;
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(LayoutPolicy))) member.LayoutPolicy = LayoutPolicy;
         if (Metadata != null) {
             foreach (DictionaryEntry entry in Metadata) {
                 if (entry.Key == null) continue;

@@ -11,7 +11,7 @@ Creates one member for an organization or team chart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageOrganizationMember [-Id] <string> [-Name] <string> [[-Role] <string>] [-ParentId <string>] [-Level <int>] [-Status <TopologyHealthStatus>] [-IconId <string>] [-Metadata <hashtable>] [<CommonParameters>]
+New-ImageOrganizationMember [-Id] <string> [-Name] <string> [[-Role] <string>] [-ParentId <string>] [-Level <int>] [-Status <TopologyHealthStatus>] [-LayoutPolicy <TopologyHierarchyLayoutPolicy>] [-IconId <string>] [-Metadata <hashtable>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,6 +54,22 @@ Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LayoutPolicy
+Sibling layout applied to this member's direct reports and inherited by its subtree.
+
+```yaml
+Type: TopologyHierarchyLayoutPolicy
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Auto, Standard, Compact, Vertical
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
