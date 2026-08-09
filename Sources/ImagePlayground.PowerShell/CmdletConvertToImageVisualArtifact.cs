@@ -1,5 +1,6 @@
 using System;
 using System.Management.Automation;
+using System.Text;
 using ChartForgeX.Composition;
 using ChartForgeX.Core;
 using ChartForgeX.Stories;
@@ -69,9 +70,15 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
             _ => throw new PSArgumentException("InputObject must be a ChartForgeX chart, grid, canvas, story, topology, flow, sequence, table, visual block, or VisualArtifact.", nameof(InputObject))
         };
 
-        if (!string.IsNullOrWhiteSpace(Id)) artifact.Id = Id.Trim();
-        if (!string.IsNullOrWhiteSpace(Title)) artifact.Title = Title.Trim();
-        if (!string.IsNullOrWhiteSpace(Subtitle)) artifact.Subtitle = Subtitle.Trim();
+        if (!string.IsNullOrWhiteSpace(Id)) {
+            artifact.Id = Id.Trim();
+        }
+        if (!string.IsNullOrWhiteSpace(Title)) {
+            artifact.Title = Title.Trim();
+        }
+        if (!string.IsNullOrWhiteSpace(Subtitle)) {
+            artifact.Subtitle = Subtitle.Trim();
+        }
         if (Decorative.IsPresent) {
             artifact.Accessibility.AsDecorative();
         } else if (!string.IsNullOrWhiteSpace(AccessibleName)) {
@@ -80,10 +87,37 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
                 string.IsNullOrWhiteSpace(AccessibleDescription) ? null : AccessibleDescription,
                 string.IsNullOrWhiteSpace(Language) ? null : Language);
         } else {
-            if (!string.IsNullOrWhiteSpace(AccessibleDescription)) artifact.Accessibility.Description = AccessibleDescription;
-            if (!string.IsNullOrWhiteSpace(Language)) artifact.Accessibility.Language = Language;
+            if (!string.IsNullOrWhiteSpace(AccessibleDescription)) {
+                artifact.Accessibility.Description = AccessibleDescription;
+            }
+            if (!string.IsNullOrWhiteSpace(Language)) {
+                artifact.Accessibility.Language = Language;
+            }
         }
-        WriteObject(artifact);
+        PSObject output = InputObject is PSObject inputWrapper && ReferenceEquals(inputWrapper.BaseObject, artifact)
+            ? inputWrapper
+            : PSObject.AsPSObject(artifact);
+        if (!output.TypeNames.Contains("ImagePlayground.VisualArtifact")) {
+            output.TypeNames.Insert(0, "ImagePlayground.VisualArtifact");
+        }
+
+        SetPortableProperty(output, "OfficeVisualSvg", Encoding.UTF8.GetBytes(artifact.ToSvg()));
+        SetPortableProperty(output, "OfficeVisualId", artifact.Id);
+        SetPortableProperty(output, "OfficeVisualTitle", artifact.Title);
+        SetPortableProperty(
+            output,
+            "OfficeVisualAlternativeText",
+            artifact.Accessibility.Description ?? artifact.Accessibility.Name ?? string.Empty);
+        WriteObject(output);
+    }
+
+    private static void SetPortableProperty(PSObject output, string name, object? value) {
+        PSPropertyInfo? existing = output.Properties[name];
+        if (existing == null) {
+            output.Properties.Add(new PSNoteProperty(name, value));
+        } else {
+            existing.Value = value;
+        }
     }
 
     private string? OptionalId() => string.IsNullOrWhiteSpace(Id) ? null : Id.Trim();

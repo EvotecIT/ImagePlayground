@@ -18,7 +18,9 @@ public sealed class GetImageTopologyDiagnosticsCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (Topology == null) throw new PSArgumentNullException(nameof(Topology));
+        if (Topology == null) {
+            throw new PSArgumentNullException(nameof(Topology));
+        }
         WriteObject(TopologyLayoutDiagnostics.Analyze(Topology, new TopologyRenderOptions { LayoutPreset = LayoutPreset }));
     }
 }

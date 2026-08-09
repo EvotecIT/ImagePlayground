@@ -153,11 +153,15 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
         }
 
         foreach (TopologyNodePort port in Port) {
-            if (port == null) throw new PSArgumentException("Port cannot contain null entries.", nameof(Port));
+            if (port == null) {
+                throw new PSArgumentException("Port cannot contain null entries.", nameof(Port));
+            }
             node.Ports.Add(port);
         }
         foreach (TopologyNodeDetail detail in Detail) {
-            if (detail == null) throw new PSArgumentException("Detail cannot contain null entries.", nameof(Detail));
+            if (detail == null) {
+                throw new PSArgumentException("Detail cannot contain null entries.", nameof(Detail));
+            }
             node.Details.Add(detail);
         }
 

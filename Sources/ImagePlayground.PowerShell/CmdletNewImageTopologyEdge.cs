@@ -198,18 +198,46 @@ public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
         if (!string.IsNullOrWhiteSpace(Tooltip)) {
             edge.Tooltip = Tooltip;
         }
-        if (!string.IsNullOrWhiteSpace(SourcePortId)) edge.SourcePortId = SourcePortId;
-        if (!string.IsNullOrWhiteSpace(TargetPortId)) edge.TargetPortId = TargetPortId;
-        if (SourceMarker.HasValue) edge.SourceMarker = SourceMarker.Value;
-        if (TargetMarker.HasValue) edge.TargetMarker = TargetMarker.Value;
-        if (StrokeWidth.HasValue) edge.StrokeWidth = StrokeWidth.Value;
-        if (Opacity.HasValue) edge.Opacity = Opacity.Value;
-        foreach (double value in DashPattern) edge.DashPattern.Add(value);
-        if (PreferredLength.HasValue) edge.PreferredLength = PreferredLength.Value;
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(MinimumRankSpan))) edge.MinimumRankSpan = MinimumRankSpan;
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(RoutingPriority))) edge.RoutingPriority = RoutingPriority;
-        if (!string.IsNullOrWhiteSpace(SourceLabel)) edge.SourceLabel = SourceLabel;
-        if (!string.IsNullOrWhiteSpace(TargetLabel)) edge.TargetLabel = TargetLabel;
+        if (!string.IsNullOrWhiteSpace(SourcePortId)) {
+            edge.SourcePortId = SourcePortId;
+        }
+        if (!string.IsNullOrWhiteSpace(TargetPortId)) {
+            edge.TargetPortId = TargetPortId;
+        }
+        if (SourceMarker.HasValue) {
+            edge.SourceMarker = SourceMarker.Value;
+        }
+        if (TargetMarker.HasValue) {
+            edge.TargetMarker = TargetMarker.Value;
+        }
+        if (StrokeWidth.HasValue) {
+            edge.StrokeWidth = StrokeWidth.Value;
+        }
+        if (Opacity.HasValue) {
+            edge.Opacity = Opacity.Value;
+        }
+        foreach (double value in DashPattern) {
+            if (value <= 0D || double.IsNaN(value) || double.IsInfinity(value)) {
+                throw new PSArgumentException("DashPattern values must be positive and finite.", nameof(DashPattern));
+            }
+
+            edge.DashPattern.Add(value);
+        }
+        if (PreferredLength.HasValue) {
+            edge.PreferredLength = PreferredLength.Value;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(MinimumRankSpan))) {
+            edge.MinimumRankSpan = MinimumRankSpan;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(RoutingPriority))) {
+            edge.RoutingPriority = RoutingPriority;
+        }
+        if (!string.IsNullOrWhiteSpace(SourceLabel)) {
+            edge.SourceLabel = SourceLabel;
+        }
+        if (!string.IsNullOrWhiteSpace(TargetLabel)) {
+            edge.TargetLabel = TargetLabel;
+        }
 
         WriteObject(edge);
     }

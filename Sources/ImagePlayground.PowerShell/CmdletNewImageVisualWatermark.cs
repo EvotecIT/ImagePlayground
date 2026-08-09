@@ -109,10 +109,32 @@ public sealed class NewImageVisualWatermarkCmdlet : ImageCmdlet {
 
     private static string ResolveMimeType(string path) {
         string extension = Path.GetExtension(path);
-        if (extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)) return "image/jpeg";
-        if (extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase)) return "image/bmp";
-        if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) return "image/gif";
-        if (extension.Equals(".tif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".tiff", StringComparison.OrdinalIgnoreCase)) return "image/tiff";
-        return "image/png";
+        if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
+            return "image/png";
+        }
+
+        if (extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)) {
+            return "image/jpeg";
+        }
+
+        if (extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase)) {
+            return "image/bmp";
+        }
+
+        if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
+            return "image/gif";
+        }
+
+        if (extension.Equals(".tif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".tiff", StringComparison.OrdinalIgnoreCase)) {
+            return "image/tiff";
+        }
+
+        if (extension.Equals(".ppm", StringComparison.OrdinalIgnoreCase)) {
+            return "image/x-portable-pixmap";
+        }
+
+        throw new PSArgumentException(
+            "Visual artifact image watermarks support PNG, JPEG, BMP, GIF, TIFF, and PPM files.",
+            nameof(ImagePath));
     }
 }

@@ -198,27 +198,45 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
 
     private void SaveChart(Chart chart) {
         var output = Helpers.ResolvePath(FilePath);
+        string? directory = System.IO.Path.GetDirectoryName(output);
+        if (!string.IsNullOrWhiteSpace(directory)) {
+            System.IO.Directory.CreateDirectory(directory!);
+        }
+
         if (Watermark.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
             Charts.Save(chart, output);
         } else {
             var render = new VisualArtifactRenderOptions();
             foreach (VisualWatermark watermark in Watermark) {
-                if (watermark == null) throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+                if (watermark == null) {
+                    throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+                }
+
                 render.Watermarks.Add(watermark);
             }
-            if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) render.Raster = new RasterImageOptions { Dpi = Dpi };
+            if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
+                render.Raster = new RasterImageOptions { Dpi = Dpi };
+            }
+
             VisualArtifact artifact = chart.ToVisualArtifact();
             var extension = System.IO.Path.GetExtension(output);
-            if (extension.Equals(".svg", System.StringComparison.OrdinalIgnoreCase)) artifact.SaveSvg(output, render);
-            else if (extension.Equals(".html", System.StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", System.StringComparison.OrdinalIgnoreCase)) artifact.SaveHtml(output, render);
-            else if (extension.Equals(".png", System.StringComparison.OrdinalIgnoreCase)) artifact.SavePng(output, render);
-            else throw new PSArgumentException("Watermarked chart output supports only .png, .svg, .html, or .htm file extensions.", nameof(FilePath));
+            if (extension.Equals(".svg", System.StringComparison.OrdinalIgnoreCase)) {
+                artifact.SaveSvg(output, render);
+            } else if (extension.Equals(".html", System.StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", System.StringComparison.OrdinalIgnoreCase)) {
+                artifact.SaveHtml(output, render);
+            } else if (extension.Equals(".png", System.StringComparison.OrdinalIgnoreCase)) {
+                artifact.SavePng(output, render);
+            } else {
+                throw new PSArgumentException("Watermarked chart output supports only .png, .svg, .html, or .htm file extensions.", nameof(FilePath));
+            }
         }
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
         }
-        if (PassThru.IsPresent) WriteObject(chart);
+        if (PassThru.IsPresent) {
+            WriteObject(chart);
+        }
     }
 
     private void AddAnnotationsFromScriptBlock() {

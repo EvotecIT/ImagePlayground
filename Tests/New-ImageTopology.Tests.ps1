@@ -1,6 +1,8 @@
 Describe 'New-ImageTopology' {
     BeforeAll {
-        if (-not $env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
             $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
             Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
         }
@@ -138,6 +140,31 @@ Describe 'New-ImageTopology' {
         $diagnostics = $chart | Get-ImageTopologyDiagnostics
         $diagnostics.Nodes.Count | Should -Be 2
         $diagnostics.Edges.Count | Should -Be 1
+    }
+
+    It 'rejects non-positive dash pattern values' {
+        { New-ImageTopologyEdge -SourceNodeId api -TargetNodeId db -DashPattern 8, -1 -ErrorAction Stop } |
+            Should -Throw '*positive and finite*'
+    }
+
+    It 'rejects interactive HTML with watermarks instead of silently producing static HTML' {
+        $file = Join-Path $TestDir 'topology-interactive-watermark.html'
+        $watermark = New-ImageVisualWatermark -Text INTERNAL
+
+        {
+            New-ImageTopology -Node (New-ImageTopologyNode -Id api -Label API) `
+                -InteractiveHtml -Watermark $watermark -FilePath $file -ErrorAction Stop
+        } | Should -Throw '*cannot currently be combined*'
+    }
+
+    It 'creates a nested output directory for watermarked charts' {
+        $file = Join-Path $TestDir 'nested/chart/chart.svg'
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartLine -Name API -Value 1, 2, 3
+        } -Watermark (New-ImageVisualWatermark -Text INTERNAL) -FilePath $file
+
+        Test-Path -LiteralPath $file | Should -BeTrue
     }
 
     It 'renders scenario controls and script-free route motion' {

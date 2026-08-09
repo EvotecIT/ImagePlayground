@@ -237,12 +237,21 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
         if (Watermark.Length > 0 && (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".apng", StringComparison.OrdinalIgnoreCase))) {
             throw new PSArgumentException("Visual artifact watermarks are supported for static SVG, HTML, and PNG topology output.", nameof(Watermark));
         }
+        if (InteractiveHtml.IsPresent && Watermark.Length > 0 &&
+            (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))) {
+            throw new PSArgumentException(
+                "Interactive topology HTML cannot currently be combined with visual artifact watermarks. Remove -InteractiveHtml or -Watermark.",
+                nameof(Watermark));
+        }
 
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
             SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Svg);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
-            if (InteractiveHtml.IsPresent && Watermark.Length == 0) chart.SaveInteractiveHtml(output, options);
-            else SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Html);
+            if (InteractiveHtml.IsPresent) {
+                chart.SaveInteractiveHtml(output, options);
+            } else {
+                SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Html);
+            }
         } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
             SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Png);
         } else if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
@@ -394,14 +403,24 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     private void SaveStaticArtifact(TopologyChart chart, string output, TopologyRenderOptions topologyOptions, StaticArtifactFormat format) {
         var artifactOptions = new VisualArtifactRenderOptions { Topology = topologyOptions };
         foreach (VisualWatermark watermark in Watermark) {
-            if (watermark == null) throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+            if (watermark == null) {
+                throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+            }
+
             artifactOptions.Watermarks.Add(watermark);
         }
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) artifactOptions.Raster = new RasterImageOptions { Dpi = Dpi };
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
+            artifactOptions.Raster = new RasterImageOptions { Dpi = Dpi };
+        }
+
         VisualArtifact artifact = chart.ToVisualArtifact();
-        if (format == StaticArtifactFormat.Svg) artifact.SaveSvg(output, artifactOptions);
-        else if (format == StaticArtifactFormat.Html) artifact.SaveHtml(output, artifactOptions);
-        else artifact.SavePng(output, artifactOptions);
+        if (format == StaticArtifactFormat.Svg) {
+            artifact.SaveSvg(output, artifactOptions);
+        } else if (format == StaticArtifactFormat.Html) {
+            artifact.SaveHtml(output, artifactOptions);
+        } else {
+            artifact.SavePng(output, artifactOptions);
+        }
     }
 
     private enum StaticArtifactFormat {

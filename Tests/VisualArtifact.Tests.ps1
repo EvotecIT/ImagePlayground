@@ -64,4 +64,37 @@ Describe 'ChartForgeX visual artifacts' {
         $artifact | Export-ImageVisualArtifact -FilePath $svgPath
         (Get-Content $svgPath -Raw) | Should -Match '<svg'
     }
+
+    It 'exposes a portable Office visual envelope without changing the artifact base type' {
+        $chart = [ChartForgeX.Core.Chart]::Create().WithSize(160, 90)
+        $artifact = $chart | ConvertTo-ImageVisualArtifact -Id portable-chart -Title 'Portable chart' -AccessibleDescription 'Portable chart description.'
+
+        $artifact.GetType().FullName | Should -Be 'ChartForgeX.VisualArtifacts.VisualArtifact'
+        $artifact.PSObject.TypeNames | Should -Contain 'ImagePlayground.VisualArtifact'
+        $artifact.OfficeVisualSvg.Count | Should -BeGreaterThan 100
+        $artifact.OfficeVisualId | Should -Be 'portable-chart'
+        $artifact.OfficeVisualTitle | Should -Be 'Portable chart'
+        $artifact.OfficeVisualAlternativeText | Should -Be 'Portable chart description.'
+
+        $again = $artifact | ConvertTo-ImageVisualArtifact -Title 'Updated portable chart'
+        $again.OfficeVisualTitle | Should -Be 'Updated portable chart'
+        @($again.PSObject.TypeNames -eq 'ImagePlayground.VisualArtifact').Count | Should -Be 1
+    }
+
+    It 'rejects multiple pipeline artifacts for one output path' {
+        $first = [ChartForgeX.Core.Chart]::Create().WithSize(120, 80) | ConvertTo-ImageVisualArtifact -Id first
+        $second = [ChartForgeX.Core.Chart]::Create().WithSize(120, 80) | ConvertTo-ImageVisualArtifact -Id second
+        $path = Join-Path $TestDir 'must-not-overwrite.svg'
+
+        { @($first, $second) | Export-ImageVisualArtifact -FilePath $path -ErrorAction Stop } |
+            Should -Throw '*exactly one artifact*'
+    }
+
+    It 'rejects unsupported image watermark formats instead of labelling them as PNG' {
+        $path = Join-Path $TestDir 'unsupported.webp'
+        [IO.File]::WriteAllBytes($path, [byte[]] @(82, 73, 70, 70, 0, 0, 0, 0, 87, 69, 66, 80))
+
+        { New-ImageVisualWatermark -ImagePath $path -ErrorAction Stop } |
+            Should -Throw '*support PNG, JPEG, BMP, GIF, TIFF, and PPM*'
+    }
 }

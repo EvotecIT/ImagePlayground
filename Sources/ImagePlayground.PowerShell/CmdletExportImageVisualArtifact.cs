@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using ChartForgeX.Core;
@@ -18,6 +19,8 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsData.Export, "ImageVisualArtifact")]
 [OutputType(typeof(VisualArtifact))]
 public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
+    private readonly List<VisualArtifact> _artifacts = new();
+
     /// <para>Visual artifact to export.</para>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public VisualArtifact? Artifact { get; set; }
@@ -53,15 +56,35 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (Artifact == null) throw new PSArgumentNullException(nameof(Artifact));
+        if (Artifact == null) {
+            throw new PSArgumentNullException(nameof(Artifact));
+        }
+
+        _artifacts.Add(Artifact);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing() {
+        if (_artifacts.Count != 1) {
+            throw new PSArgumentException(
+                "Export-ImageVisualArtifact accepts exactly one artifact per output path. Invoke it once per artifact to avoid overwriting output.",
+                nameof(Artifact));
+        }
+
+        VisualArtifact artifact = _artifacts[0];
         string output = Helpers.ResolvePath(FilePath);
         string extension = Path.GetExtension(output);
         var options = new VisualArtifactRenderOptions();
         foreach (VisualWatermark watermark in Watermark) {
-            if (watermark == null) throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+            if (watermark == null) {
+                throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+            }
+
             options.Watermarks.Add(watermark);
         }
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) options.Raster = new RasterImageOptions { Dpi = Dpi };
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
+            options.Raster = new RasterImageOptions { Dpi = Dpi };
+        }
         if (TopologyLayoutPreset != TopologyLayoutPreset.Automatic || IncludeTopologyDiagnostics.IsPresent) {
             options.Topology = new TopologyRenderOptions {
                 LayoutPreset = TopologyLayoutPreset,
@@ -69,17 +92,29 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
             };
         }
         EnsureDirectory(output);
-        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) Artifact.SaveSvg(output, options);
-        else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) Artifact.SaveHtml(output, options);
-        else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) Artifact.SavePng(output, options);
-        else throw new PSArgumentException("Visual artifact output supports only .svg, .html, .htm, or .png file extensions.", nameof(FilePath));
+        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
+            artifact.SaveSvg(output, options);
+        } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
+            artifact.SaveHtml(output, options);
+        } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
+            artifact.SavePng(output, options);
+        } else {
+            throw new PSArgumentException("Visual artifact output supports only .svg, .html, .htm, or .png file extensions.", nameof(FilePath));
+        }
 
-        if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
-        if (PassThru.IsPresent) WriteObject(Artifact);
+        if (Show.IsPresent) {
+            ImagePlayground.Helpers.Open(output, true);
+        }
+
+        if (PassThru.IsPresent) {
+            WriteObject(artifact);
+        }
     }
 
     private static void EnsureDirectory(string output) {
         string? directory = Path.GetDirectoryName(output);
-        if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
+        if (!string.IsNullOrWhiteSpace(directory)) {
+            Directory.CreateDirectory(directory!);
+        }
     }
 }
