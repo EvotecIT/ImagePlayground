@@ -7,7 +7,7 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates an organization or team chart.</summary>
-/// <para>Maps PowerShell-authored team members into the shared ChartForgeX hierarchy engine, including compact child buckets and orthogonal parent-child routing.</para>
+/// <para>Maps PowerShell-authored team members into the shared ChartForgeX hierarchy engine, including inherited standard, compact, and vertical subtree layouts.</para>
 /// <example>
 ///   <summary>Create an engineering organization chart</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -53,6 +53,10 @@ public sealed class NewImageOrganizationChartCmdlet : PSCmdlet {
     /// <summary>Layered organization-chart direction.</summary>
     [Parameter]
     public TopologyLayoutDirection Direction { get; set; } = TopologyLayoutDirection.TopToBottom;
+
+    /// <summary>Default sibling layout inherited by organization members that do not specify their own policy.</summary>
+    [Parameter]
+    public TopologyHierarchyLayoutPolicy LayoutPolicy { get; set; } = TopologyHierarchyLayoutPolicy.Auto;
 
     /// <summary>Organization member presentation mode.</summary>
     [Parameter]
@@ -127,6 +131,7 @@ public sealed class NewImageOrganizationChartCmdlet : PSCmdlet {
             IncludeTeamNode = !NoTeamNode.IsPresent,
             IncludeAncestorContext = !NoAncestorContext.IsPresent,
             LayoutDirection = Direction,
+            LayoutPolicy = LayoutPolicy,
             NodeDisplayMode = NodeDisplayMode
         };
         if (MyInvocation.BoundParameters.ContainsKey(nameof(MinLevel))) teamOptions.MinLevel = MinLevel;

@@ -16,7 +16,7 @@
     <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
-    <PackageReference Include="ChartForgeX" Version="1.3.0" />
+    <PackageReference Include="ChartForgeX" Version="1.4.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="TreeSitter.DotNet" Version="1.3.0" />

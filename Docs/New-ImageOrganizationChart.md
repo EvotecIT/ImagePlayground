@@ -11,16 +11,16 @@ Creates an organization or team chart.
 ## SYNTAX
 ### Definition (Default)
 ```powershell
-New-ImageOrganizationChart [-MemberDefinition] <scriptblock> -TeamLabel <string> -FilePath <string> [-TeamId <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-MinLevel <int>] [-MaxLevel <int>] [-NoTeamNode] [-NoAncestorContext] [-ShowLegend] [-Theme <string>] [-Transparent] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageOrganizationChart [-MemberDefinition] <scriptblock> -TeamLabel <string> -FilePath <string> [-TeamId <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Direction <TopologyLayoutDirection>] [-LayoutPolicy <TopologyHierarchyLayoutPolicy>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-MinLevel <int>] [-MaxLevel <int>] [-NoTeamNode] [-NoAncestorContext] [-ShowLegend] [-Theme <string>] [-Transparent] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Member
 ```powershell
-New-ImageOrganizationChart -Member <TopologyTeamMember[]> -TeamLabel <string> -FilePath <string> [-TeamId <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-MinLevel <int>] [-MaxLevel <int>] [-NoTeamNode] [-NoAncestorContext] [-ShowLegend] [-Theme <string>] [-Transparent] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageOrganizationChart -Member <TopologyTeamMember[]> -TeamLabel <string> -FilePath <string> [-TeamId <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Direction <TopologyLayoutDirection>] [-LayoutPolicy <TopologyHierarchyLayoutPolicy>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-MinLevel <int>] [-MaxLevel <int>] [-NoTeamNode] [-NoAncestorContext] [-ShowLegend] [-Theme <string>] [-Transparent] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Maps PowerShell-authored team members into the shared ChartForgeX hierarchy engine, including compact child buckets and orthogonal parent-child routing.
+Maps PowerShell-authored team members into the shared ChartForgeX hierarchy engine, including inherited standard, compact, and vertical subtree layouts.
 
 ## EXAMPLES
 
@@ -72,6 +72,22 @@ Type: Int32
 Parameter Sets: Definition, Member
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LayoutPolicy
+Default sibling layout inherited by organization members that do not specify their own policy.
+
+```yaml
+Type: TopologyHierarchyLayoutPolicy
+Parameter Sets: Definition, Member
+Aliases: None
+Possible values: Auto, Standard, Compact, Vertical
 
 Required: False
 Position: named
