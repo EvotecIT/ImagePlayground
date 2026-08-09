@@ -42,6 +42,7 @@ Describe 'New-ImageChart' {
             'New-ImageChartPie'
             'New-ImageChartPolar'
             'New-ImageChartProgress'
+            'New-ImageChartRadar'
             'New-ImageChartRadial'
             'New-ImageChartRangeBand'
             'New-ImageChartRangeBar'
@@ -130,6 +131,23 @@ Describe 'New-ImageChart' {
         } -FilePath $file -Width 200 -Height 150
 
         Test-Path -Path $file | Should -BeTrue
+    }
+
+    It 'creates a radar chart through the public definition command' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart_radar.svg'
+        if (Test-Path -Path $file) {
+            Remove-Item -Path $file
+        }
+
+        New-ImageChart -ChartsDefinition {
+            New-ImageChartRadar -Name 'Current' -Category 1, 2, 3, 4 -Value 82, 68, 91, 74 -Color '#2563EB'
+            New-ImageChartRadar -Name 'Target' -Category 1, 2, 3, 4 -Value 90, 85, 88, 92 -Color '#14B8A6'
+        } -FilePath $file -Width 500 -Height 360 -Theme Aurora
+
+        Test-Path -Path $file | Should -BeTrue
+        (Get-Content -Path $file -Raw) | Should -Match 'Current'
+        [enum]::GetNames([ImagePlayground.ChartTheme]) | Should -Contain 'Colorblind'
+        [enum]::GetNames([ImagePlayground.ChartTheme]) | Should -Contain 'DashboardLight'
     }
 
     It 'preserves true polar angle and radius data in a dedicated definition' {

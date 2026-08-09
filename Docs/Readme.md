@@ -2,7 +2,7 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.2.6
+Help Version: 3.2.7
 Locale: en-US
 ---
 # ImagePlayground Module
@@ -80,6 +80,15 @@ Creates a rounded avatar image.
 ### [New-ImageBarCode](New-ImageBarCode.md)
 Creates a barcode image.
 
+### [New-ImageCanvas](New-ImageCanvas.md)
+Creates a fixed-size visual canvas for social images, wallpapers, report covers, and announcement cards.
+
+### [New-ImageCanvasInfoTile](New-ImageCanvasInfoTile.md)
+Creates a positioned information tile for a visual canvas.
+
+### [New-ImageCanvasText](New-ImageCanvasText.md)
+Creates a positioned text layer for a visual canvas.
+
 ### [New-ImageChart](New-ImageChart.md)
 Creates an image chart from definitions.
 
@@ -145,6 +154,9 @@ Creates polar chart data item.
 
 ### [New-ImageChartProgress](New-ImageChartProgress.md)
 Creates progress-bar chart row.
+
+### [New-ImageChartRadar](New-ImageChartRadar.md)
+Creates radar chart series data.
 
 ### [New-ImageChartRadial](New-ImageChartRadial.md)
 Creates radial gauge chart data item.
@@ -216,8 +228,20 @@ Creates a simple grid-based image.
 ### [New-ImageIcon](New-ImageIcon.md)
 Creates an icon file from an image.
 
+### [New-ImageListBlock](New-ImageListBlock.md)
+Creates a visual list block.
+
+### [New-ImageMetricCard](New-ImageMetricCard.md)
+Creates a dashboard metric card.
+
 ### [New-ImageMosaic](New-ImageMosaic.md)
 Creates a mosaic image from multiple files.
+
+### [New-ImageOrganizationChart](New-ImageOrganizationChart.md)
+Creates an organization or team chart.
+
+### [New-ImageOrganizationMember](New-ImageOrganizationMember.md)
+Creates one member for an organization or team chart.
 
 ### [New-ImageQRCode](New-ImageQRCode.md)
 Generates a QR code image from plain text content.
@@ -282,8 +306,17 @@ Creates one resolved source, terminal, media, or text panel for a generic visual
 ### [New-ImageStoryScene](New-ImageStoryScene.md)
 Groups resolved panels into one timed visual-story scene.
 
+### [New-ImageTableBlock](New-ImageTableBlock.md)
+Creates a visual table block.
+
 ### [New-ImageThumbnail](New-ImageThumbnail.md)
 Creates thumbnails for all images in a directory.
+
+### [New-ImageTimelineBlock](New-ImageTimelineBlock.md)
+Creates an activity timeline block.
+
+### [New-ImageTimelineItem](New-ImageTimelineItem.md)
+Creates one activity timeline item.
 
 ### [New-ImageTopology](New-ImageTopology.md)
 Creates a topology diagram image.
@@ -294,8 +327,23 @@ Creates a topology edge definition.
 ### [New-ImageTopologyGroup](New-ImageTopologyGroup.md)
 Creates a topology group definition.
 
+### [New-ImageTopologyMotion](New-ImageTopologyMotion.md)
+Creates script-free route motion options for topology output.
+
 ### [New-ImageTopologyNode](New-ImageTopologyNode.md)
 Creates a topology node definition.
+
+### [New-ImageTopologyScenario](New-ImageTopologyScenario.md)
+Creates an ordered topology scenario.
+
+### [New-ImageTopologyScenarioStep](New-ImageTopologyScenarioStep.md)
+Creates one node or edge step for a topology scenario.
+
+### [New-ImageVisualGrid](New-ImageVisualGrid.md)
+Creates a reusable dashboard grid from charts and visual blocks.
+
+### [New-ImageVisualGridItem](New-ImageVisualGridItem.md)
+Creates one chart or visual-block placement for a visual grid.
 
 ### [New-ImageVisualMotionCue](New-ImageVisualMotionCue.md)
 Creates one named motion cue for an animated ChartForgeX visual story.

@@ -258,7 +258,7 @@ Chart theme.
 Type: ChartTheme
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
 Aliases: None
-Possible values: Default, Dark, Light
+Possible values: Default, Dark, Light, Colorblind, Aurora, Editorial, Candy, PeopleInfographic, Terminal, TransparentOverlayDark, Minimal, DashboardLight, SaasDashboardLight, RestaurantDashboardLight
 
 Required: False
 Position: named

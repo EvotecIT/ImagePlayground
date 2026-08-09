@@ -36,8 +36,13 @@
         <ProjectReference Include="..\ImagePlayground\ImagePlayground.csproj" />
     </ItemGroup>
 
+    <PropertyGroup Condition="'$(ChartForgeXProjectPath)' != '' And '$(ChartForgeXInteractivityHtmlProjectPath)' == ''">
+        <ChartForgeXInteractivityHtmlProjectPath>$([MSBuild]::NormalizePath('$(ChartForgeXProjectPath)', '..', '..', 'ChartForgeX.Interactivity.Html', 'ChartForgeX.Interactivity.Html.csproj'))</ChartForgeXInteractivityHtmlProjectPath>
+    </PropertyGroup>
+
     <ItemGroup Condition="'$(ChartForgeXProjectPath)' != ''">
         <ProjectReference Include="$(ChartForgeXProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
+        <ProjectReference Include="$(ChartForgeXInteractivityHtmlProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(CodeGlyphXProjectPath)' != ''">
@@ -46,6 +51,7 @@
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">
         <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
+        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX.Interactivity.Html\ChartForgeX.Interactivity.Html.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true' And '$(CodeGlyphXProjectPath)' == ''">
@@ -54,6 +60,7 @@
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
         <PackageReference Include="ChartForgeX" Version="1.3.0" />
+        <PackageReference Include="ChartForgeX.Interactivity.Html" Version="1.3.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
