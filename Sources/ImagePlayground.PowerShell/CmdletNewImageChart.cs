@@ -113,9 +113,12 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter]
     public ChartRenderOptions? Options { get; set; }
 
+    private VisualWatermark[] _watermark = System.Array.Empty<VisualWatermark>();
+
     /// <summary>Watermarks applied to static SVG, HTML, or PNG output.</summary>
     [Parameter]
-    public VisualWatermark[] Watermark { get; set; } = System.Array.Empty<VisualWatermark>();
+    [AllowNull]
+    public VisualWatermark[] Watermark { get => _watermark; set => _watermark = VisualWatermarkParameter.Normalize(value); }
 
     /// <summary>PNG physical resolution metadata in dots per inch.</summary>
     [Parameter]
@@ -197,17 +200,18 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     }
 
     private void SaveChart(Chart chart) {
+        VisualWatermark[] watermarks = Watermark ?? System.Array.Empty<VisualWatermark>();
         var output = Helpers.ResolvePath(FilePath);
         string? directory = System.IO.Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) {
             System.IO.Directory.CreateDirectory(directory!);
         }
 
-        if (Watermark.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
+        if (watermarks.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
             Charts.Save(chart, output);
         } else {
             var render = new VisualArtifactRenderOptions();
-            foreach (VisualWatermark watermark in Watermark) {
+            foreach (VisualWatermark watermark in watermarks) {
                 if (watermark == null) {
                     throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
                 }

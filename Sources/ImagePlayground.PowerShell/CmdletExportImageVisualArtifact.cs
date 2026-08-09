@@ -20,6 +20,7 @@ namespace ImagePlayground.PowerShell;
 [OutputType(typeof(VisualArtifact))]
 public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
     private readonly List<VisualArtifact> _artifacts = new();
+    private VisualWatermark[] _watermark = Array.Empty<VisualWatermark>();
 
     /// <para>Visual artifact to export.</para>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
@@ -31,7 +32,8 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
 
     /// <para>Watermarks applied in declaration order.</para>
     [Parameter]
-    public VisualWatermark[] Watermark { get; set; } = Array.Empty<VisualWatermark>();
+    [AllowNull]
+    public VisualWatermark[] Watermark { get => _watermark; set => _watermark = VisualWatermarkParameter.Normalize(value); }
 
     /// <para>PNG physical resolution metadata in dots per inch.</para>
     [Parameter]
@@ -75,7 +77,7 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
         string output = Helpers.ResolvePath(FilePath);
         string extension = Path.GetExtension(output);
         var options = new VisualArtifactRenderOptions();
-        foreach (VisualWatermark watermark in Watermark) {
+        foreach (VisualWatermark watermark in Watermark ?? Array.Empty<VisualWatermark>()) {
             if (watermark == null) {
                 throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
             }

@@ -54,6 +54,28 @@ Describe 'ChartForgeX visual artifacts' {
         [System.Text.Encoding]::ASCII.GetString($png) | Should -Match 'pHYs'
     }
 
+    It 'normalizes null-only bindings and rejects mixed null watermark entries across visual cmdlets' {
+        $chart = [ChartForgeX.Core.Chart]::Create().WithSize(160, 90)
+        [void] $chart.AddLine('API', [ChartForgeX.Primitives.ChartPoint[]] @([ChartForgeX.Primitives.ChartPoint]::new(1, 1)))
+        $artifact = $chart | ConvertTo-ImageVisualArtifact -Id null-watermark
+        $artifactPath = Join-Path $TestDir 'null-watermark-artifact.svg'
+        $chartPath = Join-Path $TestDir 'null-watermark-chart.svg'
+        $topologyPath = Join-Path $TestDir 'null-watermark-topology.svg'
+
+        $artifact | Export-ImageVisualArtifact -FilePath $artifactPath -Watermark (,$null) -ErrorAction Stop
+        New-ImageChart -ChartsDefinition { New-ImageChartLine -Name API -Value 1, 2 } -Watermark (,$null) -FilePath $chartPath -ErrorAction Stop
+        New-ImageTopology -Node (New-ImageTopologyNode -Id api -Label API) -Watermark (,$null) -FilePath $topologyPath -ErrorAction Stop
+
+        Test-Path -LiteralPath $artifactPath | Should -BeTrue
+        Test-Path -LiteralPath $chartPath | Should -BeTrue
+        Test-Path -LiteralPath $topologyPath | Should -BeTrue
+
+        $mixed = [ChartForgeX.VisualArtifacts.VisualWatermark[]] @((New-ImageVisualWatermark -Text INTERNAL), $null)
+        { $artifact | Export-ImageVisualArtifact -FilePath $artifactPath -Watermark $mixed -ErrorAction Stop } | Should -Throw '*null entries*'
+        { New-ImageChart -ChartsDefinition { New-ImageChartLine -Name API -Value 1 } -Watermark $mixed -FilePath $chartPath -ErrorAction Stop } | Should -Throw '*null entries*'
+        { New-ImageTopology -Node (New-ImageTopologyNode -Id api -Label API) -Watermark $mixed -FilePath $topologyPath -ErrorAction Stop } | Should -Throw '*null entries*'
+    }
+
     It 'uses the same artifact handoff for non-chart CFX canvases' {
         $canvas = [ChartForgeX.Composition.VisualCanvas]::Create(320, 180).WithTitle('Release overview')
         $artifact = $canvas | ConvertTo-ImageVisualArtifact -Id release-overview

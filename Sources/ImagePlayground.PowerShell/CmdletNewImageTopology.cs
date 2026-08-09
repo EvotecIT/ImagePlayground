@@ -160,9 +160,12 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     [Parameter]
     public SwitchParameter IncludeLayoutDiagnostics { get; set; }
 
+    private VisualWatermark[] _watermark = Array.Empty<VisualWatermark>();
+
     /// <para>Watermarks applied to static SVG, HTML, or PNG output.</para>
     [Parameter]
-    public VisualWatermark[] Watermark { get; set; } = Array.Empty<VisualWatermark>();
+    [AllowNull]
+    public VisualWatermark[] Watermark { get => _watermark; set => _watermark = VisualWatermarkParameter.Normalize(value); }
 
     /// <para>PNG physical resolution metadata in dots per inch.</para>
     [Parameter]
@@ -234,10 +237,11 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             Directory.CreateDirectory(directory!);
         }
 
-        if (Watermark.Length > 0 && (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".apng", StringComparison.OrdinalIgnoreCase))) {
+        VisualWatermark[] watermarks = Watermark ?? Array.Empty<VisualWatermark>();
+        if (watermarks.Length > 0 && (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".apng", StringComparison.OrdinalIgnoreCase))) {
             throw new PSArgumentException("Visual artifact watermarks are supported for static SVG, HTML, and PNG topology output.", nameof(Watermark));
         }
-        if (InteractiveHtml.IsPresent && Watermark.Length > 0 &&
+        if (InteractiveHtml.IsPresent && watermarks.Length > 0 &&
             (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))) {
             throw new PSArgumentException(
                 "Interactive topology HTML cannot currently be combined with visual artifact watermarks. Remove -InteractiveHtml or -Watermark.",
@@ -402,7 +406,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
 
     private void SaveStaticArtifact(TopologyChart chart, string output, TopologyRenderOptions topologyOptions, StaticArtifactFormat format) {
         var artifactOptions = new VisualArtifactRenderOptions { Topology = topologyOptions };
-        foreach (VisualWatermark watermark in Watermark) {
+        foreach (VisualWatermark watermark in Watermark ?? Array.Empty<VisualWatermark>()) {
             if (watermark == null) {
                 throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
             }
