@@ -1,5 +1,7 @@
 using ChartForgeX.Topology;
 using ChartForgeX.Interactivity.Html;
+using ChartForgeX.Core;
+using ChartForgeX.VisualArtifacts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -150,6 +152,23 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     [Parameter]
     public TopologyMotionOptions? Motion { get; set; }
 
+    /// <para>Reusable topology spacing and presentation profile.</para>
+    [Parameter]
+    public TopologyLayoutPreset LayoutPreset { get; set; } = TopologyLayoutPreset.Automatic;
+
+    /// <para>Draw a developer-oriented layout diagnostic overlay in SVG, HTML, or PNG output.</para>
+    [Parameter]
+    public SwitchParameter IncludeLayoutDiagnostics { get; set; }
+
+    /// <para>Watermarks applied to static SVG, HTML, or PNG output.</para>
+    [Parameter]
+    public VisualWatermark[] Watermark { get; set; } = Array.Empty<VisualWatermark>();
+
+    /// <para>PNG physical resolution metadata in dots per inch.</para>
+    [Parameter]
+    [ValidateRange(1D, 100000D)]
+    public double Dpi { get; set; } = 96D;
+
     /// <para>Hide scenario controls in interactive HTML output.</para>
     [Parameter]
     public SwitchParameter NoScenarioControls { get; set; }
@@ -215,13 +234,17 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             Directory.CreateDirectory(directory!);
         }
 
+        if (Watermark.Length > 0 && (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".apng", StringComparison.OrdinalIgnoreCase))) {
+            throw new PSArgumentException("Visual artifact watermarks are supported for static SVG, HTML, and PNG topology output.", nameof(Watermark));
+        }
+
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
-            chart.SaveSvg(output, options);
+            SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Svg);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
-            if (InteractiveHtml.IsPresent) chart.SaveInteractiveHtml(output, options);
-            else chart.SaveHtml(output, options);
+            if (InteractiveHtml.IsPresent && Watermark.Length == 0) chart.SaveInteractiveHtml(output, options);
+            else SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Html);
         } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
-            chart.SavePng(output, options);
+            SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Png);
         } else if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
             chart.SaveGif(output, options);
         } else if (extension.Equals(".apng", StringComparison.OrdinalIgnoreCase)) {
@@ -360,10 +383,31 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             EnableHtmlScenarioUrlState = InteractiveHtml.IsPresent && ScenarioUrlState.IsPresent,
             ActiveScenarioId = string.IsNullOrWhiteSpace(ActiveScenarioId) ? null : ActiveScenarioId,
             Motion = Motion,
+            LayoutPreset = LayoutPreset,
+            IncludeLayoutDiagnosticOverlay = IncludeLayoutDiagnostics.IsPresent,
             NodeDisplayMode = NodeDisplayMode,
             VisualStyle = VisualStyle,
             CanvasSurfaceStyle = Transparent.IsPresent ? TopologyCanvasSurfaceStyle.Plain : CanvasSurfaceStyle
         };
+    }
+
+    private void SaveStaticArtifact(TopologyChart chart, string output, TopologyRenderOptions topologyOptions, StaticArtifactFormat format) {
+        var artifactOptions = new VisualArtifactRenderOptions { Topology = topologyOptions };
+        foreach (VisualWatermark watermark in Watermark) {
+            if (watermark == null) throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+            artifactOptions.Watermarks.Add(watermark);
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) artifactOptions.Raster = new RasterImageOptions { Dpi = Dpi };
+        VisualArtifact artifact = chart.ToVisualArtifact();
+        if (format == StaticArtifactFormat.Svg) artifact.SaveSvg(output, artifactOptions);
+        else if (format == StaticArtifactFormat.Html) artifact.SaveHtml(output, artifactOptions);
+        else artifact.SavePng(output, artifactOptions);
+    }
+
+    private enum StaticArtifactFormat {
+        Svg,
+        Html,
+        Png
     }
 
     private TopologyTheme CreateTheme() {

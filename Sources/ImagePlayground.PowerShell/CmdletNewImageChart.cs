@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using ChartForgeX.Core;
 using ChartForgeX.Primitives;
+using ChartForgeX.VisualArtifacts;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -30,6 +31,7 @@ namespace ImagePlayground.PowerShell;
 ///   <para>Renders a themed line chart and overlays an annotation highlighting the peak value.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageChart", DefaultParameterSetName = ScriptBlockSet)]
+[OutputType(typeof(Chart))]
 public sealed class NewImageChartCmdlet : ImageCmdlet {
     private const string ScriptBlockSet = "ScriptBlock";
     private const string DefinitionSet = "Definition";
@@ -111,6 +113,19 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter]
     public ChartRenderOptions? Options { get; set; }
 
+    /// <summary>Watermarks applied to static SVG, HTML, or PNG output.</summary>
+    [Parameter]
+    public VisualWatermark[] Watermark { get; set; } = System.Array.Empty<VisualWatermark>();
+
+    /// <summary>PNG physical resolution metadata in dots per inch.</summary>
+    [Parameter]
+    [ValidateRange(1D, 100000D)]
+    public double Dpi { get; set; } = 96D;
+
+    /// <summary>Write the ChartForgeX chart to the pipeline after rendering.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord() {
         if (Definition is not null) {
@@ -177,21 +192,33 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
             return;
         }
 
-        var output = Helpers.ResolvePath(FilePath);
-        Charts.Generate(_definitions, output, Width, Height, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background, Options);
-
-        if (Show.IsPresent) {
-            ImagePlayground.Helpers.Open(output, true);
-        }
+        var built = Charts.Build(_definitions, Width, Height, XTitle, YTitle, ShowGrid.IsPresent, Theme, _annotations, Background, Options);
+        SaveChart(built);
     }
 
     private void SaveChart(Chart chart) {
         var output = Helpers.ResolvePath(FilePath);
-        Charts.Save(chart, output);
+        if (Watermark.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
+            Charts.Save(chart, output);
+        } else {
+            var render = new VisualArtifactRenderOptions();
+            foreach (VisualWatermark watermark in Watermark) {
+                if (watermark == null) throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
+                render.Watermarks.Add(watermark);
+            }
+            if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) render.Raster = new RasterImageOptions { Dpi = Dpi };
+            VisualArtifact artifact = chart.ToVisualArtifact();
+            var extension = System.IO.Path.GetExtension(output);
+            if (extension.Equals(".svg", System.StringComparison.OrdinalIgnoreCase)) artifact.SaveSvg(output, render);
+            else if (extension.Equals(".html", System.StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", System.StringComparison.OrdinalIgnoreCase)) artifact.SaveHtml(output, render);
+            else if (extension.Equals(".png", System.StringComparison.OrdinalIgnoreCase)) artifact.SavePng(output, render);
+            else throw new PSArgumentException("Watermarked chart output supports only .png, .svg, .html, or .htm file extensions.", nameof(FilePath));
+        }
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
         }
+        if (PassThru.IsPresent) WriteObject(chart);
     }
 
     private void AddAnnotationsFromScriptBlock() {

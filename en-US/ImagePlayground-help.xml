@@ -1933,6 +1933,250 @@ img.Save("out.png");</dev:code>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>ConvertTo-ImageVisualArtifact</command:name>
+      <command:verb>ConvertTo</command:verb>
+      <command:noun>ImageVisualArtifact</command:noun>
+      <maml:description>
+        <maml:para>Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The artifact is the portable handoff contract for static export and OfficeIMO document placement.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertTo-ImageVisualArtifact</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AccessibleDescription</maml:name>
+          <maml:description>
+            <maml:para>Longer accessible description for the visual.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AccessibleName</maml:name>
+          <maml:description>
+            <maml:para>Concise accessible name for the visual.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Decorative</maml:name>
+          <maml:description>
+            <maml:para>Marks the visual as decorative.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Stable artifact identifier. Existing artifact ids are preserved when omitted.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>ChartForgeX model or existing visual artifact.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Language</maml:name>
+          <maml:description>
+            <maml:para>Optional BCP 47 language tag for accessible text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Subtitle</maml:name>
+          <maml:description>
+            <maml:para>Optional artifact subtitle override.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Optional artifact title override.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>AccessibleDescription</maml:name>
+        <maml:description>
+          <maml:para>Longer accessible description for the visual.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>AccessibleName</maml:name>
+        <maml:description>
+          <maml:para>Concise accessible name for the visual.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Decorative</maml:name>
+        <maml:description>
+          <maml:para>Marks the visual as decorative.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Id</maml:name>
+        <maml:description>
+          <maml:para>Stable artifact identifier. Existing artifact ids are preserved when omitted.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>ChartForgeX model or existing visual artifact.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Language</maml:name>
+        <maml:description>
+          <maml:para>Optional BCP 47 language tag for accessible text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Subtitle</maml:name>
+        <maml:description>
+          <maml:para>Optional artifact subtitle override.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Title</maml:name>
+        <maml:description>
+          <maml:para>Optional artifact title override.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Object</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.VisualArtifacts.VisualArtifact</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Create an artifact from a topology</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$artifact = $topology | ConvertTo-ImageVisualArtifact -Id service-map -AccessibleDescription 'Gateway to database service path.'</dev:code>
+        <dev:remarks>
+          <maml:para>Creates a reusable artifact that can be exported by ImagePlayground or placed by PSWriteOffice.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Export-ImageConsoleStory</command:name>
       <command:verb>Export</command:verb>
       <command:noun>ImageConsoleStory</command:noun>
@@ -2306,6 +2550,264 @@ img.Save("out.png");</dev:code>
         <dev:code>Export-ImageMetadata -FilePath in.jpg -OutputPath meta.json</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Export-ImageVisualArtifact</command:name>
+      <command:verb>Export</command:verb>
+      <command:noun>ImageVisualArtifact</command:noun>
+      <maml:description>
+        <maml:para>Exports a ChartForgeX visual artifact to static SVG, HTML, or PNG output.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Applies shared watermarks, PNG DPI metadata, topology layout presets, and optional layout diagnostics without changing the source artifact.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Export-ImageVisualArtifact</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>Artifact</maml:name>
+          <maml:description>
+            <maml:para>Visual artifact to export.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">VisualArtifact</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualArtifact</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Destination .svg, .html, .htm, or .png path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IncludeTopologyDiagnostics</maml:name>
+          <maml:description>
+            <maml:para>Draw a developer-oriented topology layout diagnostic overlay.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the source artifact to the pipeline after export.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Show</maml:name>
+          <maml:description>
+            <maml:para>Open the generated artifact after creation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TopologyLayoutPreset</maml:name>
+          <maml:description>
+            <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyLayoutPreset</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied in declaration order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <maml:name>Artifact</maml:name>
+        <maml:description>
+          <maml:para>Visual artifact to export.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">VisualArtifact</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualArtifact</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Dpi</maml:name>
+        <maml:description>
+          <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+        <maml:name>FilePath</maml:name>
+        <maml:description>
+          <maml:para>Destination .svg, .html, .htm, or .png path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IncludeTopologyDiagnostics</maml:name>
+        <maml:description>
+          <maml:para>Draw a developer-oriented topology layout diagnostic overlay.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Write the source artifact to the pipeline after export.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Show</maml:name>
+        <maml:description>
+          <maml:para>Open the generated artifact after creation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TopologyLayoutPreset</maml:name>
+        <maml:description>
+          <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyLayoutPreset</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Watermark</maml:name>
+        <maml:description>
+          <maml:para>Watermarks applied in declaration order.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualWatermark[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ChartForgeX.VisualArtifacts.VisualArtifact</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.VisualArtifacts.VisualArtifact</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Export a watermarked 144 DPI PNG</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$artifact | Export-ImageVisualArtifact -FilePath report.png -Watermark $mark -Dpi 144</dev:code>
+        <dev:remarks>
+          <maml:para>Exports the artifact through the shared ChartForgeX static rendering pipeline.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -2953,6 +3455,109 @@ img.Save("out.png");</dev:code>
         </dev:remarks>
       </command:example>
     </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Get-ImageTopologyDiagnostics</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ImageTopologyDiagnostics</command:noun>
+      <maml:description>
+        <maml:para>Analyzes prepared ChartForgeX topology geometry and routing.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Returns machine-readable node bounds, named port positions, edge routes, fallback reasons, overlap scores, and collisions.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-ImageTopologyDiagnostics</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LayoutPreset</maml:name>
+          <maml:description>
+            <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyLayoutPreset</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>Topology</maml:name>
+          <maml:description>
+            <maml:para>Topology chart to analyze.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TopologyChart</command:parameterValue>
+          <dev:type>
+            <maml:name>TopologyChart</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>LayoutPreset</maml:name>
+        <maml:description>
+          <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyLayoutPreset</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <maml:name>Topology</maml:name>
+        <maml:description>
+          <maml:para>Topology chart to analyze.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TopologyChart</command:parameterValue>
+        <dev:type>
+          <maml:name>TopologyChart</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ChartForgeX.Topology.TopologyChart</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Topology.TopologyLayoutDiagnosticReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples />
     <command:relatedLinks />
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
@@ -5206,6 +5811,18 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -5238,6 +5855,18 @@ img.Save("out.png");</dev:code>
           <command:parameterValue required="false" variableLength="false">ChartRenderOptions</command:parameterValue>
           <dev:type>
             <maml:name>ChartRenderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the ChartForgeX chart to the pipeline after rendering.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5290,6 +5919,18 @@ img.Save("out.png");</dev:code>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>ChartTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5381,6 +6022,18 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -5413,6 +6066,18 @@ img.Save("out.png");</dev:code>
           <command:parameterValue required="false" variableLength="false">ChartRenderOptions</command:parameterValue>
           <dev:type>
             <maml:name>ChartRenderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the ChartForgeX chart to the pipeline after rendering.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5465,6 +6130,18 @@ img.Save("out.png");</dev:code>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>ChartTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5556,6 +6233,18 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -5588,6 +6277,18 @@ img.Save("out.png");</dev:code>
           <command:parameterValue required="false" variableLength="false">ChartRenderOptions</command:parameterValue>
           <dev:type>
             <maml:name>ChartRenderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the ChartForgeX chart to the pipeline after rendering.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5640,6 +6341,18 @@ img.Save("out.png");</dev:code>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>ChartTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5731,6 +6444,18 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -5763,6 +6488,18 @@ img.Save("out.png");</dev:code>
           <command:parameterValue required="false" variableLength="false">ChartRenderOptions</command:parameterValue>
           <dev:type>
             <maml:name>ChartRenderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the ChartForgeX chart to the pipeline after rendering.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5815,6 +6552,18 @@ img.Save("out.png");</dev:code>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>ChartTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -5942,6 +6691,18 @@ img.Save("out.png");</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Dpi</maml:name>
+        <maml:description>
+          <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
@@ -5974,6 +6735,18 @@ img.Save("out.png");</dev:code>
         <command:parameterValue required="false" variableLength="false">ChartRenderOptions</command:parameterValue>
         <dev:type>
           <maml:name>ChartRenderOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Write the ChartForgeX chart to the pipeline after rendering.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -6030,6 +6803,18 @@ img.Save("out.png");</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Watermark</maml:name>
+        <maml:description>
+          <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualWatermark[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
@@ -6079,7 +6864,13 @@ img.Save("out.png");</dev:code>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Core.Chart</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -27583,6 +28374,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -27620,6 +28423,18 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IncludeLayoutDiagnostics</maml:name>
+          <maml:description>
+            <maml:para>Draw a developer-oriented layout diagnostic overlay in SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>InteractiveHtml</maml:name>
           <maml:description>
             <maml:para>Enable lightweight interactions for HTML output.</maml:para>
@@ -27651,6 +28466,25 @@ polygonal areas.</maml:para>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyLayoutMode</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LayoutPreset</maml:name>
+          <maml:description>
+            <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyLayoutPreset</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -27929,6 +28763,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
@@ -28015,6 +28861,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Edge</maml:name>
           <maml:description>
@@ -28076,6 +28934,18 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IncludeLayoutDiagnostics</maml:name>
+          <maml:description>
+            <maml:para>Draw a developer-oriented layout diagnostic overlay in SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>InteractiveHtml</maml:name>
           <maml:description>
             <maml:para>Enable lightweight interactions for HTML output.</maml:para>
@@ -28107,6 +28977,25 @@ polygonal areas.</maml:para>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyLayoutMode</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LayoutPreset</maml:name>
+          <maml:description>
+            <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyLayoutPreset</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -28397,6 +29286,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Watermark</maml:name>
+          <maml:description>
+            <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualWatermark[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
@@ -28483,6 +29384,18 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Dpi</maml:name>
+        <maml:description>
+          <maml:para>PNG physical resolution metadata in dots per inch.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Edge</maml:name>
         <maml:description>
@@ -28544,6 +29457,18 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IncludeLayoutDiagnostics</maml:name>
+        <maml:description>
+          <maml:para>Draw a developer-oriented layout diagnostic overlay in SVG, HTML, or PNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>InteractiveHtml</maml:name>
         <maml:description>
           <maml:para>Enable lightweight interactions for HTML output.</maml:para>
@@ -28575,6 +29500,25 @@ polygonal areas.</maml:para>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyLayoutMode</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>LayoutPreset</maml:name>
+        <maml:description>
+          <maml:para>Reusable topology spacing and presentation profile.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyLayoutPreset</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dense</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Compact</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Balanced</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Presentation</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyLayoutPreset</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -28877,6 +29821,18 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Watermark</maml:name>
+        <maml:description>
+          <maml:para>Watermarks applied to static SVG, HTML, or PNG output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualWatermark[]</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualWatermark[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
@@ -28950,6 +29906,18 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DashPattern</maml:name>
+          <maml:description>
+            <maml:para>Alternating dash and gap lengths in pixels.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Double[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -29094,6 +30062,18 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MinimumRankSpan</maml:name>
+          <maml:description>
+            <maml:para>Preferred minimum layer separation for layered layout.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Muted</maml:name>
           <maml:description>
             <maml:para>Render the edge as a quiet structural relationship.</maml:para>
@@ -29101,6 +30081,30 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Opacity</maml:name>
+          <maml:description>
+            <maml:para>Optional edge opacity from zero to one.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PreferredLength</maml:name>
+          <maml:description>
+            <maml:para>Preferred spring length for force-directed layout.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -29136,6 +30140,18 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RoutingPriority</maml:name>
+          <maml:description>
+            <maml:para>Caller-defined routing and rendering priority. Higher values render above lower values.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>SecondaryLabel</maml:name>
           <maml:description>
             <maml:para>Secondary edge label.</maml:para>
@@ -29143,6 +30159,36 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceLabel</maml:name>
+          <maml:description>
+            <maml:para>Optional label rendered near the source endpoint.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceMarker</maml:name>
+          <maml:description>
+            <maml:para>Optional source endpoint marker.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyMarkerKind</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyMarkerKind</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -29179,6 +30225,18 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourcePortId</maml:name>
+          <maml:description>
+            <maml:para>Named port id on the source node.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Status</maml:name>
           <maml:description>
             <maml:para>Relationship health or state.</maml:para>
@@ -29193,6 +30251,48 @@ polygonal areas.</maml:para>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyHealthStatus</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>StrokeWidth</maml:name>
+          <maml:description>
+            <maml:para>Optional edge stroke width in pixels.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TargetLabel</maml:name>
+          <maml:description>
+            <maml:para>Optional label rendered near the target endpoint.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TargetMarker</maml:name>
+          <maml:description>
+            <maml:para>Optional target endpoint marker.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyMarkerKind</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyMarkerKind</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -29224,6 +30324,18 @@ polygonal areas.</maml:para>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyEdgePort</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TargetPortId</maml:name>
+          <maml:description>
+            <maml:para>Named port id on the target node.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -29263,6 +30375,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DashPattern</maml:name>
+        <maml:description>
+          <maml:para>Alternating dash and gap lengths in pixels.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Double[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -29407,6 +30531,18 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MinimumRankSpan</maml:name>
+        <maml:description>
+          <maml:para>Preferred minimum layer separation for layered layout.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Muted</maml:name>
         <maml:description>
           <maml:para>Render the edge as a quiet structural relationship.</maml:para>
@@ -29414,6 +30550,30 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Opacity</maml:name>
+        <maml:description>
+          <maml:para>Optional edge opacity from zero to one.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PreferredLength</maml:name>
+        <maml:description>
+          <maml:para>Preferred spring length for force-directed layout.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -29449,6 +30609,18 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RoutingPriority</maml:name>
+        <maml:description>
+          <maml:para>Caller-defined routing and rendering priority. Higher values render above lower values.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>SecondaryLabel</maml:name>
         <maml:description>
           <maml:para>Secondary edge label.</maml:para>
@@ -29456,6 +30628,36 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SourceLabel</maml:name>
+        <maml:description>
+          <maml:para>Optional label rendered near the source endpoint.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SourceMarker</maml:name>
+        <maml:description>
+          <maml:para>Optional source endpoint marker.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyMarkerKind</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyMarkerKind</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -29492,6 +30694,18 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SourcePortId</maml:name>
+        <maml:description>
+          <maml:para>Named port id on the source node.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Status</maml:name>
         <maml:description>
           <maml:para>Relationship health or state.</maml:para>
@@ -29506,6 +30720,48 @@ polygonal areas.</maml:para>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyHealthStatus</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>StrokeWidth</maml:name>
+        <maml:description>
+          <maml:para>Optional edge stroke width in pixels.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TargetLabel</maml:name>
+        <maml:description>
+          <maml:para>Optional label rendered near the target endpoint.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TargetMarker</maml:name>
+        <maml:description>
+          <maml:para>Optional target endpoint marker.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyMarkerKind</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyMarkerKind</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -29537,6 +30793,18 @@ polygonal areas.</maml:para>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyEdgePort</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TargetPortId</maml:name>
+        <maml:description>
+          <maml:para>Named port id on the target node.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -30408,6 +31676,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Detail</maml:name>
+          <maml:description>
+            <maml:para>Typed card detail rows created by New-ImageTopologyNodeDetail.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyNodeDetail[]</command:parameterValue>
+          <dev:type>
+            <maml:name>TopologyNodeDetail[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DisplayMode</maml:name>
           <maml:description>
@@ -30561,6 +31841,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Port</maml:name>
+          <maml:description>
+            <maml:para>Named attachment ports created by New-ImageTopologyNodePort.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyNodePort[]</command:parameterValue>
+          <dev:type>
+            <maml:name>TopologyNodePort[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Status</maml:name>
           <maml:description>
@@ -30687,6 +31979,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Detail</maml:name>
+        <maml:description>
+          <maml:para>Typed card detail rows created by New-ImageTopologyNodeDetail.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyNodeDetail[]</command:parameterValue>
+        <dev:type>
+          <maml:name>TopologyNodeDetail[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -30844,6 +32148,18 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Port</maml:name>
+        <maml:description>
+          <maml:para>Named attachment ports created by New-ImageTopologyNodePort.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyNodePort[]</command:parameterValue>
+        <dev:type>
+          <maml:name>TopologyNodePort[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Status</maml:name>
         <maml:description>
@@ -30967,6 +32283,332 @@ polygonal areas.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageTopologyNodeDetail</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageTopologyNodeDetail</command:noun>
+      <maml:description>
+        <maml:para>Creates a typed label/value detail row for a topology node card.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates a typed label/value detail row for a topology node card.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-ImageTopologyNodeDetail</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Color</maml:name>
+          <maml:description>
+            <maml:para>Optional row accent color.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IconId</maml:name>
+          <maml:description>
+            <maml:para>Optional reusable icon identifier.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Label</maml:name>
+          <maml:description>
+            <maml:para>Detail label.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Status</maml:name>
+          <maml:description>
+            <maml:para>Optional semantic status.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TopologyHealthStatus</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Healthy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Warning</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Critical</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Unknown</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Disabled</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyHealthStatus</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>Value</maml:name>
+          <maml:description>
+            <maml:para>Detail value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Color</maml:name>
+        <maml:description>
+          <maml:para>Optional row accent color.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IconId</maml:name>
+        <maml:description>
+          <maml:para>Optional reusable icon identifier.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Label</maml:name>
+        <maml:description>
+          <maml:para>Detail label.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Status</maml:name>
+        <maml:description>
+          <maml:para>Optional semantic status.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TopologyHealthStatus</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Healthy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Warning</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Critical</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Unknown</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Disabled</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyHealthStatus</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+        <maml:name>Value</maml:name>
+        <maml:description>
+          <maml:para>Detail value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Topology.TopologyNodeDetail</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples />
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageTopologyNodePort</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageTopologyNodePort</command:noun>
+      <maml:description>
+        <maml:para>Creates a named attachment port for a topology node.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates a named attachment port for a topology node.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-ImageTopologyNodePort</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Node-local stable port identifier.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Label</maml:name>
+          <maml:description>
+            <maml:para>Optional visible or host-facing label.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Offset</maml:name>
+          <maml:description>
+            <maml:para>Normalized position along the side from zero to one.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>Side</maml:name>
+          <maml:description>
+            <maml:para>Explicit node boundary side.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TopologyEdgePort</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Top</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bottom</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TopologyEdgePort</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Id</maml:name>
+        <maml:description>
+          <maml:para>Node-local stable port identifier.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Label</maml:name>
+        <maml:description>
+          <maml:para>Optional visible or host-facing label.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Offset</maml:name>
+        <maml:description>
+          <maml:para>Normalized position along the side from zero to one.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+        <maml:name>Side</maml:name>
+        <maml:description>
+          <maml:para>Explicit node boundary side.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TopologyEdgePort</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Top</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bottom</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TopologyEdgePort</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Topology.TopologyNodePort</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples />
     <command:relatedLinks />
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
@@ -32861,6 +34503,550 @@ polygonal areas.</maml:para>
             } -FilePath profile.svg</dev:code>
         <dev:remarks>
           <maml:para>Builds a dependency-free SVG whose one-shot motion honors reduced-motion preferences.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageVisualWatermark</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageVisualWatermark</command:noun>
+      <maml:description>
+        <maml:para>Creates a deterministic text or image watermark for ChartForgeX visual artifacts.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates a deterministic text or image watermark for ChartForgeX visual artifacts.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="Text">
+        <maml:name>New-ImageVisualWatermark</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Anchor</maml:name>
+          <maml:description>
+            <maml:para>Watermark anchor on the artifact canvas.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualCanvasAnchor</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopCenter</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopRight</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MiddleLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MiddleRight</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomCenter</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomRight</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualCanvasAnchor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Color</maml:name>
+          <maml:description>
+            <maml:para>Text color.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ChartColor</command:parameterValue>
+          <dev:type>
+            <maml:name>ChartColor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FontSize</maml:name>
+          <maml:description>
+            <maml:para>Base text size in pixels.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OffsetX</maml:name>
+          <maml:description>
+            <maml:para>Horizontal offset from the selected anchor.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OffsetY</maml:name>
+          <maml:description>
+            <maml:para>Vertical offset from the selected anchor.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Opacity</maml:name>
+          <maml:description>
+            <maml:para>Watermark opacity from zero to one.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Padding</maml:name>
+          <maml:description>
+            <maml:para>Inset from anchored canvas edges.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Repeat</maml:name>
+          <maml:description>
+            <maml:para>Render repeated watermark tiles across the canvas.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RepeatSpacingX</maml:name>
+          <maml:description>
+            <maml:para>Horizontal spacing between repeated watermark anchors.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RepeatSpacingY</maml:name>
+          <maml:description>
+            <maml:para>Vertical spacing between repeated watermark anchors.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RotationDegrees</maml:name>
+          <maml:description>
+            <maml:para>Clockwise watermark rotation in degrees.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Scale</maml:name>
+          <maml:description>
+            <maml:para>Positive watermark scale.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Text</maml:name>
+          <maml:description>
+            <maml:para>Watermark text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Image">
+        <maml:name>New-ImageVisualWatermark</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Anchor</maml:name>
+          <maml:description>
+            <maml:para>Watermark anchor on the artifact canvas.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualCanvasAnchor</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopCenter</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopRight</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MiddleLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MiddleRight</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomCenter</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomRight</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualCanvasAnchor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>ImagePath</maml:name>
+          <maml:description>
+            <maml:para>Raster watermark image path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OffsetX</maml:name>
+          <maml:description>
+            <maml:para>Horizontal offset from the selected anchor.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OffsetY</maml:name>
+          <maml:description>
+            <maml:para>Vertical offset from the selected anchor.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Opacity</maml:name>
+          <maml:description>
+            <maml:para>Watermark opacity from zero to one.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Padding</maml:name>
+          <maml:description>
+            <maml:para>Inset from anchored canvas edges.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Repeat</maml:name>
+          <maml:description>
+            <maml:para>Render repeated watermark tiles across the canvas.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RepeatSpacingX</maml:name>
+          <maml:description>
+            <maml:para>Horizontal spacing between repeated watermark anchors.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RepeatSpacingY</maml:name>
+          <maml:description>
+            <maml:para>Vertical spacing between repeated watermark anchors.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RotationDegrees</maml:name>
+          <maml:description>
+            <maml:para>Clockwise watermark rotation in degrees.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Scale</maml:name>
+          <maml:description>
+            <maml:para>Positive watermark scale.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Anchor</maml:name>
+        <maml:description>
+          <maml:para>Watermark anchor on the artifact canvas.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualCanvasAnchor</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopCenter</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopRight</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MiddleLeft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MiddleRight</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BottomLeft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BottomCenter</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BottomRight</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>VisualCanvasAnchor</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Color</maml:name>
+        <maml:description>
+          <maml:para>Text color.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ChartColor</command:parameterValue>
+        <dev:type>
+          <maml:name>ChartColor</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>FontSize</maml:name>
+        <maml:description>
+          <maml:para>Base text size in pixels.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>ImagePath</maml:name>
+        <maml:description>
+          <maml:para>Raster watermark image path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>OffsetX</maml:name>
+        <maml:description>
+          <maml:para>Horizontal offset from the selected anchor.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>OffsetY</maml:name>
+        <maml:description>
+          <maml:para>Vertical offset from the selected anchor.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Opacity</maml:name>
+        <maml:description>
+          <maml:para>Watermark opacity from zero to one.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Padding</maml:name>
+        <maml:description>
+          <maml:para>Inset from anchored canvas edges.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Repeat</maml:name>
+        <maml:description>
+          <maml:para>Render repeated watermark tiles across the canvas.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RepeatSpacingX</maml:name>
+        <maml:description>
+          <maml:para>Horizontal spacing between repeated watermark anchors.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RepeatSpacingY</maml:name>
+        <maml:description>
+          <maml:para>Vertical spacing between repeated watermark anchors.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RotationDegrees</maml:name>
+        <maml:description>
+          <maml:para>Clockwise watermark rotation in degrees.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Scale</maml:name>
+        <maml:description>
+          <maml:para>Positive watermark scale.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Text</maml:name>
+        <maml:description>
+          <maml:para>Watermark text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.VisualArtifacts.VisualWatermark</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Create a centered confidential watermark</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$mark = New-ImageVisualWatermark -Text CONFIDENTIAL -Anchor Center -RotationDegrees -28 -Opacity 0.15</dev:code>
+        <dev:remarks>
+          <maml:para>The watermark can be passed to Export-ImageVisualArtifact or New-ImageTopology.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

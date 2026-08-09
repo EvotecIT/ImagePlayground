@@ -11,7 +11,7 @@ Creates a topology edge definition.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageTopologyEdge [-SourceNodeId] <string> [-TargetNodeId] <string> [[-Label] <string>] [-Id <string>] [-SecondaryLabel <string>] [-TertiaryLabel <string>] [-Kind <TopologyEdgeKind>] [-Status <TopologyHealthStatus>] [-Direction <VisualLinkDirection>] [-Routing <TopologyEdgeRouting>] [-LineStyle <TopologyEdgeLineStyle>] [-Emphasis <TopologyEdgeEmphasis>] [-SourcePort <TopologyEdgePort>] [-TargetPort <TopologyEdgePort>] [-RouteLane <double>] [-LabelOffsetX <double>] [-LabelOffsetY <double>] [-Color <string>] [-Muted] [-Href <string>] [-Tooltip <string>] [<CommonParameters>]
+New-ImageTopologyEdge [-SourceNodeId] <string> [-TargetNodeId] <string> [[-Label] <string>] [-Id <string>] [-SecondaryLabel <string>] [-TertiaryLabel <string>] [-Kind <TopologyEdgeKind>] [-Status <TopologyHealthStatus>] [-Direction <VisualLinkDirection>] [-Routing <TopologyEdgeRouting>] [-LineStyle <TopologyEdgeLineStyle>] [-Emphasis <TopologyEdgeEmphasis>] [-SourcePort <TopologyEdgePort>] [-TargetPort <TopologyEdgePort>] [-RouteLane <double>] [-LabelOffsetX <double>] [-LabelOffsetY <double>] [-Color <string>] [-Muted] [-Href <string>] [-Tooltip <string>] [-SourcePortId <string>] [-TargetPortId <string>] [-SourceMarker <TopologyMarkerKind>] [-TargetMarker <TopologyMarkerKind>] [-StrokeWidth <Double>] [-Opacity <Double>] [-DashPattern <double[]>] [-PreferredLength <Double>] [-MinimumRankSpan <int>] [-RoutingPriority <int>] [-SourceLabel <string>] [-TargetLabel <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -33,6 +33,22 @@ Optional edge color as a CSS hex color.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DashPattern
+Alternating dash and gap lengths in pixels.
+
+```yaml
+Type: Double[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -188,11 +204,59 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -MinimumRankSpan
+Preferred minimum layer separation for layered layout.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Muted
 Render the edge as a quiet structural relationship.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Opacity
+Optional edge opacity from zero to one.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PreferredLength
+Preferred spring length for force-directed layout.
+
+```yaml
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -236,6 +300,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -RoutingPriority
+Caller-defined routing and rendering priority. Higher values render above lower values.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -SecondaryLabel
 Secondary edge label.
 
@@ -244,6 +324,38 @@ Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SourceLabel
+Optional label rendered near the source endpoint.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SourceMarker
+Optional source endpoint marker.
+
+```yaml
+Type: TopologyMarkerKind
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: None, Arrow, Circle, Diamond
 
 Required: False
 Position: named
@@ -284,6 +396,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -SourcePortId
+Named port id on the source node.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Status
 Relationship health or state.
 
@@ -292,6 +420,54 @@ Type: TopologyHealthStatus
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Healthy, Warning, Critical, Unknown, Disabled
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -StrokeWidth
+Optional edge stroke width in pixels.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TargetLabel
+Optional label rendered near the target endpoint.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TargetMarker
+Optional target endpoint marker.
+
+```yaml
+Type: TopologyMarkerKind
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: None, Arrow, Circle, Diamond
 
 Required: False
 Position: named
@@ -324,6 +500,22 @@ Type: TopologyEdgePort
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Auto, Top, Right, Bottom, Left
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TargetPortId
+Named port id on the target node.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named

@@ -38,11 +38,17 @@ Converts an image file into a Base64 encoded string.
 ### [ConvertTo-ImageStorySource](ConvertTo-ImageStorySource.md)
 Converts exact source text into renderer-neutral syntax spans for visual stories.
 
+### [ConvertTo-ImageVisualArtifact](ConvertTo-ImageVisualArtifact.md)
+Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.
+
 ### [Export-ImageConsoleStory](Export-ImageConsoleStory.md)
 Exports an authored ImagePlayground console story to SVG, HTML, PNG, GIF, or APNG.
 
 ### [Export-ImageMetadata](Export-ImageMetadata.md)
 Exports metadata from an image.
+
+### [Export-ImageVisualArtifact](Export-ImageVisualArtifact.md)
+Exports a ChartForgeX visual artifact to static SVG, HTML, or PNG output.
 
 ### [Get-Image](Get-Image.md)
 Loads an image from disk.
@@ -67,6 +73,9 @@ Gets embedded C2PA containers and direct XMP generative-AI declarations from an 
 
 ### [Get-ImageQRCode](Get-ImageQRCode.md)
 Reads QR code information from an image file.
+
+### [Get-ImageTopologyDiagnostics](Get-ImageTopologyDiagnostics.md)
+Analyzes prepared ChartForgeX topology geometry and routing.
 
 ### [Import-ImageMetadata](Import-ImageMetadata.md)
 Imports metadata into an image.
@@ -333,6 +342,12 @@ Creates script-free route motion options for topology output.
 ### [New-ImageTopologyNode](New-ImageTopologyNode.md)
 Creates a topology node definition.
 
+### [New-ImageTopologyNodeDetail](New-ImageTopologyNodeDetail.md)
+Creates a typed label/value detail row for a topology node card.
+
+### [New-ImageTopologyNodePort](New-ImageTopologyNodePort.md)
+Creates a named attachment port for a topology node.
+
 ### [New-ImageTopologyScenario](New-ImageTopologyScenario.md)
 Creates an ordered topology scenario.
 
@@ -350,6 +365,9 @@ Creates one named motion cue for an animated ChartForgeX visual story.
 
 ### [New-ImageVisualStory](New-ImageVisualStory.md)
 Creates a script-free animated visual story from a ChartForgeX visual grid.
+
+### [New-ImageVisualWatermark](New-ImageVisualWatermark.md)
+Creates a deterministic text or image watermark for ChartForgeX visual artifacts.
 
 ### [Remove-ImageExif](Remove-ImageExif.md)
 Removes EXIF metadata from an image.
