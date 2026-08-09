@@ -21,8 +21,9 @@ Creates gauge chart data item.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartGauge
+New-ImageChartGauge -Name 'Capacity' -Value 68 -Minimum 0 -Maximum 100 -Color Orange
 ```
+
 
 ## PARAMETERS
 

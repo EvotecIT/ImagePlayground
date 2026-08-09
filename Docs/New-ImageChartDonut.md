@@ -21,8 +21,9 @@ Creates donut chart data item.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageChartDonut
+New-ImageChartDonut -Name 'Completed' -Value 72 -Color Green
 ```
+
 
 ## PARAMETERS
 

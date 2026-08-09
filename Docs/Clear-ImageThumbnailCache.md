@@ -24,6 +24,7 @@ Clears cached thumbnails.
 Clear-ImageThumbnailCache
 ```
 
+
 ## PARAMETERS
 
 ### CommonParameters

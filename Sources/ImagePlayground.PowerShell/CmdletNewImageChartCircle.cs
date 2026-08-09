@@ -5,6 +5,10 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates circle status chart data item.</summary>
+/// <example>
+///   <summary>Create an availability circle</summary>
+///   <code>New-ImageChartCircle -Name 'Availability' -Value 99.9 -Minimum 0 -Maximum 100 -Color '#2DD4BF'</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartCircle")]
 public sealed class NewImageChartCircleCmdlet : PSCmdlet {
     /// <summary>Label for the circle.</summary>
