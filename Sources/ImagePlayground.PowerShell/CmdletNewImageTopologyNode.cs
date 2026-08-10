@@ -14,6 +14,9 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageTopologyNode")]
 [OutputType(typeof(TopologyNode))]
 public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
+    private TopologyNodePort[] _ports = System.Array.Empty<TopologyNodePort>();
+    private TopologyNodeDetail[] _details = System.Array.Empty<TopologyNodeDetail>();
+
     /// <para>Stable node identifier used by topology edges.</para>
     [Parameter(Mandatory = true, Position = 0)]
     public string Id { get; set; } = string.Empty;
@@ -96,11 +99,17 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
 
     /// <para>Named attachment ports created by New-ImageTopologyNodePort.</para>
     [Parameter]
-    public TopologyNodePort[] Port { get; set; } = System.Array.Empty<TopologyNodePort>();
+    public TopologyNodePort[] Port {
+        get => _ports;
+        set => _ports = value ?? System.Array.Empty<TopologyNodePort>();
+    }
 
     /// <para>Typed card detail rows created by New-ImageTopologyNodeDetail.</para>
     [Parameter]
-    public TopologyNodeDetail[] Detail { get; set; } = System.Array.Empty<TopologyNodeDetail>();
+    public TopologyNodeDetail[] Detail {
+        get => _details;
+        set => _details = value ?? System.Array.Empty<TopologyNodeDetail>();
+    }
 
     /// <summary>Emits a topology node definition.</summary>
     protected override void ProcessRecord() {

@@ -17,6 +17,7 @@ namespace ImagePlayground.PowerShell;
 [OutputType(typeof(TopologyEdge))]
 public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
     private static int s_generatedId;
+    private double[] _dashPattern = System.Array.Empty<double>();
 
     /// <para>Stable edge identifier. When omitted, a unique identifier is derived from source and target node ids.</para>
     [Parameter]
@@ -130,7 +131,10 @@ public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
 
     /// <para>Alternating dash and gap lengths in pixels.</para>
     [Parameter]
-    public double[] DashPattern { get; set; } = System.Array.Empty<double>();
+    public double[] DashPattern {
+        get => _dashPattern;
+        set => _dashPattern = value ?? System.Array.Empty<double>();
+    }
 
     /// <para>Preferred spring length for force-directed layout.</para>
     [Parameter]

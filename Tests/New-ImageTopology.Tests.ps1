@@ -147,6 +147,21 @@ Describe 'New-ImageTopology' {
             Should -Throw '*positive and finite*'
     }
 
+    It 'treats explicit null topology arrays as empty collections' {
+        $edge = New-ImageTopologyEdge -SourceNodeId api -TargetNodeId db -DashPattern $null
+        $node = New-ImageTopologyNode -Id api -Label API -Port $null -Detail $null
+
+        $edge.DashPattern.Count | Should -Be 0
+        $node.Ports.Count | Should -Be 0
+        $node.Details.Count | Should -Be 0
+    }
+
+    It 'still rejects null entries inside populated topology arrays' {
+        $port = New-ImageTopologyNodePort -Id outbound -Side Right
+        { New-ImageTopologyNode -Id api -Label API -Port @($port, $null) -ErrorAction Stop } |
+            Should -Throw '*cannot contain null entries*'
+    }
+
     It 'rejects interactive HTML with watermarks instead of silently producing static HTML' {
         $file = Join-Path $TestDir 'topology-interactive-watermark.html'
         $watermark = New-ImageVisualWatermark -Text INTERNAL
