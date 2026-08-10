@@ -99,6 +99,19 @@ New-ImageChart {
 
 The `New-ImageChartBar`, `New-ImageChartLine`, `New-ImageChartDonut`, and other chart-definition commands remain the normal PowerShell experience. Advanced scripts can also pass a native `ChartForgeX.Core.Chart` through `-Chart` or configure one through `-ChartScript`.
 
+`ConvertTo-ImageVisualArtifact` adds portable SVG and versioned semantic JSON bytes to the pipeline object. SVG supports flat Office placement; PSWriteOffice can consume the semantic payload across its separate module load context to create editable Visio shapes and connectors:
+
+```powershell
+$artifact = New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyNode -Id api -Label API -Kind Service
+    New-ImageTopologyNode -Id database -Label Database -Kind Database
+    New-ImageTopologyEdge -Id api-db -SourceNodeId api -TargetNodeId database -Label queries
+} -FilePath .\topology.svg -PassThru |
+    ConvertTo-ImageVisualArtifact -Id service-topology -Title 'Service topology'
+
+$artifact | Export-OfficeVisioVisual -Path .\topology.vsdx
+```
+
 Present a deliberately paced, multi-tab PowerShell session while keeping ChartForgeX as the reusable terminal renderer:
 
 ```powershell

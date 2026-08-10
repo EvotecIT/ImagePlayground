@@ -11,7 +11,7 @@ using ChartForgeX.VisualBlocks;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.</summary>
-/// <para>The artifact is the portable handoff contract for static export and OfficeIMO document placement.</para>
+/// <para>The artifact is the portable handoff contract for static export, OfficeIMO document placement, and native editable Visio projection.</para>
 /// <example>
 ///   <summary>Create an artifact from a topology</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -102,6 +102,10 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
         }
 
         SetPortableProperty(output, "OfficeVisualSvg", Encoding.UTF8.GetBytes(artifact.ToSvg()));
+        SetPortableProperty(output, "OfficeVisualInterchangeJson", artifact.ToInterchangeUtf8Json());
+        SetPortableProperty(output, "OfficeVisualInterchangeSchema", VisualArtifactInterchangeEnvelope.SchemaId);
+        SetPortableProperty(output, "OfficeVisualInterchangeVersion", VisualArtifactInterchangeEnvelope.CurrentVersion);
+        SetPortableProperty(output, "OfficeVisualKind", artifact.Kind.ToString());
         SetPortableProperty(output, "OfficeVisualId", artifact.Id);
         SetPortableProperty(output, "OfficeVisualTitle", artifact.Title);
         SetPortableProperty(

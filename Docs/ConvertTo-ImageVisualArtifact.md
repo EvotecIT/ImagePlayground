@@ -15,7 +15,7 @@ ConvertTo-ImageVisualArtifact [-InputObject] <Object> [-Id <string>] [-Title <st
 ```
 
 ## DESCRIPTION
-The artifact is the portable handoff contract for static export and OfficeIMO document placement.
+The artifact is the portable handoff contract for static export, OfficeIMO document placement, and native editable Visio projection.
 
 ## EXAMPLES
 

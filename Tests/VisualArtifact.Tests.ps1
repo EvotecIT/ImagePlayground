@@ -94,6 +94,10 @@ Describe 'ChartForgeX visual artifacts' {
         $artifact.GetType().FullName | Should -Be 'ChartForgeX.VisualArtifacts.VisualArtifact'
         $artifact.PSObject.TypeNames | Should -Contain 'ImagePlayground.VisualArtifact'
         $artifact.OfficeVisualSvg.Count | Should -BeGreaterThan 100
+        $artifact.OfficeVisualInterchangeJson.Count | Should -BeGreaterThan 100
+        $artifact.OfficeVisualInterchangeSchema | Should -Be 'chartforgex.visual-artifact'
+        $artifact.OfficeVisualInterchangeVersion | Should -Be 1
+        $artifact.OfficeVisualKind | Should -Be 'Chart'
         $artifact.OfficeVisualId | Should -Be 'portable-chart'
         $artifact.OfficeVisualTitle | Should -Be 'Portable chart'
         $artifact.OfficeVisualAlternativeText | Should -Be 'Portable chart description.'
@@ -101,6 +105,24 @@ Describe 'ChartForgeX visual artifacts' {
         $again = $artifact | ConvertTo-ImageVisualArtifact -Title 'Updated portable chart'
         $again.OfficeVisualTitle | Should -Be 'Updated portable chart'
         @($again.PSObject.TypeNames -eq 'ImagePlayground.VisualArtifact').Count | Should -Be 1
+    }
+
+    It 'preserves native topology semantics in the portable Office interchange payload' {
+        $topologyPath = Join-Path $TestDir 'portable-topology.svg'
+        $topology = New-ImageTopology -TopologyDefinition {
+            New-ImageTopologyNode -Id api -Label API
+            New-ImageTopologyNode -Id database -Label Database
+            New-ImageTopologyEdge -Id api-db -SourceNodeId api -TargetNodeId database -Label queries
+        } -FilePath $topologyPath -NoTitle -PassThru
+
+        $artifact = $topology | ConvertTo-ImageVisualArtifact -Id portable-topology -Title 'Portable topology'
+        $envelope = [Text.Encoding]::UTF8.GetString($artifact.OfficeVisualInterchangeJson) | ConvertFrom-Json
+
+        $envelope.kind | Should -Be 'Topology'
+        $envelope.Nodes.Count | Should -Be 2
+        $envelope.Edges.Count | Should -Be 1
+        $envelope.Edges[0].sourceId | Should -Be 'api'
+        $envelope.Edges[0].targetId | Should -Be 'database'
     }
 
     It 'rejects multiple pipeline artifacts for one output path' {
