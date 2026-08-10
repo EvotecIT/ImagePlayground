@@ -24,13 +24,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref }}
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -52,11 +52,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ImagePlayground.psd1
-          git commit -m "chore: regenerate psd1" || echo "No changes to commit"
-          git push origin HEAD:$Env:HEAD_BRANCH
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "No PSD1 changes to commit."
+          } elseif ($LASTEXITCODE -eq 1) {
+            git commit -m "chore: regenerate psd1"
+            git push origin HEAD:$Env:HEAD_BRANCH
+          } else {
+            throw "Unable to inspect staged PSD1 changes (git exit code $LASTEXITCODE)."
+          }
 
       - name: Upload refreshed manifest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: psd1
           path: ImagePlayground.psd1
@@ -67,16 +74,16 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download manifest
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: psd1
           path: .
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -91,7 +98,7 @@ jobs:
         run: .\Build\Build-Module.ps1 -RunMode Build -SignModule:$false
 
       - name: Upload packaged module
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: packaged-module
           path: Artefacts/Unpacked/Modules/ImagePlayground
@@ -104,10 +111,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download packaged module
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: packaged-module
           path: .packaged-module
@@ -135,10 +142,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download packaged module
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: packaged-module
           path: .packaged-module
@@ -166,10 +173,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download packaged module
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: packaged-module
           path: .packaged-module
@@ -197,10 +204,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download packaged module
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: packaged-module
           path: .packaged-module
