@@ -119,8 +119,15 @@ Describe 'ChartForgeX visual artifacts' {
         $envelope = [Text.Encoding]::UTF8.GetString($artifact.OfficeVisualInterchangeJson) | ConvertFrom-Json
 
         $envelope.kind | Should -Be 'Topology'
+        $envelope.family | Should -Be 'Topology'
+        $envelope.topology.layoutMode | Should -Be 'Layered'
+        $envelope.topology.layoutDirection | Should -Be 'TopToBottom'
         $envelope.Nodes.Count | Should -Be 2
+        $envelope.Nodes[0].role | Should -Be 'TopologyNode'
+        $envelope.Nodes[0].topology.kind | Should -Not -BeNullOrEmpty
         $envelope.Edges.Count | Should -Be 1
+        $envelope.Edges[0].role | Should -Be 'TopologyEdge'
+        $envelope.Edges[0].topology.kind | Should -Not -BeNullOrEmpty
         $envelope.Edges[0].sourceId | Should -Be 'api'
         $envelope.Edges[0].targetId | Should -Be 'database'
     }
