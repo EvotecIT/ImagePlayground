@@ -17,6 +17,7 @@ namespace ImagePlayground.PowerShell;
 [OutputType(typeof(TopologyEdge))]
 public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
     private static int s_generatedId;
+    private double[] _dashPattern = System.Array.Empty<double>();
 
     /// <para>Stable edge identifier. When omitted, a unique identifier is derived from source and target node ids.</para>
     [Parameter]
@@ -102,6 +103,61 @@ public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
     [Parameter]
     public string Tooltip { get; set; } = string.Empty;
 
+    /// <para>Named port id on the source node.</para>
+    [Parameter]
+    public string SourcePortId { get; set; } = string.Empty;
+
+    /// <para>Named port id on the target node.</para>
+    [Parameter]
+    public string TargetPortId { get; set; } = string.Empty;
+
+    /// <para>Optional source endpoint marker.</para>
+    [Parameter]
+    public TopologyMarkerKind? SourceMarker { get; set; }
+
+    /// <para>Optional target endpoint marker.</para>
+    [Parameter]
+    public TopologyMarkerKind? TargetMarker { get; set; }
+
+    /// <para>Optional edge stroke width in pixels.</para>
+    [Parameter]
+    [ValidateRange(0.01D, 1000D)]
+    public double? StrokeWidth { get; set; }
+
+    /// <para>Optional edge opacity from zero to one.</para>
+    [Parameter]
+    [ValidateRange(0D, 1D)]
+    public double? Opacity { get; set; }
+
+    /// <para>Alternating dash and gap lengths in pixels.</para>
+    [Parameter]
+    public double[] DashPattern {
+        get => _dashPattern;
+        set => _dashPattern = value ?? System.Array.Empty<double>();
+    }
+
+    /// <para>Preferred spring length for force-directed layout.</para>
+    [Parameter]
+    [ValidateRange(0.01D, 100000D)]
+    public double? PreferredLength { get; set; }
+
+    /// <para>Preferred minimum layer separation for layered layout.</para>
+    [Parameter]
+    [ValidateRange(1, 1000)]
+    public int MinimumRankSpan { get; set; } = 1;
+
+    /// <para>Caller-defined routing and rendering priority. Higher values render above lower values.</para>
+    [Parameter]
+    public int RoutingPriority { get; set; }
+
+    /// <para>Optional label rendered near the source endpoint.</para>
+    [Parameter]
+    public string SourceLabel { get; set; } = string.Empty;
+
+    /// <para>Optional label rendered near the target endpoint.</para>
+    [Parameter]
+    public string TargetLabel { get; set; } = string.Empty;
+
     /// <summary>Emits a topology edge definition.</summary>
     protected override void ProcessRecord() {
         var edge = new TopologyEdge {
@@ -145,6 +201,46 @@ public sealed class NewImageTopologyEdgeCmdlet : PSCmdlet {
         }
         if (!string.IsNullOrWhiteSpace(Tooltip)) {
             edge.Tooltip = Tooltip;
+        }
+        if (!string.IsNullOrWhiteSpace(SourcePortId)) {
+            edge.SourcePortId = SourcePortId;
+        }
+        if (!string.IsNullOrWhiteSpace(TargetPortId)) {
+            edge.TargetPortId = TargetPortId;
+        }
+        if (SourceMarker.HasValue) {
+            edge.SourceMarker = SourceMarker.Value;
+        }
+        if (TargetMarker.HasValue) {
+            edge.TargetMarker = TargetMarker.Value;
+        }
+        if (StrokeWidth.HasValue) {
+            edge.StrokeWidth = StrokeWidth.Value;
+        }
+        if (Opacity.HasValue) {
+            edge.Opacity = Opacity.Value;
+        }
+        foreach (double value in DashPattern) {
+            if (value <= 0D || double.IsNaN(value) || double.IsInfinity(value)) {
+                throw new PSArgumentException("DashPattern values must be positive and finite.", nameof(DashPattern));
+            }
+
+            edge.DashPattern.Add(value);
+        }
+        if (PreferredLength.HasValue) {
+            edge.PreferredLength = PreferredLength.Value;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(MinimumRankSpan))) {
+            edge.MinimumRankSpan = MinimumRankSpan;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(RoutingPriority))) {
+            edge.RoutingPriority = RoutingPriority;
+        }
+        if (!string.IsNullOrWhiteSpace(SourceLabel)) {
+            edge.SourceLabel = SourceLabel;
+        }
+        if (!string.IsNullOrWhiteSpace(TargetLabel)) {
+            edge.TargetLabel = TargetLabel;
         }
 
         WriteObject(edge);

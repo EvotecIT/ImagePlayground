@@ -11,7 +11,7 @@ Creates a topology node definition.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageTopologyNode [-Id] <string> [-Label] <string> [-Subtitle <string>] [-Kind <TopologyNodeKind>] [-Status <TopologyHealthStatus>] [-GroupId <string>] [-X <double>] [-Y <double>] [-Longitude <double>] [-Latitude <double>] [-Width <double>] [-Height <double>] [-Symbol <string>] [-IconId <string>] [-DisplayMode <TopologyNodeDisplayMode>] [-Badge <string>] [-Color <string>] [-BackgroundColor <string>] [-Href <string>] [-Tooltip <string>] [<CommonParameters>]
+New-ImageTopologyNode [-Id] <string> [-Label] <string> [-Subtitle <string>] [-Kind <TopologyNodeKind>] [-Status <TopologyHealthStatus>] [-GroupId <string>] [-X <double>] [-Y <double>] [-Longitude <double>] [-Latitude <double>] [-Width <double>] [-Height <double>] [-Symbol <string>] [-IconId <string>] [-DisplayMode <TopologyNodeDisplayMode>] [-Badge <string>] [-Color <string>] [-BackgroundColor <string>] [-Href <string>] [-Tooltip <string>] [-Port <TopologyNodePort[]>] [-Detail <TopologyNodeDetail[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -65,6 +65,22 @@ Optional node accent color as a CSS hex color.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Detail
+Typed card detail rows created by New-ImageTopologyNodeDetail.
+
+```yaml
+Type: TopologyNodeDetail[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -225,6 +241,22 @@ Optional node longitude for geographic layouts.
 
 ```yaml
 Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Port
+Named attachment ports created by New-ImageTopologyNodePort.
+
+```yaml
+Type: TopologyNodePort[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

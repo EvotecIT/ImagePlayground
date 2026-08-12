@@ -14,6 +14,9 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageTopologyNode")]
 [OutputType(typeof(TopologyNode))]
 public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
+    private TopologyNodePort[] _ports = System.Array.Empty<TopologyNodePort>();
+    private TopologyNodeDetail[] _details = System.Array.Empty<TopologyNodeDetail>();
+
     /// <para>Stable node identifier used by topology edges.</para>
     [Parameter(Mandatory = true, Position = 0)]
     public string Id { get; set; } = string.Empty;
@@ -94,6 +97,20 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
     [Parameter]
     public string Tooltip { get; set; } = string.Empty;
 
+    /// <para>Named attachment ports created by New-ImageTopologyNodePort.</para>
+    [Parameter]
+    public TopologyNodePort[] Port {
+        get => _ports;
+        set => _ports = value ?? System.Array.Empty<TopologyNodePort>();
+    }
+
+    /// <para>Typed card detail rows created by New-ImageTopologyNodeDetail.</para>
+    [Parameter]
+    public TopologyNodeDetail[] Detail {
+        get => _details;
+        set => _details = value ?? System.Array.Empty<TopologyNodeDetail>();
+    }
+
     /// <summary>Emits a topology node definition.</summary>
     protected override void ProcessRecord() {
         var node = new TopologyNode {
@@ -142,6 +159,19 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
         }
         if (!string.IsNullOrWhiteSpace(Tooltip)) {
             node.Tooltip = Tooltip;
+        }
+
+        foreach (TopologyNodePort port in Port) {
+            if (port == null) {
+                throw new PSArgumentException("Port cannot contain null entries.", nameof(Port));
+            }
+            node.Ports.Add(port);
+        }
+        foreach (TopologyNodeDetail detail in Detail) {
+            if (detail == null) {
+                throw new PSArgumentException("Detail cannot contain null entries.", nameof(Detail));
+            }
+            node.Details.Add(detail);
         }
 
         WriteObject(node);

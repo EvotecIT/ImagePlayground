@@ -11,12 +11,12 @@ Creates a topology diagram image.
 ## SYNTAX
 ### ScriptBlock (Default)
 ```powershell
-New-ImageTopology [-TopologyDefinition] <scriptblock> -FilePath <string> [-ScenarioDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-ActiveScenarioId <string>] [-Motion <TopologyMotionOptions>] [-NoScenarioControls] [-ScenarioControlMode <TopologyHtmlScenarioControlMode>] [-NoScenarioPanel] [-ScenarioUrlState] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageTopology [-TopologyDefinition] <scriptblock> -FilePath <string> [-ScenarioDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-ActiveScenarioId <string>] [-Motion <TopologyMotionOptions>] [-LayoutPreset <TopologyLayoutPreset>] [-IncludeLayoutDiagnostics] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-NoScenarioControls] [-ScenarioControlMode <TopologyHtmlScenarioControlMode>] [-NoScenarioPanel] [-ScenarioUrlState] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Definition
 ```powershell
-New-ImageTopology -FilePath <string> [-Definition <Object[]>] [-Chart <TopologyChart>] [-Node <TopologyNode[]>] [-Edge <TopologyEdge[]>] [-Group <TopologyGroup[]>] [-Scenario <TopologyScenario[]>] [-ScenarioDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-ActiveScenarioId <string>] [-Motion <TopologyMotionOptions>] [-NoScenarioControls] [-ScenarioControlMode <TopologyHtmlScenarioControlMode>] [-NoScenarioPanel] [-ScenarioUrlState] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageTopology -FilePath <string> [-Definition <Object[]>] [-Chart <TopologyChart>] [-Node <TopologyNode[]>] [-Edge <TopologyEdge[]>] [-Group <TopologyGroup[]>] [-Scenario <TopologyScenario[]>] [-ScenarioDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Width <int>] [-Height <int>] [-Padding <int>] [-Layout <TopologyLayoutMode>] [-Direction <TopologyLayoutDirection>] [-NodeDisplayMode <TopologyNodeDisplayMode>] [-VisualStyle <TopologyVisualStyle>] [-CanvasSurfaceStyle <TopologyCanvasSurfaceStyle>] [-Theme <string>] [-Transparent] [-NoTitle] [-NoLegend] [-NoGroups] [-NoEdgeLabels] [-NoStatusBadges] [-FitContentToViewport] [-InteractiveHtml] [-ActiveScenarioId <string>] [-Motion <TopologyMotionOptions>] [-LayoutPreset <TopologyLayoutPreset>] [-IncludeLayoutDiagnostics] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-NoScenarioControls] [-ScenarioControlMode <TopologyHtmlScenarioControlMode>] [-NoScenarioPanel] [-ScenarioUrlState] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -117,6 +117,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Dpi
+PNG physical resolution metadata in dots per inch.
+
+```yaml
+Type: Double
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Edge
 Topology edges provided directly.
 
@@ -197,6 +213,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -IncludeLayoutDiagnostics
+Draw a developer-oriented layout diagnostic overlay in SVG, HTML, or PNG output.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -InteractiveHtml
 Enable lightweight interactions for HTML output.
 
@@ -221,6 +253,22 @@ Type: TopologyLayoutMode
 Parameter Sets: ScriptBlock, Definition
 Aliases: None
 Possible values: Manual, GroupGrid, HubAndSpoke, Layered, Matrix, DenseGrouped, Geographic, ForceDirected, RelationshipRadial, MindMap
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LayoutPreset
+Reusable topology spacing and presentation profile.
+
+```yaml
+Type: TopologyLayoutPreset
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values: Automatic, Dense, Compact, Balanced, Presentation
 
 Required: False
 Position: named
@@ -589,6 +637,22 @@ Type: TopologyVisualStyle
 Parameter Sets: ScriptBlock, Definition
 Aliases: None
 Possible values: Default, MonitoringDashboard
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Watermark
+Watermarks applied to static SVG, HTML, or PNG output.
+
+```yaml
+Type: VisualWatermark[]
+Parameter Sets: ScriptBlock, Definition
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
