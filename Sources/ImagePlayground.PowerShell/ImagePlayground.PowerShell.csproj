@@ -59,8 +59,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
-        <PackageReference Include="ChartForgeX" Version="1.5.0" />
-        <PackageReference Include="ChartForgeX.Interactivity.Html" Version="1.5.0" />
+        <PackageReference Include="ChartForgeX" Version="1.6.0" />
+        <PackageReference Include="ChartForgeX.Interactivity.Html" Version="1.6.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
