@@ -524,13 +524,18 @@ Generic stories combine resolved source, terminal output, text, images, and SVG 
 
 ```powershell
 $chartPath = '.\weekly-builds.png'
+$sourceText = @'
+New-ImageChart {
+    New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
+} -FilePath '.\weekly-builds.png' -Width 900 -Height 500
+'@
 
 New-ImageChart {
     New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
 } -FilePath $chartPath -Width 900 -Height 500
 
 $source = ConvertTo-ImageStorySource `
-    -Text (Get-Content '.\Create-WeeklyBuilds.ps1' -Raw) `
+    -Text $sourceText `
     -Language PowerShell
 
 $codePanel = New-ImageStoryPanel -Id code -Source $source
@@ -684,7 +689,7 @@ The core package targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .N
 using ImagePlayground;
 using SixLabors.ImageSharp;
 
-using var image = Image.Load("photo.jpg");
+using var image = ImagePlayground.Image.Load("photo.jpg");
 image.Resize(1200, 1200, keepAspectRatio: true);
 image.Watermark(
     "Internal",
