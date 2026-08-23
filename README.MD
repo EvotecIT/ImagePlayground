@@ -36,11 +36,34 @@ Every image below is checked into this repository beside the script or API that 
 | Goal | Start with | Complete example |
 | --- | --- | --- |
 | Prepare images for a website or report | `Resize-Image`, `Add-ImageWatermark`, `Export-ImageMetadata` | [`Sources/ImagePlayground.Examples`](Sources/ImagePlayground.Examples) |
+| Inspect provenance or remove publishing metadata | `Get-ImageMetadata`, `Get-ImageProvenance`, `Remove-ImageMetadata` | [`Examples/Images.RemoveMetadata.ps1`](Examples/Images.RemoveMetadata.ps1) |
 | Generate contact, Wi-Fi, calendar, payment, or OTP codes | `New-ImageQRCode*`, `Get-ImageQRCode` | [`Examples/QrCodeWithLogo.ps1`](Examples/QrCodeWithLogo.ps1) |
 | Create operational charts | `New-ImageChart` and the `New-ImageChart*` builders | [`Examples/Charts.ChartForgeX.Showcase.ps1`](Examples/Charts.ChartForgeX.Showcase.ps1) |
+| Compose social cards and operational dashboards | `New-ImageCanvas`, `New-ImageVisualGrid`, and the visual-block builders | [`Examples/VisualGrid.ServiceHealth.ps1`](Examples/VisualGrid.ServiceHealth.ps1) |
 | Explain services, routes, or ownership | `New-ImageTopology`, `New-ImageOrganizationChart` | [`Examples/Topology.ServiceMap.ps1`](Examples/Topology.ServiceMap.ps1) |
 | Turn a script run into documentation | `New-ImageConsoleStory`, `New-ImageStory` | [`Examples/ConsoleStory.TabNavigation.ps1`](Examples/ConsoleStory.TabNavigation.ps1) |
 | Hand editable visuals to Office and Visio | `ConvertTo-ImageVisualArtifact` | [`Website/content/project-docs/docs/visual-reporting.md`](Website/content/project-docs/docs/visual-reporting.md) |
+
+## PowerShell surface at a glance
+
+The current module manifest exports **131 compiled cmdlets and 2 compatibility aliases**. The [generated command reference](Docs/Readme.md) has one page for every exported cmdlet; this map shows how those commands fit together.
+
+| Command family | Cmdlets | What it covers | Good starting points |
+| --- | ---: | --- | --- |
+| Image processing and files | 22 | Load, save, convert, compare, resize, crop, rotate, adjust, blur, sharpen, annotate, watermark, merge, thumbnail, mosaic, grid, avatar, icon, GIF, and Base64 workflows | [`Get-Image`](Docs/Get-Image.md), [`ConvertTo-Image`](Docs/ConvertTo-Image.md), [`New-ImageCrop`](Docs/New-ImageCrop.md) |
+| Metadata and provenance | 13 | EXIF, general metadata, HEIF container information, HEIF XMP, thumbnail cache, embedded provenance, export/import, controlled updates, and removal | [`Get-ImageMetadata`](Docs/Get-ImageMetadata.md), [`Get-ImageProvenance`](Docs/Get-ImageProvenance.md), [`Remove-ImageMetadata`](Docs/Remove-ImageMetadata.md) |
+| QR codes and barcodes | 20 | Plain content, contact, Wi-Fi, calendar, email, OTP, phone, SMS, location, cryptocurrency, payment formats, barcode creation, and image readback | [`New-ImageQRCode`](Docs/New-ImageQRCode.md), [`New-ImageQRCodeOtp`](Docs/New-ImageQRCodeOtp.md), [`New-ImageBarCode`](Docs/New-ImageBarCode.md) |
+| Charts | 34 | Bar, line, area, pie, donut, scatter, bubble, radar, polar, radial, heatmap, histogram, gauge, funnel, box plot, range, slope, treemap, waterfall, word cloud, and other report-oriented definitions | [`New-ImageChart`](Docs/New-ImageChart.md), [`New-ImageChartOptions`](Docs/New-ImageChartOptions.md), [`New-ImageChartAnnotation`](Docs/New-ImageChartAnnotation.md) |
+| Canvas and visual blocks | 10 | Fixed-size canvases, text and information layers, metric cards, lists, tables, timelines, and reusable visual grids | [`New-ImageCanvas`](Docs/New-ImageCanvas.md), [`New-ImageMetricCard`](Docs/New-ImageMetricCard.md), [`New-ImageVisualGrid`](Docs/New-ImageVisualGrid.md) |
+| Topology and organization | 12 | Organization hierarchies, grouped nodes, ports, details, edges, routing diagnostics, motion, and ordered operational scenarios | [`New-ImageTopology`](Docs/New-ImageTopology.md), [`Get-ImageTopologyDiagnostics`](Docs/Get-ImageTopologyDiagnostics.md), [`New-ImageOrganizationChart`](Docs/New-ImageOrganizationChart.md) |
+| Console stories | 10 | Captured or authored commands, outputs, tables, pauses, palettes, persistent tabs, tab selection, and SVG/HTML/raster export | [`New-ImageConsoleStory`](Docs/New-ImageConsoleStory.md), [`New-ImageConsoleStoryTab`](Docs/New-ImageConsoleStoryTab.md), [`Export-ImageConsoleStory`](Docs/Export-ImageConsoleStory.md) |
+| Visual stories and artifacts | 10 | Source highlighting, resolved panels, scenes, declared outcomes, motion cues, watermarks, reusable semantic artifacts, and static export | [`New-ImageStory`](Docs/New-ImageStory.md), [`New-ImageVisualStory`](Docs/New-ImageVisualStory.md), [`ConvertTo-ImageVisualArtifact`](Docs/ConvertTo-ImageVisualArtifact.md) |
+
+To inspect the command surface of the version installed on a machine:
+
+```powershell
+Get-Command -Module ImagePlayground | Sort-Object Noun, Verb
+```
 
 ## First result in PowerShell
 
