@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="cfx-visual-grid-45899c10" width="1106" height="743" viewBox="0 0 1106 743" role="img" aria-labelledby="cfx-visual-grid-45899c10-title cfx-visual-grid-45899c10-desc" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="max-width:100%;height:auto;display:block">
+<title id="cfx-visual-grid-45899c10-title">Service health</title>
+<desc id="cfx-visual-grid-45899c10-desc">Static visual grid containing charts and visual blocks.</desc>
+<defs>
+<style>#cfx-visual-grid-45899c10 .cfx-guide-stroke,#cfx-visual-grid-45899c10 .cfx-premium-stroke{vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}#cfx-visual-grid-45899c10 text{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}</style>
+<linearGradient id="cfx-visual-grid-45899c10-visualGridSurface" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#F4F7EF" stop-opacity="1"/><stop offset="100%" stop-color="#EAEDE5" stop-opacity="1"/></linearGradient>
+</defs>
+<rect width="100%" height="100%" fill="url(#cfx-visual-grid-45899c10-visualGridSurface)"/>
+<text data-cfx-role="visual-grid-title" x="24" y="43.5" fill="#1D2430" font-family="Aptos, Calibri, 'Segoe UI', Candara, Arial, sans-serif" font-size="26" font-weight="800">Service health</text>
+<text data-cfx-role="visual-grid-subtitle" x="26" y="64" fill="#8B93A3" font-family="Aptos, Calibri, 'Segoe UI', Candara, Arial, sans-serif" font-size="14">Generated from PowerShell objects</text>
+<svg xmlns="http://www.w3.org/2000/svg" id="cfx-visual-ccd22f46" width="320" height="176" viewBox="0 0 320 176" role="img" aria-labelledby="cfx-visual-ccd22f46-title cfx-visual-ccd22f46-desc" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="max-width:100%;height:auto;display:block" x="124" y="163" data-cfx-role="visual-grid-panel" data-cfx-motion-target="requests">
+<title id="cfx-visual-ccd22f46-title">Requests</title>
+<desc id="cfx-visual-ccd22f46-desc">Static ChartForgeX visual block.</desc>
+<defs>
+<style>#cfx-visual-ccd22f46 .cfx-guide-stroke,#cfx-visual-ccd22f46 .cfx-premium-stroke{vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}#cfx-visual-ccd22f46 text{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}</style>
+<linearGradient id="cfx-visual-ccd22f46-visualBackground" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0"/></linearGradient>
+<linearGradient id="cfx-visual-ccd22f46-visualCard" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#F7F7F8" stop-opacity="1"/></linearGradient>
+<linearGradient id="cfx-visual-ccd22f46-visualPlot" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#F9FBFD" stop-opacity="1"/><stop offset="100%" stop-color="#F0F2F5" stop-opacity="1"/></linearGradient>
+<clipPath id="cfx-visual-ccd22f46-visualCardClip"><rect x="0" y="0" width="320" height="176" rx="12"/></clipPath>
+</defs>
+<rect data-cfx-role="visual-card" class="cfx-guide-stroke" x="0.5" y="0.5" width="319" height="175" rx="11.5" fill="url(#cfx-visual-ccd22f46-visualCard)" stroke="rgba(148,163,184,0.361)"/>
+<rect data-cfx-role="visual-card-highlight" class="cfx-guide-stroke" x="1.5" y="1.5" width="317" height="173" rx="10.5" fill="none" stroke="#fff" stroke-opacity="0.42"/>
+<rect data-cfx-role="metric-status-bar" x="1.5" y="1.5" width="7" height="173" fill="#10B981" clip-path="url(#cfx-visual-ccd22f46-visualCardClip)"/>
+<text data-cfx-role="metric-label" x="22" y="34.5" fill="#64748B" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700">Requests</text>
+<text data-cfx-role="metric-value" x="22" y="87.22" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="38.72" font-weight="850">12840</text>
+<g data-cfx-role="metric-mini-sparkline" data-cfx-style="area" data-cfx-min="8" data-cfx-max="12">
+<polygon data-cfx-role="metric-mini-sparkline-fill" points="209.68,96.874 209.68,96.874 239.12,86.314 268.56,75.754 298,54.634 298,96.874" fill="rgba(16,185,129,0.173)"/>
+<polyline data-cfx-role="metric-mini-sparkline-line" points="209.68,96.874 239.12,86.314 268.56,75.754 298,54.634" fill="none" stroke="#10B981" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle data-cfx-role="metric-mini-sparkline-current" cx="298" cy="54.634" r="3.2" fill="#10B981"/>
+</g>
+<text data-cfx-role="metric-trend" x="22" y="154" fill="#10B981" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700">+12%</text>
+</svg>
+
+<svg xmlns="http://www.w3.org/2000/svg" id="cfx-visual-1b00e83f" width="520" height="300" viewBox="0 0 520 300" role="img" aria-labelledby="cfx-visual-1b00e83f-title cfx-visual-1b00e83f-desc" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="max-width:100%;height:auto;display:block" x="562" y="101" data-cfx-role="visual-grid-panel">
+<title id="cfx-visual-1b00e83f-title">Checks</title>
+<desc id="cfx-visual-1b00e83f-desc">Static ChartForgeX visual block.</desc>
+<defs>
+<style>#cfx-visual-1b00e83f .cfx-guide-stroke,#cfx-visual-1b00e83f .cfx-premium-stroke{vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}#cfx-visual-1b00e83f text{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}</style>
+<linearGradient id="cfx-visual-1b00e83f-visualBackground" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0"/></linearGradient>
+<linearGradient id="cfx-visual-1b00e83f-visualCard" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#F7F7F8" stop-opacity="1"/></linearGradient>
+<linearGradient id="cfx-visual-1b00e83f-visualPlot" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#F9FBFD" stop-opacity="1"/><stop offset="100%" stop-color="#F0F2F5" stop-opacity="1"/></linearGradient>
+<clipPath id="cfx-visual-1b00e83f-visualCardClip"><rect x="0" y="0" width="520" height="300" rx="12"/></clipPath>
+</defs>
+<rect data-cfx-role="visual-card" class="cfx-guide-stroke" x="0.5" y="0.5" width="519" height="299" rx="11.5" fill="url(#cfx-visual-1b00e83f-visualCard)" stroke="rgba(148,163,184,0.361)"/>
+<rect data-cfx-role="visual-card-highlight" class="cfx-guide-stroke" x="1.5" y="1.5" width="517" height="297" rx="10.5" fill="none" stroke="#fff" stroke-opacity="0.42"/>
+<text data-cfx-role="visual-title" x="22" y="40.75" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="25" font-weight="800">Checks</text>
+<circle data-cfx-role="list-marker" cx="30" cy="78.5" r="4" fill="#10B981"/>
+<text data-cfx-role="visual-text" x="46" y="83.78" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="500">API</text>
+<circle data-cfx-role="list-marker" cx="30" cy="111.5" r="4" fill="#F59E0B"/>
+<text data-cfx-role="visual-text" x="46" y="116.78" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="500">Database</text>
+</svg>
+
+<svg xmlns="http://www.w3.org/2000/svg" id="cfx-visual-4072acbc" width="520" height="300" viewBox="0 0 520 300" role="img" aria-labelledby="cfx-visual-4072acbc-title cfx-visual-4072acbc-desc" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="max-width:100%;height:auto;display:block" x="24" y="419" data-cfx-role="visual-grid-panel">
+<title id="cfx-visual-4072acbc-title">Services</title>
+<desc id="cfx-visual-4072acbc-desc">Static ChartForgeX visual block.</desc>
+<defs>
+<style>#cfx-visual-4072acbc .cfx-guide-stroke,#cfx-visual-4072acbc .cfx-premium-stroke{vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}#cfx-visual-4072acbc text{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}</style>
+<linearGradient id="cfx-visual-4072acbc-visualBackground" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0"/></linearGradient>
+<linearGradient id="cfx-visual-4072acbc-visualCard" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#F7F7F8" stop-opacity="1"/></linearGradient>
+<linearGradient id="cfx-visual-4072acbc-visualPlot" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#F9FBFD" stop-opacity="1"/><stop offset="100%" stop-color="#F0F2F5" stop-opacity="1"/></linearGradient>
+<clipPath id="cfx-visual-4072acbc-visualCardClip"><rect x="0" y="0" width="520" height="300" rx="12"/></clipPath>
+</defs>
+<rect data-cfx-role="visual-card" class="cfx-guide-stroke" x="0.5" y="0.5" width="519" height="299" rx="11.5" fill="url(#cfx-visual-4072acbc-visualCard)" stroke="rgba(148,163,184,0.361)"/>
+<rect data-cfx-role="visual-card-highlight" class="cfx-guide-stroke" x="1.5" y="1.5" width="517" height="297" rx="10.5" fill="none" stroke="#fff" stroke-opacity="0.42"/>
+<text data-cfx-role="visual-title" x="22" y="40.75" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="25" font-weight="800">Services</text>
+<rect data-cfx-role="table-header" class="cfx-guide-stroke" x="22" y="62" width="476" height="26" rx="6" fill="url(#cfx-visual-4072acbc-visualPlot)" stroke="rgba(148,163,184,0.188)"/>
+<text data-cfx-role="visual-text" x="31" y="79.16" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700">Name</text>
+<text data-cfx-role="visual-text" x="269" y="79.16" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700">Status</text>
+<text data-cfx-role="visual-text" x="31" y="107.84" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400">API</text>
+<text data-cfx-role="visual-text" x="269" y="107.84" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400">Healthy</text>
+<rect data-cfx-role="table-row" x="22" y="116" width="476" height="24" rx="4" fill="rgba(248,250,252,0.431)"/>
+<text data-cfx-role="visual-text" x="31" y="131.84" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400">Database</text>
+<text data-cfx-role="visual-text" x="269" y="131.84" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400">Warning</text>
+</svg>
+
+<svg xmlns="http://www.w3.org/2000/svg" id="cfx-visual-345cc370" width="520" height="300" viewBox="0 0 520 300" role="img" aria-labelledby="cfx-visual-345cc370-title cfx-visual-345cc370-desc" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="max-width:100%;height:auto;display:block" x="562" y="419" data-cfx-role="visual-grid-panel">
+<title id="cfx-visual-345cc370-title">Activity</title>
+<desc id="cfx-visual-345cc370-desc">Static ChartForgeX visual block.</desc>
+<defs>
+<style>#cfx-visual-345cc370 .cfx-guide-stroke,#cfx-visual-345cc370 .cfx-premium-stroke{vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}#cfx-visual-345cc370 text{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}</style>
+<linearGradient id="cfx-visual-345cc370-visualBackground" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0"/></linearGradient>
+<linearGradient id="cfx-visual-345cc370-visualCard" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#F7F7F8" stop-opacity="1"/></linearGradient>
+<linearGradient id="cfx-visual-345cc370-visualPlot" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#F9FBFD" stop-opacity="1"/><stop offset="100%" stop-color="#F0F2F5" stop-opacity="1"/></linearGradient>
+<clipPath id="cfx-visual-345cc370-visualCardClip"><rect x="0" y="0" width="520" height="300" rx="12"/></clipPath>
+</defs>
+<rect data-cfx-role="visual-card" class="cfx-guide-stroke" x="0.5" y="0.5" width="519" height="299" rx="11.5" fill="url(#cfx-visual-345cc370-visualCard)" stroke="rgba(148,163,184,0.361)"/>
+<rect data-cfx-role="visual-card-highlight" class="cfx-guide-stroke" x="1.5" y="1.5" width="517" height="297" rx="10.5" fill="none" stroke="#fff" stroke-opacity="0.42"/>
+<text data-cfx-role="visual-title" x="22" y="40.75" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="25" font-weight="800">Activity</text>
+<g data-cfx-role="activity-timeline-block" data-cfx-event-surfaces="true">
+<line data-cfx-role="activity-spine" x1="40" y1="68" x2="40" y2="133" stroke="rgba(148,163,184,0.188)" stroke-width="2"/>
+<rect data-cfx-role="activity-event-surface" class="cfx-guide-stroke" x="54" y="56" width="444" height="30" rx="10" fill="rgba(248,250,252,0.51)" stroke="rgba(148,163,184,0.588)"/>
+<circle data-cfx-role="activity-event-node" cx="40" cy="77" r="10" fill="rgba(16,185,129,0.204)" stroke="#10B981" stroke-width="2"/>
+<text data-cfx-role="visual-text" x="62" y="77" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="800">Build completed</text>
+<text data-cfx-role="visual-text" x="498" y="77" text-anchor="end" fill="#64748B" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="500">14:20</text>
+<circle data-cfx-role="activity-check-node" cx="64" cy="111" r="4" fill="#10B981"/>
+<polyline data-cfx-role="activity-checkmark" points="60,111 63,115 69,107" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text data-cfx-role="visual-text" x="80" y="115" text-anchor="start" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="500">Smoke tests</text>
+<line data-cfx-role="activity-check-strike" x1="80" y1="110" x2="152.5" y2="110" stroke="#0F172A" stroke-opacity="0.55"/>
+</g>
+</svg>
+
+</svg>

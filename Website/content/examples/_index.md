@@ -39,4 +39,9 @@ These examples are selected from the ImagePlayground repository because they sho
     <h3>Render an organization hierarchy</h3>
     <p>Model reporting relationships and choose branch-level hierarchy layouts.</p>
   </a>
+  <a class="ev-example-card" href="./animated-visual-story/">
+    <span class="ev-example-card__eyebrow">Visual story</span>
+    <h3>Animate a reusable visual grid</h3>
+    <p>Reveal native ChartForgeX blocks in SVG or HTML while preserving a complete static result.</p>
+  </a>
 </div>
