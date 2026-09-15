@@ -23,5 +23,4 @@
     }
     RootModule             = 'ImagePlayground.psm1'
     RequiredModules        = @()
-    ScriptsToProcess       = @()
 }
