@@ -21,8 +21,11 @@ Creates a named attachment port for a topology node.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageTopologyNodePort
+PS> $port = New-ImageTopologyNodePort -Id output -Side Right -Offset 0.5 -Label Database
+New-ImageTopologyNode -Id api -Label API -Kind Service -Port $port
 ```
+
+Creates a port halfway along the right boundary and attaches it to the service node.
 
 ## PARAMETERS
 

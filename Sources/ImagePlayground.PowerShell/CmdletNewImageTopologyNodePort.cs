@@ -4,6 +4,13 @@ using ChartForgeX.Topology;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates a named attachment port for a topology node.</summary>
+/// <example>
+///   <summary>Add an output port to a service node</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$port = New-ImageTopologyNodePort -Id output -Side Right -Offset 0.5 -Label Database
+/// New-ImageTopologyNode -Id api -Label API -Kind Service -Port $port</code>
+///   <para>Creates a port halfway along the right boundary and attaches it to the service node.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageTopologyNodePort")]
 [OutputType(typeof(TopologyNodePort))]
 public sealed class NewImageTopologyNodePortCmdlet : PSCmdlet {

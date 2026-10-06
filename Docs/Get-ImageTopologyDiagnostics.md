@@ -21,8 +21,15 @@ Returns machine-readable node bounds, named port positions, edge routes, fallbac
 
 ### EXAMPLE 1
 ```powershell
-Get-ImageTopologyDiagnostics
+PS> $chart = New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyNode -Id api -Label API -Kind Service
+    New-ImageTopologyNode -Id db -Label Database -Kind Database
+    New-ImageTopologyEdge -SourceNodeId api -TargetNodeId db -Kind Dependency
+} -Layout Layered -FilePath service-map.svg -PassThru
+$chart | Get-ImageTopologyDiagnostics -LayoutPreset Balanced
 ```
+
+Exports a service diagram and returns its node and edge layout diagnostics.
 
 ## PARAMETERS
 

@@ -21,8 +21,11 @@ Creates a typed label/value detail row for a topology node card.
 
 ### EXAMPLE 1
 ```powershell
-New-ImageTopologyNodeDetail
+PS> $detail = New-ImageTopologyNodeDetail -Label Latency -Value '32 ms' -Status Healthy
+New-ImageTopologyNode -Id api -Label API -Kind Service -Detail $detail
 ```
+
+Creates a labeled health detail and attaches it to a topology node card.
 
 ## PARAMETERS
 

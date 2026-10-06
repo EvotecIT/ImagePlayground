@@ -3557,7 +3557,23 @@ img.Save("out.png");</dev:code>
         <maml:para></maml:para>
       </maml:alert>
     </maml:alertSet>
-    <command:examples />
+    <command:examples>
+      <command:example>
+        <maml:title>Inspect the layout of a service diagram</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$chart = New-ImageTopology -TopologyDefinition {&#xD;
+                New-ImageTopologyNode -Id api -Label API -Kind Service&#xD;
+                New-ImageTopologyNode -Id db -Label Database -Kind Database&#xD;
+                New-ImageTopologyEdge -SourceNodeId api -TargetNodeId db -Kind Dependency&#xD;
+            } -Layout Layered -FilePath service-map.svg -PassThru&#xD;
+            $chart | Get-ImageTopologyDiagnostics -LayoutPreset Balanced</dev:code>
+        <dev:remarks>
+          <maml:para>Exports a service diagram and returns its node and edge layout diagnostics.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
     <command:relatedLinks />
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
@@ -32457,7 +32473,19 @@ polygonal areas.</maml:para>
         <maml:para></maml:para>
       </maml:alert>
     </maml:alertSet>
-    <command:examples />
+    <command:examples>
+      <command:example>
+        <maml:title>Add a health detail to a service node</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$detail = New-ImageTopologyNodeDetail -Label Latency -Value '32 ms' -Status Healthy&#xD;
+            New-ImageTopologyNode -Id api -Label API -Kind Service -Detail $detail</dev:code>
+        <dev:remarks>
+          <maml:para>Creates a labeled health detail and attaches it to a topology node card.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
     <command:relatedLinks />
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
@@ -32608,7 +32636,19 @@ polygonal areas.</maml:para>
         <maml:para></maml:para>
       </maml:alert>
     </maml:alertSet>
-    <command:examples />
+    <command:examples>
+      <command:example>
+        <maml:title>Add an output port to a service node</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$port = New-ImageTopologyNodePort -Id output -Side Right -Offset 0.5 -Label Database&#xD;
+            New-ImageTopologyNode -Id api -Label API -Kind Service -Port $port</dev:code>
+        <dev:remarks>
+          <maml:para>Creates a port halfway along the right boundary and attaches it to the service node.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
     <command:relatedLinks />
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
