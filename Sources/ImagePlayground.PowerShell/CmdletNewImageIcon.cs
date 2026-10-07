@@ -35,7 +35,7 @@ public sealed class NewImageIconCmdlet : ImageCmdlet {
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "NewImageIconFileNotFound", FilePath);
 
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         using var img = ImagePlayground.Image.Load(filePath);
         img.SaveAsIcon(output, Size);
         if (Open.IsPresent) {

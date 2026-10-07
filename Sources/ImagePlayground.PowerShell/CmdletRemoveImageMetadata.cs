@@ -38,7 +38,7 @@ public sealed class RemoveImageMetadataCmdlet : ImageCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "RemoveImageMetadataFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         if (All && MetadataType is { Length: > 0 }) {
             ThrowTerminatingError(new ErrorRecord(
                 new ArgumentException("All and MetadataType cannot be used together."),

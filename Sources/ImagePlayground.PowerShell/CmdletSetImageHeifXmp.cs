@@ -52,7 +52,7 @@ public sealed class SetImageHeifXmpCmdlet : ImageCmdlet {
 
         var output = string.IsNullOrWhiteSpace(FilePathOutput)
             ? filePath
-            : Helpers.ResolvePath(FilePathOutput!);
+            : PowerShellPathResolver.ResolveFileSystemPath(this, FilePathOutput!);
         ImagePlayground.Image.SetHeifXmp(filePath, output, xmp);
     }
 }

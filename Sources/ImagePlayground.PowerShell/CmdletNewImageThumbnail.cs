@@ -40,7 +40,7 @@ public sealed class NewImageThumbnailCmdlet : ImageCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var dir = ResolveExistingDirectoryPath(DirectoryPath, "NewImageThumbnailDirectoryNotFound", DirectoryPath);
-        var output = Helpers.ResolvePath(OutputDirectory);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputDirectory);
         ImagePlayground.ImageHelper.GenerateThumbnails(dir, output, Width, Height, !DontRespectAspectRatio.IsPresent, Sampler);
     }
 }

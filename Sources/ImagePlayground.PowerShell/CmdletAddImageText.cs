@@ -93,7 +93,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
             }
         }
 
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         ImagePlayground.ImageHelper.AddText(
             filePath,
             output,

@@ -31,7 +31,7 @@ public sealed class ExportImageMetadataCmdlet : ImageCmdlet {
         if (string.IsNullOrWhiteSpace(OutputPath)) {
             WriteObject(json);
         } else {
-            var output = Helpers.ResolvePath(OutputPath!);
+            var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath!);
             File.WriteAllText(output, json);
         }
     }

@@ -83,7 +83,7 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "AddImageTextBoxFileNotFound", FilePath);
 
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         ImagePlayground.ImageHelper.AddTextBox(
             filePath,
             output,

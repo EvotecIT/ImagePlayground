@@ -28,7 +28,7 @@ public sealed class SetImageBlurCmdlet : AsyncImageCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageBlurFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         await ImagePlayground.ImageHelper.BlurAsync(filePath, output, Amount, CancelToken).ConfigureAwait(false);
     }
 }

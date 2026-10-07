@@ -4,6 +4,35 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 internal static class PowerShellPathResolver {
+    /// <summary>
+    /// Resolves an input file against the cmdlet's PowerShell location, retaining HTTP downloads.
+    /// </summary>
+    /// <param name="cmdlet">Cmdlet whose session supplies provider path resolution.</param>
+    /// <param name="path">Input file path or HTTP/HTTPS URL supplied by the caller.</param>
+    /// <returns>An absolute filesystem path, or the downloaded temporary file path.</returns>
+    internal static string ResolveInputFilePath(PSCmdlet cmdlet, string path) {
+        if (cmdlet == null) {
+            throw new ArgumentNullException(nameof(cmdlet));
+        }
+        if (string.IsNullOrWhiteSpace(path)) {
+            throw new PSArgumentException("A non-empty path is required.", nameof(path));
+        }
+
+        string expanded = Environment.ExpandEnvironmentVariables(path);
+        if (expanded.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            expanded.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
+            return Helpers.ResolvePath(path);
+        }
+
+        return ResolveFileSystemPath(cmdlet, path);
+    }
+
+    /// <summary>
+    /// Resolves a literal filesystem path against the cmdlet's current PowerShell provider location.
+    /// </summary>
+    /// <param name="cmdlet">Cmdlet whose session supplies provider path resolution.</param>
+    /// <param name="path">Filesystem path supplied by the caller.</param>
+    /// <returns>An absolute filesystem path.</returns>
     internal static string ResolveFileSystemPath(PSCmdlet cmdlet, string path) {
         if (cmdlet == null) {
             throw new ArgumentNullException(nameof(cmdlet));
@@ -12,12 +41,12 @@ internal static class PowerShellPathResolver {
             throw new PSArgumentException("A non-empty path is required.", nameof(path));
         }
         var resolved = cmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
-            path,
+            Environment.ExpandEnvironmentVariables(path),
             out var provider,
             out _);
         if (provider == null ||
             !string.Equals(provider.Name, "FileSystem", StringComparison.OrdinalIgnoreCase)) {
-            throw new PSArgumentException("Image story paths must use the FileSystem provider.", nameof(path));
+            throw new PSArgumentException("Image paths must use the FileSystem provider.", nameof(path));
         }
         return resolved;
     }

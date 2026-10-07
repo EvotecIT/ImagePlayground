@@ -15,8 +15,9 @@ public abstract class AsyncImageCmdlet : AsyncPSCmdlet {
     /// <param name="targetObject">Target object for the error record.</param>
     /// <param name="label">Friendly label for the missing item.</param>
     /// <returns>Resolved full path.</returns>
+    /// <remarks>Resolve paths before the hook's first await so SessionState is accessed on the pipeline thread.</remarks>
     protected string ResolveExistingFilePath(string path, string errorId, object targetObject, string label = "File") {
-        string resolvedPath = Helpers.ResolvePath(path);
+        string resolvedPath = PowerShellPathResolver.ResolveInputFilePath(this, path);
         if (!File.Exists(resolvedPath)) {
             var exception = new FileNotFoundException($"{label} not found: {path}", path);
             ThrowTerminatingError(new ErrorRecord(exception, errorId, ErrorCategory.ObjectNotFound, targetObject));
@@ -33,8 +34,9 @@ public abstract class AsyncImageCmdlet : AsyncPSCmdlet {
     /// <param name="targetObject">Target object for the error record.</param>
     /// <param name="label">Friendly label for the missing item.</param>
     /// <returns>Resolved full path.</returns>
+    /// <remarks>Resolve paths before the hook's first await so SessionState is accessed on the pipeline thread.</remarks>
     protected string ResolveExistingDirectoryPath(string path, string errorId, object targetObject, string label = "Directory") {
-        string resolvedPath = Helpers.ResolvePath(path);
+        string resolvedPath = PowerShellPathResolver.ResolveFileSystemPath(this, path);
         if (!Directory.Exists(resolvedPath)) {
             var exception = new DirectoryNotFoundException($"{label} not found: {path}");
             ThrowTerminatingError(new ErrorRecord(exception, errorId, ErrorCategory.ObjectNotFound, targetObject));

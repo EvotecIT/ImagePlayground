@@ -38,7 +38,7 @@ public sealed class ConvertToImageCmdlet : ImageCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "ConvertToImageFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         ImagePlayground.ImageHelper.ConvertTo(filePath, output, Quality, CompressionLevel);
     }
 }

@@ -27,7 +27,7 @@ public sealed class NewImageBarCodeCmdlet : AsyncImageCmdlet {
 
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         await BarCode.GenerateAsync(Type, Value, output, CancelToken).ConfigureAwait(false);
     }
 }

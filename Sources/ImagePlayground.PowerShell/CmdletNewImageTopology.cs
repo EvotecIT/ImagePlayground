@@ -220,7 +220,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
 
     /// <inheritdoc />
     protected override void EndProcessing() {
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         var extension = Path.GetExtension(output);
         ValidateExtension(extension, output);
         if (TopologyDefinition != null) {
