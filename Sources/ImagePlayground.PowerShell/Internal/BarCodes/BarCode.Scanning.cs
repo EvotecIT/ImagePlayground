@@ -9,7 +9,7 @@ namespace ImagePlayground;
 
 public partial class BarCode {
     /// <summary>Reads the first barcode, returning null only when a completed scan finds none.</summary>
-    /// <remarks>Default scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Cancellation throws; a deadline throws TimeoutException. Use Scan to retain partial results and completion details.</remarks>
+    /// <remarks>Default scans allow five seconds and exclude QR, Pharmacode, and Patch Code. The scan deadline starts after input path resolution, including any URL download. Cancellation throws; a deadline throws TimeoutException. Use Scan to retain partial results and completion details.</remarks>
     public static DetectedSymbol? Read(string filePath) => ReadAsync(filePath).GetAwaiter().GetResult();
 
     /// <summary>Reads the first barcode with explicit scanning options.</summary>
@@ -22,6 +22,8 @@ public partial class BarCode {
 
     /// <summary>Reads the first barcode asynchronously with explicit scanning options.</summary>
     public static async Task<DetectedSymbol?> ReadAsync(string filePath, CancellationToken cancellationToken, ScanOptions? options) {
+        cancellationToken.ThrowIfCancellationRequested();
+        options?.CancellationToken.ThrowIfCancellationRequested();
         var scan = await SymbolScanner.ScanFileAsync(Helpers.ResolvePath(filePath), CreateScanOptions(options, firstMatch: true), cancellationToken).ConfigureAwait(false);
         if (scan.CompletionReason == ScanCompletionReason.Cancelled) {
             throw new OperationCanceledException(scan.Failure, cancellationToken);
@@ -39,13 +41,19 @@ public partial class BarCode {
     }
 
     /// <summary>Scans barcodes and returns symbols with deadline, cancellation, and unsupported-format details.</summary>
-    /// <remarks>Partial results remain available. Explicit formats may opt into Pharmacode or Patch Code; QR formats use the CodeGlyphX scanner directly. Supplied options are not modified.</remarks>
+    /// <remarks>Partial results remain available. Explicit formats may opt into Pharmacode or Patch Code; QR formats use the CodeGlyphX scanner directly. Supplied options are not modified. The scan deadline starts after input path resolution, including any URL download.</remarks>
     public static ScanResult Scan(string filePath, ScanOptions? options = null, CancellationToken cancellationToken = default)
         => ScanAsync(filePath, options, cancellationToken).GetAwaiter().GetResult();
 
     /// <summary>Scans barcodes asynchronously, retaining partial results and structured cancellation.</summary>
-    public static Task<ScanResult> ScanAsync(string filePath, ScanOptions? options = null, CancellationToken cancellationToken = default)
-        => SymbolScanner.ScanFileAsync(Helpers.ResolvePath(filePath), CreateScanOptions(options, firstMatch: false), cancellationToken);
+    public static Task<ScanResult> ScanAsync(string filePath, ScanOptions? options = null, CancellationToken cancellationToken = default) {
+        var scanOptions = CreateScanOptions(options, firstMatch: false);
+        // The owner returns structured cancellation before opening the path; avoid URL downloads first.
+        var path = cancellationToken.IsCancellationRequested || scanOptions.CancellationToken.IsCancellationRequested
+            ? filePath
+            : Helpers.ResolvePath(filePath);
+        return SymbolScanner.ScanFileAsync(path, scanOptions, cancellationToken);
+    }
 
     private static ScanOptions CreateScanOptions(ScanOptions? options, bool firstMatch) {
         var source = options ?? new ScanOptions { TimeoutMilliseconds = 5000, MaxSymbols = firstMatch ? 1 : 32 };

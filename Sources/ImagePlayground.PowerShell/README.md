@@ -36,7 +36,7 @@ $scan.CompletionReason
 $scan.Symbols | Select-Object Format, Text
 ```
 
-Omitting `-ScanOptions` gives the adapter a five-second total deadline. An explicit `ScanOptions` object retains CodeGlyphX defaults, including its 500 ms deadline, unless changed by the caller. Default barcode scans exclude QR formats, Pharmacode, and Patch Code; explicit formats can opt into the latter two. QR formats use `Get-ImageQRCode` or the CodeGlyphX scanner directly. Detailed results retain structured cancellation and deadline status, including any partial symbols. The adapter does not modify supplied options.
+Omitting `-ScanOptions` gives the adapter a five-second scan deadline. An explicit `ScanOptions` object retains CodeGlyphX defaults, including its 500 ms deadline, unless changed by the caller. The scan deadline starts after input path resolution and any URL download. The C# helpers skip path resolution when their argument or options token is already cancelled: `BarCode.Read` throws, while `BarCode.Scan` returns structured cancellation. Default barcode scans exclude QR formats, Pharmacode, and Patch Code; explicit formats can opt into the latter two. QR formats use `Get-ImageQRCode` or the CodeGlyphX scanner directly. Detailed results retain structured cancellation and deadline status, including any partial symbols. The adapter does not modify supplied options.
 
 DotCode, Han Xin, and stacked GS1 DataBar generation use the owner's matrix renderer. MaxiCode needs a renderer for its hexagonal geometry and is rejected. GS1 Composite needs separate linear and composite payloads and is rejected by the single-value barcode command; use CodeGlyphX's composite encoder for that workflow.
 
