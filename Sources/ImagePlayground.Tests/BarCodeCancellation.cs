@@ -27,7 +27,7 @@ public partial class ImagePlayground {
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => BarCode.GenerateAsync(BarcodeType.EAN, "9012341234571", filePath, cts.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => BarCode.GenerateAsync(SymbolFormat.Ean, "9012341234571", filePath, cts.Token));
         Assert.False(File.Exists(filePath));
     }
 }

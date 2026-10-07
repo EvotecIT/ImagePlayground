@@ -12,9 +12,10 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageBarCode")]
 public sealed class NewImageBarCodeCmdlet : AsyncImageCmdlet {
-    /// <summary>Barcode type.</summary>
+    /// <summary>Physical barcode format from the CodeGlyphX catalogue.</summary>
+    /// <para>QR formats use New-ImageQRCode. MaxiCode requires specialized rendering, and GS1 Composite requires separate payloads; neither is supported by this single-value command.</para>
     [Parameter(Mandatory = true, Position = 0)]
-    public BarcodeType Type { get; set; }
+    public SymbolFormat Type { get; set; }
 
     /// <summary>Value encoded in the barcode.</summary>
     [Parameter(Mandatory = true, Position = 1)]

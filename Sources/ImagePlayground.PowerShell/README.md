@@ -13,3 +13,26 @@ Add-ImageWatermark -FilePath '.\photo.jpg' -OutputPath '.\marked.jpg' -Watermark
 ```
 
 Cmdlets expose one execution mode. Where the core has a cancellable asynchronous file API, the cmdlet uses it internally; callers do not select an implementation with `-Async`.
+
+## CodeGlyphX 3 migration
+
+The module uses CodeGlyphX 3.0.0. Barcode generation and recognition share its `SymbolFormat` catalogue. PowerShell enum names remain case-insensitive; C# callers replace `BarcodeType` with `SymbolFormat`, including `EAN` → `Ean`, `PDF417` → `Pdf417`, `UPCA` → `UpcA`, and `GS1DataBarStackedOmni` → `Gs1DataBarStackedOmnidirectional`.
+
+`Get-ImageBarCode` and `ImagePlayground.BarCode.Read` return `DetectedSymbol`. Replace the former `Kind` and format-specific result inspection with `Format`, `Text`, and `Bytes`. Ordinary reads return the first barcode or no object after a completed scan finds none. Cancellation raises an error, and a deadline raises `TimeoutException` in the C# helper.
+
+Use `-Detailed` or `ImagePlayground.BarCode.Scan` when callers need multiple symbols, partial results, or completion details:
+
+```powershell
+$options = [CodeGlyphX.ScanOptions]::new()
+$options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')
+$options.TimeoutMilliseconds = 5000
+$scan = Get-ImageBarCode -FilePath '.\codes.png' -ScanOptions $options -Detailed
+$scan.CompletionReason
+$scan.Symbols | Select-Object Format, Text
+```
+
+Omitting `-ScanOptions` gives the adapter a five-second total deadline. An explicit `ScanOptions` object retains CodeGlyphX defaults, including its 500 ms deadline, unless changed by the caller. Default barcode scans exclude QR formats, Pharmacode, and Patch Code; explicit formats can opt into the latter two. QR formats use `Get-ImageQRCode` or the CodeGlyphX scanner directly. Detailed results retain structured cancellation and deadline status, including any partial symbols. The adapter does not modify supplied options.
+
+DotCode, Han Xin, and stacked GS1 DataBar generation use the owner's matrix renderer. MaxiCode needs a renderer for its hexagonal geometry and is rejected. GS1 Composite needs separate linear and composite payloads and is rejected by the single-value barcode command; use CodeGlyphX's composite encoder for that workflow.
+
+Typed QR payment payloads retain the owner's recommended encoding. Slovenian UPN QR uses version 15, medium error correction, and ISO-8859-2. Explicit error correction selections on other QR helpers remain effective. `-LogoPath` embeds a validated logo in raster or SVG output through CodeGlyphX. The logo fits within one eighth of the image width, retaining its aspect ratio. ImageSharp normalizes the logo before the owner embeds it without a background plate. Invalid logos leave an existing destination intact.

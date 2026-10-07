@@ -10,6 +10,7 @@
 
 ### Breaking changes
 
+- Migrated barcode APIs to CodeGlyphX 3.0.0 `SymbolFormat` and `DetectedSymbol`; `Get-ImageBarCode -Detailed` and `BarCode.Scan` expose the owner's `ScanResult` for partial results and completion details.
 - Removed the PowerShell `-Async` parameter. Affected cmdlets now always use their cancellable asynchronous core implementation.
 - Removed the unused `ImagePlayground.BarcodeResult` type; CodeGlyphX owns barcode result contracts for .NET callers.
 - Removed the unused Microsoft.CSharp dependency and limited System.Text.Json and System.Memory package references to .NET Standard 2.0 and .NET Framework 4.7.2.
@@ -17,6 +18,7 @@
 
 ### Changed
 
+- Routed barcode format dispatch and QR logo rendering through CodeGlyphX, enabling DotCode, Han Xin, stacked GS1 DataBar, and SVG logos while preserving typed payment encoding. MaxiCode and single-value GS1 Composite generation now fail explicitly before writing output.
 - Upgraded the PowerShell visual adapter to ChartForgeX 1.3.0 for generic visual stories, outcome validation, syntax spans, deterministic static fallback, and reduced-motion and print-safe output.
 - Kept every `New-ImageChart*` command as a thin PowerShell adapter over ChartForgeX while keeping the C# packages as separate capability owners.
 - Upgraded the PowerShell chart adapter to ChartForgeX 1.0.2, mapped `New-ImageChartPolar` angle/radius pairs to true polar geometry, and preserved explicit line-marker `None`/`Circle` semantics.

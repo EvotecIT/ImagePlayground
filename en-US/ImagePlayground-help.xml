@@ -2902,6 +2902,18 @@ img.Save("out.png");</dev:code>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Get-ImageBarCode</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Detailed</maml:name>
+          <maml:description>
+            <maml:para>Without this switch, return the first DetectedSymbol; cancellation and deadlines produce errors. Detailed results retain structured cancellation and deadline status.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -2914,9 +2926,33 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ScanOptions</maml:name>
+          <maml:description>
+            <maml:para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ScanOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Detailed</maml:name>
+        <maml:description>
+          <maml:para>Without this switch, return the first DetectedSymbol; cancellation and deadlines produce errors. Detailed results retain structured cancellation and deadline status.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
@@ -2929,6 +2965,18 @@ img.Save("out.png");</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ScanOptions</maml:name>
+        <maml:description>
+          <maml:para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>ScanOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -2937,7 +2985,18 @@ img.Save("out.png");</dev:code>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>CodeGlyphX.DetectedSymbol</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>CodeGlyphX.ScanResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -2947,6 +3006,21 @@ img.Save("out.png");</dev:code>
       <command:example>
         <maml:title>Decode barcode</maml:title>
         <dev:code>Get-ImageBarCode -FilePath barcode.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Scan selected formats and inspect completion details</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$options = [CodeGlyphX.ScanOptions]::new()&#xD;
+            $options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')&#xD;
+            $options.TimeoutMilliseconds = 5000&#xD;
+            $scan = Get-ImageBarCode -FilePath barcode.png -ScanOptions $options -Detailed&#xD;
+            $scan.CompletionReason&#xD;
+            $scan.Symbols</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -4177,25 +4251,28 @@ img.Save("out.png");</dev:code>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Type</maml:name>
           <maml:description>
-            <maml:para>Barcode type.</maml:para>
+            <maml:para>QR formats use New-ImageQRCode. MaxiCode requires specialized rendering, and GS1 Composite requires separate payloads; neither is supported by this single-value command.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">BarcodeType</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">SymbolFormat</command:parameterValue>
           <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">QrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MicroQrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Aztec</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code128</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1_128</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1Code128</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code39</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code93</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">EAN</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">UPCA</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">UPCE</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">ITF14</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">ITF</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Industrial2of5</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Matrix2of5</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">IATA2of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UpcA</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UpcE</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Itf14</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Itf</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Industrial2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Matrix2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Iata2Of5</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PatchCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Codabar</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">MSI</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Msi</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code11</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Plessey</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Telepen</command:parameterValue>
@@ -4207,25 +4284,26 @@ img.Save("out.png");</dev:code>
             <command:parameterValue required="false" variableLength="false">RoyalMail4State</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">AustraliaPost</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">JapanPost</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarTruncated</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarOmni</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarStacked</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarExpanded</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarExpandedStacked</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">UspsImb</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarTruncated</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarOmnidirectional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarStacked</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarExpanded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarExpandedStacked</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UspsIntelligentMail</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">KixCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">DataMatrix</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">PDF417</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">MicroPDF417</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarLimited</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarStackedOmni</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Pdf417</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MicroPdf417</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RmQrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarLimited</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarStackedOmnidirectional</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">MaxiCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1Composite</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>BarcodeType</maml:name>
+            <maml:name>SymbolFormat</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -4260,25 +4338,28 @@ img.Save("out.png");</dev:code>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Type</maml:name>
         <maml:description>
-          <maml:para>Barcode type.</maml:para>
+          <maml:para>QR formats use New-ImageQRCode. MaxiCode requires specialized rendering, and GS1 Composite requires separate payloads; neither is supported by this single-value command.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">BarcodeType</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">SymbolFormat</command:parameterValue>
         <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">QrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MicroQrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Aztec</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code128</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1_128</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1Code128</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code39</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code93</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">EAN</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">UPCA</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">UPCE</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">ITF14</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">ITF</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Industrial2of5</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Matrix2of5</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">IATA2of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UpcA</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UpcE</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Itf14</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Itf</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Industrial2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Matrix2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Iata2Of5</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PatchCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Codabar</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">MSI</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Msi</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code11</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Plessey</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Telepen</command:parameterValue>
@@ -4290,25 +4371,26 @@ img.Save("out.png");</dev:code>
           <command:parameterValue required="false" variableLength="false">RoyalMail4State</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">AustraliaPost</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">JapanPost</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarTruncated</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarOmni</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarStacked</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarExpanded</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarExpandedStacked</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">UspsImb</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarTruncated</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarOmnidirectional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarStacked</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarExpanded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarExpandedStacked</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UspsIntelligentMail</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">KixCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">DataMatrix</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">PDF417</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">MicroPDF417</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarLimited</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarStackedOmni</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Pdf417</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MicroPdf417</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RmQrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarLimited</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarStackedOmnidirectional</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">MaxiCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1Composite</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>BarcodeType</maml:name>
+          <maml:name>SymbolFormat</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -18129,7 +18211,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LogoPath</maml:name>
           <maml:description>
-            <maml:para>Optional logo image to place at the center of the QR code.</maml:para>
+            <maml:para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -18228,7 +18310,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LogoPath</maml:name>
         <maml:description>
-          <maml:para>Optional logo image to place at the center of the QR code.</maml:para>
+          <maml:para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
