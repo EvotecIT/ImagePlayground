@@ -16,9 +16,14 @@ Cmdlets expose one execution mode. Where the core has a cancellable asynchronous
 
 ## CodeGlyphX 3 migration
 
-The module uses CodeGlyphX 3.0.0. Barcode generation and recognition share its `SymbolFormat` catalogue. PowerShell enum names remain case-insensitive; C# callers replace `BarcodeType` with `SymbolFormat`, including `EAN` → `Ean`, `PDF417` → `Pdf417`, `UPCA` → `UpcA`, and `GS1DataBarStackedOmni` → `Gs1DataBarStackedOmnidirectional`.
+The module uses CodeGlyphX 3.0.0. Barcode generation and recognition share its `SymbolFormat` catalogue. PowerShell enum names remain case-insensitive; C# callers replace `BarcodeType` with `SymbolFormat`, including capitalization changes such as `EAN` → `Ean`, `PDF417` → `Pdf417`, and `UPCA` → `UpcA`. These format names also change beyond capitalization:
 
-`Get-ImageBarCode` and `ImagePlayground.BarCode.Read` return `DetectedSymbol`. Replace the former `Kind` and format-specific result inspection with `Format`, `Text`, and `Bytes`. Ordinary reads return the first barcode or no object after a completed scan finds none. Cancellation raises an error, and a deadline raises `TimeoutException` in the C# helper.
+- `GS1_128` → `Gs1Code128`
+- `GS1DataBarOmni` → `Gs1DataBarOmnidirectional`
+- `GS1DataBarStackedOmni` → `Gs1DataBarStackedOmnidirectional`
+- `UspsImb` → `UspsIntelligentMail`
+
+`Get-ImageBarCode` and `ImagePlayground.BarCode.Read` return `DetectedSymbol`. Replace the former `Kind` and format-specific result inspection with `Format` and `Text`. `HasRawBytes` reports whether exact decoded payload bytes are available through the read-only `RawBytes` property. Ordinary reads return the first barcode or no object after a completed scan finds none. Cancellation raises an error, and a deadline raises `TimeoutException` in the C# helper. `Get-ImageQRCode` retains its `QrDecoded` result and existing QR decode options.
 
 Use `-Detailed` or `ImagePlayground.BarCode.Scan` when callers need multiple symbols, partial results, or completion details:
 

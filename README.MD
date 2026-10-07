@@ -309,7 +309,7 @@ New-ImageQRCodeWiFi `
 
 Use `New-ImageBarCode` and `Get-ImageBarCode` for barcode generation and readback. C# applications that only need codes should reference [CodeGlyphX](https://github.com/EvotecIT/CodeGlyphX) directly.
 
-`Get-ImageBarCode` returns a CodeGlyphX `DetectedSymbol`; read its `Format`, `Text`, and `Bytes` properties. Use `-Detailed` to inspect all recognized symbols and the scan completion reason. `-ScanOptions` accepts the owner's format, deadline, image-limit, and accuracy settings. See the [CodeGlyphX 3 migration notes](Sources/ImagePlayground.PowerShell/README.md#codeglyphx-3-migration) for renamed formats and result contracts.
+`Get-ImageBarCode` returns a CodeGlyphX `DetectedSymbol`; read its `Format` and `Text` properties, and check `HasRawBytes` before reading `RawBytes` when exact payload bytes are needed. Use `-Detailed` to inspect all recognized symbols and the scan completion reason. `-ScanOptions` accepts the owner's format, deadline, image-limit, and accuracy settings. See the [CodeGlyphX 3 migration notes](Sources/ImagePlayground.PowerShell/README.md#codeglyphx-3-migration) for renamed formats and result contracts.
 
 ## Charts and report graphics
 
