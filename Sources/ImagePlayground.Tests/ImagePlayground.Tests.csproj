@@ -25,6 +25,15 @@
         <ProjectReference Include="..\ImagePlayground.PowerShell\ImagePlayground.PowerShell.csproj" />
     </ItemGroup>
 
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+        <!-- Host public cmdlets inside the coverage test process; the product retains PowerShellStandard.Library. -->
+        <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.20" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
+        <Compile Remove="PowerShellPathContracts.cs" />
+    </ItemGroup>
+
     <ItemGroup>
         <None Update="Images\BarcodeEAN13.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
