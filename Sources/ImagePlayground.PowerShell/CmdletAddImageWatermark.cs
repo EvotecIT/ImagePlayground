@@ -69,7 +69,7 @@ public sealed class AddImageWatermarkCmdlet : AsyncImageCmdlet {
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "AddImageWatermarkFileNotFound", FilePath);
         var watermark = ResolveExistingFilePath(WatermarkPath, "AddImageWatermarkSourceNotFound", WatermarkPath, "Watermark file");
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
 
         if (Spacing != null) {
             await ImagePlayground.ImageHelper.WatermarkImageTiledAsync(filePath, output, watermark, Spacing.Value, Opacity, Rotate, FlipMode, WatermarkPercentage, CancelToken).ConfigureAwait(false);

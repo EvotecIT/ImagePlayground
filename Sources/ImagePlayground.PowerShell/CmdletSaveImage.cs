@@ -47,7 +47,7 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     protected override void ProcessRecord() {
         var filePath = FilePath;
         if (!string.IsNullOrWhiteSpace(filePath)) {
-            var output = Helpers.ResolvePath(filePath!);
+            var output = PowerShellPathResolver.ResolveFileSystemPath(this, filePath!);
             Image.Save(output, Open.IsPresent, Quality, CompressionLevel);
         } else if (AsStream.IsPresent) {
             WriteObject(Image.ToStream(Quality, CompressionLevel));

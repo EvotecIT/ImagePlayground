@@ -33,7 +33,7 @@ public sealed class CompareImageCmdlet : ImageCmdlet {
 
         var outputPath = OutputPath;
         if (!string.IsNullOrWhiteSpace(outputPath)) {
-            var output = Helpers.ResolvePath(outputPath!);
+            var output = PowerShellPathResolver.ResolveFileSystemPath(this, outputPath!);
             ImagePlayground.ImageHelper.Compare(filePath, compare, output);
         } else {
             var result = ImagePlayground.ImageHelper.Compare(filePath, compare);

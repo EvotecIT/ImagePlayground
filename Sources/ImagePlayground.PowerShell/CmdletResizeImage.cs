@@ -54,7 +54,7 @@ public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "ResizeImageFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
 
         if (ParameterSetName == ParameterSetPercentage) {
             await ImagePlayground.ImageHelper.ResizeAsync(filePath, output, Percentage, CancelToken).ConfigureAwait(false);

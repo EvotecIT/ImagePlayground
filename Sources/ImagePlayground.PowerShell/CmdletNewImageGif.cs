@@ -33,7 +33,7 @@ public sealed class NewImageGifCmdlet : ImageCmdlet {
             checkedFrames.Add(full);
         }
 
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         Gif.Generate(checkedFrames, output, FrameDelay);
     }
 }

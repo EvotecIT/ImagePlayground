@@ -19,13 +19,13 @@ public abstract class AsyncQrCodeCmdlet : AsyncImageCmdlet {
     }
 
     /// <summary>
-    /// Ensures an output path exists, creating a temporary path when none was supplied.
+    /// Resolves the output path before asynchronous work, creating a temporary path when none was supplied.
     /// </summary>
     /// <param name="filePath">Output path provided by the caller.</param>
-    /// <returns>Output path to use for QR generation.</returns>
+    /// <returns>Absolute filesystem path to use for QR generation.</returns>
     protected string EnsureQrOutputPath(string filePath) {
         if (!string.IsNullOrWhiteSpace(filePath)) {
-            return filePath;
+            return PowerShellPathResolver.ResolveFileSystemPath(this, filePath);
         }
 
         string resolvedPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Split('.')[0] + ".png");
@@ -40,7 +40,7 @@ public abstract class AsyncQrCodeCmdlet : AsyncImageCmdlet {
     /// <param name="show">Flag indicating whether preview was requested.</param>
     protected static void ShowGeneratedQrCode(string filePath, SwitchParameter show) {
         if (show.IsPresent) {
-            Helpers.Open(Helpers.ResolvePath(filePath), true);
+            Helpers.Open(filePath, true);
         }
     }
 }

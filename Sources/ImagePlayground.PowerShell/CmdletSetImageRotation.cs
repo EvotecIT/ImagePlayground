@@ -44,7 +44,7 @@ public sealed class SetImageRotationCmdlet : AsyncImageCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageRotationFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
 
         if (ParameterSetName == ParameterSetDegrees) {
             await ImagePlayground.ImageHelper.RotateAsync(filePath, output, Degrees, CancelToken).ConfigureAwait(false);

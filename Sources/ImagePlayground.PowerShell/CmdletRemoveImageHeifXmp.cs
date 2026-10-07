@@ -25,7 +25,7 @@ public sealed class RemoveImageHeifXmpCmdlet : ImageCmdlet {
         var filePath = ResolveExistingFilePath(FilePath, "RemoveImageHeifXmpFileNotFound", FilePath);
         var output = string.IsNullOrWhiteSpace(FilePathOutput)
             ? filePath
-            : Helpers.ResolvePath(FilePathOutput!);
+            : PowerShellPathResolver.ResolveFileSystemPath(this, FilePathOutput!);
         ImagePlayground.Image.RemoveHeifXmp(filePath, output);
     }
 }

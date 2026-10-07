@@ -32,7 +32,7 @@ public sealed class ImportImageMetadataCmdlet : ImageCmdlet {
         var filePath = ResolveExistingFilePath(FilePath, "ImportImageMetadataFileNotFound", FilePath);
         var metaPath = ResolveExistingFilePath(MetadataPath, "ImportImageMetadataSourceNotFound", MetadataPath, "Metadata file");
 
-        var output = string.IsNullOrWhiteSpace(OutputPath) ? filePath : Helpers.ResolvePath(OutputPath!);
+        var output = string.IsNullOrWhiteSpace(OutputPath) ? filePath : PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath!);
         var options = new ImageHelper.ImportMetadataOptions(filePath, metaPath, output);
         ImageHelper.ImportMetadata(options);
     }

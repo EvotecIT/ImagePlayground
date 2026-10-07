@@ -46,7 +46,7 @@ public sealed class SetImageAdjustCmdlet : AsyncImageCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageAdjustFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         await ImageHelper.AdjustAsync(filePath, output, Brightness, Contrast, Lightness, Opacity, Saturation, Sepia, CancelToken).ConfigureAwait(false);
     }
 }
