@@ -1,58 +1,52 @@
-using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Bmp;
-using SixLabors.ImageSharp.Formats.Gif;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Pbm;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Formats.Tga;
-using SixLabors.ImageSharp.Formats.Tiff;
-using SixLabors.ImageSharp.Formats.Webp;
-
 namespace ImagePlayground;
 
-/// <summary>
-/// Image encoding helper methods.
-/// </summary>
+/// <summary>Shared image encoder settings used by file and stream entry points.</summary>
 public static partial class Helpers {
-    /// <summary>
-    /// Returns an image encoder instance appropriate for the given file extension.
-    /// </summary>
-    /// <param name="extension">File extension including the leading dot.</param>
-    /// <param name="quality">Optional quality value for lossy formats.</param>
-    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
-    /// <returns>Configured image encoder.</returns>
-    public static IImageEncoder GetEncoder(string extension, int? quality, int? compressionLevel) {
-        extension = extension.ToLowerInvariant();
-        return extension switch {
-            ".png" => new PngEncoder {
-                CompressionLevel = compressionLevel.HasValue
-                    ? (PngCompressionLevel)Math.Max(0, Math.Min(9, compressionLevel.Value))
-                    : PngCompressionLevel.DefaultCompression
-            },
-            ".jpg" => new JpegEncoder {
-                Quality = quality.HasValue
-                    ? Math.Max(0, Math.Min(100, quality.Value))
-                    : 75
-            },
-            ".jpeg" => new JpegEncoder {
-                Quality = quality.HasValue
-                    ? Math.Max(0, Math.Min(100, quality.Value))
-                    : 75
-            },
-            ".bmp" => new BmpEncoder(),
-            ".gif" => new GifEncoder(),
-            ".pbm" => new PbmEncoder(),
-            ".tga" => new TgaEncoder(),
-            ".tiff" => new TiffEncoder(),
-            ".webp" => new WebpEncoder {
-                Quality = quality.HasValue
-                    ? Math.Max(0, Math.Min(100, quality.Value))
-                    : 75
-            },
-            _ => throw new UnknownImageFormatException(
-                $"Image format not supported. Supported extensions: {string.Join(", ", SupportedExtensions)}"),
-        };
+    /// <summary>Resolves a supported file extension to its image format.</summary>
+    public static ImageType GetImageType(string extension) => extension.ToLowerInvariant() switch {
+        ".png" => ImageType.Png, ".jpg" or ".jpeg" => ImageType.Jpeg, ".bmp" => ImageType.Bmp,
+        ".gif" => ImageType.Gif, ".pbm" => ImageType.Pbm, ".tga" => ImageType.Tga,
+        ".tif" or ".tiff" => ImageType.Tiff, ".webp" => ImageType.WebP, ".ico" => ImageType.Icon,
+        _ => throw new NotSupportedException("The image extension is not supported.")
+    };
+
+    /// <summary>Resolves the shared encoder format for a still image.</summary>
+    public static OfficeImageExportFormat GetEncoder(ImageType type) => type switch {
+        ImageType.Png => OfficeImageExportFormat.Png, ImageType.Jpeg => OfficeImageExportFormat.Jpeg,
+        ImageType.Bmp => OfficeImageExportFormat.Bmp, ImageType.Pbm => OfficeImageExportFormat.Pbm,
+        ImageType.Tga => OfficeImageExportFormat.Tga, ImageType.Tiff => OfficeImageExportFormat.Tiff,
+        ImageType.WebP => OfficeImageExportFormat.Webp, ImageType.Icon => OfficeImageExportFormat.Icon,
+        ImageType.Gif => throw new ArgumentException("GIF frames are encoded by the shared animation encoder.", nameof(type)),
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+
+    /// <summary>Resolves the shared encoder format from a file extension.</summary>
+    public static OfficeImageExportFormat GetEncoder(string extension) => GetEncoder(GetImageType(extension));
+
+    internal static OfficeImageFormat GetContainerFormat(ImageType type) => type switch {
+        ImageType.Png => OfficeImageFormat.Png,
+        ImageType.Jpeg => OfficeImageFormat.Jpeg,
+        ImageType.Gif => OfficeImageFormat.Gif,
+        ImageType.Bmp => OfficeImageFormat.Bmp,
+        ImageType.Pbm => OfficeImageFormat.PortableMap,
+        ImageType.Tga => OfficeImageFormat.Tga,
+        ImageType.Tiff => OfficeImageFormat.Tiff,
+        ImageType.WebP => OfficeImageFormat.Webp,
+        ImageType.Icon => OfficeImageFormat.Icon,
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+
+    /// <summary>Creates format-specific encoding options, clamping quality and compression controls to their supported ranges.</summary>
+    public static OfficeRasterEncodingOptions GetEncodingOptions(ImageType type, int? quality, int? compressionLevel) {
+        if (quality.HasValue) quality = Math.Max(1, Math.Min(100, quality.Value));
+        if (compressionLevel.HasValue) compressionLevel = Math.Max(0, Math.Min(9, compressionLevel.Value));
+        var options = new OfficeRasterEncodingOptions();
+        if (quality.HasValue) options.Jpeg.Quality = quality.Value;
+        if (type == ImageType.WebP && quality.HasValue) {
+            options.Webp.Mode = OfficeWebpEncodingMode.Lossy;
+            options.Webp.Quality = quality.Value;
+        }
+        if (compressionLevel.HasValue) options.Png.Compression = compressionLevel.Value == 0 ? OfficePngCompression.Stored : compressionLevel.Value <= 3 ? OfficePngCompression.Fastest : OfficePngCompression.Optimal;
+        return options;
     }
 }

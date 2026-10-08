@@ -252,7 +252,7 @@ Topology layout mode.
 Type: TopologyLayoutMode
 Parameter Sets: ScriptBlock, Definition
 Aliases: None
-Possible values: Manual, GroupGrid, HubAndSpoke, Layered, Matrix, DenseGrouped, Geographic, ForceDirected, RelationshipRadial, MindMap
+Possible values: Manual, GroupGrid, HubAndSpoke, Layered, Matrix, DenseGrouped, Geographic, ForceDirected, RelationshipRadial, MindMap, Swimlane
 
 Required: False
 Position: named

@@ -1,4 +1,7 @@
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,9 +19,11 @@ public partial class ImagePlayground {
         if (File.Exists(dest)) File.Delete(dest);
 
         await ImageHelper.ResizeAsync(src, dest, 40, 40);
+        using var original = Image.Load(src);
         using var img = Image.Load(dest);
-        Assert.Equal(40, img.Width);
-        Assert.Equal(40, img.Height);
+        double scale = System.Math.Min(40D / original.Width, 40D / original.Height);
+        Assert.Equal((int)System.Math.Round(original.Width * scale), img.Width);
+        Assert.Equal((int)System.Math.Round(original.Height * scale), img.Height);
     }
 
     [Fact]

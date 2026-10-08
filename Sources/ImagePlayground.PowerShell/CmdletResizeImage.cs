@@ -2,10 +2,14 @@ using ImagePlayground;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Resizes an image.</summary>
-/// <para>Use width/height parameters or <see cref="Percentage"/>.</para>
+/// <para>Width and height bound the resized image while preserving its aspect ratio. Use <see cref="DontRespectAspectRatio"/> to stretch to the supplied dimensions, or <see cref="Percentage"/> for uniform scaling.</para>
 /// <example>
-///   <summary>Resize to 100x100</summary>
+///   <summary>Fit inside a 100x100 box</summary>
 ///   <code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100</code>
+/// </example>
+/// <example>
+///   <summary>Stretch to 100x100</summary>
+///   <code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100 -DontRespectAspectRatio</code>
 /// </example>
 /// <example>
 ///   <summary>Double the size</summary>
@@ -28,14 +32,14 @@ public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
         [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetPercentage)]
         public string OutputPath { get; set; } = string.Empty;
 
-        /// <summary>New width of the image.</summary>
-        /// <para>Used with <see cref="Height"/> when not using <see cref="Percentage"/>.</para>
+        /// <summary>Requested width or maximum width when both bounds are supplied.</summary>
+        /// <para>When aspect ratio is preserved, a width alone determines the corresponding height.</para>
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
         [ValidateRange(1, 1000)]
         public int Width { get; set; }
 
-        /// <summary>New height of the image.</summary>
-        /// <para>Used with <see cref="Width"/> when not using <see cref="Percentage"/>.</para>
+        /// <summary>Requested height or maximum height when both bounds are supplied.</summary>
+        /// <para>When aspect ratio is preserved, a height alone determines the corresponding width.</para>
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
         [ValidateRange(1, 1000)]
         public int Height { get; set; }
@@ -46,8 +50,8 @@ public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
         [ValidateRange(1, 1000)]
         public int Percentage { get; set; }
 
-        /// <summary>Ignore aspect ratio.</summary>
-        /// <para>Only valid when resizing by width or height.</para>
+        /// <summary>Stretch to the supplied dimensions.</summary>
+        /// <para>Disables aspect ratio preservation. An omitted dimension retains its original value.</para>
         [Parameter(ParameterSetName = ParameterSetHeightWidth)]
         public SwitchParameter DontRespectAspectRatio { get; set; }
 

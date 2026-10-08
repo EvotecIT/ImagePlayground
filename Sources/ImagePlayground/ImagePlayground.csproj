@@ -7,16 +7,16 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Description>ImageSharp-based image processing, EXIF metadata, image comparison, text, watermarking, thumbnails, icons, grids, mosaics, GIF, and conversion APIs for .NET.</Description>
-    <PackageTags>images;image-processing;exif;metadata;compare;text;watermark;imagesharp;dotnet</PackageTags>
+    <Description>Managed image processing, EXIF metadata, image comparison, text, watermarking, thumbnails, icons, grids, mosaics, GIF, and conversion APIs for .NET.</Description>
+    <PackageTags>images;image-processing;exif;metadata;compare;text;watermark;dotnet</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Codeuctivity.ImageSharpCompare" Version="2.0.182" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+    <PackageReference Include="OfficeIMO.Core" Version="3.4.4" Condition="'$(OfficeImoCoreProjectPath)' == ''" />
+    <PackageReference Include="ChartForgeX" Version="1.8.1" Condition="'$(ChartForgeXProjectPath)' == ''" />
+    <ProjectReference Include="$(OfficeImoCoreProjectPath)" Condition="'$(OfficeImoCoreProjectPath)' != ''" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
+    <ProjectReference Include="$(ChartForgeXProjectPath)" Condition="'$(ChartForgeXProjectPath)' != ''" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net472'">
@@ -36,6 +36,7 @@
     <Using Include="System.IO" />
     <Using Include="System.Net" />
     <Using Include="System.Net.Http" />
+    <Using Include="OfficeIMO.Drawing" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">

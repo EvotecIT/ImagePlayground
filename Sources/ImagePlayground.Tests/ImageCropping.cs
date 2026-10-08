@@ -1,9 +1,11 @@
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using ImagePlayground;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System.IO;
 using Xunit;
-using PointF = SixLabors.ImageSharp.PointF;
+using PointF = OfficeIMO.Drawing.OfficePoint;
 
 namespace ImagePlayground.Tests {
     public partial class ImagePlayground {
@@ -15,8 +17,8 @@ namespace ImagePlayground.Tests {
             using var img = global::ImagePlayground.Image.Load(src);
             img.CropCircle(img.Width / 2f, img.Height / 2f, img.Width / 4f);
             img.Save(dest);
-            using var result = SixLabors.ImageSharp.Image.Load<Rgba32>(dest);
-            Assert.Equal(0, result[0, 0].A);
+            using var result = global::ImagePlayground.Image.Load(dest);
+            Assert.Equal(0, result.Raster.GetPixel(0, 0).A);
         }
 
         [Fact]
@@ -28,8 +30,8 @@ namespace ImagePlayground.Tests {
             var points = new[] { new PointF(0, 0), new PointF(img.Width, 0), new PointF(img.Width / 2f, img.Height / 2f) };
             img.CropPolygon(points);
             img.Save(dest);
-            using var result = SixLabors.ImageSharp.Image.Load<Rgba32>(dest);
-            Assert.Equal(0, result[result.Width - 1, result.Height - 1].A);
+            using var result = global::ImagePlayground.Image.Load(dest);
+            Assert.Equal(0, result.Raster.GetPixel(result.Width - 1, result.Height - 1).A);
         }
     }
 }

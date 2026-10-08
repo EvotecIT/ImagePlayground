@@ -11,7 +11,7 @@ Generates a QR code initiating a Skype call.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeSkypeCall [-UserName] <string> [-FilePath] <string> [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,7 +39,7 @@ Generates a branded Skype call QR code and opens the resulting image after creat
 Background color of the QR code.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -71,7 +71,7 @@ Accept wildcard characters: False
 Foreground color of QR modules.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

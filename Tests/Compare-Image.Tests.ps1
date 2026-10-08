@@ -20,11 +20,11 @@ Describe 'Compare-Image' {
 
         if (Test-Path $img2) { Remove-Item $img2 }
 
-        Add-ImageText -FilePath $img1 -OutputPath $img2 -Text 'X' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        Add-ImageText -FilePath $img1 -OutputPath $img2 -Text 'X' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red)
 
         $result = Compare-Image -FilePath $img1 -FilePathToCompare $img2
 
-        $result.PixelErrorCount | Should -BeGreaterThan 0
+        $result.ChangedPixels | Should -BeGreaterThan 0
 
     }
 
@@ -36,7 +36,7 @@ Describe 'Compare-Image' {
 
         if (Test-Path $modified) { Remove-Item $modified }
 
-        Add-ImageText -FilePath $img1 -OutputPath $modified -Text 'Diff' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        Add-ImageText -FilePath $img1 -OutputPath $modified -Text 'Diff' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red)
 
         $dest = Join-Path $TestDir 'diff.png'
 

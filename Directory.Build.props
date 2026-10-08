@@ -5,6 +5,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <UseLocalCodeGlyphXProject Condition="'$(UseLocalCodeGlyphXProject)' == ''">false</UseLocalCodeGlyphXProject>
     <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == ''">false</UseLocalChartForgeXProject>
+    <ChartForgeXProjectPath Condition="'$(ChartForgeXProjectPath)' == '' And '$(UseLocalChartForgeXProject)' == 'true' And '$(EVOTEC_GITHUB_ROOT)' != ''">$([MSBuild]::NormalizePath('$(EVOTEC_GITHUB_ROOT)', 'ChartForgeX', 'ChartForgeX', 'ChartForgeX.csproj'))</ChartForgeXProjectPath>
+    <ChartForgeXProjectPath Condition="'$(ChartForgeXProjectPath)' == '' And '$(UseLocalChartForgeXProject)' == 'true'">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..', 'ChartForgeX', 'ChartForgeX', 'ChartForgeX.csproj'))</ChartForgeXProjectPath>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>

@@ -1,7 +1,7 @@
 using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
 
 namespace ImagePlayground.PowerShell;
 
@@ -61,7 +61,7 @@ public sealed class NewImageCropCmdlet : ImageCmdlet {
 
     /// <summary>Points describing a polygon.</summary>
     [Parameter(ParameterSetName = ParameterSetPolygon)]
-    public PointF[] Points { get; set; } = System.Array.Empty<PointF>();
+    public OfficePoint[] Points { get; set; } = System.Array.Empty<OfficePoint>();
 
     /// <summary>Open the cropped file after creation.</summary>
     [Parameter]

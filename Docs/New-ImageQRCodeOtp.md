@@ -11,7 +11,7 @@ Generates a QR code for one-time-password configuration.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <string> [[-Label] <string>] [[-Issuer] <string>] [-FilePath] <string> [-Algorithm <OtpAlgorithm>] [-Digits <int>] [-Period <int>] [-Counter <Int32>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeOtp [-Type] <OtpAuthType> [-SecretBase32] <string> [[-Label] <string>] [[-Issuer] <string>] [-FilePath] <string> [-Algorithm <OtpAlgorithm>] [-Digits <int>] [-Period <int>] [-Counter <Int32>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,7 +55,7 @@ Accept wildcard characters: False
 Background color of the QR code.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -119,7 +119,7 @@ Accept wildcard characters: False
 Foreground color of QR modules.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

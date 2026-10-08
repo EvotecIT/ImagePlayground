@@ -49,22 +49,17 @@
         <ProjectReference Include="$(CodeGlyphXProjectPath)" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' == 'true' And '$(ChartForgeXProjectPath)' == ''">
-        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX\ChartForgeX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
-        <ProjectReference Include="..\..\..\ChartForgeX\ChartForgeX.Interactivity.Html\ChartForgeX.Interactivity.Html.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
-    </ItemGroup>
-
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' == 'true' And '$(CodeGlyphXProjectPath)' == ''">
         <ProjectReference Include="..\..\..\CodeGlyphX\CodeGlyphX\CodeGlyphX.csproj" GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;PackageVersion;AssemblyVersion;FileVersion;InformationalVersion" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(UseLocalChartForgeXProject)' != 'true' And '$(ChartForgeXProjectPath)' == ''">
+    <ItemGroup Condition="'$(ChartForgeXProjectPath)' == ''">
         <PackageReference Include="ChartForgeX" Version="1.8.1" />
         <PackageReference Include="ChartForgeX.Interactivity.Html" Version="1.8.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalCodeGlyphXProject)' != 'true' And '$(CodeGlyphXProjectPath)' == ''">
-        <PackageReference Include="CodeGlyphX" Version="2.1.0" />
+        <PackageReference Include="CodeGlyphX" Version="3.0.0" />
     </ItemGroup>
 
     <PropertyGroup>

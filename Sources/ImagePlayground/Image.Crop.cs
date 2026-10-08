@@ -1,47 +1,11 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
 namespace ImagePlayground;
-/// <summary>
-/// Provides image manipulation operations.
-/// </summary>
-public partial class Image : System.IDisposable {
-    /// <summary>
-    /// Crops the image to the specified <paramref name="rectangle"/>.
-    /// </summary>
-    /// <param name="rectangle">Crop rectangle.</param>
-    public void Crop(Rectangle rectangle) {
-        _image.Mutate(x => x.Crop(rectangle));
-    }
 
-    /// <summary>
-    /// Crops the image to a circular region.
-    /// </summary>
-    /// <param name="centerX">Center X coordinate.</param>
-    /// <param name="centerY">Center Y coordinate.</param>
-    /// <param name="radius">Radius of the circle.</param>
-    public void CropCircle(float centerX, float centerY, float radius) {
-        var circle = new EllipsePolygon(centerX, centerY, radius);
-        ApplyClip(circle);
-    }
-
-    /// <summary>
-    /// Crops the image to the specified polygon.
-    /// </summary>
-    /// <param name="points">Polygon vertices.</param>
-    public void CropPolygon(params PointF[] points) {
-        var polygon = new Polygon(new LinearLineSegment(points));
-        ApplyClip(polygon);
-    }
-
-    private void ApplyClip(IPath shape) {
-        using var clone = _image.Clone(ctx => { });
-        _image.Mutate(x => {
-            x.Clear(Color.Transparent);
-            x.Clip(shape, ctx => ctx.DrawImage(clone, 1f));
-        });
-    }
+/// <summary>Cropping and transparency masks over managed image frames.</summary>
+public partial class Image {
+    /// <summary>Crops each frame to an exact in-bounds pixel rectangle.</summary>
+    public void Crop(Rectangle rectangle) => Apply(image => OfficeRasterTransforms.Crop(image, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height), _ => (rectangle.Width, rectangle.Height));
+    /// <summary>Keeps pixels inside the requested circular region without changing canvas dimensions.</summary>
+    public void CropCircle(float centerX, float centerY, float radius) => Apply(image => OfficeRasterTransforms.MaskEllipse(image, centerX-radius, centerY-radius, radius*2, radius*2));
+    /// <summary>Keeps pixels inside a polygon without changing canvas dimensions.</summary>
+    public void CropPolygon(params OfficePoint[] points) => Apply(image => OfficeRasterTransforms.MaskPolygon(image, points));
 }

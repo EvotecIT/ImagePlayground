@@ -11,7 +11,7 @@ Generates a QR code that opens an email draft.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeEmail [-Email] <string> [[-Subject] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeEmail [-Email] <string> [[-Subject] <string>] [[-Message] <string>] [-FilePath] <string> [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,7 +39,7 @@ Generates a support-oriented email QR code and opens the image after creation.
 Background color of the QR code.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -87,7 +87,7 @@ Accept wildcard characters: False
 Foreground color of QR modules.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

@@ -1,8 +1,8 @@
 # ImagePlayground.PowerShell
 
-This project builds the binary ImagePlayground PowerShell module. It provides one command surface over the `ImagePlayground`, `ChartForgeX`, and `CodeGlyphX` .NET packages.
+This project builds the binary ImagePlayground PowerShell module. It provides one command surface over the `ImagePlayground`, `OfficeIMO.Core`, `ChartForgeX`, and `CodeGlyphX` .NET packages.
 
-Use it for image conversion, resizing, composition, text, watermarks, metadata, thumbnails, icons, mosaics, grids, avatars, GIFs, charts, topology diagrams, QR codes, and barcodes. The cmdlets stay thin: ChartForgeX owns chart rendering, CodeGlyphX owns code generation and decoding, and ImagePlayground owns image manipulation.
+Use it for image conversion, resizing, composition, text, watermarks, metadata, thumbnails, icons, mosaics, grids, avatars, GIFs, charts, topology diagrams, QR codes, and barcodes. The cmdlets stay thin: OfficeIMO.Core owns raster processing and metadata, ChartForgeX owns animation and chart rendering, and CodeGlyphX owns code generation and decoding.
 
 ```powershell
 Install-Module -Name ImagePlayground -Scope CurrentUser

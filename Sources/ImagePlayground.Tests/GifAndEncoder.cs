@@ -1,6 +1,7 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,22 +43,30 @@ public partial class ImagePlayground {
     }
 
     [Fact]
-    public void Test_GetEncoder_PngCompressionClamped() {
-        var enc = Helpers.GetEncoder(".png", null, 15) as PngEncoder;
-        Assert.NotNull(enc);
-        Assert.Equal(PngCompressionLevel.BestCompression, enc.CompressionLevel);
+    public void Test_Save_PngCompressionClamped() {
+        using var image = Image.Load(Path.Combine(_directoryWithImages, "QRCode1.png"));
+        string clamped = Path.Combine(_directoryWithTests, "compression_clamped.png");
+        string maximum = Path.Combine(_directoryWithTests, "compression_maximum.png");
+        image.Save(clamped, compressionLevel: 15);
+        image.Save(maximum, compressionLevel: 9);
+        Assert.Equal(File.ReadAllBytes(maximum), File.ReadAllBytes(clamped));
     }
 
     [Fact]
-    public void Test_GetEncoder_JpegQualityClamped() {
-        var enc = Helpers.GetEncoder(".jpg", 200, null) as JpegEncoder;
-        Assert.NotNull(enc);
-        Assert.Equal(100, enc.Quality);
+    public void Test_Save_JpegQualityClamped() {
+        using var image = Image.Load(Path.Combine(_directoryWithImages, "QRCode1.png"));
+        string clamped = Path.Combine(_directoryWithTests, "quality_clamped.jpg");
+        string maximum = Path.Combine(_directoryWithTests, "quality_maximum.jpg");
+        image.Save(clamped, quality: 200);
+        image.Save(maximum, quality: 100);
+        Assert.Equal(File.ReadAllBytes(maximum), File.ReadAllBytes(clamped));
     }
 
     [Fact]
-    public void Test_GetEncoder_UnknownExtensionThrows() {
-        var ex = Assert.Throws<SixLabors.ImageSharp.UnknownImageFormatException>(() => Helpers.GetEncoder(".xyz", null, null));
-        Assert.Contains(".png", ex.Message);
+    public void Test_Save_UnknownExtensionThrows() {
+        using var image = Image.Load(Path.Combine(_directoryWithImages, "QRCode1.png"));
+        string destination = Path.Combine(_directoryWithTests, "unsupported.xyz");
+        Assert.Throws<NotSupportedException>(() => image.Save(destination));
+        Assert.False(File.Exists(destination));
     }
 }

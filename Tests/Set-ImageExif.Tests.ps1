@@ -22,19 +22,22 @@ Describe 'Set-ImageExif' {
 
         $img.Create($dest, 10, 10)
 
-        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Artist, 'Retained artist')
 
         $img.Save()
 
         $img.Dispose()
 
-        Set-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Value 'Modified'
+        Set-ImageExif -FilePath $dest -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::Software) -Value 'Modified'
 
         (Get-ImageExif -FilePath $dest -Translate).Software | Should -Be 'Modified'
 
-        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Verbose
+        Remove-ImageExif -FilePath $dest -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::Software) -Verbose
 
-        (Get-ImageExif -FilePath $dest).Count | Should -Be 0
+        $remaining = Get-ImageExif -FilePath $dest -Translate
+        $remaining.Software | Should -BeNullOrEmpty
+        $remaining.Artist | Should -Be 'Retained artist'
 
     }
 
@@ -49,7 +52,7 @@ Describe 'Set-ImageExif' {
         $img.Dispose()
 
         {
-            Set-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Value 123
+            Set-ImageExif -FilePath $dest -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::Software) -Value 123
         } | Should -Throw
 
     }

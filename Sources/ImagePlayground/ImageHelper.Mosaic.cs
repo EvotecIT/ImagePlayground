@@ -1,54 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using ChartForgeX.Composition;
 
 namespace ImagePlayground;
-/// <summary>
-/// Provides helper methods for image manipulation.
-/// </summary>
+
+/// <summary>File workflows for arranging a mosaic of images.</summary>
 public partial class ImageHelper {
-    /// <summary>
-    /// Creates a mosaic from multiple images.
-    /// </summary>
-    /// <param name="filePaths">Collection of image paths.</param>
-    /// <param name="outFilePath">Destination path for the mosaic.</param>
-    /// <param name="columns">Number of columns in the mosaic.</param>
-    /// <param name="tileWidth">Width of each tile.</param>
-    /// <param name="tileHeight">Height of each tile.</param>
+    /// <summary>Creates a mosaic from the first frames of input images using fixed-size tiles.</summary>
     public static void Mosaic(IEnumerable<string> filePaths, string outFilePath, int columns, int tileWidth, int tileHeight) {
-        if (filePaths == null) {
-            throw new ArgumentNullException(nameof(filePaths));
-        }
-        if (columns <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(columns));
-        }
-        if (tileWidth <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(tileWidth));
-        }
-        if (tileHeight <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(tileHeight));
-        }
+        if (filePaths == null) throw new ArgumentNullException(nameof(filePaths));
+        if (columns <= 0) throw new ArgumentOutOfRangeException(nameof(columns));
+        if (tileWidth <= 0 || tileHeight <= 0) throw new ArgumentOutOfRangeException(nameof(tileWidth));
         string[] files = filePaths.ToArray();
-        if (files.Length == 0) {
-            throw new ArgumentException("At least one file path must be provided.", nameof(filePaths));
-        }
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Helpers.CreateParentDirectory(outFullPath);
-        int rows = (int)Math.Ceiling(files.Length / (double)columns);
-        using Image<Rgba32> output = new Image<Rgba32>(columns * tileWidth, rows * tileHeight);
+        if (files.Length == 0) throw new ArgumentException("At least one image path is required.", nameof(filePaths));
+        int rows = checked((files.Length + columns - 1) / columns);
+        var composition = ImageComposition.CreateTransparent(checked(columns * tileWidth), checked(rows * tileHeight));
         for (int i = 0; i < files.Length; i++) {
-            string full = Helpers.ResolvePath(files[i]);
-            using var inStream = File.OpenRead(full);
-            using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
-            Resize(image, tileWidth, tileHeight, false);
-            int x = (i % columns) * tileWidth;
-            int y = (i / columns) * tileHeight;
-            output.Mutate(ctx => ctx.DrawImage(image, new Point(x, y), 1f));
+            using var image = Image.Load(files[i]); image.Resize(tileWidth, tileHeight, false);
+            composition.DrawImage(ToChartImage(image.Raster), i % columns * tileWidth, i / columns * tileHeight, tileWidth, tileHeight);
         }
-        output.Save(outFullPath);
+        using var output = Image.FromRaster(ToOfficeImage(composition.ToImage())); output.Save(outFilePath);
     }
 }

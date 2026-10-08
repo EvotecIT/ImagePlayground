@@ -1,6 +1,7 @@
-﻿using SixLabors.Fonts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 
 namespace ImagePlayground.Examples;
@@ -36,7 +37,7 @@ internal partial class Example {
         string filePath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr.jpg");
         string targetPath = System.IO.Path.Combine(folderPath, "PrzemyslawKlysAndKulkozaurr_GrayScale.png");
         using (var image = Image.Load(filePath)) {
-            image.Grayscale(GrayscaleMode.Bt709);
+            image.Grayscale(OfficeRasterGrayscaleMode.Bt709);
             image.Save(targetPath);
         }
 

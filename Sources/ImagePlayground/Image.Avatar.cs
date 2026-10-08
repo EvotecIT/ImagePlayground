@@ -1,104 +1,21 @@
-using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
 namespace ImagePlayground;
-/// <summary>
-/// Provides image manipulation operations.
-/// </summary>
-public partial class Image : IDisposable {
-    /// <summary>
-    /// Converts the image into an avatar with the specified size and corner radius.
-    /// </summary>
-    /// <param name="width">Desired avatar width.</param>
-    /// <param name="height">Desired avatar height.</param>
-    /// <param name="cornerRadius">Radius of the rounded corners.</param>
-    public void Avatar(int width, int height, float cornerRadius) {
-        _image.Mutate(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
-    }
 
-    /// <summary>
-    /// Saves the image as an avatar file.
-    /// </summary>
-    /// <param name="filePath">Destination file path.</param>
-    /// <param name="width">Width of the avatar.</param>
-    /// <param name="height">Height of the avatar.</param>
-    /// <param name="cornerRadius">Radius of the rounded corners.</param>
-    public void SaveAsAvatar(string filePath, int width, int height, float cornerRadius) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath)!);
-        using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
-        clone.Save(fullPath);
-    }
-
-    /// <summary>
-    /// Writes the avatar image to a stream.
-    /// </summary>
-    /// <param name="stream">Stream to write the avatar to.</param>
-    /// <param name="width">Width of the avatar.</param>
-    /// <param name="height">Height of the avatar.</param>
-    /// <param name="cornerRadius">Radius of the rounded corners.</param>
-    public void SaveAsAvatar(Stream stream, int width, int height, float cornerRadius) {
-        using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
-        clone.SaveAsPng(stream);
-        stream.Seek(0, SeekOrigin.Begin);
-    }
-
-    /// <summary>
-    /// Saves the image as a circular avatar file.
-    /// </summary>
-    /// <param name="filePath">Destination file path.</param>
-    /// <param name="size">Diameter of the avatar.</param>
-    public void SaveAsCircularAvatar(string filePath, int size) {
-        SaveAsAvatar(filePath, size, size, size / 2f);
-    }
-
-    /// <summary>
-    /// Writes a circular avatar to a stream.
-    /// </summary>
-    /// <param name="stream">Destination stream.</param>
-    /// <param name="size">Diameter of the avatar.</param>
-    public void SaveAsCircularAvatar(Stream stream, int size) {
-        SaveAsAvatar(stream, size, size, size / 2f);
-    }
-
-    private static IImageProcessingContext ConvertToAvatar(IImageProcessingContext context, Size size, float cornerRadius) {
-        return ApplyRoundedCorners(context.Resize(new ResizeOptions {
-            Size = size,
-            Mode = ResizeMode.Crop
-        }), cornerRadius);
-    }
-
-    private static IImageProcessingContext ApplyRoundedCorners(IImageProcessingContext context, float cornerRadius) {
-        Size size = context.GetCurrentSize();
-        IPathCollection corners = BuildCorners(size.Width, size.Height, cornerRadius);
-
-        context.SetGraphicsOptions(new GraphicsOptions {
-            Antialias = true,
-            AlphaCompositionMode = PixelAlphaCompositionMode.DestOut
-        });
-
-        foreach (IPath path in corners) {
-            context = context.Fill(Color.Red, path);
-        }
-
-        return context;
-    }
-
-    private static PathCollection BuildCorners(int imageWidth, int imageHeight, float cornerRadius) {
-        var rect = new RectangularPolygon(-0.5f, -0.5f, cornerRadius, cornerRadius);
-        IPath cornerTopLeft = rect.Clip(new EllipsePolygon(cornerRadius - 0.5f, cornerRadius - 0.5f, cornerRadius));
-
-        float rightPos = imageWidth - cornerTopLeft.Bounds.Width + 1;
-        float bottomPos = imageHeight - cornerTopLeft.Bounds.Height + 1;
-
-        IPath cornerTopRight = cornerTopLeft.RotateDegree(90).Translate(rightPos, 0);
-        IPath cornerBottomLeft = cornerTopLeft.RotateDegree(-90).Translate(0, bottomPos);
-        IPath cornerBottomRight = cornerTopLeft.RotateDegree(180).Translate(rightPos, bottomPos);
-
-        return new PathCollection(cornerTopLeft, cornerBottomLeft, cornerTopRight, cornerBottomRight);
-    }
+/// <summary>Avatar and transparent corner workflows.</summary>
+public partial class Image {
+    /// <summary>Fits the image to the requested canvas with centered cropping and rounded corners.</summary>
+    public void Avatar(int width, int height, float cornerRadius) => Apply(source => {
+        if (width <= 0 || height <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        double scale = Math.Max(width / (double)source.Width, height / (double)source.Height);
+        var resized = OfficeRasterResampler.Resize(source, Math.Max(width, checked((int)Math.Ceiling(source.Width*scale))), Math.Max(height, checked((int)Math.Ceiling(source.Height*scale))), OfficeRasterResamplingMode.Bicubic);
+        var cropped = OfficeRasterTransforms.Crop(resized, (resized.Width-width)/2, (resized.Height-height)/2, width, height);
+        return OfficeRasterTransforms.MaskRoundedRectangle(cropped, cornerRadius);
+    }, _ => (width, height));
+    /// <summary>Applies a rounded avatar and saves it to a file.</summary>
+    public void SaveAsAvatar(string filePath, int width, int height, float cornerRadius) { Avatar(width,height,cornerRadius); Save(filePath); }
+    /// <summary>Applies a rounded avatar and writes it to a caller-owned stream.</summary>
+    public void SaveAsAvatar(Stream stream, int width, int height, float cornerRadius) { Avatar(width,height,cornerRadius); Save(stream); }
+    /// <summary>Applies a circular avatar and saves it to a file.</summary>
+    public void SaveAsCircularAvatar(string filePath, int size) { Avatar(size,size,size/2f); Save(filePath); }
+    /// <summary>Applies a circular avatar and writes it to a caller-owned stream.</summary>
+    public void SaveAsCircularAvatar(Stream stream, int size) { Avatar(size,size,size/2f); Save(stream); }
 }

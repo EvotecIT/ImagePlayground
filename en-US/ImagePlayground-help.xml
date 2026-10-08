@@ -22,9 +22,9 @@ image to disk.</maml:para>
           <maml:description>
             <maml:para>Text color.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -70,9 +70,9 @@ image to disk.</maml:para>
           <maml:description>
             <maml:para>Outline color.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -106,9 +106,9 @@ image to disk.</maml:para>
           <maml:description>
             <maml:para>Color of shadow.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -181,9 +181,9 @@ image to disk.</maml:para>
         <maml:description>
           <maml:para>Text color.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -229,9 +229,9 @@ image to disk.</maml:para>
         <maml:description>
           <maml:para>Outline color.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -265,9 +265,9 @@ image to disk.</maml:para>
         <maml:description>
           <maml:para>Color of shadow.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -355,12 +355,14 @@ image to disk.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>Draw text using ImageSharp</maml:title>
-        <dev:code>using SixLabors.ImageSharp;&#xD;
-using SixLabors.ImageSharp.ColorSpaces;&#xD;
-using var img = Image.Load("in.png");&#xD;
-img.AddText(10, 10, "Sample", Color.Black, 24);&#xD;
-img.Save("out.png");</dev:code>
+        <maml:title>Edit an image and save it</maml:title>
+        <dev:code>$img = Get-Image -FilePath in.png&#xD;
+try {&#xD;
+    $img.AddText(10, 10, 'Sample', [OfficeIMO.Drawing.OfficeColor]::Black, 24)&#xD;
+    Save-Image -Image $img -FilePath out.png&#xD;
+} finally {&#xD;
+    $img.Dispose()&#xD;
+}</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -388,9 +390,9 @@ img.Save("out.png");</dev:code>
           <maml:description>
             <maml:para>Text color.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -448,14 +450,15 @@ img.Save("out.png");</dev:code>
           <maml:description>
             <maml:para>Horizontal alignment.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">HorizontalAlignment</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeTextAlignment</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Justify</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>HorizontalAlignment</maml:name>
+            <maml:name>OfficeTextAlignment</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -465,9 +468,9 @@ img.Save("out.png");</dev:code>
           <maml:description>
             <maml:para>Outline color.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -501,9 +504,9 @@ img.Save("out.png");</dev:code>
           <maml:description>
             <maml:para>Color of shadow.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -549,14 +552,14 @@ img.Save("out.png");</dev:code>
           <maml:description>
             <maml:para>Vertical alignment.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">VerticalAlignment</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeTextVerticalAlignment</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">Top</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Bottom</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>VerticalAlignment</maml:name>
+            <maml:name>OfficeTextVerticalAlignment</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -605,9 +608,9 @@ img.Save("out.png");</dev:code>
         <maml:description>
           <maml:para>Text color.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -665,14 +668,15 @@ img.Save("out.png");</dev:code>
         <maml:description>
           <maml:para>Horizontal alignment.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">HorizontalAlignment</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeTextAlignment</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Justify</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>HorizontalAlignment</maml:name>
+          <maml:name>OfficeTextAlignment</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -682,9 +686,9 @@ img.Save("out.png");</dev:code>
         <maml:description>
           <maml:para>Outline color.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -718,9 +722,9 @@ img.Save("out.png");</dev:code>
         <maml:description>
           <maml:para>Color of shadow.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -766,14 +770,14 @@ img.Save("out.png");</dev:code>
         <maml:description>
           <maml:para>Vertical alignment.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">VerticalAlignment</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeTextVerticalAlignment</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">Top</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Bottom</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>VerticalAlignment</maml:name>
+          <maml:name>OfficeTextVerticalAlignment</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -1351,6 +1355,7 @@ img.Save("out.png");</dev:code>
     </command:details>
     <maml:description>
       <maml:para>When OutputPath is omitted, the cmdlet writes the comparison result to the pipeline instead of creating a file.</maml:para>
+      <maml:para>ChangedPixels counts pixels whose premultiplied RGB or alpha differs; Similarity ranges from zero to one.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -1438,7 +1443,13 @@ img.Save("out.png");</dev:code>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Drawing.OfficeRasterComparisonResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -2823,7 +2834,7 @@ img.Save("out.png");</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Returns a SixLabors.ImageSharp.Image object for further processing.</maml:para>
+      <maml:para>Returns an editable Image. Save it with Save-Image after applying transformations, and dispose it when finished.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -2863,7 +2874,13 @@ img.Save("out.png");</dev:code>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.Image</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -2902,6 +2919,18 @@ img.Save("out.png");</dev:code>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Get-ImageBarCode</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Detailed</maml:name>
+          <maml:description>
+            <maml:para>Without this switch, return the first DetectedSymbol; cancellation and deadlines produce errors. Detailed results retain structured cancellation and deadline status.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -2914,9 +2943,33 @@ img.Save("out.png");</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ScanOptions</maml:name>
+          <maml:description>
+            <maml:para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ScanOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Detailed</maml:name>
+        <maml:description>
+          <maml:para>Without this switch, return the first DetectedSymbol; cancellation and deadlines produce errors. Detailed results retain structured cancellation and deadline status.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
@@ -2929,6 +2982,18 @@ img.Save("out.png");</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ScanOptions</maml:name>
+        <maml:description>
+          <maml:para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>ScanOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -2937,7 +3002,18 @@ img.Save("out.png");</dev:code>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>CodeGlyphX.DetectedSymbol</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>CodeGlyphX.ScanResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -2947,6 +3023,21 @@ img.Save("out.png");</dev:code>
       <command:example>
         <maml:title>Decode barcode</maml:title>
         <dev:code>Get-ImageBarCode -FilePath barcode.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Scan selected formats and inspect completion details</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$options = [CodeGlyphX.ScanOptions]::new()&#xD;
+            $options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')&#xD;
+            $options.TimeoutMilliseconds = 5000&#xD;
+            $scan = Get-ImageBarCode -FilePath barcode.png -ScanOptions $options -Detailed&#xD;
+            $scan.CompletionReason&#xD;
+            $scan.Symbols</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -3062,7 +3153,7 @@ img.Save("out.png");</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Returns brands, primary item information, item types, EXIF presence, and image dimensions when declared by HEIF item properties.</maml:para>
+      <maml:para>Returns an OfficeIMO.Drawing.OfficeHeifImageInfo containing brands, primary item information, item types, EXIF presence, and image dimensions when declared by HEIF item properties.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -3105,7 +3196,7 @@ img.Save("out.png");</dev:code>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>ImagePlayground.HeifImageInfo</maml:name>
+          <maml:name>OfficeIMO.Drawing.OfficeHeifImageInfo</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -4177,25 +4268,28 @@ img.Save("out.png");</dev:code>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Type</maml:name>
           <maml:description>
-            <maml:para>Barcode type.</maml:para>
+            <maml:para>QR formats use New-ImageQRCode. MaxiCode requires specialized rendering, and GS1 Composite requires separate payloads; neither is supported by this single-value command.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">BarcodeType</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">SymbolFormat</command:parameterValue>
           <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">QrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MicroQrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Aztec</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code128</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1_128</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1Code128</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code39</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code93</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">EAN</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">UPCA</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">UPCE</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">ITF14</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">ITF</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Industrial2of5</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Matrix2of5</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">IATA2of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UpcA</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UpcE</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Itf14</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Itf</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Industrial2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Matrix2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Iata2Of5</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PatchCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Codabar</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">MSI</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Msi</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Code11</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Plessey</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Telepen</command:parameterValue>
@@ -4207,25 +4301,26 @@ img.Save("out.png");</dev:code>
             <command:parameterValue required="false" variableLength="false">RoyalMail4State</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">AustraliaPost</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">JapanPost</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarTruncated</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarOmni</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarStacked</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarExpanded</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarExpandedStacked</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">UspsImb</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarTruncated</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarOmnidirectional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarStacked</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarExpanded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarExpandedStacked</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UspsIntelligentMail</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">KixCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">DataMatrix</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">PDF417</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">MicroPDF417</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarLimited</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1DataBarStackedOmni</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Pdf417</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MicroPdf417</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RmQrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarLimited</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarStackedOmnidirectional</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">MaxiCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">GS1Composite</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>BarcodeType</maml:name>
+            <maml:name>SymbolFormat</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -4260,25 +4355,28 @@ img.Save("out.png");</dev:code>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Type</maml:name>
         <maml:description>
-          <maml:para>Barcode type.</maml:para>
+          <maml:para>QR formats use New-ImageQRCode. MaxiCode requires specialized rendering, and GS1 Composite requires separate payloads; neither is supported by this single-value command.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">BarcodeType</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">SymbolFormat</command:parameterValue>
         <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">QrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MicroQrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Aztec</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code128</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1_128</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1Code128</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code39</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code93</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">EAN</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">UPCA</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">UPCE</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">ITF14</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">ITF</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Industrial2of5</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Matrix2of5</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">IATA2of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UpcA</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UpcE</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Itf14</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Itf</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Industrial2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Matrix2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Iata2Of5</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PatchCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Codabar</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">MSI</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Msi</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Code11</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Plessey</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Telepen</command:parameterValue>
@@ -4290,25 +4388,26 @@ img.Save("out.png");</dev:code>
           <command:parameterValue required="false" variableLength="false">RoyalMail4State</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">AustraliaPost</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">JapanPost</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarTruncated</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarOmni</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarStacked</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarExpanded</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarExpandedStacked</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">UspsImb</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarTruncated</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarOmnidirectional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarStacked</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarExpanded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarExpandedStacked</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UspsIntelligentMail</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">KixCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">DataMatrix</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">PDF417</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">MicroPDF417</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarLimited</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1DataBarStackedOmni</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Pdf417</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MicroPdf417</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RmQrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarLimited</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarStackedOmnidirectional</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">MaxiCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">GS1Composite</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>BarcodeType</maml:name>
+          <maml:name>SymbolFormat</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -15320,9 +15419,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Points describing a polygon.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PointF[]</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficePoint[]</command:parameterValue>
           <dev:type>
-            <maml:name>PointF[]</maml:name>
+            <maml:name>OfficePoint[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15407,9 +15506,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Points describing a polygon.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PointF[]</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficePoint[]</command:parameterValue>
         <dev:type>
-          <maml:name>PointF[]</maml:name>
+          <maml:name>OfficePoint[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -15629,9 +15728,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15692,9 +15791,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -18083,9 +18182,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18119,9 +18218,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18182,9 +18281,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -18218,9 +18317,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -18375,9 +18474,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18411,9 +18510,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18496,9 +18595,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18532,9 +18631,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18653,9 +18752,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18713,9 +18812,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18822,9 +18921,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18882,9 +18981,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19015,9 +19114,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19099,9 +19198,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19220,9 +19319,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19304,9 +19403,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19449,9 +19548,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19497,9 +19596,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19658,9 +19757,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19706,9 +19805,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19891,9 +19990,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -19987,9 +20086,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -20224,9 +20323,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -20265,9 +20364,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -20352,9 +20451,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -20393,9 +20492,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -20518,9 +20617,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -20570,9 +20669,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -20669,9 +20768,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -20721,9 +20820,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -20858,9 +20957,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -20894,9 +20993,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -20957,9 +21056,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -20993,9 +21092,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21106,9 +21205,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21130,9 +21229,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21193,9 +21292,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21217,9 +21316,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21342,9 +21441,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21378,9 +21477,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21465,9 +21564,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21501,9 +21600,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21650,9 +21749,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21686,9 +21785,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21773,9 +21872,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21809,9 +21908,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21926,9 +22025,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21974,9 +22073,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22094,9 +22193,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22142,9 +22241,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22295,9 +22394,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22319,9 +22418,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22370,9 +22469,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22394,9 +22493,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22495,9 +22594,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22519,9 +22618,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22657,9 +22756,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22681,9 +22780,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22869,9 +22968,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22893,9 +22992,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -22944,9 +23043,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -22968,9 +23067,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -23081,9 +23180,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -23141,9 +23240,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -23300,9 +23399,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -23360,9 +23459,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -23557,9 +23656,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -23581,9 +23680,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -23644,9 +23743,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -23668,9 +23767,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -23817,9 +23916,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24093,9 +24192,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24237,9 +24336,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -24513,9 +24612,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -24671,9 +24770,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24695,9 +24794,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24758,9 +24857,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -24782,9 +24881,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -24901,9 +25000,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Background color of the QR code.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24985,9 +25084,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Foreground color of QR modules.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
-            <maml:name>Color</maml:name>
+            <maml:name>OfficeColor</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -25214,9 +25313,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Background color of the QR code.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -25298,9 +25397,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Foreground color of QR modules.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Color</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
         <dev:type>
-          <maml:name>Color</maml:name>
+          <maml:name>OfficeColor</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -28479,6 +28578,7 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">ForceDirected</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">RelationshipRadial</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">MindMap</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Swimlane</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyLayoutMode</maml:name>
@@ -28990,6 +29090,7 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">ForceDirected</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">RelationshipRadial</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">MindMap</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Swimlane</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyLayoutMode</maml:name>
@@ -29513,6 +29614,7 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">ForceDirected</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">RelationshipRadial</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">MindMap</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Swimlane</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyLayoutMode</maml:name>
@@ -30202,6 +30304,12 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OpenTriangle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OpenDiamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ExactlyOne</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyMarkerKind</maml:name>
@@ -30306,6 +30414,12 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OpenTriangle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OpenDiamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ExactlyOne</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyMarkerKind</maml:name>
@@ -30671,6 +30785,12 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OpenTriangle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OpenDiamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExactlyOne</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyMarkerKind</maml:name>
@@ -30775,6 +30895,12 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Arrow</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OpenTriangle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OpenDiamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExactlyOne</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyMarkerKind</maml:name>
@@ -35112,9 +35238,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Tags to remove.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">ExifTag[]</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">OfficeExifTag[]</command:parameterValue>
           <dev:type>
-            <maml:name>ExifTag[]</maml:name>
+            <maml:name>OfficeExifTag[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -35202,9 +35328,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Tags to remove.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">ExifTag[]</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">OfficeExifTag[]</command:parameterValue>
         <dev:type>
-          <maml:name>ExifTag[]</maml:name>
+          <maml:name>OfficeExifTag[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -35250,7 +35376,7 @@ polygonal areas.</maml:para>
     <command:examples>
       <command:example>
         <maml:title>Remove specific tag</maml:title>
-        <dev:code>Remove-ImageExif -FilePath img.jpg -ExifTag ExifIFD.DateTimeOriginal</dev:code>
+        <dev:code>Remove-ImageExif -FilePath img.jpg -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal)</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -35554,7 +35680,7 @@ polygonal areas.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Use width/height parameters or Percentage.</maml:para>
+      <maml:para>Width and height bound the resized image while preserving its aspect ratio. Use DontRespectAspectRatio to stretch to the supplied dimensions, or Percentage for uniform scaling.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="HeightWidth">
@@ -35562,7 +35688,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DontRespectAspectRatio</maml:name>
           <maml:description>
-            <maml:para>Only valid when resizing by width or height.</maml:para>
+            <maml:para>Disables aspect ratio preservation. An omitted dimension retains its original value.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -35586,7 +35712,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>Used with Width when not using Percentage.</maml:para>
+            <maml:para>When aspect ratio is preserved, a height alone determines the corresponding width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -35610,7 +35736,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>Used with Height when not using Percentage.</maml:para>
+            <maml:para>When aspect ratio is preserved, a width alone determines the corresponding height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -35664,7 +35790,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>DontRespectAspectRatio</maml:name>
         <maml:description>
-          <maml:para>Only valid when resizing by width or height.</maml:para>
+          <maml:para>Disables aspect ratio preservation. An omitted dimension retains its original value.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -35688,7 +35814,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Height</maml:name>
         <maml:description>
-          <maml:para>Used with Width when not using Percentage.</maml:para>
+          <maml:para>When aspect ratio is preserved, a height alone determines the corresponding width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -35724,7 +35850,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
-          <maml:para>Used with Height when not using Percentage.</maml:para>
+          <maml:para>When aspect ratio is preserved, a width alone determines the corresponding height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -35749,8 +35875,15 @@ polygonal areas.</maml:para>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Resize to 100x100</maml:title>
+        <maml:title>Fit inside a 100x100 box</maml:title>
         <dev:code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Stretch to 100x100</maml:title>
+        <dev:code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100 -DontRespectAspectRatio</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -36430,7 +36563,7 @@ polygonal areas.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The value must match the type declared by the selected EXIF tag, including ImageSharp wrapper types such as Number or Rational.</maml:para>
+      <maml:para>The shared metadata API validates the selected tag and its value. Use OfficeRational values for unsigned EXIF fractions.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -36440,9 +36573,9 @@ polygonal areas.</maml:para>
           <maml:description>
             <maml:para>Tag to set.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">ExifTag</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">OfficeExifTag</command:parameterValue>
           <dev:type>
-            <maml:name>ExifTag</maml:name>
+            <maml:name>OfficeExifTag</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -36491,9 +36624,9 @@ polygonal areas.</maml:para>
         <maml:description>
           <maml:para>Tag to set.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">ExifTag</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">OfficeExifTag</command:parameterValue>
         <dev:type>
-          <maml:name>ExifTag</maml:name>
+          <maml:name>OfficeExifTag</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -36554,7 +36687,7 @@ polygonal areas.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)</dev:code>
+        <dev:code>Set-ImageExif -FilePath img.jpg -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal) -Value (Get-Date -Format 'yyyy:MM:dd HH:mm:ss')</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>

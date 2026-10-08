@@ -1,3 +1,7 @@
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +17,6 @@ using ChartForgeX;
 using ChartForgeX.Core;
 using ChartForgeX.Topology;
 using ChartForgeX.VisualArtifacts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
-using SixLabors.ImageSharp.PixelFormats;
 using Xunit;
 using PowerShellHost = System.Management.Automation.PowerShell;
 using PlaygroundImage = global::ImagePlayground.Image;
@@ -81,7 +82,7 @@ public partial class ImagePlayground {
         switch (command) {
             case "Add-ImageText":
             case "Add-ImageTextBox":
-                parameters.AddRange(new[] { ("Text", (object)"Path"), ("X", 1), ("Y", 1), ("FontSize", 8), ("FontFamily", SixLabors.Fonts.SystemFonts.Collection.Families.First().Name) });
+                parameters.AddRange(new[] { ("Text", (object)"Path"), ("X", 1), ("Y", 1), ("FontSize", 8), ("FontFamily", "Arial") });
                 if (command == "Add-ImageTextBox") {
                     parameters.Add(("Width", 48));
                 }
@@ -110,15 +111,15 @@ public partial class ImagePlayground {
             Assert.Empty(PlaygroundImage.GetExifValues(output));
         }
         if (command == "Set-ImageExif") {
-            Assert.Contains(PlaygroundImage.GetExifValues(output), value => value.Tag == ExifTag.Software && value.GetValue()?.ToString() == "path-contract");
+            Assert.Contains(PlaygroundImage.GetExifValues(output), value => value.Tag.Equals(ExifTag.Software) && value.Value?.ToString() == "path-contract");
         }
         if (command is "Add-ImageText" or "Add-ImageTextBox" or "Add-ImageWatermark" or "Set-ImageAdjust" or "Set-ImageBlur" or "Set-ImageSharpen") {
-            using var source = SixLabors.ImageSharp.Image.Load<Rgba32>(Path.Combine(fixture.Location, "source.png"));
-            using var edited = SixLabors.ImageSharp.Image.Load<Rgba32>(output);
-            Assert.Contains(Enumerable.Range(0, width * height), index => source[index % width, index / width] != edited[index % width, index / width]);
+            using var source = global::ImagePlayground.Image.Load(Path.Combine(fixture.Location, "source.png"));
+            using var edited = global::ImagePlayground.Image.Load(output);
+            Assert.Contains(Enumerable.Range(0, width * height), index => source.Raster.GetPixel(index % width, index / width) != edited.Raster.GetPixel(index % width, index / width));
         }
         if (command == "New-ImageGif") {
-            using var gif = SixLabors.ImageSharp.Image.Load(output);
+            using var gif = global::ImagePlayground.Image.Load(output);
             Assert.Equal(2, gif.Frames.Count);
         }
     }
@@ -138,7 +139,7 @@ public partial class ImagePlayground {
         }
         fixture.Invoke("Import-ImageMetadata", ("FilePath", "./other.png"), ("MetadataPath", "./metadata.json"), ("OutputPath", "./imported.png"));
         fixture.AssertImageOutput("imported.png", 64, 48);
-        Assert.Contains(PlaygroundImage.GetExifValues(Path.Combine(fixture.Location, "imported.png")), value => value.Tag == ExifTag.Software && value.GetValue()?.ToString() == "original-path-fixture");
+        Assert.Contains(PlaygroundImage.GetExifValues(Path.Combine(fixture.Location, "imported.png")), value => value.Tag.Equals(ExifTag.Software) && value.Value?.ToString() == "original-path-fixture");
 
         const string xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />";
         File.WriteAllBytes(Path.Combine(fixture.Location, "source.heic"), CreateMinimalHeifWithPrimaryImageExifAndXmp(64, 48, CreateExifPayload("fixture"), "<x:xmpmeta />"));
@@ -246,16 +247,16 @@ public partial class ImagePlayground {
             Directory.CreateDirectory(Location);
             Directory.CreateDirectory(ProcessDirectory);
             Directory.CreateDirectory(Path.Combine(Location, "inputs"));
-            using (var source = new SixLabors.ImageSharp.Image<Rgba32>(64, 48)) {
+            using (var source = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(64, 48))) {
                 for (int y = 0; y < source.Height; y++) {
                     for (int x = 0; x < source.Width; x++) {
-                        source[x, y] = new Rgba32((byte)(x * 4), (byte)(y * 5), 128);
+                        source.Raster.SetPixel(x, y, new OfficeColor((byte)(x * 4), (byte)(y * 5), 128));
                     }
                 }
-                source.Metadata.ExifProfile = new ExifProfile();
-                source.Metadata.ExifProfile.SetValue(ExifTag.Software, "original-path-fixture");
+
+                source.Metadata.SetExifValue(ExifTag.Software, "original-path-fixture");
                 source.Save(Path.Combine(Location, "source.png"));
-                source[0, 0] = new Rgba32(255, 255, 255);
+                source.Raster.SetPixel(0, 0, OfficeColor.White);
                 source.Save(Path.Combine(Location, "other.png"));
             }
             File.Copy(Path.Combine(Location, "source.png"), Path.Combine(Location, "inputs", "source.png"));
@@ -295,7 +296,7 @@ public partial class ImagePlayground {
         }
 
         public void AssertImageOutput(string relativePath, int width, int height) {
-            using var output = SixLabors.ImageSharp.Image.Load(Path.Combine(Location, relativePath));
+            using var output = global::ImagePlayground.Image.Load(Path.Combine(Location, relativePath));
             Assert.Equal(width, output.Width);
             Assert.Equal(height, output.Height);
             Assert.False(File.Exists(Path.Combine(ProcessDirectory, relativePath)));

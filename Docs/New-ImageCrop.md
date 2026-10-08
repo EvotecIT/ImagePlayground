@@ -22,7 +22,7 @@ New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-CenterX <float>] [-C
 
 ### Polygon
 ```powershell
-New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <PointF[]>] [-Open] [<CommonParameters>]
+New-ImageCrop [-FilePath] <string> [-OutputPath] <string> [-Points <OfficePoint[]>] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -145,7 +145,7 @@ Accept wildcard characters: False
 Points describing a polygon.
 
 ```yaml
-Type: PointF[]
+Type: OfficePoint[]
 Parameter Sets: Polygon
 Aliases: None
 Possible values:

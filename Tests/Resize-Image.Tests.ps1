@@ -12,13 +12,13 @@ Describe 'Resize-Image' {
 
     }
 
-    It 'resizes an image' {
+    It 'stretches an image when aspect ratio preservation is disabled' {
 
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
 
         $dest = Join-Path $TestDir 'logo-small.png'
 
-        Resize-Image -FilePath $src -OutputPath $dest -Width 50 -Height 50
+        Resize-Image -FilePath $src -OutputPath $dest -Width 50 -Height 50 -DontRespectAspectRatio
 
         $img = [ImagePlayground.Image]::Load($dest)
 
@@ -28,6 +28,24 @@ Describe 'Resize-Image' {
 
         $img.Dispose()
 
+    }
+
+    It 'fits an asymmetric image inside both bounds by default' {
+        $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        $dest = Join-Path $TestDir 'logo-fitted.png'
+        Resize-Image -FilePath $src -OutputPath $dest -Width 50 -Height 50
+        $original = [ImagePlayground.Image]::Load($src)
+        $img = [ImagePlayground.Image]::Load($dest)
+        try {
+            $scale = [math]::Min(50.0 / $original.Width, 50.0 / $original.Height)
+            $img.Width | Should -Be ([math]::Round($original.Width * $scale))
+            $img.Height | Should -Be ([math]::Round($original.Height * $scale))
+            $img.Width | Should -BeLessOrEqual 50
+            $img.Height | Should -BeLessOrEqual 50
+        } finally {
+            $img.Dispose()
+            $original.Dispose()
+        }
     }
 
     It 'resizes an image by percentage' {

@@ -20,7 +20,7 @@ Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [<C
 ```
 
 ## DESCRIPTION
-Use width/height parameters or Percentage.
+Width and height bound the resized image while preserving its aspect ratio. Use DontRespectAspectRatio to stretch to the supplied dimensions, or Percentage for uniform scaling.
 
 ## EXAMPLES
 
@@ -32,6 +32,12 @@ Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100
 
 ### EXAMPLE 2
 ```powershell
+Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100 -DontRespectAspectRatio
+```
+
+
+### EXAMPLE 3
+```powershell
 Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200
 ```
 
@@ -39,7 +45,7 @@ Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200
 ## PARAMETERS
 
 ### -DontRespectAspectRatio
-Only valid when resizing by width or height.
+Disables aspect ratio preservation. An omitted dimension retains its original value.
 
 ```yaml
 Type: SwitchParameter
@@ -71,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -Height
-Used with Width when not using Percentage.
+When aspect ratio is preserved, a height alone determines the corresponding width.
 
 ```yaml
 Type: Int32
@@ -119,7 +125,7 @@ Accept wildcard characters: False
 ```
 
 ### -Width
-Used with Height when not using Percentage.
+When aspect ratio is preserved, a width alone determines the corresponding height.
 
 ```yaml
 Type: Int32
