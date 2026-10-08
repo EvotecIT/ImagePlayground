@@ -104,6 +104,13 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(file));
         var expected = QrPayloads.SlovenianUpn(payload).Text;
         AssertQrDecoded(file, expected);
+        var decoded = QrCode.Read(file);
+        Assert.NotNull(decoded);
+        Assert.Equal(15, decoded.Version);
+        Assert.Equal(QrErrorCorrectionLevel.M, decoded.ErrorCorrectionLevel);
+        Assert.Equal(expected.Length, decoded.Bytes.Length);
+        // ISO-8859-2 represents capital Z with caron as one byte, unlike UTF-8.
+        Assert.Equal((byte)0xAE, decoded.Bytes[expected.IndexOf('Ž')]);
     }
 
     private static SwissQrCodePayload CreateSwissPayload() {
@@ -115,7 +122,7 @@ public partial class ImagePlayground {
 
     private static SlovenianUpnQrPayload CreateSlovenianUpnPayload() {
         return new SlovenianUpnQrPayload(
-            "John Doe",
+            "Žan Doe",
             "Main Street 1",
             "Ljubljana",
             "Evotec d.o.o.",

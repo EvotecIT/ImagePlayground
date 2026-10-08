@@ -11,7 +11,7 @@ public partial class ImagePlayground {
     [Fact]
     public void Test_BarCode_Generate_InvalidType_Throws() {
         string filePath = Path.Combine(_directoryWithTests, "barcode_invalid.png");
-        Assert.Throws<ArgumentOutOfRangeException>(() => BarCode.Generate((BarcodeType)999, "invalid", filePath));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BarCode.Generate((SymbolFormat)999, "invalid", filePath));
     }
 }
 

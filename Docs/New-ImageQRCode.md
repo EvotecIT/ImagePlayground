@@ -104,7 +104,7 @@ Accept wildcard characters: False
 ```
 
 ### -LogoPath
-Optional logo image to place at the center of the QR code.
+The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.
 
 ```yaml
 Type: String
