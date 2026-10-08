@@ -33260,6 +33260,7 @@ polygonal areas.</maml:para>
     </command:details>
     <maml:description>
       <maml:para>Render the grid directly, pass it to New-ImageVisualStory, or compose it inside a ChartForgeX visual canvas.</maml:para>
+      <maml:para>With Motion, the output is a detached VisualMotionPresentation accepted by New-ImageVisualStory. Static grids remain VisualGrid objects.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Definition">
@@ -33303,7 +33304,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Optional output path. Omit it to return the grid without rendering.</maml:para>
+            <maml:para>Optional output path. Omit it to return the grid or detached motion presentation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -33403,7 +33404,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Return the grid when an output file is also written.</maml:para>
+            <maml:para>Return the grid or detached motion presentation when an output file is also written.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -33518,7 +33519,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Optional output path. Omit it to return the grid without rendering.</maml:para>
+            <maml:para>Optional output path. Omit it to return the grid or detached motion presentation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -33618,7 +33619,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Return the grid when an output file is also written.</maml:para>
+            <maml:para>Return the grid or detached motion presentation when an output file is also written.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -33745,7 +33746,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>Optional output path. Omit it to return the grid without rendering.</maml:para>
+          <maml:para>Optional output path. Omit it to return the grid or detached motion presentation.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -33845,7 +33846,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
-          <maml:para>Return the grid when an output file is also written.</maml:para>
+          <maml:para>Return the grid or detached motion presentation when an output file is also written.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -33930,6 +33931,11 @@ polygonal areas.</maml:para>
       <command:returnValue>
         <dev:type>
           <maml:name>ChartForgeX.VisualBlocks.VisualGrid</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Motion.VisualMotionPresentation</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -34394,6 +34400,7 @@ polygonal areas.</maml:para>
     </command:details>
     <maml:description>
       <maml:para>Use a native ChartForgeX VisualGrid or configure one in StoryScript. SVG and HTML preserve motion, while PNG renders the completed static state.</maml:para>
+      <maml:para>A VisualMotionPresentation returned by New-ImageVisualGrid -Motion can also be piped directly into this command.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="StoryScript">
@@ -34437,7 +34444,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Write the configured ChartForgeX VisualGrid to the pipeline.</maml:para>
+            <maml:para>Write the detached motion presentation, or the static grid when no motion is supplied.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -34524,11 +34531,62 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Write the configured ChartForgeX VisualGrid to the pipeline.</maml:para>
+            <maml:para>Write the detached motion presentation, or the static grid when no motion is supplied.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Show</maml:name>
+          <maml:description>
+            <maml:para>Open the generated visual after creation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Presentation">
+        <maml:name>New-ImageVisualStory</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Write the detached motion presentation, or the static grid when no motion is supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Presentation</maml:name>
+          <maml:description>
+            <maml:para>Detached motion presentation to export, including output from New-ImageVisualGrid -Motion.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">VisualMotionPresentation</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualMotionPresentation</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -34599,11 +34657,23 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
-          <maml:para>Write the configured ChartForgeX VisualGrid to the pipeline.</maml:para>
+          <maml:para>Write the detached motion presentation, or the static grid when no motion is supplied.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>Presentation</maml:name>
+        <maml:description>
+          <maml:para>Detached motion presentation to export, including output from New-ImageVisualGrid -Motion.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">VisualMotionPresentation</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualMotionPresentation</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -34639,11 +34709,21 @@ polygonal areas.</maml:para>
           <maml:name>ChartForgeX.VisualBlocks.VisualGrid</maml:name>
         </dev:type>
       </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ChartForgeX.Motion.VisualMotionPresentation</maml:name>
+        </dev:type>
+      </command:inputType>
     </command:inputTypes>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
           <maml:name>ChartForgeX.VisualBlocks.VisualGrid</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Motion.VisualMotionPresentation</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -34669,6 +34749,19 @@ polygonal areas.</maml:para>
             } -FilePath profile.svg</dev:code>
         <dev:remarks>
           <maml:para>Builds a dependency-free SVG whose one-shot motion honors reduced-motion preferences.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Export a detached motion grid through the pipeline</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('requests')&#xD;
+            New-ImageVisualGrid -ContentDefinition {&#xD;
+              New-ImageVisualGridItem -TargetId requests -Block (New-ImageMetricCard -Label Requests -Value 12840)&#xD;
+            } -Motion $motion | New-ImageVisualStory -FilePath requests.svg</dev:code>
+        <dev:remarks>
+          <maml:para>Reuses the typed presentation captured by the grid command without changing its source grid or timeline.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

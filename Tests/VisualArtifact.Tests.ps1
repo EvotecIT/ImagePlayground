@@ -45,7 +45,10 @@ Describe 'ChartForgeX visual artifacts' {
         $watermark = New-ImageVisualWatermark -Text 'INTERNAL' -Anchor Center -Opacity 0.2 -RotationDegrees -24
         $svgPath = Join-Path $TestDir 'visual-artifact-watermark.svg'
         $pngPath = Join-Path $TestDir 'visual-artifact-watermark.png'
-        $sourceSvg = [ChartForgeX.VisualArtifacts.VisualArtifactRendering]::ToSvg($artifact)
+        $beforePath = Join-Path $TestDir 'visual-artifact-before.svg'
+        $afterPath = Join-Path $TestDir 'visual-artifact-after.svg'
+        $artifact | Export-ImageVisualArtifact -FilePath $beforePath
+        $sourceSvg = [System.IO.File]::ReadAllText($beforePath)
         $sourceRender = $artifact.RenderSource
 
         $artifact | Export-ImageVisualArtifact -FilePath $svgPath -Watermark $watermark
@@ -54,7 +57,8 @@ Describe 'ChartForgeX visual artifacts' {
         (Get-Content $svgPath -Raw) | Should -Match 'INTERNAL'
         $png = [System.IO.File]::ReadAllBytes($pngPath)
         [System.Text.Encoding]::ASCII.GetString($png) | Should -Match 'pHYs'
-        [ChartForgeX.VisualArtifacts.VisualArtifactRendering]::ToSvg($artifact) | Should -BeExactly $sourceSvg
+        $artifact | Export-ImageVisualArtifact -FilePath $afterPath
+        [System.IO.File]::ReadAllText($afterPath) | Should -BeExactly $sourceSvg
         [object]::ReferenceEquals($artifact.RenderSource, $sourceRender) | Should -BeTrue
     }
 

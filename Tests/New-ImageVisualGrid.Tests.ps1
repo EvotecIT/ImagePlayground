@@ -53,12 +53,16 @@ Describe 'New-ImageVisualGrid' {
     It 'preserves the caller static grid while returning detached motion' {
         $grid = [ChartForgeX.VisualBlocks.VisualGrid]::Create()
         [void] $grid.Add('requests', [ChartForgeX.VisualBlocks.MetricCard]::Create().WithMetric('Requests', '12840'))
-        $before = [ChartForgeX.VisualsExtensions]::ToSvg($grid)
+        $beforePath = Join-Path -Path $TestDir -ChildPath 'static-grid-before.svg'
+        $afterPath = Join-Path -Path $TestDir -ChildPath 'static-grid-after.svg'
+        $grid | New-ImageVisualStory -FilePath $beforePath
+        $before = [System.IO.File]::ReadAllText($beforePath)
         $motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('requests')
         $file = Join-Path -Path $TestDir -ChildPath 'detached-motion.html'
         $presentation = $grid | New-ImageVisualStory -Motion $motion -FilePath $file -PassThru
         $presentation | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
-        [ChartForgeX.VisualsExtensions]::ToSvg($grid) | Should -BeExactly $before
+        $grid | New-ImageVisualStory -FilePath $afterPath
+        [System.IO.File]::ReadAllText($afterPath) | Should -BeExactly $before
         [void] $motion.Add('later-target', [ChartForgeX.Motion.VisualMotionEffect]::Fade)
         $presentation.ToSvg() | Should -Match 'data-cfx-motion-target="requests"'
         $presentation.ToSvg() | Should -Not -Match 'data-cfx-motion-target="later-target"'
