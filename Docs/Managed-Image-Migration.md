@@ -92,6 +92,10 @@ Compare-Image -FilePath '.\expected.png' -FilePathToCompare '.\actual.png' -Outp
 
 Resizing preserves aspect ratio by default. A single width or height determines the other dimension; supplying both dimensions fits each frame inside that bounding box. Set `keepAspectRatio: false` in .NET or use `Resize-Image -DontRespectAspectRatio` in PowerShell to stretch to the supplied dimensions. Percentage resizing retains integer truncation of each resulting dimension, with a minimum of one pixel.
 
+`Avatar` edits each frame. `SaveAsAvatar` and `SaveAsCircularAvatar` create independent output and preserve the source pixels and metadata, including when encoding or writing fails. Their stream overloads write PNG, retain transparent corners, and keep the caller's stream open. PNG output preserves multiple frames as APNG with their timing and play count.
+
+`AutoOrient` applies an existing EXIF orientation and resets it to normal. Images without that tag retain their pixels and metadata. Tiled watermarks use each frame's own dimensions, clip the last tiles at its edges, and retain timing and play count. `WatermarkImageTiled` accepts an optional cancellation token; cancellation leaves the original frame sequence intact.
+
 Barcode generation takes `CodeGlyphX.SymbolFormat` in place of `BarcodeType`. Use names such as `Ean`, `UpcA`, `UpcE`, and `Pdf417`. `Get-ImageBarCode` returns a `DetectedSymbol` with `Text` and `Format`; `-Detailed` returns the complete `ScanResult`. Pass `-ScanOptions` to select formats, image limits, and a recognition deadline. The default barcode scan allows five seconds and excludes QR, Pharmacode, and Patch Code; explicit formats can select Pharmacode or Patch Code.
 
 JPEG quality is clamped to 1 through 100. PNG compression levels are clamped to 0 through 9 and map to the shared encoder's stored (0), fastest (1 through 3), and optimal (4 through 9) profiles. WebP output is lossless by default; an explicit quality setting selects the managed lossy encoder, with quality clamped to 1 through 100.

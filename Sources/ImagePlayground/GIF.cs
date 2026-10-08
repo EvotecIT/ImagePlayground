@@ -12,7 +12,7 @@ public static class Gif {
         var source = new OfficeRasterFrames(ReadFrames(), playCount: 0);
         var frames = Image.ToAnimationFrames(source);
         string fullPath = Helpers.ResolvePath(filePath); Helpers.CreateParentDirectory(fullPath);
-        File.WriteAllBytes(fullPath, RasterAnimationEncoder.Encode(frames, RasterAnimationFormat.Gif, new RasterAnimationOptions { PlayCount = 0 }));
+        OfficeImageFileWriter.WriteAllBytes(fullPath, RasterAnimationEncoder.Encode(frames, RasterAnimationFormat.Gif, new RasterAnimationOptions { PlayCount = 0 }));
 
         IEnumerable<OfficeRasterFrame> ReadFrames() {
             foreach (string path in sourceImages) {

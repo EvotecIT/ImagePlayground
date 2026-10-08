@@ -12,6 +12,6 @@ public partial class Image {
         byte[] encoded = OfficeIconEncoder.Encode(images);
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
-        File.WriteAllBytes(fullPath, encoded);
+        OfficeImageFileWriter.WriteAllBytes(fullPath, encoded);
     }
 }

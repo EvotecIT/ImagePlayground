@@ -104,7 +104,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
+        img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage, cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

@@ -2,10 +2,16 @@ namespace ImagePlayground;
 
 /// <summary>Geometric image edits delegated to the shared managed raster engine.</summary>
 public partial class Image {
-    /// <summary>Applies the stored EXIF orientation and resets it to the normal orientation.</summary>
+    /// <summary>Applies the stored EXIF orientation and resets it to normal, leaving images without an orientation tag unchanged.</summary>
     public void AutoOrient() {
-        object? value = Metadata.ExifValues.FirstOrDefault(entry => entry.Tag.Equals(OfficeExifTag.Orientation))?.Value;
-        int orientation = value == null ? 1 : Convert.ToInt32(value);
+        object? value = Metadata.GetExifValue(OfficeExifTag.Orientation)?.Value;
+        if (value == null) {
+            return;
+        }
+        int orientation = Convert.ToInt32(value);
+        if (orientation == 1) {
+            return;
+        }
         Apply(image => OfficeRasterTransforms.AutoOrient(image, orientation), image => OfficeRasterTransforms.GetRotatedSize(image, orientation >= 5 ? 90 : 0));
         Metadata.SetExifValue(OfficeExifTag.Orientation, (ushort)1);
     }

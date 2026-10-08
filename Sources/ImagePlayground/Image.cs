@@ -122,7 +122,7 @@ public partial class Image : IDisposable {
         using var mask = FromRaster(Compare(imageToCompare).DifferenceImage);
         string output = Helpers.ResolvePath(filePathToSave);
         Helpers.CreateParentDirectory(output);
-        File.WriteAllBytes(output, mask.Encode(ImageType.Png, null, null));
+        OfficeImageFileWriter.WriteAllBytes(output, mask.Encode(ImageType.Png, null, null));
     }
 
     /// <summary>Saves a PNG difference mask against another image file.</summary>
@@ -132,24 +132,23 @@ public partial class Image : IDisposable {
     }
 
     /// <summary>Encodes the image to a file, preserving animation when writing GIF or PNG.</summary>
-    /// <remarks>Metadata profile families supported by the destination are retained. Call GetEncodingMetadataOmissions to inspect families the destination cannot carry before saving.</remarks>
+    /// <remarks>Metadata profile families supported by the destination are retained. Call GetEncodingMetadataOmissions to inspect families the destination cannot carry before saving. Completed bytes are staged beside the destination and atomically replace it.</remarks>
     public void Save(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null) {
         string fullPath = ResolveOutputPath(filePath);
         byte[] bytes = Encode(Helpers.GetImageType(Path.GetExtension(fullPath)), quality, compressionLevel);
         Helpers.CreateParentDirectory(fullPath);
-        File.WriteAllBytes(fullPath, bytes);
+        OfficeImageFileWriter.WriteAllBytes(fullPath, bytes);
         Helpers.Open(fullPath, openImage);
     }
 
     /// <summary>Encodes and saves the image while observing cancellation.</summary>
-    /// <remarks>Metadata preservation follows the destination format. Call GetEncodingMetadataOmissions before saving when profile omissions must be reviewed.</remarks>
+    /// <remarks>Metadata preservation follows the destination format. Call GetEncodingMetadataOmissions before saving when profile omissions must be reviewed. Cancellation and staging failures preserve the destination until the atomic commit.</remarks>
     public async Task SaveAsync(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null, CancellationToken cancellationToken = default) {
         string fullPath = ResolveOutputPath(filePath);
         byte[] bytes = await Task.Run(() => Encode(Helpers.GetImageType(Path.GetExtension(fullPath)), quality, compressionLevel, cancellationToken), cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
         Helpers.CreateParentDirectory(fullPath);
-        using var stream = File.Create(fullPath);
-        await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
+        await OfficeImageFileWriter.WriteAllBytesAsync(fullPath, bytes, cancellationToken).ConfigureAwait(false);
         Helpers.Open(fullPath, openImage);
     }
 
@@ -228,9 +227,9 @@ public partial class Image : IDisposable {
         catch (NotSupportedException) { return ImageType.Png; }
     }
 
-    private void Apply(Func<OfficeRasterImage, OfficeRasterImage> transform, Func<OfficeRasterImage, (int Width, int Height)>? outputSize = null) {
+    private void Apply(Func<OfficeRasterImage, OfficeRasterImage> transform, Func<OfficeRasterImage, (int Width, int Height)>? outputSize = null, long additionalRetainedBytes = 0) {
         EnsureUsable();
-        _frames = _frames.Transform(transform, outputSize);
+        _frames = _frames.Transform(transform, outputSize, additionalRetainedBytes: additionalRetainedBytes);
     }
 
     private void EnsureUsable() {

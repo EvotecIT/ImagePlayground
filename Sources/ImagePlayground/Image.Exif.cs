@@ -92,16 +92,24 @@ public partial class Image {
                         throw new NotSupportedException("HEIF XMP editing requires an existing writable metadata item.");
                     }
                     if (hasXmp) {
+                        string? xmpText = null;
+                        if (xmp != null) {
+                            try {
+                                xmpText = new UTF8Encoding(false, true).GetString(xmp);
+                            } catch (DecoderFallbackException exception) {
+                                throw new NotSupportedException("HEIF XMP import requires valid UTF-8 metadata.", exception);
+                            }
+                        }
                         string temporary = output + "." + Guid.NewGuid().ToString("N") + ".tmp";
                         temporaryPaths.Add(temporary);
-                        if (!OfficeHeifMetadataReader.TryWriteXmp(currentPath, temporary, xmp == null ? null : Encoding.UTF8.GetString(xmp))) {
+                        if (!OfficeHeifMetadataReader.TryWriteXmp(currentPath, temporary, xmpText)) {
                             throw new NotSupportedException("The existing HEIF XMP item cannot be rewritten.");
                         }
                         currentPath = temporary;
                     }
                 }
                 if (!string.Equals(currentPath, output, StringComparison.Ordinal)) {
-                    File.WriteAllBytes(output, Helpers.ReadEncodedFile(currentPath));
+                    OfficeImageFileWriter.WriteAllBytes(output, Helpers.ReadEncodedFile(currentPath));
                 }
             } finally {
                 foreach (string temporary in temporaryPaths) {
@@ -111,7 +119,7 @@ public partial class Image {
                 }
             }
         } else {
-            File.WriteAllBytes(output, OfficeImageMetadata.Apply(Helpers.ReadEncodedFile(fullPath), metadata));
+            OfficeImageFileWriter.WriteAllBytes(output, OfficeImageMetadata.Apply(Helpers.ReadEncodedFile(fullPath), metadata));
         }
     }
 }

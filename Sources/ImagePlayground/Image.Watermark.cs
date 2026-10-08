@@ -24,24 +24,53 @@ public partial class Image {
         AddImage(watermark.Raster, x, y, opacity);
     }
 
-    /// <summary>Draws repeated image watermarks with nonnegative spacing between tiles.</summary>
-    public void WatermarkImageTiled(string filePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
+    /// <summary>Draws repeated image watermarks within each frame's canvas, observing cancellation during tiling.</summary>
+    /// <remarks>Each target frame is copied once. Timing and playback count remain unchanged, and a failed or canceled operation leaves the original frame sequence intact.</remarks>
+    public void WatermarkImageTiled(string filePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
         if (spacing < 0) { throw new ArgumentOutOfRangeException(nameof(spacing)); }
-        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode);
+        if (opacity < 0 || opacity > 1 || float.IsNaN(opacity)) {
+            throw new ArgumentOutOfRangeException(nameof(opacity));
+        }
+        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
+        if (opacity == 0) {
+            return;
+        }
         long stepX = (long)watermark.Width + spacing;
         long stepY = (long)watermark.Height + spacing;
-        for (long y = spacing; y < Height; y += stepY) {
-            for (long x = spacing; x < Width; x += stepX) { AddImage(watermark.Raster, (int)x, (int)y, opacity); }
-        }
+        long watermarkBytes = watermark.Frames.Sum(frame => (long)frame.Image.Width * frame.Image.Height * 4);
+        _frames = _frames.Transform(source => {
+            var result = source.Clone();
+            var canvas = new OfficeRasterCanvas(result, font: null, fonts: null, cancellationToken: cancellationToken);
+            for (long y = spacing; y < source.Height; y += stepY) {
+                cancellationToken.ThrowIfCancellationRequested();
+                for (long x = spacing; x < source.Width; x += stepX) {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    canvas.DrawAffineImage(watermark.Raster, OfficeTransform.Translate(x, y), opacity);
+                }
+            }
+            return result;
+        }, cancellationToken: cancellationToken, additionalRetainedBytes: watermarkBytes);
     }
 
-    private static Image PrepareWatermark(string filePath, int percentage, int rotate, FlipMode flipMode) {
+    private static Image PrepareWatermark(string filePath, int percentage, int rotate, FlipMode flipMode, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         if (percentage < 1 || percentage > 100) { throw new ArgumentOutOfRangeException(nameof(percentage), "Watermark percentage must be between 1 and 100."); }
         var image = Load(filePath);
         try {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (image.Frames.Count > 1) {
+                var firstFrame = FromRaster(image.Raster);
+                image.Dispose();
+                image = firstFrame;
+            }
             if (percentage != 100) { image.Resize(Math.Max(1, checked((int)((long)image.Width * percentage / 100))), Math.Max(1, checked((int)((long)image.Height * percentage / 100)))); }
+            cancellationToken.ThrowIfCancellationRequested();
             if (flipMode != FlipMode.None) { image.Flip(flipMode); }
+            cancellationToken.ThrowIfCancellationRequested();
             if (rotate != 0) { image.Rotate(rotate); }
+            cancellationToken.ThrowIfCancellationRequested();
             return image;
         } catch { image.Dispose(); throw; }
     }

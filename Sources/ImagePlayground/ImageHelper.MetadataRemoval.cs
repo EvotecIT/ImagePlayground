@@ -17,7 +17,7 @@ public partial class ImageHelper {
             if((options.MetadataTypes&ImageMetadataType.Iptc)!=0)kinds|=OfficeImageMetadataProfileKinds.Iptc;
             if((options.MetadataTypes&ImageMetadataType.C2pa)!=0)kinds|=OfficeImageMetadataProfileKinds.C2pa;
             var result=OfficeImageMetadata.Remove(Helpers.ReadEncodedFile(input),kinds);
-            File.WriteAllBytes(output,result.EncodedBytes);removed=FromProfileKinds(result.RemovedProfiles);
+            OfficeImageFileWriter.WriteAllBytes(output,result.EncodedBytes);removed=FromProfileKinds(result.RemovedProfiles);
         }
         return new ImageMetadataRemovalResult(input,output,options.MetadataTypes,removed,false,originalLength,new FileInfo(output).Length);
     }
