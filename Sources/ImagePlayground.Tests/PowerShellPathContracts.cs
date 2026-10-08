@@ -265,6 +265,8 @@ public partial class ImagePlayground {
             try {
                 _runspace.Open();
                 Environment.CurrentDirectory = ProcessDirectory;
+                // The runtime can resolve a symlinked temporary root to its physical path.
+                ProcessDirectory = Environment.CurrentDirectory;
                 Invoke("Set-Location", ("LiteralPath", Location));
                 Invoke("New-PSDrive", ("Name", "ImagePaths"), ("PSProvider", "FileSystem"), ("Root", Location));
                 Environment.SetEnvironmentVariable(_environmentName, Location);
