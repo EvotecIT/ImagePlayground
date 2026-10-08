@@ -1,6 +1,6 @@
 # ImagePlayground
 
-`ImagePlayground` is the cross-platform .NET image-processing package in this repository. It uses OfficeIMO.Core for managed raster processing and ChartForgeX for GIF/APNG encoding, and targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .NET 10.
+`ImagePlayground` is the cross-platform .NET image-processing package in this repository. It uses OfficeIMO.Core for managed raster processing, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding, and targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .NET 10.
 
 ```shell
 dotnet add package ImagePlayground

@@ -1,6 +1,22 @@
 # Managed image API migration
 
-ImagePlayground uses OfficeIMO.Core for raster processing, metadata, and comparison, and ChartForgeX for GIF/APNG encoding. The editable image wrapper remains `ImagePlayground.Image`; its public APIs use owned types. Updating callers requires source changes when they used the previous image, font, EXIF, or comparison types.
+ImagePlayground uses OfficeIMO.Core for raster processing, metadata, and comparison, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding. The editable image wrapper remains `ImagePlayground.Image`; its public APIs use owned types. Updating callers requires source changes when they used the previous image, font, EXIF, or comparison types.
+
+## ChartForgeX 2.0 assembly ownership
+
+The ChartForgeX packages use version 2.0.0 together. `ChartForgeX` owns chart, topology, geometry, raster primitives, and the neutral visual artifact envelope; `ChartForgeX.Visuals` owns composition, canvases, visual blocks, and watermark decoration; `ChartForgeX.Stories` owns stories, terminal playback, motion, and GIF/APNG encoding. Their namespaces remain unchanged. For example, `ChartForgeX.Raster.RasterAnimationEncoder` is in `ChartForgeX.Stories.dll`, while `ChartForgeX.Composition.ImageComposition` is in `ChartForgeX.Visuals.dll`.
+
+The ImagePlayground NuGet package brings these dependencies automatically. Callers that directly reference an owning engine should use its corresponding package. Update assembly-qualified names or explicit assembly loads that previously resolved story or composition types from `ChartForgeX.dll`. The PowerShell module loads all three assemblies and retains its selected type accelerators. The optional Tree-sitter adapter references `ChartForgeX.Stories` for its story-source contracts.
+
+Static `New-ImageVisualGrid` output remains a `ChartForgeX.VisualBlocks.VisualGrid`. With `-Motion`, it returns a detached `ChartForgeX.Motion.VisualMotionPresentation`; the presentation captures the grid and timeline without changing either caller object. Pipe that result to `New-ImageVisualStory`, or pass it through the command's typed `-Presentation` parameter. `New-ImageVisualStory -PassThru` returns the presentation when motion is supplied and the grid for static output. SVG and HTML retain the timeline; PNG contains the completed static picture.
+
+```powershell
+$motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('requests')
+$presentation = New-ImageVisualGrid -ContentDefinition {
+    New-ImageVisualGridItem -TargetId requests -Block (New-ImageMetricCard -Label Requests -Value 12840)
+} -Motion $motion
+$presentation | New-ImageVisualStory -FilePath '.\requests.svg'
+```
 
 ## Replace public value types
 

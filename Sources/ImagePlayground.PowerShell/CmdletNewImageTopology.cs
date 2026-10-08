@@ -252,16 +252,21 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Svg);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
             if (InteractiveHtml.IsPresent) {
-                chart.SaveInteractiveHtml(output, options);
+                if (Motion == null) {
+                    chart.SaveInteractiveHtml(output, options);
+                } else {
+                    File.WriteAllText(output, new HtmlInteractiveTopologyRenderer().RenderPresentationPage(
+                        chart, prepared => prepared.WithMotion(Motion).ToSvg(), options));
+                }
             } else {
                 SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Html);
             }
         } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
             SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Png);
         } else if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)) {
-            chart.SaveGif(output, options);
+            chart.SaveGif(output, options, Motion);
         } else if (extension.Equals(".apng", StringComparison.OrdinalIgnoreCase)) {
-            chart.SaveApng(output, options);
+            chart.SaveApng(output, options, Motion);
         }
 
         if (Show.IsPresent) {
@@ -395,7 +400,6 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             EnableHtmlScenarioPanel = InteractiveHtml.IsPresent && !NoScenarioPanel.IsPresent,
             EnableHtmlScenarioUrlState = InteractiveHtml.IsPresent && ScenarioUrlState.IsPresent,
             ActiveScenarioId = string.IsNullOrWhiteSpace(ActiveScenarioId) ? null : ActiveScenarioId,
-            Motion = Motion,
             LayoutPreset = LayoutPreset,
             IncludeLayoutDiagnosticOverlay = IncludeLayoutDiagnostics.IsPresent,
             NodeDisplayMode = NodeDisplayMode,
@@ -406,18 +410,40 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
 
     private void SaveStaticArtifact(TopologyChart chart, string output, TopologyRenderOptions topologyOptions, StaticArtifactFormat format) {
         var artifactOptions = new VisualArtifactRenderOptions { Topology = topologyOptions };
-        foreach (VisualWatermark watermark in Watermark ?? Array.Empty<VisualWatermark>()) {
+        VisualWatermark[] watermarks = Watermark ?? Array.Empty<VisualWatermark>();
+        foreach (VisualWatermark watermark in watermarks) {
             if (watermark == null) {
                 throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
             }
-
-            artifactOptions.Watermarks.Add(watermark);
         }
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
             artifactOptions.Raster = new RasterImageOptions { Dpi = Dpi };
         }
-
+        if (Motion != null) {
+            var presentation = chart.WithMotion(Motion, topologyOptions);
+            var motionArtifact = VisualArtifact.Create("topology-motion", VisualArtifactKind.Topology, presentation);
+            motionArtifact.Title = chart.Title ?? string.Empty;
+            motionArtifact.NaturalSize = new VisualArtifactSize(presentation.Width, presentation.Height);
+            motionArtifact.Accessibility.Language = chart.Accessibility.Language;
+            if (format == StaticArtifactFormat.Svg) {
+                var svg = presentation.ToSvg();
+                File.WriteAllText(output, watermarks.Length == 0 ? svg : motionArtifact.ToWatermarkedSvg(svg, watermarks));
+            } else if (format == StaticArtifactFormat.Html) {
+                File.WriteAllText(output, watermarks.Length == 0
+                    ? presentation.ToHtmlPage()
+                    : motionArtifact.ToWatermarkedHtmlPage(presentation.ToSvg(), watermarks));
+            } else {
+                if (watermarks.Length > 0) {
+                    motionArtifact = motionArtifact.ToWatermarkedArtifact(artifactOptions, watermarks);
+                }
+                motionArtifact.SavePng(output, artifactOptions);
+            }
+            return;
+        }
         VisualArtifact artifact = chart.ToVisualArtifact();
+        if (watermarks.Length > 0) {
+            artifact = artifact.ToWatermarkedArtifact(artifactOptions, watermarks);
+        }
         if (format == StaticArtifactFormat.Svg) {
             artifact.SaveSvg(output, artifactOptions);
         } else if (format == StaticArtifactFormat.Html) {

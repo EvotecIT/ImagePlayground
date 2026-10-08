@@ -117,6 +117,8 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
         NETAssemblyTypeAcceleratorMode    = 'Enums'
         NETAssemblyTypeAcceleratorAssemblies = @(
             'ChartForgeX'
+            'ChartForgeX.Visuals'
+            'ChartForgeX.Stories'
             'CodeGlyphX'
             'ImagePlayground'
             'ImagePlayground.PowerShell'
@@ -131,6 +133,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Core.Chart'
             'ChartForgeX.Core.ChartCalendarHeatmapItem'
             'ChartForgeX.Motion.VisualMotionCue'
+            'ChartForgeX.Motion.VisualMotionPresentation'
             'ChartForgeX.Motion.VisualMotionTimeline'
             'ChartForgeX.Primitives.ChartColor'
             'ChartForgeX.Primitives.ChartPoint'

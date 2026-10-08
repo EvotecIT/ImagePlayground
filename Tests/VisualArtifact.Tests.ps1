@@ -45,6 +45,8 @@ Describe 'ChartForgeX visual artifacts' {
         $watermark = New-ImageVisualWatermark -Text 'INTERNAL' -Anchor Center -Opacity 0.2 -RotationDegrees -24
         $svgPath = Join-Path $TestDir 'visual-artifact-watermark.svg'
         $pngPath = Join-Path $TestDir 'visual-artifact-watermark.png'
+        $sourceSvg = [ChartForgeX.VisualArtifacts.VisualArtifactRendering]::ToSvg($artifact)
+        $sourceRender = $artifact.RenderSource
 
         $artifact | Export-ImageVisualArtifact -FilePath $svgPath -Watermark $watermark
         $artifact | Export-ImageVisualArtifact -FilePath $pngPath -Watermark $watermark -Dpi 144
@@ -52,6 +54,8 @@ Describe 'ChartForgeX visual artifacts' {
         (Get-Content $svgPath -Raw) | Should -Match 'INTERNAL'
         $png = [System.IO.File]::ReadAllBytes($pngPath)
         [System.Text.Encoding]::ASCII.GetString($png) | Should -Match 'pHYs'
+        [ChartForgeX.VisualArtifacts.VisualArtifactRendering]::ToSvg($artifact) | Should -BeExactly $sourceSvg
+        [object]::ReferenceEquals($artifact.RenderSource, $sourceRender) | Should -BeTrue
     }
 
     It 'normalizes null-only bindings and rejects mixed null watermark entries across visual cmdlets' {

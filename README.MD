@@ -29,7 +29,7 @@ The PowerShell module provides one scripting surface over reusable .NET librarie
 
 - **ImagePlayground** provides the editable image wrapper and file workflows.
 - **OfficeIMO.Core** handles managed raster decoding, filters, transforms, metadata, and pixel comparison.
-- **ChartForgeX** handles animation encoding, charts, visual blocks, canvases, topology, hierarchy, and story rendering.
+- **ChartForgeX** handles charts, topology, hierarchy, and raster primitives. **ChartForgeX.Visuals** handles composition, visual blocks, and canvases; **ChartForgeX.Stories** handles animation encoding and story rendering.
 - **CodeGlyphX** handles QR-code and barcode generation and decoding.
 
 PowerShell users install one module. .NET applications reference only the package that owns the capability they need.
@@ -121,7 +121,7 @@ dotnet add package ChartForgeX
 dotnet add package CodeGlyphX
 ```
 
-The ImagePlayground .NET package uses OfficeIMO.Core for raster processing and ChartForgeX for GIF/APNG encoding. The PowerShell module also exposes ChartForgeX charts and stories and CodeGlyphX QR codes and barcodes.
+The ImagePlayground .NET package uses OfficeIMO.Core for raster processing, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding. These ChartForgeX packages use version 2.0.0 together. The PowerShell module also exposes ChartForgeX charts and stories and CodeGlyphX QR codes and barcodes.
 
 ## Quick start
 
@@ -179,7 +179,7 @@ ImageHelper.Resize(
 
 ## Image processing and composition
 
-ImagePlayground uses the managed raster APIs in [OfficeIMO.Core](https://github.com/EvotecIT/OfficeIMO) and the GIF/APNG encoder in [ChartForgeX](https://github.com/EvotecIT/ChartForgeX). Image APIs expose owned value types and buffers. See the [migration guide](Docs/Managed-Image-Migration.md) for type, comparison, and format changes.
+ImagePlayground uses the managed raster APIs in [OfficeIMO.Core](https://github.com/EvotecIT/OfficeIMO), composition in [ChartForgeX.Visuals](https://www.nuget.org/packages/ChartForgeX.Visuals), and GIF/APNG encoding in [ChartForgeX.Stories](https://www.nuget.org/packages/ChartForgeX.Stories). Image APIs expose owned value types and buffers. See the [migration guide](Docs/Managed-Image-Migration.md) for type, assembly, comparison, and format changes.
 
 ### Focused commands for one operation
 
@@ -704,7 +704,9 @@ image.Save("photo-watermarked.jpg");
 | Need | Package |
 | --- | --- |
 | Image loading, processing, composition, metadata, thumbnails, icons, mosaics, avatars, or GIFs | [`ImagePlayground`](https://www.nuget.org/packages/ImagePlayground) |
-| Charts, topology, hierarchy, visual blocks, canvases, or stories | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
+| Charts, topology, hierarchy, and raster primitives | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
+| Composition, visual blocks, canvases, and watermark decoration | [`ChartForgeX.Visuals`](https://www.nuget.org/packages/ChartForgeX.Visuals) |
+| Stories, terminal playback, motion, and GIF/APNG encoding | [`ChartForgeX.Stories`](https://www.nuget.org/packages/ChartForgeX.Stories) |
 | QR codes, barcodes, GS1 data, renderers, or image decoding | [`CodeGlyphX`](https://www.nuget.org/packages/CodeGlyphX) |
 | PowerShell access to all three owners | [`ImagePlayground`](https://www.powershellgallery.com/packages/ImagePlayground) module |
 
@@ -754,7 +756,7 @@ Generated command Markdown and external help come from the C# XML documentation 
 - PowerShell: Windows PowerShell 5.1 and PowerShell 7+
 - Core library: .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .NET 10
 - Raster processing, metadata, and comparison engine: OfficeIMO.Core
-- Chart, topology, canvas, and story engine: ChartForgeX
+- Chart and topology engine: ChartForgeX; canvas and composition engine: ChartForgeX.Visuals; story and animation engine: ChartForgeX.Stories
 - QR-code and barcode engine: CodeGlyphX
 - Optional C# and Bash source highlighting: `ImagePlayground.Syntax.TreeSitter`
 

@@ -204,6 +204,7 @@ Describe 'New-ImageTopology' {
         $html = Get-Content -Path $file -Raw
         $html | Should -Match 'data-cfx-topology-scenario="request"'
         $html | Should -Match 'data-cfx-active-scenario="request"'
+        $html | Should -Match 'animateMotion'
     }
 
     It 'exports animated topology GIF and APNG files' {

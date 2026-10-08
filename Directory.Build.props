@@ -7,6 +7,9 @@
     <UseLocalChartForgeXProject Condition="'$(UseLocalChartForgeXProject)' == ''">false</UseLocalChartForgeXProject>
     <ChartForgeXProjectPath Condition="'$(ChartForgeXProjectPath)' == '' And '$(UseLocalChartForgeXProject)' == 'true' And '$(EVOTEC_GITHUB_ROOT)' != ''">$([MSBuild]::NormalizePath('$(EVOTEC_GITHUB_ROOT)', 'ChartForgeX', 'ChartForgeX', 'ChartForgeX.csproj'))</ChartForgeXProjectPath>
     <ChartForgeXProjectPath Condition="'$(ChartForgeXProjectPath)' == '' And '$(UseLocalChartForgeXProject)' == 'true'">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..', 'ChartForgeX', 'ChartForgeX', 'ChartForgeX.csproj'))</ChartForgeXProjectPath>
+    <ChartForgeXVisualsProjectPath Condition="'$(ChartForgeXVisualsProjectPath)' == '' And '$(ChartForgeXProjectPath)' != ''">$([MSBuild]::NormalizePath('$(ChartForgeXProjectPath)', '..', '..', 'ChartForgeX.Visuals', 'ChartForgeX.Visuals.csproj'))</ChartForgeXVisualsProjectPath>
+    <ChartForgeXStoriesProjectPath Condition="'$(ChartForgeXStoriesProjectPath)' == '' And '$(ChartForgeXProjectPath)' != ''">$([MSBuild]::NormalizePath('$(ChartForgeXProjectPath)', '..', '..', 'ChartForgeX.Stories', 'ChartForgeX.Stories.csproj'))</ChartForgeXStoriesProjectPath>
+    <ChartForgeXInteractivityHtmlProjectPath Condition="'$(ChartForgeXInteractivityHtmlProjectPath)' == '' And '$(ChartForgeXProjectPath)' != ''">$([MSBuild]::NormalizePath('$(ChartForgeXProjectPath)', '..', '..', 'ChartForgeX.Interactivity.Html', 'ChartForgeX.Interactivity.Html.csproj'))</ChartForgeXInteractivityHtmlProjectPath>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/EvotecIT/ImagePlayground</RepositoryUrl>

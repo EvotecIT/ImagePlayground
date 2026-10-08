@@ -233,6 +233,99 @@ public partial class ImagePlayground {
         }
     }
 
+    [Fact]
+    public void Test_PowerShell_V2MotionPresentationExportsWithoutChangingStaticGrid() {
+        using var fixture = new PowerShellPathFixture();
+        var grid = ChartForgeX.VisualBlocks.VisualGrid.Create().WithTitle("Detached motion");
+        grid.Add("requests", ChartForgeX.VisualBlocks.MetricCard.Create().WithMetric("Requests", "12840"));
+        string before = grid.ToSvg();
+        var motion = ChartForgeX.Motion.VisualMotionTimeline.Create().Rise("requests");
+        var presentation = Assert.IsType<ChartForgeX.Motion.VisualMotionPresentation>(fixture.Invoke("New-ImageVisualStory", ("Grid", grid), ("Motion", motion), ("FilePath", "./motion.svg"), ("PassThru", true)).Single().BaseObject);
+        Assert.Equal("ChartForgeX.Stories", presentation.GetType().Assembly.GetName().Name);
+        Assert.Equal("ChartForgeX.Visuals", grid.GetType().Assembly.GetName().Name);
+        Assert.Equal(before, grid.ToSvg());
+        Assert.Contains("data-cfx-motion-target=\"requests\"", File.ReadAllText(Path.Combine(fixture.Location, "motion.svg")));
+        var exported = fixture.Invoke("New-ImageVisualStory", ("Presentation", presentation), ("FilePath", "./motion.png"), ("PassThru", true)).Single().BaseObject;
+        Assert.Same(presentation, exported);
+        fixture.AssertImageOutput("motion.png", presentation.ToRgbaImage().Width, presentation.ToRgbaImage().Height);
+    }
+
+    [Fact]
+    public void Test_PowerShell_V2MotionGridReturnsTypedReusablePresentation() {
+        using var fixture = new PowerShellPathFixture();
+        var item = ChartForgeX.VisualBlocks.VisualGridItem.FromBlock("requests", ChartForgeX.VisualBlocks.MetricCard.Create().WithMetric("Requests", "12840"));
+        var motion = ChartForgeX.Motion.VisualMotionTimeline.Create().Rise("requests");
+        var presentation = Assert.IsType<ChartForgeX.Motion.VisualMotionPresentation>(fixture.Invoke("New-ImageVisualGrid", ("Content", new[] { item }), ("Motion", motion)).Single().BaseObject);
+        motion.Add("later-target", ChartForgeX.Motion.VisualMotionEffect.Fade);
+        Assert.Contains("data-cfx-motion-target=\"requests\"", presentation.ToSvg());
+        Assert.DoesNotContain("data-cfx-motion-target=\"later-target\"", presentation.ToSvg());
+    }
+
+    [Fact]
+    public void Test_PowerShell_V2WatermarkExportPreservesCallerArtifactAndPassThru() {
+        using var fixture = new PowerShellPathFixture();
+        var chart = Chart.Create().WithSize(240, 160).WithTitle("Caller artifact").AddBar("Requests", ChartPoints.FromValues(1, 2));
+        var artifact = chart.ToVisualArtifact();
+        artifact.Metadata.Add("caller", "preserved");
+        string before = artifact.ToSvg();
+        var renderSource = artifact.RenderSource;
+        var regions = artifact.Regions.ToArray();
+        var watermark = VisualWatermark.FromText("INTERNAL");
+        var returned = fixture.Invoke("Export-ImageVisualArtifact", ("Artifact", artifact), ("Watermark", new[] { watermark }), ("FilePath", "./watermark.svg"), ("PassThru", true)).Single().BaseObject;
+        Assert.Same(artifact, returned);
+        Assert.Contains("INTERNAL", File.ReadAllText(Path.Combine(fixture.Location, "watermark.svg")));
+        fixture.Invoke("Export-ImageVisualArtifact", ("Artifact", artifact), ("Watermark", new[] { watermark }), ("FilePath", "./watermark.png"), ("Dpi", 144D));
+        fixture.AssertImageOutput("watermark.png", 240, 160);
+        Assert.Equal(before, artifact.ToSvg());
+        Assert.Same(renderSource, artifact.RenderSource);
+        Assert.Equal("preserved", artifact.Metadata["caller"]);
+        Assert.Equal(regions, artifact.Regions);
+    }
+
+    [Theory]
+    [InlineData("svg", false)]
+    [InlineData("html", false)]
+    [InlineData("png", false)]
+    [InlineData("svg", true)]
+    [InlineData("html", true)]
+    [InlineData("png", true)]
+    public void Test_PowerShell_V2TopologyMotionRetainsRenderAndChartPassThru(string extension, bool watermarked) {
+        using var fixture = new PowerShellPathFixture();
+        var chart = TopologyChart.Create();
+        chart.Viewport.Width = 320;
+        chart.Viewport.Height = 200;
+        chart.Nodes.Add(new TopologyNode { Id = "api", Label = "API" });
+        chart.Nodes.Add(new TopologyNode { Id = "db", Label = "Database" });
+        chart.Edges.Add(new TopologyEdge { Id = "api-db", SourceNodeId = "api", TargetNodeId = "db" });
+        var motion = TopologyMotionOptions.RoutePulseForEdges("api-db").AtProgress(0.5);
+        string before = chart.ToSvg();
+        string outputName = "topology-motion." + extension;
+        var parameters = new List<(string, object)> { ("Chart", chart), ("Motion", motion), ("FilePath", "./" + outputName), ("Dpi", 144D), ("PassThru", true) };
+        if (watermarked) {
+            parameters.Add(("Watermark", new[] { VisualWatermark.FromText("INTERNAL") }));
+        }
+        var returned = fixture.Invoke("New-ImageTopology", parameters.ToArray()).Single().BaseObject;
+        Assert.Same(chart, returned);
+        Assert.Equal(before, chart.ToSvg());
+        if (extension == "png") {
+            using var image = PlaygroundImage.Load(Path.Combine(fixture.Location, outputName));
+            Assert.True(image.Width >= 320);
+            Assert.True(image.Height >= 200);
+            Assert.Contains("pHYs", Encoding.ASCII.GetString(File.ReadAllBytes(Path.Combine(fixture.Location, outputName))));
+            if (watermarked) {
+                fixture.Invoke("New-ImageTopology", ("Chart", chart), ("Motion", motion), ("FilePath", "./unmarked.png"), ("Dpi", 144D));
+                using var unmarked = PlaygroundImage.Load(Path.Combine(fixture.Location, "unmarked.png"));
+                Assert.Equal(image.Width, unmarked.Width);
+                Assert.Equal(image.Height, unmarked.Height);
+                Assert.False(image.Raster.GetPixels().SequenceEqual(unmarked.Raster.GetPixels()));
+            }
+        } else {
+            string markup = File.ReadAllText(Path.Combine(fixture.Location, outputName));
+            Assert.Contains("animateMotion", markup);
+            if (watermarked) Assert.Contains("INTERNAL", markup);
+        }
+    }
+
     private sealed class PowerShellPathFixture : IDisposable {
         private readonly string _originalDirectory = Environment.CurrentDirectory;
         private readonly string _root = Path.Combine(Path.GetTempPath(), "ImagePlayground-paths-" + Guid.NewGuid().ToString("N"));
