@@ -45,7 +45,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.Rotate(rotateMode);
+        img.Rotate(rotateMode, cancellationToken: cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
@@ -58,7 +58,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.Rotate(degrees);
+        img.Rotate(degrees, cancellationToken: cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

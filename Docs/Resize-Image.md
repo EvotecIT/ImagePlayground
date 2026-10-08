@@ -6,50 +6,60 @@ schema: 2.0.0
 ---
 # Resize-Image
 ## SYNOPSIS
-Resizes an image.
+Resizes an image object or a source file.
 
 ## SYNTAX
-### HeightWidth (Default)
+### FileDimensions (Default)
 ```powershell
 Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [<CommonParameters>]
 ```
 
-### Percentage
+### FilePercentage
 ```powershell
-Resize-Image [-FilePath] <string> [-OutputPath] <string> [-Percentage <int>] [<CommonParameters>]
+Resize-Image [-FilePath] <string> [-OutputPath] <string> -Percentage <int> [<CommonParameters>]
+```
+
+### ObjectDimensions
+```powershell
+Resize-Image [-Image] <Image> [[-OutputPath] <string>] [-Width <int>] [-Height <int>] [-DontRespectAspectRatio] [<CommonParameters>]
+```
+
+### ObjectPercentage
+```powershell
+Resize-Image [-Image] <Image> [[-OutputPath] <string>] -Percentage <int> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Width and height bound the resized image while preserving its aspect ratio. Use DontRespectAspectRatio to stretch to the supplied dimensions, or Percentage for uniform scaling.
+Width and height bound the resized image while preserving its aspect ratio. Object input is updated and emitted for further edits or saving. Path input requires OutputPath and saves the result.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100
+Get-Image in.png | Resize-Image -Width 1200 | Save-Image -FilePath out.png
 ```
 
 
 ### EXAMPLE 2
 ```powershell
-Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100 -DontRespectAspectRatio
+Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100
 ```
 
 
 ### EXAMPLE 3
 ```powershell
-Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200
+$image | Resize-Image -Percentage 200
 ```
 
 
 ## PARAMETERS
 
 ### -DontRespectAspectRatio
-Disables aspect ratio preservation. An omitted dimension retains its original value.
+Stretches to the supplied dimensions; an omitted dimension retains its original value.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: HeightWidth
+Parameter Sets: FileDimensions, ObjectDimensions
 Aliases: None
 Possible values:
 
@@ -61,11 +71,11 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-The image must exist.
+Source path, resolved in the current PowerShell filesystem location.
 
 ```yaml
 Type: String
-Parameter Sets: HeightWidth, Percentage
+Parameter Sets: FileDimensions, FilePercentage
 Aliases: None
 Possible values:
 
@@ -77,11 +87,11 @@ Accept wildcard characters: False
 ```
 
 ### -Height
-When aspect ratio is preserved, a height alone determines the corresponding width.
+Requested height or maximum height when both bounds are supplied.
 
 ```yaml
 Type: Int32
-Parameter Sets: HeightWidth
+Parameter Sets: FileDimensions, ObjectDimensions
 Aliases: None
 Possible values:
 
@@ -92,16 +102,32 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -OutputPath
-Supported formats depend on the file extension.
+### -Image
+Editable object; the same instance is emitted after resizing.
 
 ```yaml
-Type: String
-Parameter Sets: HeightWidth, Percentage
+Type: Image
+Parameter Sets: ObjectDimensions, ObjectPercentage
 Aliases: None
 Possible values:
 
 Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -OutputPath
+Destination path; required for path input and optional for object input.
+
+```yaml
+Type: String
+Parameter Sets: FileDimensions, FilePercentage, ObjectDimensions, ObjectPercentage
+Aliases: None
+Possible values:
+
+Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
@@ -109,15 +135,15 @@ Accept wildcard characters: False
 ```
 
 ### -Percentage
-Applies uniform scaling relative to the original size.
+Positive percentage for uniform scaling relative to the original dimensions.
 
 ```yaml
 Type: Int32
-Parameter Sets: Percentage
+Parameter Sets: FilePercentage, ObjectPercentage
 Aliases: None
 Possible values:
 
-Required: False
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -125,11 +151,11 @@ Accept wildcard characters: False
 ```
 
 ### -Width
-When aspect ratio is preserved, a width alone determines the corresponding height.
+The shared owner validates pixel and working-memory limits before allocation.
 
 ```yaml
 Type: Int32
-Parameter Sets: HeightWidth
+Parameter Sets: FileDimensions, ObjectDimensions
 Aliases: None
 Possible values:
 
@@ -146,10 +172,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 - `System.String`
+- `ImagePlayground.Image`
 
 ## OUTPUTS
 
-- `None`
+- `ImagePlayground.Image`
 
 ## RELATED LINKS
 

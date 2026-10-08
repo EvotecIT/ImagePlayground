@@ -64,7 +64,10 @@ public partial class ImageHelper {
             data=JsonSerializer.Deserialize<SerializedImageMetadata>(json, MetadataJsonOptions)??throw new InvalidDataException("Metadata JSON cannot be null.");
         } catch (JsonException exception) { throw new InvalidDataException("Metadata JSON cannot be parsed.", exception); }
         if(!Enum.IsDefined(typeof(OfficeImageResolutionUnit),data.ResolutionUnits)) throw new InvalidDataException("The metadata resolution unit is unknown.");
-        var metadata=new OfficeImageMetadata { HorizontalResolution=data.HorizontalResolution,VerticalResolution=data.VerticalResolution,ResolutionUnits=data.ResolutionUnits,ExifProfile=data.ExifProfile,XmpProfile=data.XmpProfile,IccProfile=data.IccProfile,IptcProfile=data.IptcProfile };
+        var resolution = new OfficeImageResolution(data.HorizontalResolution, data.VerticalResolution, data.ResolutionUnits);
+        var metadata = new OfficeImageMetadata { ExifProfile=data.ExifProfile,XmpProfile=data.XmpProfile,IccProfile=data.IccProfile,IptcProfile=data.IptcProfile };
+        // Profile parsing restores its stored density; the editable JSON resolution fields take precedence.
+        metadata.Resolution = resolution;
         Image.WriteMetadataFile(Helpers.ResolvePath(filePath),outFilePath,metadata);
     }
     /// <summary>Removes all supported metadata profiles.</summary>

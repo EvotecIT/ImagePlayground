@@ -131,10 +131,13 @@ public partial class ImagePlayground {
         Assert.Throws<InvalidDataException>(() => ImageHelper.ImportMetadata(options));
     }
 
-    [Fact]
-    public void Test_Metadata_MissingProperties_Throws() {
-        string imgPath = Path.Combine(_directoryWithTests, "metadata_missing.jpg");
-        string metaPath = Path.Combine(_directoryWithTests, "metadata_missing.json");
+    [Theory]
+    [InlineData("HorizontalResolution")]
+    [InlineData("VerticalResolution")]
+    [InlineData("ResolutionUnits")]
+    public void Test_Metadata_MissingProperties_Throws(string property) {
+        string imgPath = Path.Combine(_directoryWithTests, "metadata_missing_" + property + ".jpg");
+        string metaPath = Path.Combine(_directoryWithTests, "metadata_missing_" + property + ".json");
         if (File.Exists(imgPath)) File.Delete(imgPath);
         if (File.Exists(metaPath)) File.Delete(metaPath);
 
@@ -148,7 +151,7 @@ public partial class ImagePlayground {
         ImageHelper.ExportMetadata(imgPath, metaPath);
 
         var node = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(metaPath))!;
-        node.AsObject().Remove("HorizontalResolution");
+        node.AsObject().Remove(property);
         File.WriteAllText(metaPath, node.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
 
         var options = new ImageHelper.ImportMetadataOptions(imgPath, metaPath, imgPath);

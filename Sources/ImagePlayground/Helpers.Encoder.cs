@@ -23,18 +23,8 @@ public static partial class Helpers {
     /// <summary>Resolves the shared encoder format from a file extension.</summary>
     public static OfficeImageExportFormat GetEncoder(string extension) => GetEncoder(GetImageType(extension));
 
-    internal static OfficeImageFormat GetContainerFormat(ImageType type) => type switch {
-        ImageType.Png => OfficeImageFormat.Png,
-        ImageType.Jpeg => OfficeImageFormat.Jpeg,
-        ImageType.Gif => OfficeImageFormat.Gif,
-        ImageType.Bmp => OfficeImageFormat.Bmp,
-        ImageType.Pbm => OfficeImageFormat.PortableMap,
-        ImageType.Tga => OfficeImageFormat.Tga,
-        ImageType.Tiff => OfficeImageFormat.Tiff,
-        ImageType.WebP => OfficeImageFormat.Webp,
-        ImageType.Icon => OfficeImageFormat.Icon,
-        _ => throw new ArgumentOutOfRangeException(nameof(type))
-    };
+    internal static OfficeImageFormat GetContainerFormat(ImageType type) =>
+        type == ImageType.Gif ? OfficeImageFormat.Gif : GetEncoder(type).GetContainerFormat();
 
     /// <summary>Creates format-specific encoding options, clamping quality and compression controls to their supported ranges.</summary>
     public static OfficeRasterEncodingOptions GetEncodingOptions(ImageType type, int? quality, int? compressionLevel) {

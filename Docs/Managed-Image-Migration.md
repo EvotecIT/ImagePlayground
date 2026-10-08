@@ -50,6 +50,28 @@ image.AddText(20, 20, "Caption", OfficeColor.White, 24);
 image.Save("captioned.png");
 ```
 
+`Load` accepts owned `OfficeRasterDecodeOptions` for encoded-byte, pixel, memory, frame-count, and cancellation limits. Stream input reads from its current position and remains open. `SourceFormat` describes the detected container; `DefaultOutputFormat` describes the supported format used by parameterless stream export. An unsupported export container defaults to PNG. A filename extension does not change source-format detection.
+
+Loading retains stored EXIF orientation by default so `AutoOrient` can apply it during editing. Passing `ApplyExifOrientation = true` normalizes pixels during decoding and resets the editable orientation tag to normal.
+
+Use an explicit format for stream conversion. `Encode` prepares complete bytes and reports metadata omissions before any output is written:
+
+```csharp
+using var image = Image.Load("photo.jpg");
+image.Resize(new OfficeRasterResizeOptions {
+    Width = 1200,
+    Height = 800,
+    Fit = OfficeImageFit.Cover
+});
+var result = image.Encode(ImageType.Png);
+byte[] bytes = result.RequireMetadataPreservation();
+using var stream = image.ToStream(ImageType.Png);
+```
+
+`RequireMetadataPreservation()` throws when a supplied profile family cannot be retained. It does not promise lossless pixel compression. `EncodedBytes` belongs to the result; `Metadata` is an independent requested projection rather than a reread of density values rounded by the destination codec. Metadata describes the primary image. `ToRgbaImage()` and `FromRgbaImage()` copy pixels for ChartForgeX composition without sharing mutable buffers.
+
+File saves replace the destination atomically after encoding. Stream saves keep the stream open; seekable streams are replaced, truncated, and rewound, while nonseekable streams receive bytes at their current position. A write error or cancellation during writing can leave partial stream output.
+
 ## Update PowerShell scripts
 
 `Get-Image` returns an editable `ImagePlayground.Image`, and `Save-Image` accepts that wrapper. Use the owned color and EXIF types in typed parameters and method calls.
@@ -64,6 +86,26 @@ try {
     $image.Dispose()
 }
 ```
+
+Object input to `Resize-Image` updates and emits the same image for further processing. File input requires `-OutputPath` and saves without emitting an editable object. The shared engine validates the requested size and memory budget; the former 1000-pixel command limit is removed.
+
+```powershell
+$image = Get-Image -FilePath '.\photo.jpg'
+try {
+    $image | Resize-Image -Width 1200 | Save-Image -FilePath '.\small.png'
+    $stream = $image | Save-Image -AsStream -Format Png
+    try {
+        # Read the encoded PNG from position zero.
+        $stream.Length
+    } finally {
+        $stream.Dispose()
+    }
+} finally {
+    $image.Dispose()
+}
+```
+
+`Save-Image -EncodingOptions` accepts `OfficeRasterEncodingOptions`. `-Quality` and `-CompressionLevel` override the corresponding settings. `-Format` applies to stream output; file output uses the destination extension. Omit the stream format to use `DefaultOutputFormat`.
 
 ## Edit EXIF and profile bytes
 
@@ -83,7 +125,7 @@ Raster saving preserves the profile families supported by the selected container
 
 Lossless metadata import and editing reject profiles that their original container cannot represent. TIFF maker notes with offsets relative to the original file require explicit removal or replacement before raster re-encoding. Physical image density is preserved across supported unit conversions; `PhysicalDpiX` and `PhysicalDpiY` provide inch-based values, while `ResolutionUnits` describes the container's native representation.
 
-The wrapper exposes primary/global TIFF metadata and applies its native resolution to every encoded page. `Metadata.Resolution` returns an immutable snapshot containing the horizontal value, vertical value, and native unit.
+The wrapper exposes primary/global TIFF metadata and applies its native resolution to every encoded page. Assign `Metadata.Resolution` to set the horizontal value, vertical value, and native unit together. The scalar resolution properties and generic EXIF density edits update the same authority. In encoder options, nullable `Resolution` overrides metadata only when supplied; it replaces the shared `DpiX` and `DpiY` settings.
 
 ## Read comparison results
 
@@ -108,6 +150,12 @@ Compare-Image -FilePath '.\expected.png' -FilePathToCompare '.\actual.png' -Outp
 
 Resizing preserves aspect ratio by default. A single width or height determines the other dimension; supplying both dimensions fits each frame inside that bounding box. Set `keepAspectRatio: false` in .NET or use `Resize-Image -DontRespectAspectRatio` in PowerShell to stretch to the supplied dimensions. Percentage resizing retains integer truncation of each resulting dimension, with a minimum of one pixel.
 
+The .NET options overload accepts the shared `OfficeRasterResizeOptions`: `Contain` fits without padding, `Cover` fills both bounds and crops the center, and `Stretch` uses the requested dimensions. Sampling and color space are explicit. The shared frame operation checks retained pixels and peak working memory before replacing the frame sequence. `OfficeRasterResampler.PlanResize` exposes the resulting geometry and memory estimate before allocation.
+
+Use `OfficeRasterTextOptions` with `GetTextSize` and the boxed `AddText` overload to share font selection, shaping, wrapping, alignment, outline, and shadow settings between measurement and rendering. Caller-provided font collections avoid relying on installed system fonts. Cancellation tokens reach loading, resizing, drawing, text, and encoding operations.
+
+Text and filters reserve their largest per-frame temporary storage alongside all retained source and result frames before editing begins. A rejected memory plan leaves the original sequence intact. The shared text and filter estimators expose the same policy to applications that compose Core operations directly.
+
 `Avatar` edits each frame. `SaveAsAvatar` and `SaveAsCircularAvatar` create independent output and preserve the source pixels and metadata, including when encoding or writing fails. Their stream overloads write PNG, retain transparent corners, and keep the caller's stream open. PNG output preserves multiple frames as APNG with their timing and play count.
 
 `AutoOrient` applies an existing EXIF orientation and resets it to normal. Images without that tag retain their pixels and metadata. Tiled watermarks use each frame's own dimensions, clip the last tiles at its edges, and retain timing and play count. `WatermarkImageTiled` accepts an optional cancellation token; cancellation leaves the original frame sequence intact.
@@ -118,7 +166,7 @@ JPEG quality is clamped to 1 through 100. PNG compression levels are clamped to 
 
 Images expose frame timing and play count through `OfficeRasterFrames` and `OfficeRasterFrame`. GIF/APNG output uses the shared ChartForgeX animation encoder. Formats that cannot retain several frames reject such output so callers must select the intended frame explicitly.
 
-Frames without a positive duration, including TIFF pages exported as animation, use 100 milliseconds. GIF stores timing in 10-millisecond units with a 10-millisecond minimum, and pixels with alpha below 128 become transparent. Use APNG when partial alpha must be preserved.
+Explicit zero-duration frames retain zero duration in GIF and APNG. GIF rounds positive delays to 10-millisecond units with a 10-millisecond minimum; APNG uses rational delays. Negative delays are rejected. Maximum supported delays are 655.35 seconds for GIF and 65,535 seconds for APNG. TIFF pages with no authored duration therefore export with zero delay unless the caller supplies timing. GIF pixels with alpha below 128 become transparent. Use APNG when partial alpha must be preserved.
 
 Saving `.ico` retains the image's resolution entries, each up to 256 pixels on each axis. `SaveAsIcon(path, sizes)` derives a requested set of square entries from the first frame. ICO thumbnails resize the entries through the managed raster engine. Thumbnail generation skips undecodable files, preserves decodable originals whose extension has no encoder, and propagates resizing or encoding failures for supported output formats.
 

@@ -10,13 +10,13 @@ public partial class ImageHelper {
     public static void ConvertTo(string filePath, string outFilePath, int? quality = null, int? compressionLevel = null) {
         string input = Helpers.ResolvePath(filePath);
         string output = Helpers.ResolvePath(outFilePath);
-        if (Path.GetExtension(output).Equals(".ico", StringComparison.OrdinalIgnoreCase) &&
-            Path.GetExtension(input).Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
+        byte[] inputBytes = Helpers.ReadEncodedFile(input);
+        using var image = Image.Load(inputBytes);
+        if (Helpers.GetImageType(Path.GetExtension(output)) == ImageType.Icon && image.SourceFormat == OfficeImageFormat.Icon) {
             Helpers.CreateParentDirectory(output);
-            File.Copy(input, output, true);
+            OfficeImageFileWriter.WriteAllBytes(output, inputBytes);
             return;
         }
-        using var image = Image.Load(input);
         image.Save(output, quality: quality, compressionLevel: compressionLevel);
     }
     /// <summary>Resizes all image frames and saves the result, fitting within supplied bounds when preserving aspect ratio.</summary>
@@ -26,35 +26,15 @@ public partial class ImageHelper {
     /// <summary>Loads, resizes, and saves while observing cancellation.</summary>
     public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested(); using var image = await Image.LoadAsync(filePath, cancellationToken).ConfigureAwait(false);
-        image.Resize(width, height, keepAspectRatio, sampler); await image.SaveAsync(outFilePath, cancellationToken: cancellationToken).ConfigureAwait(false);
+        image.Resize(width, height, keepAspectRatio, sampler, cancellationToken); await image.SaveAsync(outFilePath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
     /// <summary>Returns independently resized raster pixels, fitting within supplied bounds when preserving aspect ratio; the input remains unchanged.</summary>
-    public static OfficeRasterImage Resize(OfficeRasterImage image, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
-        var dimensions = GetResizeDimensions(image, width, height, keepAspectRatio);
-        return OfficeRasterResampler.Resize(image, dimensions.Width, dimensions.Height, sampler.HasValue ? Helpers.GetResampler(sampler.Value) : OfficeRasterResamplingMode.Bicubic);
-    }
+    public static OfficeRasterImage Resize(OfficeRasterImage image, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null, CancellationToken cancellationToken = default) =>
+        OfficeRasterResampler.Resize(image, new OfficeRasterResizeOptions {
+            Width = width, Height = height, Fit = keepAspectRatio ? OfficeImageFit.Contain : OfficeImageFit.Stretch,
+            ResamplingMode = sampler.HasValue ? Helpers.GetResampler(sampler.Value) : OfficeRasterResamplingMode.Bicubic
+        }, cancellationToken);
 
-    internal static (int Width, int Height) GetResizeDimensions(OfficeRasterImage image, int? width, int? height, bool keepAspectRatio) {
-        if (image == null) {
-            throw new ArgumentNullException(nameof(image));
-        }
-        if (width <= 0 || height <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(width), "Requested dimensions must be positive.");
-        }
-        int outputWidth = width ?? image.Width, outputHeight = height ?? image.Height;
-        if (keepAspectRatio) {
-            if (width.HasValue && height.HasValue) {
-                double scale = Math.Min(width.Value / (double)image.Width, height.Value / (double)image.Height);
-                outputWidth = Math.Min(width.Value, Math.Max(1, checked((int)Math.Round(image.Width * scale))));
-                outputHeight = Math.Min(height.Value, Math.Max(1, checked((int)Math.Round(image.Height * scale))));
-            } else if (width.HasValue) {
-                outputHeight = Math.Max(1, checked((int)Math.Round(width.Value * image.Height / (double)image.Width)));
-            } else if (height.HasValue) {
-                outputWidth = Math.Max(1, checked((int)Math.Round(height.Value * image.Width / (double)image.Height)));
-            }
-        }
-        return (outputWidth, outputHeight);
-    }
     /// <summary>Scales all image frames by a positive percentage and saves the result.</summary>
     public static void Resize(string filePath, string outFilePath, int percentage) {
         using var image = Image.Load(filePath); image.Resize(percentage); image.Save(outFilePath);
@@ -62,7 +42,7 @@ public partial class ImageHelper {
     /// <summary>Scales and saves the image while observing cancellation.</summary>
     public static async Task ResizeAsync(string filePath, string outFilePath, int percentage, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested(); using var image = await Image.LoadAsync(filePath, cancellationToken).ConfigureAwait(false);
-        image.Resize(percentage); await image.SaveAsync(outFilePath, cancellationToken: cancellationToken).ConfigureAwait(false);
+        image.Resize(percentage, cancellationToken); await image.SaveAsync(outFilePath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
     /// <summary>Combines the first frames of two images at the requested relative placement.</summary>
     public static void Combine(string filePath, string filePath2, string outFilePath, bool resizeToFit = false, ImagePlacement imagePlacement = ImagePlacement.Bottom) {

@@ -23,7 +23,7 @@ public partial class Image {
         for (int i = 0; i < frames.Length; i++) {
             cancellationToken.ThrowIfCancellationRequested();
             var frame = source[i];
-            frames[i] = new RasterAnimationFrame(ImageHelper.ToChartImage(frame.Image), frame.Duration == TimeSpan.Zero ? TimeSpan.FromMilliseconds(100) : frame.Duration);
+            frames[i] = new RasterAnimationFrame(ImageHelper.ToChartImage(frame.Image), frame.Duration);
         }
         return frames;
     }

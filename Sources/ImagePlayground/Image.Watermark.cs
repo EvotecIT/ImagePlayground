@@ -3,25 +3,25 @@ namespace ImagePlayground;
 /// <summary>Text and raster watermark workflows.</summary>
 public partial class Image {
     /// <summary>Draws a text watermark at explicit pixel coordinates.</summary>
-    public void Watermark(string text, float x, float y, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f) => AddText(x, y, text, color, fontSize, fontFamilyName);
+    public void Watermark(string text, float x, float y, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f, CancellationToken cancellationToken = default) => AddText(x, y, text, color, fontSize, fontFamilyName, cancellationToken: cancellationToken);
 
     /// <summary>Draws a text watermark at a predefined placement.</summary>
-    public void Watermark(string text, WatermarkPlacement placement, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f) {
-        var size = GetTextSize(text, fontSize, fontFamilyName);
+    public void Watermark(string text, WatermarkPlacement placement, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f, CancellationToken cancellationToken = default) {
+        var size = GetTextSize(text, fontSize, fontFamilyName, cancellationToken);
         var point = GetWatermarkLocation(placement, size.Width, size.Height, padding);
-        Watermark(text, (float)point.X, (float)point.Y, color, fontSize, fontFamilyName, padding);
+        Watermark(text, (float)point.X, (float)point.Y, color, fontSize, fontFamilyName, padding, cancellationToken);
     }
 
     /// <summary>Draws an image watermark at a predefined placement.</summary>
-    public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode);
-        AddImage(watermark.Raster, GetWatermarkLocation(placement, watermark.Width, watermark.Height, padding), opacity);
+    public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
+        AddImage(watermark.Raster, GetWatermarkLocation(placement, watermark.Width, watermark.Height, padding), opacity, cancellationToken);
     }
 
     /// <summary>Draws an image watermark at explicit pixel coordinates.</summary>
-    public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode);
-        AddImage(watermark.Raster, x, y, opacity);
+    public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
+        AddImage(watermark.Raster, x, y, opacity, cancellationToken);
     }
 
     /// <summary>Draws repeated image watermarks within each frame's canvas, observing cancellation during tiling.</summary>
@@ -57,7 +57,7 @@ public partial class Image {
     private static Image PrepareWatermark(string filePath, int percentage, int rotate, FlipMode flipMode, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         if (percentage < 1 || percentage > 100) { throw new ArgumentOutOfRangeException(nameof(percentage), "Watermark percentage must be between 1 and 100."); }
-        var image = Load(filePath);
+        var image = Load(filePath, new OfficeRasterDecodeOptions { ApplyExifOrientation = false, CancellationToken = cancellationToken });
         try {
             cancellationToken.ThrowIfCancellationRequested();
             if (image.Frames.Count > 1) {
@@ -65,11 +65,11 @@ public partial class Image {
                 image.Dispose();
                 image = firstFrame;
             }
-            if (percentage != 100) { image.Resize(Math.Max(1, checked((int)((long)image.Width * percentage / 100))), Math.Max(1, checked((int)((long)image.Height * percentage / 100)))); }
+            if (percentage != 100) { image.Resize(Math.Max(1, checked((int)((long)image.Width * percentage / 100))), Math.Max(1, checked((int)((long)image.Height * percentage / 100))), cancellationToken: cancellationToken); }
             cancellationToken.ThrowIfCancellationRequested();
-            if (flipMode != FlipMode.None) { image.Flip(flipMode); }
+            if (flipMode != FlipMode.None) { image.Flip(flipMode, cancellationToken); }
             cancellationToken.ThrowIfCancellationRequested();
-            if (rotate != 0) { image.Rotate(rotate); }
+            if (rotate != 0) { image.Rotate(rotate, cancellationToken); }
             cancellationToken.ThrowIfCancellationRequested();
             return image;
         } catch { image.Dispose(); throw; }

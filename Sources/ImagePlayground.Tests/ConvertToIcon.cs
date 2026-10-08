@@ -11,7 +11,10 @@ namespace ImagePlayground.Tests;
 public partial class ImagePlayground {
     [Fact]
     public void Test_ConvertToIcon_FromIcon_CopiesFile() {
-        string src = Path.Combine(_directoryWithImages, "QRCode1.ico");
+        string src = Path.Combine(_directoryWithTests, "actual-icon-source.ico");
+        using (var source = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(16, 16, OfficeColor.Blue))) {
+            source.Save(src);
+        }
         string dest = Path.Combine(_directoryWithTests, "copy.ico");
         if (File.Exists(dest)) File.Delete(dest);
 

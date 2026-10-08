@@ -6,43 +6,48 @@ schema: 2.0.0
 ---
 # Save-Image
 ## SYNOPSIS
-Saves an image to disk or returns its encoded bytes as a stream.
+Saves an image object to disk or returns its encoded bytes as a stream.
 
 ## SYNTAX
-### __AllParameterSets
+### File (Default)
 ```powershell
-Save-Image [-Image] <Image> [[-FilePath] <string>] [-Quality <Int32>] [-CompressionLevel <Int32>] [-AsStream] [-Open] [<CommonParameters>]
+Save-Image [-Image] <Image> [[-FilePath] <string>] [-Quality <Int32>] [-CompressionLevel <Int32>] [-EncodingOptions <OfficeRasterEncodingOptions>] [-Open] [<CommonParameters>]
+```
+
+### Stream
+```powershell
+Save-Image [-Image] <Image> -AsStream [-Quality <Int32>] [-CompressionLevel <Int32>] [-EncodingOptions <OfficeRasterEncodingOptions>] [-Format <ImageType>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this cmdlet to persist an Image instance after applying transformations.
+Accepts editable image objects from Get-Image and Resize-Image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Save-Image -Image $img
+PS> Get-Image in.png | Resize-Image -Width 1200 | Save-Image -FilePath out.png
 ```
 
 
 ### EXAMPLE 2
 ```powershell
-PS> Save-Image -Image $img -FilePath out.jpg -Quality 80
+PS> Get-Image in.jpg | Save-Image -AsStream -Format Png
 ```
 
 
 ## PARAMETERS
 
 ### -AsStream
-When used without FilePath, the cmdlet writes a stream object to the pipeline.
+Returns an encoded stream at position zero; the caller owns the stream.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Stream
 Aliases: None
 Possible values:
 
-Required: False
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -54,7 +59,23 @@ Compression level for PNG images.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: File, Stream
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EncodingOptions
+Owned encoder settings; simple quality and compression controls override their matching settings.
+
+```yaml
+Type: OfficeRasterEncodingOptions
+Parameter Sets: File, Stream
 Aliases: None
 Possible values:
 
@@ -66,43 +87,59 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-When omitted, the image is saved using the path already associated with the image object.
+Optional destination path; omitted uses the path associated with the image.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: File
 Aliases: None
 Possible values:
 
 Required: False
 Position: 1
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Format
+Explicit stream output format; omitted uses the image's detected supported default.
+
+```yaml
+Type: ImageType
+Parameter Sets: Stream
+Aliases: None
+Possible values: Bmp, Gif, Jpeg, Pbm, Png, Tga, Tiff, WebP, Icon
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Image
-Image object to save.
+Editable image object to save.
 
 ```yaml
 Type: Image
-Parameter Sets: __AllParameterSets
+Parameter Sets: File, Stream
 Aliases: None
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
 ### -Open
-Open file after saving.
+Opens the completed file.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: File
 Aliases: None
 Possible values:
 
@@ -118,7 +155,7 @@ Quality for JPEG or WEBP images.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: File, Stream
 Aliases: None
 Possible values:
 
@@ -134,7 +171,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.String`
+- `ImagePlayground.Image`
 
 ## OUTPUTS
 

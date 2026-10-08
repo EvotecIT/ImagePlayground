@@ -41,12 +41,12 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        if (brightness.HasValue) { img.Brightness(brightness.Value); }
-        if (contrast.HasValue) { img.Contrast(contrast.Value); }
-        if (lightness.HasValue) { img.Lightness(lightness.Value); }
-        if (opacity.HasValue) { img.Opacity(opacity.Value); }
-        if (saturation.HasValue) { img.Saturate(saturation.Value); }
-        if (sepia.HasValue) { img.Sepia(sepia.Value); }
+        if (brightness.HasValue) { img.Brightness(brightness.Value, cancellationToken: cancellationToken); }
+        if (contrast.HasValue) { img.Contrast(contrast.Value, cancellationToken: cancellationToken); }
+        if (lightness.HasValue) { img.Lightness(lightness.Value, cancellationToken: cancellationToken); }
+        if (opacity.HasValue) { img.Opacity(opacity.Value, cancellationToken: cancellationToken); }
+        if (saturation.HasValue) { img.Saturate(saturation.Value, cancellationToken: cancellationToken); }
+        if (sepia.HasValue) { img.Sepia(sepia.Value, cancellationToken: cancellationToken); }
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

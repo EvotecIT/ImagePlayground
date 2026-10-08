@@ -35769,19 +35769,19 @@ polygonal areas.</maml:para>
       <command:verb>Resize</command:verb>
       <command:noun>Image</command:noun>
       <maml:description>
-        <maml:para>Resizes an image.</maml:para>
+        <maml:para>Resizes an image object or a source file.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Width and height bound the resized image while preserving its aspect ratio. Use DontRespectAspectRatio to stretch to the supplied dimensions, or Percentage for uniform scaling.</maml:para>
+      <maml:para>Width and height bound the resized image while preserving its aspect ratio. Object input is updated and emitted for further edits or saving. Path input requires OutputPath and saves the result.</maml:para>
     </maml:description>
     <command:syntax>
-      <command:syntaxItem parameterSetName="HeightWidth">
+      <command:syntaxItem parameterSetName="FileDimensions">
         <maml:name>Resize-Image</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DontRespectAspectRatio</maml:name>
           <maml:description>
-            <maml:para>Disables aspect ratio preservation. An omitted dimension retains its original value.</maml:para>
+            <maml:para>Stretches to the supplied dimensions; an omitted dimension retains its original value.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -35793,7 +35793,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>The image must exist.</maml:para>
+            <maml:para>Source path, resolved in the current PowerShell filesystem location.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35805,7 +35805,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>When aspect ratio is preserved, a height alone determines the corresponding width.</maml:para>
+            <maml:para>Requested height or maximum height when both bounds are supplied.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -35817,7 +35817,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>OutputPath</maml:name>
           <maml:description>
-            <maml:para>Supported formats depend on the file extension.</maml:para>
+            <maml:para>Destination path; required for path input and optional for object input.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35829,7 +35829,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>When aspect ratio is preserved, a width alone determines the corresponding height.</maml:para>
+            <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -35839,12 +35839,12 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
-      <command:syntaxItem parameterSetName="Percentage">
+      <command:syntaxItem parameterSetName="FilePercentage">
         <maml:name>Resize-Image</maml:name>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>The image must exist.</maml:para>
+            <maml:para>Source path, resolved in the current PowerShell filesystem location.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35856,7 +35856,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>OutputPath</maml:name>
           <maml:description>
-            <maml:para>Supported formats depend on the file extension.</maml:para>
+            <maml:para>Destination path; required for path input and optional for object input.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35865,12 +35865,114 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Percentage</maml:name>
           <maml:description>
-            <maml:para>Applies uniform scaling relative to the original size.</maml:para>
+            <maml:para>Positive percentage for uniform scaling relative to the original dimensions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="ObjectDimensions">
+        <maml:name>Resize-Image</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DontRespectAspectRatio</maml:name>
+          <maml:description>
+            <maml:para>Stretches to the supplied dimensions; an omitted dimension retains its original value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Height</maml:name>
+          <maml:description>
+            <maml:para>Requested height or maximum height when both bounds are supplied.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>Image</maml:name>
+          <maml:description>
+            <maml:para>Editable object; the same instance is emitted after resizing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Image</command:parameterValue>
+          <dev:type>
+            <maml:name>Image</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination path; required for path input and optional for object input.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Width</maml:name>
+          <maml:description>
+            <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="ObjectPercentage">
+        <maml:name>Resize-Image</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>Image</maml:name>
+          <maml:description>
+            <maml:para>Editable object; the same instance is emitted after resizing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Image</command:parameterValue>
+          <dev:type>
+            <maml:name>Image</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination path; required for path input and optional for object input.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Percentage</maml:name>
+          <maml:description>
+            <maml:para>Positive percentage for uniform scaling relative to the original dimensions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
             <maml:uri />
@@ -35883,7 +35985,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>DontRespectAspectRatio</maml:name>
         <maml:description>
-          <maml:para>Disables aspect ratio preservation. An omitted dimension retains its original value.</maml:para>
+          <maml:para>Stretches to the supplied dimensions; an omitted dimension retains its original value.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -35895,7 +35997,7 @@ polygonal areas.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>The image must exist.</maml:para>
+          <maml:para>Source path, resolved in the current PowerShell filesystem location.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -35907,7 +36009,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Height</maml:name>
         <maml:description>
-          <maml:para>When aspect ratio is preserved, a height alone determines the corresponding width.</maml:para>
+          <maml:para>Requested height or maximum height when both bounds are supplied.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -35916,24 +36018,36 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <maml:name>Image</maml:name>
+        <maml:description>
+          <maml:para>Editable object; the same instance is emitted after resizing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Image</command:parameterValue>
+        <dev:type>
+          <maml:name>Image</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>OutputPath</maml:name>
         <maml:description>
-          <maml:para>Supported formats depend on the file extension.</maml:para>
+          <maml:para>Destination path; required for path input and optional for object input.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Percentage</maml:name>
         <maml:description>
-          <maml:para>Applies uniform scaling relative to the original size.</maml:para>
+          <maml:para>Positive percentage for uniform scaling relative to the original dimensions.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
         <dev:type>
           <maml:name>Int32</maml:name>
           <maml:uri />
@@ -35943,7 +36057,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
-          <maml:para>When aspect ratio is preserved, a width alone determines the corresponding height.</maml:para>
+          <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -35959,8 +36073,19 @@ polygonal areas.</maml:para>
           <maml:name>System.String</maml:name>
         </dev:type>
       </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ImagePlayground.Image</maml:name>
+        </dev:type>
+      </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.Image</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -35968,22 +36093,22 @@ polygonal areas.</maml:para>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Fit inside a 100x100 box</maml:title>
+        <maml:title>Resize and save an object pipeline</maml:title>
+        <dev:code>Get-Image in.png | Resize-Image -Width 1200 | Save-Image -FilePath out.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Fit a file inside a 100x100 box</maml:title>
         <dev:code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>Stretch to 100x100</maml:title>
-        <dev:code>Resize-Image -FilePath in.png -OutputPath out.png -Width 100 -Height 100 -DontRespectAspectRatio</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>Double the size</maml:title>
-        <dev:code>Resize-Image -FilePath in.png -OutputPath out.png -Percentage 200</dev:code>
+        <maml:title>Double the size of an image object</maml:title>
+        <dev:code>$image | Resize-Image -Percentage 200</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -35997,27 +36122,15 @@ polygonal areas.</maml:para>
       <command:verb>Save</command:verb>
       <command:noun>Image</command:noun>
       <maml:description>
-        <maml:para>Saves an image to disk or returns its encoded bytes as a stream.</maml:para>
+        <maml:para>Saves an image object to disk or returns its encoded bytes as a stream.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Use this cmdlet to persist an Image instance after applying transformations.</maml:para>
+      <maml:para>Accepts editable image objects from Get-Image and Resize-Image.</maml:para>
     </maml:description>
     <command:syntax>
-      <command:syntaxItem parameterSetName="__AllParameterSets">
+      <command:syntaxItem parameterSetName="File">
         <maml:name>Save-Image</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>AsStream</maml:name>
-          <maml:description>
-            <maml:para>When used without FilePath, the cmdlet writes a stream object to the pipeline.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>CompressionLevel</maml:name>
           <maml:description>
@@ -36030,10 +36143,22 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>EncodingOptions</maml:name>
+          <maml:description>
+            <maml:para>Owned encoder settings; simple quality and compression controls override their matching settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeRasterEncodingOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeRasterEncodingOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>When omitted, the image is saved using the path already associated with the image object.</maml:para>
+            <maml:para>Optional destination path; omitted uses the path associated with the image.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -36042,10 +36167,10 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>Image</maml:name>
           <maml:description>
-            <maml:para>Image object to save.</maml:para>
+            <maml:para>Editable image object to save.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">Image</command:parameterValue>
           <dev:type>
@@ -36057,7 +36182,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open file after saving.</maml:para>
+            <maml:para>Opens the completed file.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -36079,14 +36204,100 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Stream">
+        <maml:name>Save-Image</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AsStream</maml:name>
+          <maml:description>
+            <maml:para>Returns an encoded stream at position zero; the caller owns the stream.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CompressionLevel</maml:name>
+          <maml:description>
+            <maml:para>Compression level for PNG images.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>EncodingOptions</maml:name>
+          <maml:description>
+            <maml:para>Owned encoder settings; simple quality and compression controls override their matching settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeRasterEncodingOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeRasterEncodingOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Explicit stream output format; omitted uses the image's detected supported default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ImageType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Bmp</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gif</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Pbm</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tga</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WebP</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Icon</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>ImageType</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>Image</maml:name>
+          <maml:description>
+            <maml:para>Editable image object to save.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Image</command:parameterValue>
+          <dev:type>
+            <maml:name>Image</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Quality</maml:name>
+          <maml:description>
+            <maml:para>Quality for JPEG or WEBP images.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>AsStream</maml:name>
         <maml:description>
-          <maml:para>When used without FilePath, the cmdlet writes a stream object to the pipeline.</maml:para>
+          <maml:para>Returns an encoded stream at position zero; the caller owns the stream.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
           <maml:uri />
@@ -36105,10 +36316,22 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>EncodingOptions</maml:name>
+        <maml:description>
+          <maml:para>Owned encoder settings; simple quality and compression controls override their matching settings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeRasterEncodingOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeRasterEncodingOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>When omitted, the image is saved using the path already associated with the image object.</maml:para>
+          <maml:para>Optional destination path; omitted uses the path associated with the image.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -36117,10 +36340,33 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>Explicit stream output format; omitted uses the image's detected supported default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ImageType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Bmp</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gif</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Pbm</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Tga</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WebP</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Icon</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>ImageType</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>Image</maml:name>
         <maml:description>
-          <maml:para>Image object to save.</maml:para>
+          <maml:para>Editable image object to save.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">Image</command:parameterValue>
         <dev:type>
@@ -36132,7 +36378,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Open</maml:name>
         <maml:description>
-          <maml:para>Open file after saving.</maml:para>
+          <maml:para>Opens the completed file.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -36157,7 +36403,7 @@ polygonal areas.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>System.String</maml:name>
+          <maml:name>ImagePlayground.Image</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -36169,21 +36415,21 @@ polygonal areas.</maml:para>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Overwrite the source file</maml:title>
+        <maml:title>Resize and save an image object</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Save-Image -Image $img</dev:code>
+        <dev:code>Get-Image in.png | Resize-Image -Width 1200 | Save-Image -FilePath out.png</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>Save as JPEG with quality 80</maml:title>
+        <maml:title>Return an explicit PNG stream</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Save-Image -Image $img -FilePath out.jpg -Quality 80</dev:code>
+        <dev:code>Get-Image in.jpg | Save-Image -AsStream -Format Png</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
