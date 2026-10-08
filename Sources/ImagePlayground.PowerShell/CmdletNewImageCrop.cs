@@ -70,7 +70,7 @@ public sealed class NewImageCropCmdlet : ImageCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "NewImageCropFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
 
         if (ParameterSetName == ParameterSetCircle) {
             ImageHelper.CropCircle(filePath, output, CenterX, CenterY, Radius);

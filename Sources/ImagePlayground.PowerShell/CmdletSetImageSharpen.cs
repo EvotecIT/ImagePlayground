@@ -28,7 +28,7 @@ public sealed class SetImageSharpenCmdlet : AsyncImageCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "SetImageSharpenFileNotFound", FilePath);
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         await ImagePlayground.ImageHelper.SharpenAsync(filePath, output, Amount, CancelToken).ConfigureAwait(false);
     }
 }

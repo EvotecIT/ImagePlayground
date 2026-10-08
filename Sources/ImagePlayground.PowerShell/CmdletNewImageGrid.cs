@@ -34,7 +34,7 @@ public sealed class NewImageGridCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         ImagePlayground.ImageHelper.Create(output, Width, Height, Color, Open.IsPresent);
     }
 }

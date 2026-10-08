@@ -53,7 +53,7 @@ public sealed class NewImageAvatarCmdlet : ImageCmdlet {
             ImagePlayground.ImageHelper.Avatar(filePath, OutputStream, Width, Height, CornerRadius);
             OutputStream.Position = 0;
         } else {
-            var output = Helpers.ResolvePath(OutputPath);
+            var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
             ImagePlayground.ImageHelper.Avatar(filePath, output, Width, Height, CornerRadius);
             if (Open.IsPresent) {
                 ImagePlayground.Helpers.Open(output, true);

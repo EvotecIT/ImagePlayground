@@ -74,7 +74,7 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
         }
 
         VisualArtifact artifact = _artifacts[0];
-        string output = Helpers.ResolvePath(FilePath);
+        string output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         string extension = Path.GetExtension(output);
         var options = new VisualArtifactRenderOptions();
         foreach (VisualWatermark watermark in Watermark ?? Array.Empty<VisualWatermark>()) {

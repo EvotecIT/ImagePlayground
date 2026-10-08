@@ -41,7 +41,7 @@ public sealed class RemoveImageExifCmdlet : ImageCmdlet {
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "RemoveImageExifFileNotFound", FilePath);
 
-        var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
+        var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : PowerShellPathResolver.ResolveFileSystemPath(this, FilePathOutput!);
         Helpers.CreateParentDirectory(output);
         WriteVerbose($"Saving image to {output}");
 

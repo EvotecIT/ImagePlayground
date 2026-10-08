@@ -47,7 +47,7 @@ public sealed class SetImageExifCmdlet : ImageCmdlet {
                 nameof(Value));
         }
 
-        var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : Helpers.ResolvePath(FilePathOutput!);
+        var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : PowerShellPathResolver.ResolveFileSystemPath(this, FilePathOutput!);
         ImagePlayground.Image.SetExifValue(filePath, output, ExifTag, value);
     }
 }

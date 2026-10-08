@@ -37,7 +37,7 @@ public sealed class MergeImageCmdlet : ImageCmdlet {
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "MergeImageSourceNotFound", FilePath);
         var merge = ResolveExistingFilePath(FilePathToMerge, "MergeImageTargetNotFound", FilePathToMerge);
-        var output = Helpers.ResolvePath(FilePathOutput);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePathOutput);
 
         ImagePlayground.ImageHelper.Combine(filePath, merge, output, ResizeToFit.IsPresent, Placement);
     }

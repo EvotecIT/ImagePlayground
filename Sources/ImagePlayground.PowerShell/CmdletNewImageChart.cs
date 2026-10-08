@@ -201,7 +201,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
 
     private void SaveChart(Chart chart) {
         VisualWatermark[] watermarks = Watermark ?? System.Array.Empty<VisualWatermark>();
-        var output = Helpers.ResolvePath(FilePath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         string? directory = System.IO.Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) {
             System.IO.Directory.CreateDirectory(directory!);

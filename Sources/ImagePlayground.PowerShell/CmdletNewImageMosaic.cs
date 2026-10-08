@@ -44,7 +44,7 @@ public sealed class NewImageMosaicCmdlet : ImageCmdlet {
             var full = ResolveExistingFilePath(file, "NewImageMosaicFileNotFound", file);
             checkedFiles.Add(full);
         }
-        var output = Helpers.ResolvePath(OutputPath);
+        var output = PowerShellPathResolver.ResolveFileSystemPath(this, OutputPath);
         ImageHelper.Mosaic(checkedFiles, output, Columns, Width, Height);
         if (Open.IsPresent) {
             Helpers.Open(output, true);
