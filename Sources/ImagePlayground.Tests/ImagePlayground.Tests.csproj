@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-        <!-- Host public cmdlets inside the coverage test process; the product retains PowerShellStandard.Library. -->
+        <!-- PowerShell 7.4 hosts the .NET 8 coverage lane; newer SDKs require a newer .NET target. -->
         <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.20" PrivateAssets="all" />
     </ItemGroup>
 

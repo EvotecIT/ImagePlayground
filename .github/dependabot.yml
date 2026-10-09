@@ -2,6 +2,10 @@ version: 2
 updates:
 - package-ecosystem: nuget
   directory: /Sources
+  # The cmdlet coverage host targets .NET 8 and uses PowerShell 7.4.
+  ignore:
+  - dependency-name: Microsoft.PowerShell.SDK
+    versions: ['>=7.5']
   schedule:
     interval: daily
   cooldown:
