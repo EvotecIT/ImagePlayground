@@ -1,7 +1,11 @@
 Describe 'New-ImageVisualStory' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        }
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
@@ -73,6 +77,23 @@ Describe 'New-ImageVisualStory' {
         } finally {
             Remove-Variable -Name ImagePlaygroundVisualStoryPathInvoked -Scope Global -ErrorAction SilentlyContinue
         }
+    }
+
+    It 'starts a scripted grid with the canonical theme while respecting an authored override' {
+        $defaultGrid = New-ImageVisualStory -StoryScript {
+            param($Story)
+            [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes))
+        } -FilePath (Join-Path -Path $TestDir -ChildPath 'story-canonical-theme.svg') -PassThru
+        $defaultGrid.Theme.UseGraphiteLayout | Should -BeTrue
+        $defaultGrid.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Themes.ChartTheme]::GraphiteLight()).Text.ToCss()
+
+        $customGrid = New-ImageVisualStory -StoryScript {
+            param($Story)
+            [void] $Story.WithTheme([ChartForgeX.Themes.ChartTheme]::Aurora())
+            [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes -Theme Aurora))
+        } -FilePath (Join-Path -Path $TestDir -ChildPath 'story-authored-theme.svg') -PassThru
+        $customGrid.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Themes.ChartTheme]::Aurora()).Text.ToCss()
+        $customGrid.Theme.UseGraphiteLayout | Should -BeFalse
     }
 
     It 'rejects non-file-system output paths before invoking the story script' {

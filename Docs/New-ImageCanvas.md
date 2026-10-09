@@ -11,17 +11,17 @@ Creates a fixed-size visual canvas for social images, wallpapers, report covers,
 ## SYNTAX
 ### Definition (Default)
 ```powershell
-New-ImageCanvas [-LayerDefinition] <scriptblock> -FilePath <string> [-Preset <ImageCanvasPreset>] [-Width <int>] [-Height <int>] [-Title <string>] [-BackgroundTop <ChartColor>] [-BackgroundBottom <ChartColor>] [-Backdrop <VisualCanvasBackdropStyle>] [-PngOutputScale <int>] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageCanvas [-LayerDefinition] <scriptblock> -FilePath <string> [-Preset <ImageCanvasPreset>] [-Width <int>] [-Height <int>] [-Title <string>] [-Theme <string>] [-BackgroundTop <ChartColor>] [-BackgroundBottom <ChartColor>] [-Backdrop <VisualCanvasBackdropStyle>] [-PngOutputScale <int>] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Layer
 ```powershell
-New-ImageCanvas -Layer <VisualCanvasLayer[]> -FilePath <string> [-Preset <ImageCanvasPreset>] [-Width <int>] [-Height <int>] [-Title <string>] [-BackgroundTop <ChartColor>] [-BackgroundBottom <ChartColor>] [-Backdrop <VisualCanvasBackdropStyle>] [-PngOutputScale <int>] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageCanvas -Layer <VisualCanvasLayer[]> -FilePath <string> [-Preset <ImageCanvasPreset>] [-Width <int>] [-Height <int>] [-Title <string>] [-Theme <string>] [-BackgroundTop <ChartColor>] [-BackgroundBottom <ChartColor>] [-Backdrop <VisualCanvasBackdropStyle>] [-PngOutputScale <int>] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Canvas
 ```powershell
-New-ImageCanvas -Canvas <VisualCanvas> -FilePath <string> [-Title <string>] [-BackgroundTop <ChartColor>] [-BackgroundBottom <ChartColor>] [-Backdrop <VisualCanvasBackdropStyle>] [-PngOutputScale <int>] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageCanvas -Canvas <VisualCanvas> -FilePath <string> [-Title <string>] [-Theme <string>] [-BackgroundTop <ChartColor>] [-BackgroundBottom <ChartColor>] [-Backdrop <VisualCanvasBackdropStyle>] [-PngOutputScale <int>] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ Layer commands emit native ChartForgeX layers; ImagePlayground only binds PowerS
 
 ### EXAMPLE 1
 ```powershell
-PS> New-ImageCanvas -Preset SocialPreview -Title 'ChartForgeX 1.3' -Backdrop TechHorizon -LayerDefinition { New-ImageCanvasText -X 72 -Y 72 -Width 1000 -Text 'ChartForgeX 1.3' -FontSize 58 -Color White -Emphasized; New-ImageCanvasInfoTile -X 72 -Y 190 -Width 360 -Height 150 -Icon SVG -Label 'Renderer' -Value 'Dependency-free' } -FilePath preview.png
+PS> New-ImageCanvas -Preset SocialPreview -Theme Dark -Title 'Service health' -LayerDefinition { New-ImageCanvasText -X 72 -Y 72 -Width 1000 -Text 'Service health' -FontSize 58 -Color White -Emphasized; New-ImageCanvasInfoTile -X 72 -Y 220 -Width 360 -Height 176 -Icon API -Label 'Requests' -Value '12,840' -Detail '+12% this week' } -FilePath preview.png
 ```
 
 
@@ -221,6 +221,22 @@ Type: SwitchParameter
 Parameter Sets: Definition, Layer, Canvas
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Theme
+Canonical light or dark canvas theme. An existing canvas keeps its theme unless this parameter is supplied.
+
+```yaml
+Type: String
+Parameter Sets: Definition, Layer, Canvas
+Aliases: None
+Possible values: Light, Dark
 
 Required: False
 Position: named

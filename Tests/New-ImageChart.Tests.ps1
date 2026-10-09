@@ -310,6 +310,34 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
+    It 'renders a native chart from the pipeline without changing its model or presentation' {
+        $authoredFile = Join-Path -Path $TestDir -ChildPath 'chart-native-authored.svg'
+        $pipelineFile = Join-Path -Path $TestDir -ChildPath 'chart-native-pipeline.svg'
+        $definition = New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
+        $authored = New-ImageChart -Definition $definition -Theme Dark -Width 368 -Height 320 -Title 'Weekly builds' -Subtitle 'Completed pipeline runs' -FilePath $authoredFile -PassThru
+        $expectedSvg = [System.IO.File]::ReadAllText($authoredFile)
+
+        $rendered = $authored | New-ImageChart -FilePath $pipelineFile -PassThru
+
+        [object]::ReferenceEquals($authored, $rendered) | Should -BeTrue
+        [System.IO.File]::ReadAllText($pipelineFile) | Should -BeExactly $expectedSvg
+    }
+
+    It 'sets headings consistently and preserves unbound native chart headings' {
+        $definition = New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
+        $authored = New-ImageChart -Definition $definition -Title 'Weekly builds' -Subtitle 'Completed pipeline runs' -FilePath (Join-Path -Path $TestDir -ChildPath 'chart-headings.svg') -PassThru
+        $authored.Title | Should -BeExactly 'Weekly builds'
+        $authored.Subtitle | Should -BeExactly 'Completed pipeline runs'
+
+        $preserved = New-ImageChart -Chart $authored -FilePath (Join-Path -Path $TestDir -ChildPath 'chart-headings-preserved.svg') -PassThru
+        $preserved.Title | Should -BeExactly 'Weekly builds'
+        $preserved.Subtitle | Should -BeExactly 'Completed pipeline runs'
+        $overridden = New-ImageChart -Chart $authored -Title 'Build history' -Subtitle '' -FilePath (Join-Path -Path $TestDir -ChildPath 'chart-headings-overridden.svg') -PassThru
+        $overridden.Title | Should -BeExactly 'Build history'
+        $overridden.Subtitle | Should -BeNullOrEmpty
+        [System.IO.File]::ReadAllText((Join-Path -Path $TestDir -ChildPath 'chart-headings-overridden.svg')) | Should -Match 'Build history'
+    }
+
     It 'accepts ChartForgeX-style color names and hex values' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_chartforgex_colors.png'
         if (Test-Path -Path $file) {
@@ -325,7 +353,7 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'renders identical output for array and pipeline input' {
+    It 'renders identical output for multiple definitions supplied as an array or pipeline' {
         $arrayFile = Join-Path -Path $TestDir -ChildPath 'chart_array_compare.png'
         $pipeFile = Join-Path -Path $TestDir -ChildPath 'chart_pipe_compare.png'
         if (Test-Path -Path $arrayFile) {
@@ -351,6 +379,29 @@ Describe 'New-ImageChart' {
 
         $first.Dispose()
         $second.Dispose()
+    }
+
+    It 'rejects mixed definition kinds before creating output through <InputKind> input' -TestCases @(
+        @{ InputKind = 'Array' }
+        @{ InputKind = 'Pipeline' }
+    ) {
+        param($InputKind)
+
+        $file = Join-Path -Path $TestDir -ChildPath ('chart-mixed-rejected-{0}.svg' -f $InputKind)
+        Remove-Item -Path $file -ErrorAction SilentlyContinue
+        $definitions = @(
+            New-ImageChartBar -Name Requests -Value 10, 20
+            New-ImageChartLine -Name Latency -Value 4, 8
+        )
+
+        {
+            if ($InputKind -eq 'Array') {
+                New-ImageChart -Definition $definitions -FilePath $file -ErrorAction Stop
+            } else {
+                $definitions | New-ImageChart -FilePath $file -ErrorAction Stop
+            }
+        } | Should -Throw '*same concrete definition type*'
+        Test-Path -Path $file | Should -BeFalse
     }
 
     It 'creates parent directory when saving a chart' {

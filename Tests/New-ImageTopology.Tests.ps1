@@ -48,7 +48,26 @@ Describe 'New-ImageTopology' {
         Test-Path -Path $file | Should -BeTrue
     }
 
-    It 'accepts a direct topology chart without a Definition argument and preserves chart layout' {
+    It 'uses the canonical topology colors in either theme' -TestCases @(
+        @{ Theme = 'Light' }
+        @{ Theme = 'Dark' }
+    ) {
+        param($Theme)
+        $tokens = if ($Theme -eq 'Dark') {
+            [ChartForgeX.Themes.VisualDesignTokens]::GraphiteDark()
+        } else {
+            [ChartForgeX.Themes.VisualDesignTokens]::GraphiteLight()
+        }
+        $topology = New-ImageTopology -TopologyDefinition {
+            New-ImageTopologyNode -Id api -Label API -Kind Service -Status Healthy
+        } -Theme $Theme -FilePath (Join-Path -Path $TestDir -ChildPath ("topology-theme-{0}.svg" -f $Theme)) -PassThru
+
+        $topology.Theme.Foreground | Should -BeExactly $tokens.Foreground.ToCss()
+        $topology.Theme.Healthy | Should -BeExactly $tokens.Positive.ToCss()
+        $topology.Theme.FontFamily | Should -BeExactly $tokens.FontFamily
+    }
+
+    It 'accepts a direct topology chart without a Definition argument and preserves chart layout and custom theme' {
         $file = Join-Path -Path $TestDir -ChildPath 'topology-chart-input.svg'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
@@ -60,6 +79,8 @@ Describe 'New-ImageTopology' {
         $chart.Viewport.Width = 640
         $chart.Viewport.Height = 360
         $chart.Viewport.Padding = 12
+        $chart.Theme = [ChartForgeX.Topology.TopologyTheme]::Light()
+        $chart.Theme.Foreground = '#334455'
 
         $node = [ChartForgeX.Topology.TopologyNode]::new()
         $node.Id = 'api'
@@ -73,6 +94,7 @@ Describe 'New-ImageTopology' {
         $topology.Viewport.Width | Should -Be 640
         $topology.Viewport.Height | Should -Be 360
         $topology.Viewport.Padding | Should -Be 12
+        $topology.Theme.Foreground | Should -BeExactly '#334455'
         Test-Path -Path $file | Should -BeTrue
     }
 

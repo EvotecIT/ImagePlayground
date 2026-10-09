@@ -1,7 +1,11 @@
 Describe 'New-ImageVisualGrid' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        }
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
@@ -36,6 +40,28 @@ Describe 'New-ImageVisualGrid' {
 
         $grid | Should -BeOfType 'ChartForgeX.VisualBlocks.VisualGrid'
         $grid.Items.Count | Should -Be 1
+    }
+
+    It 'uses one canonical theme for the grid and authored factual blocks' -TestCases @(
+        @{ Theme = 'Light' }
+        @{ Theme = 'Dark' }
+    ) {
+        param($Theme)
+        $blocks = @(
+            New-ImageMetricCard -Label Requests -Value 12840 -Theme $Theme
+            New-ImageListBlock -Title Checks -Item API, Database -Status Positive, Warning -Theme $Theme
+            New-ImageTableBlock -Title Services -Column Name, Status -Row @{ Name = 'API'; Status = 'Healthy' } -Theme $Theme
+            New-ImageTimelineBlock -Title Activity -Theme $Theme -ItemDefinition {
+                New-ImageTimelineItem -Kind Event -Title 'Build completed' -Status Positive
+            }
+        )
+        $grid = New-ImageVisualGrid -Content $blocks -Theme $Theme -Columns 1
+        foreach ($block in $blocks) {
+            $block.Options.Theme.UseGraphiteLayout | Should -BeTrue
+            $block.Options.Theme.Text.ToCss() | Should -BeExactly $grid.Theme.Text.ToCss()
+            $block.Options.Theme.FontFamily | Should -BeExactly $grid.Theme.FontFamily
+            $block.Options.Theme.Positive.ToCss() | Should -BeExactly $grid.Theme.Positive.ToCss()
+        }
     }
 
     It 'returns a reusable motion presentation accepted by visual story export' {

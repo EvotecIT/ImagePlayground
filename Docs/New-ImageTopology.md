@@ -566,7 +566,7 @@ Accept wildcard characters: False
 ```
 
 ### -Theme
-Topology theme name.
+Canonical light or dark topology theme. A supplied chart keeps its theme unless this parameter is supplied.
 
 ```yaml
 Type: String

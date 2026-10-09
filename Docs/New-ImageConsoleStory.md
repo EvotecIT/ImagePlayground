@@ -512,7 +512,7 @@ Accept wildcard characters: False
 ```
 
 ### -Theme
-Built-in terminal color palette used by composed and captured stories.
+Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.
 
 ```yaml
 Type: String

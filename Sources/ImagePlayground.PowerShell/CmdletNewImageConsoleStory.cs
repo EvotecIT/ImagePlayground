@@ -134,7 +134,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = StepSet)]
     public string WorkingDirectory { get; set; } = @"C:\";
 
-    /// <summary>Built-in terminal color palette used by composed and captured stories.</summary>
+    /// <summary>Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
@@ -302,7 +302,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
 
     private TerminalStory BuildStory() {
         if (ParameterSetName == StoryScriptSet) {
-            var story = TerminalStory.Create();
+            var story = TerminalStory.Create().WithTheme(TerminalTheme.GraphiteDark());
             foreach (var result in StoryScript!.Invoke(story)) {
                 var value = result is PSObject psObject ? psObject.BaseObject : result;
                 if (value is TerminalStory returnedStory) {
