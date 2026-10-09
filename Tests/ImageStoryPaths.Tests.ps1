@@ -1,7 +1,11 @@
 Describe 'Image story output paths' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force -ErrorAction Stop
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force -ErrorAction Stop
+        }
     }
 
     It 'resolves relative console story paths through the current FileSystem provider location' {
