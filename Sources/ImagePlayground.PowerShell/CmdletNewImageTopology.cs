@@ -256,7 +256,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
                     chart.SaveInteractiveHtml(output, options);
                 } else {
                     File.WriteAllText(output, new HtmlInteractiveTopologyRenderer().RenderPresentationPage(
-                        chart, prepared => prepared.WithMotion(Motion).ToSvg(), options));
+                        chart, prepared => prepared.WithMotion(Motion, options.ActiveScenarioId).ToSvg(), options));
                 }
             } else {
                 SaveStaticArtifact(chart, output, options, StaticArtifactFormat.Html);

@@ -326,6 +326,31 @@ public partial class ImagePlayground {
         }
     }
 
+    [Theory]
+    [InlineData(null, "alternate")]
+    [InlineData("default", "default")]
+    public void Test_PowerShell_InteractiveTopologyMotionUsesTheSelectedHostScenarioUnlessExplicitlyOverridden(string? explicitScenario, string expectedSource) {
+        using var fixture = new PowerShellPathFixture();
+        var chart = TopologyChart.Create().WithViewport(500, 260).WithLayout(TopologyLayoutMode.Manual)
+            .AddNode("a", "API", 20, 40, width: 100, height: 60)
+            .AddNode("b", "Worker", 300, 40, width: 100, height: 60)
+            .AddNode("c", "Data", 300, 160, width: 100, height: 60)
+            .AddEdge("first", "a", "b", routing: TopologyEdgeRouting.Straight)
+            .AddEdge("second", "a", "c", routing: TopologyEdgeRouting.Straight)
+            .AddScenario("default", "Default", scenario => scenario.AddEdgeStep("first"))
+            .AddScenario("alternate", "Alternate", scenario => scenario.AddEdgeStep("second"));
+        var motion = new TopologyMotionOptions { ScenarioId = explicitScenario };
+        var before = chart.ToSvg();
+        fixture.Invoke("New-ImageTopology", ("Chart", chart), ("Motion", motion), ("ActiveScenarioId", "alternate"),
+            ("InteractiveHtml", true), ("FilePath", "./selected-motion.html"));
+        var html = File.ReadAllText(Path.Combine(fixture.Location, "selected-motion.html"));
+        Assert.Contains("data-cfx-active-scenario=\"alternate\"", html);
+        Assert.Contains("data-cfx-motion-source=\"" + expectedSource + "\"", html);
+        Assert.Equal(before, chart.ToSvg());
+        Assert.Equal(explicitScenario, motion.ScenarioId);
+        Assert.Empty(motion.EdgeIds);
+    }
+
     private sealed class PowerShellPathFixture : IDisposable {
         private readonly string _originalDirectory = Environment.CurrentDirectory;
         private readonly string _root = Path.Combine(Path.GetTempPath(), "ImagePlayground-paths-" + Guid.NewGuid().ToString("N"));
