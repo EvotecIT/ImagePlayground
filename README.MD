@@ -584,6 +584,30 @@ The profile and terminal examples include separately authored compact versions. 
 
 ![A complete PowerShell recipe alongside its weekly builds chart](Examples/Samples/StoryChartRecipe.png)
 
+For an animated editor, pass a `StorySourceTimeline` to `New-ImageStoryPanel -SourceTimeline`. `-SourceOptions` sets the filename, line numbers, wrapping, and fixed font size. For captured sessions, `New-ImageStoryReplay` accepts ordered dictionaries or JSON objects with `TimestampSeconds`, `Kind`, and event-specific fields:
+
+```powershell
+$events = @(
+    @{ TimestampSeconds = 0; Kind = 'Command'; Text = './Test-Project.ps1' }
+    @{ TimestampSeconds = 20; Kind = 'Output'; Text = '24 checks passed'; Tone = 'Success' }
+)
+$recording = New-ImageStoryReplay -DurationSeconds 25 -Events $events
+$replay = $recording.CompressPauses([TimeSpan]::FromSeconds(2))
+$panel = New-ImageStoryPanel -Id terminal -Replay $replay `
+    -TerminalOptions ([ChartForgeX.Stories.VisualStoryTerminalOptions]::new(18))
+$scene = New-ImageStoryScene -Id result -Title 'Replay the result' `
+    -DurationSeconds $replay.Duration.TotalSeconds -Panels $panel
+$outcome = New-ImageStoryOutcome -Id passed -Label '24 checks passed' -PanelId terminal
+New-ImageStory -Title 'Project validation' -Scenes $scene -Outcomes $outcome `
+    -FilePath './validation.html' -Player -PlayCount 1 -EndHoldSeconds 2
+```
+
+Replay events also support `ReplaceLine`, `Clear`, `Directory`, `Marker`, `OpenTab`, and `SelectTab`. Commands remain observations. Execute trusted scripts explicitly before capturing their results. `Trim` and `CompressPauses` return edited presentations with original timestamps; trimming keeps earlier context in the transcript. `Explain` adds presentation annotations.
+
+`New-ImageStory` prepares once for its primary output and portable bundle. `-EndHoldSeconds`, `-TransitionSeconds`, `-PlayCount`, `-FramesPerSecond`, `-AnimationScale`, and `-MaximumFrames` share playback and sampling settings across animated outputs. `-Player` adds controls to HTML; HTML is script-free when omitted. GIF accepts at most 50 frames per second and requires a rounded final delay of at least 20 milliseconds. APNG supports up to 60 frames per second. PNG remains the completed poster. An export error leaves an existing output file intact; each successfully exported bundle artifact commits independently.
+
+[`Story.WriteFixReplay.ps1`](Examples/Story.WriteFixReplay.ps1) captures an actual PowerShell error and corrected result, animates the source correction, and creates a player with SVG, PNG, GIF, APNG, and transcript artifacts. MP4 integration is deferred.
+
 ## Portable visual artifacts and Office workflows
 
 `ConvertTo-ImageVisualArtifact` attaches static SVG and versioned semantic JSON bytes to a pipeline object. The SVG is suitable for flat placement; the semantic payload lets a compatible consumer rebuild editable shapes and connectors.

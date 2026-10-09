@@ -11,17 +11,27 @@ Creates one resolved source, terminal, media, or text panel for a generic visual
 ## SYNTAX
 ### Source (Default)
 ```powershell
-New-ImageStoryPanel -Id <string> -Source <StorySourceText> [-Title <string>] [-Weight <double>] [<CommonParameters>]
+New-ImageStoryPanel -Id <string> -Source <StorySourceText> [-Title <string>] [-Weight <double>] [-SourceOptions <VisualStorySourceOptions>] [<CommonParameters>]
+```
+
+### SourceTimeline
+```powershell
+New-ImageStoryPanel -Id <string> -SourceTimeline <StorySourceTimeline> [-Title <string>] [-Weight <double>] [-SourceOptions <VisualStorySourceOptions>] [<CommonParameters>]
 ```
 
 ### SourceText
 ```powershell
-New-ImageStoryPanel -Id <string> -SourceText <string> [-Title <string>] [-Weight <double>] [-Language <string>] [-Tokenizer <IStorySourceTokenizer>] [<CommonParameters>]
+New-ImageStoryPanel -Id <string> -SourceText <string> [-Title <string>] [-Weight <double>] [-SourceOptions <VisualStorySourceOptions>] [-Language <string>] [-Tokenizer <IStorySourceTokenizer>] [<CommonParameters>]
+```
+
+### Replay
+```powershell
+New-ImageStoryPanel -Id <string> -Replay <StoryReplay> [-Title <string>] [-Weight <double>] [-TerminalOptions <VisualStoryTerminalOptions>] [-ReplayTheme <TerminalTheme>] [-AccessibleText <string>] [<CommonParameters>]
 ```
 
 ### Terminal
 ```powershell
-New-ImageStoryPanel -Id <string> -Terminal <TerminalStory> -AccessibleText <string> [-Title <string>] [-Weight <double>] [<CommonParameters>]
+New-ImageStoryPanel -Id <string> -Terminal <TerminalStory> -AccessibleText <string> [-Title <string>] [-Weight <double>] [-TerminalOptions <VisualStoryTerminalOptions>] [<CommonParameters>]
 ```
 
 ### MediaPath
@@ -62,11 +72,11 @@ Accessible alternative for terminal or media content.
 
 ```yaml
 Type: String
-Parameter Sets: Terminal, MediaPath, MediaBytes, MediaImage
+Parameter Sets: Replay, Terminal, MediaPath, MediaBytes, MediaImage
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -94,7 +104,7 @@ Stable panel identifier referenced by completed outcomes.
 
 ```yaml
 Type: String
-Parameter Sets: Source, SourceText, Terminal, MediaPath, MediaBytes, MediaImage, Text
+Parameter Sets: Source, SourceTimeline, SourceText, Replay, Terminal, MediaPath, MediaBytes, MediaImage, Text
 Aliases: None
 Possible values:
 
@@ -185,6 +195,38 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Replay
+Resolved recorded observations. Rendering never executes their commands.
+
+```yaml
+Type: StoryReplay
+Parameter Sets: Replay
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -ReplayTheme
+Optional recorded-replay palette.
+
+```yaml
+Type: TerminalTheme
+Parameter Sets: Replay
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Source
 Exact source text with optional renderer-neutral syntax spans.
 
@@ -198,6 +240,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -SourceOptions
+Fixed source viewport settings, including filename and line numbers.
+
+```yaml
+Type: VisualStorySourceOptions
+Parameter Sets: Source, SourceTimeline, SourceText
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -217,6 +275,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -SourceTimeline
+Resolved source editing events on the scene clock.
+
+```yaml
+Type: StorySourceTimeline
+Parameter Sets: SourceTimeline
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### -Terminal
 Resolved deterministic terminal presentation.
 
@@ -230,6 +304,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -TerminalOptions
+Fixed-font wrapping and history settings for terminal or replay panels.
+
+```yaml
+Type: VisualStoryTerminalOptions
+Parameter Sets: Replay, Terminal
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -254,7 +344,7 @@ Optional visible panel title.
 
 ```yaml
 Type: String
-Parameter Sets: Source, SourceText, Terminal, MediaPath, MediaBytes, MediaImage, Text
+Parameter Sets: Source, SourceTimeline, SourceText, Replay, Terminal, MediaPath, MediaBytes, MediaImage, Text
 Aliases: None
 Possible values:
 
@@ -286,7 +376,7 @@ Relative size in split or stacked scenes.
 
 ```yaml
 Type: Double
-Parameter Sets: Source, SourceText, Terminal, MediaPath, MediaBytes, MediaImage, Text
+Parameter Sets: Source, SourceTimeline, SourceText, Replay, Terminal, MediaPath, MediaBytes, MediaImage, Text
 Aliases: None
 Possible values:
 
@@ -303,6 +393,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 - `ChartForgeX.Stories.StorySourceText`
+- `ChartForgeX.Stories.StorySourceTimeline`
+- `ChartForgeX.Stories.StoryReplay`
 - `ChartForgeX.Terminal.TerminalStory`
 
 ## OUTPUTS

@@ -312,6 +312,9 @@ Declares a result that must be visible in the completed visual-story scene.
 ### [New-ImageStoryPanel](New-ImageStoryPanel.md)
 Creates one resolved source, terminal, media, or text panel for a generic visual story.
 
+### [New-ImageStoryReplay](New-ImageStoryReplay.md)
+Converts ordered capture records into a resolved replay without executing commands.
+
 ### [New-ImageStoryScene](New-ImageStoryScene.md)
 Groups resolved panels into one timed visual-story scene.
 

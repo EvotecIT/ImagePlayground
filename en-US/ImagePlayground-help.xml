@@ -25845,7 +25845,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>AnimationScale</maml:name>
           <maml:description>
-            <maml:para>Raster density multiplier for GIF and APNG output.</maml:para>
+            <maml:para>Pixel density multiplier for animated SVG, HTML, GIF and APNG output.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -25913,7 +25913,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>EndHoldSeconds</maml:name>
           <maml:description>
-            <maml:para>Completed-scene hold time for GIF and APNG output.</maml:para>
+            <maml:para>Completed-scene hold shared by all animated formats.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -25937,7 +25937,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FramesPerSecond</maml:name>
           <maml:description>
-            <maml:para>Frame rate for GIF and APNG output.</maml:para>
+            <maml:para>Frame rate shared by animated SVG, HTML, GIF and APNG output.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -25973,7 +25973,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>NoLoop</maml:name>
           <maml:description>
-            <maml:para>Produce a single-play GIF or APNG.</maml:para>
+            <maml:para>Produce one play in every animated format. Equivalent to PlayCount 1.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -25998,6 +25998,30 @@ polygonal areas.</maml:para>
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Write the resolved native story to the pipeline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PlayCount</maml:name>
+          <maml:description>
+            <maml:para>Total plays for all animated formats. Zero repeats indefinitely.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Player</maml:name>
+          <maml:description>
+            <maml:para>Add browser playback controls to HTML output and HTML bundle artifacts.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -26084,7 +26108,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>AnimationScale</maml:name>
           <maml:description>
-            <maml:para>Raster density multiplier for GIF and APNG output.</maml:para>
+            <maml:para>Pixel density multiplier for animated SVG, HTML, GIF and APNG output.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -26140,7 +26164,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>EndHoldSeconds</maml:name>
           <maml:description>
-            <maml:para>Completed-scene hold time for GIF and APNG output.</maml:para>
+            <maml:para>Completed-scene hold shared by all animated formats.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -26164,7 +26188,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FramesPerSecond</maml:name>
           <maml:description>
-            <maml:para>Frame rate for GIF and APNG output.</maml:para>
+            <maml:para>Frame rate shared by animated SVG, HTML, GIF and APNG output.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -26188,7 +26212,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>NoLoop</maml:name>
           <maml:description>
-            <maml:para>Produce a single-play GIF or APNG.</maml:para>
+            <maml:para>Produce one play in every animated format. Equivalent to PlayCount 1.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -26201,6 +26225,30 @@ polygonal areas.</maml:para>
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Write the resolved native story to the pipeline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PlayCount</maml:name>
+          <maml:description>
+            <maml:para>Total plays for all animated formats. Zero repeats indefinitely.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Player</maml:name>
+          <maml:description>
+            <maml:para>Add browser playback controls to HTML output and HTML bundle artifacts.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -26251,7 +26299,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>AnimationScale</maml:name>
         <maml:description>
-          <maml:para>Raster density multiplier for GIF and APNG output.</maml:para>
+          <maml:para>Pixel density multiplier for animated SVG, HTML, GIF and APNG output.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -26319,7 +26367,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>EndHoldSeconds</maml:name>
         <maml:description>
-          <maml:para>Completed-scene hold time for GIF and APNG output.</maml:para>
+          <maml:para>Completed-scene hold shared by all animated formats.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -26343,7 +26391,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FramesPerSecond</maml:name>
         <maml:description>
-          <maml:para>Frame rate for GIF and APNG output.</maml:para>
+          <maml:para>Frame rate shared by animated SVG, HTML, GIF and APNG output.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -26379,7 +26427,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>NoLoop</maml:name>
         <maml:description>
-          <maml:para>Produce a single-play GIF or APNG.</maml:para>
+          <maml:para>Produce one play in every animated format. Equivalent to PlayCount 1.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -26404,6 +26452,30 @@ polygonal areas.</maml:para>
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Write the resolved native story to the pipeline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PlayCount</maml:name>
+        <maml:description>
+          <maml:para>Total plays for all animated formats. Zero repeats indefinitely.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Player</maml:name>
+        <maml:description>
+          <maml:para>Add browser playback controls to HTML output and HTML bundle artifacts.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -26702,6 +26774,81 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceOptions</maml:name>
+          <maml:description>
+            <maml:para>Fixed source viewport settings, including filename and line numbers.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualStorySourceOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualStorySourceOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Optional visible panel title.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Weight</maml:name>
+          <maml:description>
+            <maml:para>Relative size in split or stacked scenes.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="SourceTimeline">
+        <maml:name>New-ImageStoryPanel</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Stable panel identifier referenced by completed outcomes.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceOptions</maml:name>
+          <maml:description>
+            <maml:para>Fixed source viewport settings, including filename and line numbers.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualStorySourceOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualStorySourceOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>SourceTimeline</maml:name>
+          <maml:description>
+            <maml:para>Resolved source editing events on the scene clock.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">StorySourceTimeline</command:parameterValue>
+          <dev:type>
+            <maml:name>StorySourceTimeline</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Title</maml:name>
           <maml:description>
             <maml:para>Optional visible panel title.</maml:para>
@@ -26748,6 +26895,18 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceOptions</maml:name>
+          <maml:description>
+            <maml:para>Fixed source viewport settings, including filename and line numbers.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualStorySourceOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualStorySourceOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -26801,6 +26960,93 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Replay">
+        <maml:name>New-ImageStoryPanel</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AccessibleText</maml:name>
+          <maml:description>
+            <maml:para>Accessible alternative for terminal or media content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Stable panel identifier referenced by completed outcomes.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Replay</maml:name>
+          <maml:description>
+            <maml:para>Resolved recorded observations. Rendering never executes their commands.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">StoryReplay</command:parameterValue>
+          <dev:type>
+            <maml:name>StoryReplay</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ReplayTheme</maml:name>
+          <maml:description>
+            <maml:para>Optional recorded-replay palette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TerminalOptions</maml:name>
+          <maml:description>
+            <maml:para>Fixed-font wrapping and history settings for terminal or replay panels.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualStoryTerminalOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualStoryTerminalOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Optional visible panel title.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Weight</maml:name>
+          <maml:description>
+            <maml:para>Relative size in split or stacked scenes.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
       <command:syntaxItem parameterSetName="Terminal">
         <maml:name>New-ImageStoryPanel</maml:name>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
@@ -26835,6 +27081,18 @@ polygonal areas.</maml:para>
           <command:parameterValue required="true" variableLength="false">TerminalStory</command:parameterValue>
           <dev:type>
             <maml:name>TerminalStory</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TerminalOptions</maml:name>
+          <maml:description>
+            <maml:para>Fixed-font wrapping and history settings for terminal or replay panels.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualStoryTerminalOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualStoryTerminalOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -27142,12 +27400,12 @@ polygonal areas.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>AccessibleText</maml:name>
         <maml:description>
           <maml:para>Accessible alternative for terminal or media content.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
@@ -27239,6 +27497,30 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>Replay</maml:name>
+        <maml:description>
+          <maml:para>Resolved recorded observations. Rendering never executes their commands.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">StoryReplay</command:parameterValue>
+        <dev:type>
+          <maml:name>StoryReplay</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ReplayTheme</maml:name>
+        <maml:description>
+          <maml:para>Optional recorded-replay palette.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalTheme</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Source</maml:name>
         <maml:description>
           <maml:para>Exact source text with optional renderer-neutral syntax spans.</maml:para>
@@ -27246,6 +27528,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="true" variableLength="false">StorySourceText</command:parameterValue>
         <dev:type>
           <maml:name>StorySourceText</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SourceOptions</maml:name>
+        <maml:description>
+          <maml:para>Fixed source viewport settings, including filename and line numbers.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualStorySourceOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualStorySourceOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -27263,6 +27557,18 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>SourceTimeline</maml:name>
+        <maml:description>
+          <maml:para>Resolved source editing events on the scene clock.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">StorySourceTimeline</command:parameterValue>
+        <dev:type>
+          <maml:name>StorySourceTimeline</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Terminal</maml:name>
         <maml:description>
           <maml:para>Resolved deterministic terminal presentation.</maml:para>
@@ -27270,6 +27576,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="true" variableLength="false">TerminalStory</command:parameterValue>
         <dev:type>
           <maml:name>TerminalStory</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TerminalOptions</maml:name>
+        <maml:description>
+          <maml:para>Fixed-font wrapping and history settings for terminal or replay panels.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualStoryTerminalOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualStoryTerminalOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -27331,6 +27649,16 @@ polygonal areas.</maml:para>
       </command:inputType>
       <command:inputType>
         <dev:type>
+          <maml:name>ChartForgeX.Stories.StorySourceTimeline</maml:name>
+        </dev:type>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>ChartForgeX.Stories.StoryReplay</maml:name>
+        </dev:type>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
           <maml:name>ChartForgeX.Terminal.TerminalStory</maml:name>
         </dev:type>
       </command:inputType>
@@ -27354,6 +27682,220 @@ polygonal areas.</maml:para>
       <command:example>
         <maml:title>Create an emphasized result panel</maml:title>
         <dev:code>New-ImageStoryPanel -Id 'summary' -Title 'Result' -Text 'Deployment completed.' -Emphasized</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-ImageStoryReplay</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>ImageStoryReplay</command:noun>
+      <maml:description>
+        <maml:para>Converts ordered capture records into a resolved replay without executing commands.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Each event supplies TimestampSeconds and Kind. Command, Output, ReplaceLine, Directory and Marker use Text. OpenTab uses TabId, Title, Dialect, WorkingDirectory and CustomPrompt; SelectTab uses TabId. Output and ReplaceLine can supply Tone. Capture scripts remain a separate, explicit caller action.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-ImageStoryReplay</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CustomPrompt</maml:name>
+          <maml:description>
+            <maml:para>Prompt required by the Custom dialect.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dialect</maml:name>
+          <maml:description>
+            <maml:para>Initial prompt dialect.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalDialect</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CommandPrompt</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Python</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CSharp</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>TerminalDialect</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DurationSeconds</maml:name>
+          <maml:description>
+            <maml:para>Recorded endpoint, including idle time.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="Events">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Ordered dictionaries or objects, including objects read with ConvertFrom-Json.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PSObject[]</command:parameterValue>
+          <dev:type>
+            <maml:name>PSObject[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Initial session title.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WorkingDirectory</maml:name>
+          <maml:description>
+            <maml:para>Initial prompt directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CustomPrompt</maml:name>
+        <maml:description>
+          <maml:para>Prompt required by the Custom dialect.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Dialect</maml:name>
+        <maml:description>
+          <maml:para>Initial prompt dialect.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalDialect</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">PowerShell</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CommandPrompt</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Python</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CSharp</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>TerminalDialect</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DurationSeconds</maml:name>
+        <maml:description>
+          <maml:para>Recorded endpoint, including idle time.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="Events">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Ordered dictionaries or objects, including objects read with ConvertFrom-Json.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSObject[]</command:parameterValue>
+        <dev:type>
+          <maml:name>PSObject[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Title</maml:name>
+        <maml:description>
+          <maml:para>Initial session title.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>WorkingDirectory</maml:name>
+        <maml:description>
+          <maml:para>Initial prompt directory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSObject[]</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ChartForgeX.Stories.StoryReplay</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Prepare recorded output for playback</maml:title>
+        <dev:code>$events = @(&#xD;
+                @{ TimestampSeconds = 1; Kind = 'Command'; Text = './Test-Project.ps1' }&#xD;
+                @{ TimestampSeconds = 12; Kind = 'Output'; Text = '24 checks passed'; Tone = 'Success' }&#xD;
+            )&#xD;
+            $replay = New-ImageStoryReplay -DurationSeconds 15 -Events $events&#xD;
+            $replay.CompressPauses([TimeSpan]::FromSeconds(2))</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>

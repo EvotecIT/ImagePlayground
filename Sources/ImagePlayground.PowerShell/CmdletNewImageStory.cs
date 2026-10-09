@@ -5,6 +5,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ChartForgeX;
 using ChartForgeX.Stories;
+using ChartForgeX.Raster;
+using ChartForgeX.Interactivity.Html;
 using ImagePlayground.PowerShell.Stories;
 
 namespace ImagePlayground.PowerShell;
@@ -27,7 +29,7 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageStory", DefaultParameterSetName = PartsSet)]
 [OutputType(typeof(VisualStory))]
-public sealed class NewImageStoryCmdlet : PSCmdlet {
+public sealed partial class NewImageStoryCmdlet : PSCmdlet {
     private const string PartsSet = "Parts";
     private const string StorySet = "Story";
     private readonly List<VisualStory> _stories = new();
@@ -83,12 +85,12 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
     [Parameter]
     public System.DateTimeOffset? CapturedAtUtc { get; set; }
 
-    /// <summary>Frame rate for GIF and APNG output.</summary>
+    /// <summary>Frame rate shared by animated SVG, HTML, GIF and APNG output.</summary>
     [Parameter]
-    [ValidateRange(2, 30)]
+    [ValidateRange(2, 60)]
     public int FramesPerSecond { get; set; } = 6;
 
-    /// <summary>Completed-scene hold time for GIF and APNG output.</summary>
+    /// <summary>Completed-scene hold shared by all animated formats.</summary>
     [Parameter]
     [PSDefaultValue(Value = 1.5, Help = "1.5")]
     [ValidateRange(0, 10)]
@@ -100,19 +102,28 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
     [ValidateRange(0, 1)]
     public double TransitionSeconds { get; set; } = 0.24;
 
-    /// <summary>Raster density multiplier for GIF and APNG output.</summary>
+    /// <summary>Pixel density multiplier for animated SVG, HTML, GIF and APNG output.</summary>
     [Parameter]
     [ValidateRange(1, 4)]
     public int AnimationScale { get; set; } = 1;
 
     /// <summary>Maximum animated frame budget.</summary>
     [Parameter]
-    [ValidateRange(2, 600)]
+    [ValidateRange(2, 3600)]
     public int MaximumFrames { get; set; } = 240;
 
-    /// <summary>Produce a single-play GIF or APNG.</summary>
+    /// <summary>Produce one play in every animated format. Equivalent to PlayCount 1.</summary>
     [Parameter]
     public SwitchParameter NoLoop { get; set; }
+
+    /// <summary>Total plays for all animated formats. Zero repeats indefinitely.</summary>
+    [Parameter]
+    [ValidateRange(0, 65536)]
+    public int PlayCount { get; set; }
+
+    /// <summary>Add browser playback controls to HTML output and HTML bundle artifacts.</summary>
+    [Parameter]
+    public SwitchParameter Player { get; set; }
 
     /// <summary>Open the generated story after creation.</summary>
     [Parameter]
@@ -147,18 +158,18 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
             : GetBundleArtifacts(bundle, output);
         if (bundle != null) ValidateBundleDestinations(output, bundle, bundleArtifacts);
         var story = BuildStory();
+        if (NoLoop.IsPresent && MyInvocation.BoundParameters.ContainsKey(nameof(PlayCount)) && PlayCount != 1)
+            throw new PSArgumentException("NoLoop requires PlayCount 1. Supply one playback setting.");
+        var prepared = story.Prepare(new VisualStoryPlaybackOptions(
+            TimeSpan.FromSeconds(EndHoldSeconds), TimeSpan.FromSeconds(TransitionSeconds), NoLoop.IsPresent ? 1 : PlayCount));
+        var sampling = new VisualStoryFrameOptions(FramesPerSecond, AnimationScale, MaximumFrames);
         var directory = Path.GetDirectoryName(output);
         if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
 
-        if (extension.Equals(".svg", System.StringComparison.OrdinalIgnoreCase)) story.SaveSvg(output);
-        else if (extension.Equals(".html", System.StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", System.StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, story.ToHtmlPage());
-        else if (extension.Equals(".png", System.StringComparison.OrdinalIgnoreCase)) story.SavePng(output);
-        else if (extension.Equals(".gif", System.StringComparison.OrdinalIgnoreCase)) story.SaveGif(output, BuildAnimationOptions());
-        else if (extension.Equals(".apng", System.StringComparison.OrdinalIgnoreCase)) story.SaveApng(output, BuildAnimationOptions());
-        else story.SaveTranscript(output);
+        WriteArtifact(prepared, sampling, extension, output);
 
         if (bundle != null) {
-            WriteBundle(story, bundle, output, bundleArtifacts);
+            WriteBundle(story, prepared, sampling, bundle, output, bundleArtifacts);
         }
         if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         if (PassThru.IsPresent) WriteObject(story);
@@ -179,16 +190,10 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         return story;
     }
 
-    private VisualStoryAnimationOptions BuildAnimationOptions() => VisualStoryAnimationOptions.Create()
-        .WithFramesPerSecond(FramesPerSecond)
-        .WithEndHold(EndHoldSeconds)
-        .WithTransition(TransitionSeconds)
-        .WithOutputScale(AnimationScale)
-        .WithMaximumFrames(MaximumFrames)
-        .WithLoop(!NoLoop.IsPresent);
-
     private void WriteBundle(
         VisualStory story,
+        PreparedVisualStory prepared,
+        VisualStoryFrameOptions sampling,
         string bundlePath,
         string resolvedOutputPath,
         IReadOnlyList<BundleArtifact> bundleArtifacts) {
@@ -199,12 +204,7 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
         foreach (var artifact in bundleArtifacts) {
             var format = artifact.Format;
             var path = artifact.Path;
-            if (format == "Svg") story.SaveSvg(path);
-            else if (format == "Html") File.WriteAllText(path, story.ToHtmlPage());
-            else if (format == "Png") story.SavePng(path);
-            else if (format == "Gif") story.SaveGif(path, BuildAnimationOptions());
-            else if (format == "Apng") story.SaveApng(path, BuildAnimationOptions());
-            else story.SaveTranscript(path);
+            WriteArtifact(prepared, sampling, Path.GetExtension(path), path);
             artifacts.Add(new {
                 role = format == "Png" ? "completed" : format == "Transcript" ? "transcript" : format == "Html" ? "html" : "animated",
                 format = format == "Transcript" ? "text" : format.ToLowerInvariant(),
@@ -222,6 +222,17 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
             outcome,
             generatedAtUtc = CapturedAtUtc?.ToUniversalTime(),
             producer = BuildProducerName(),
+            playback = new {
+                contentSeconds = prepared.ContentDuration.TotalSeconds,
+                durationSeconds = prepared.Duration.TotalSeconds,
+                endHoldSeconds = prepared.Playback.EndHold.TotalSeconds,
+                transitionSeconds = prepared.Playback.Transition.TotalSeconds,
+                playCount = prepared.Playback.PlayCount,
+                framesPerSecond = sampling.FramesPerSecond,
+                outputScale = sampling.OutputScale,
+                maximumFrames = sampling.MaximumFrames
+            },
+            chapters = prepared.Chapters.Select(chapter => new { id = chapter.Id, title = chapter.Title, startSeconds = chapter.Start.TotalSeconds, durationSeconds = chapter.Duration.TotalSeconds }),
             artifacts
         };
         File.WriteAllText(
