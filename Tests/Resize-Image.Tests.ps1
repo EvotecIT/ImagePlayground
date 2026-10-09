@@ -87,13 +87,28 @@ Describe 'Resize-Image' {
         { Resize-Image -FilePath $src -OutputPath $dest -Width 10 -Height -5 } | Should -Throw
     }
 
-    It 'throws for dimensions above maximum' {
+    It 'fits dimensions above 1000 inside <Width>x<Height> bounds' -TestCases @(
+        @{ Width = 1200; Height = 100 }
+        @{ Width = 100; Height = 1200 }
+    ) {
+        param($Width, $Height)
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
-        $dest = Join-Path $TestDir 'logo-too-large.png'
-        { Resize-Image -FilePath $src -OutputPath $dest -Width 1200 -Height 100 } | Should -Throw
-        { Resize-Image -FilePath $src -OutputPath $dest -Width 100 -Height 1200 } | Should -Throw
+        $dest = Join-Path $TestDir ('logo-large-bounds-{0}x{1}.png' -f $Width, $Height)
+        Resize-Image -FilePath $src -OutputPath $dest -Width $Width -Height $Height
+        $original = [ImagePlayground.Image]::Load($src)
+        $img = [ImagePlayground.Image]::Load($dest)
+        try {
+            $scale = [math]::Min($Width / [double] $original.Width, $Height / [double] $original.Height)
+            $img.Width | Should -Be ([math]::Round($original.Width * $scale))
+            $img.Height | Should -Be ([math]::Round($original.Height * $scale))
+            $img.Width | Should -BeLessOrEqual $Width
+            $img.Height | Should -BeLessOrEqual $Height
+        } finally {
+            $img.Dispose()
+            $original.Dispose()
+        }
     }
-    It 'accepts maximum dimension values' {
+    It 'accepts a 1000-pixel bounding box' {
         $src = Join-Path $PSScriptRoot "../Sources/ImagePlayground.Tests/Images/LogoEvotec.png"
         $dest = Join-Path $TestDir "logo-max.png"
         { Resize-Image -FilePath $src -OutputPath $dest -Width 1000 -Height 1000 } | Should -Not -Throw

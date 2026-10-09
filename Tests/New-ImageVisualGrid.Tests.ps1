@@ -1,5 +1,6 @@
 Describe 'New-ImageVisualGrid' {
     BeforeAll {
+        $PreviousDevelopment = [Environment]::GetEnvironmentVariable('IMAGEPLAYGROUND_DEVELOPMENT', 'Process')
         $modulePath = if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
             $env:IMAGEPLAYGROUND_TEST_MODULE_PATH
         } else {
@@ -11,6 +12,10 @@ Describe 'New-ImageVisualGrid' {
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
         }
+    }
+
+    AfterAll {
+        [Environment]::SetEnvironmentVariable('IMAGEPLAYGROUND_DEVELOPMENT', $PreviousDevelopment, 'Process')
     }
 
     It 'renders a dashboard from PowerShell-native visual blocks' {
