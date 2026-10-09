@@ -1,8 +1,13 @@
 Describe 'New-ImageVisualGrid' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
-        $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
+        $modulePath = if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            $env:IMAGEPLAYGROUND_TEST_MODULE_PATH
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Join-Path $PSScriptRoot '../ImagePlayground.psd1'
+        }
+        Import-Module -Name $modulePath -Force -ErrorAction Stop
+        $TestDir = Join-Path -Path $TestDrive -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
         }
@@ -63,6 +68,30 @@ Describe 'New-ImageVisualGrid' {
         $presentation | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
         $grid | New-ImageVisualStory -FilePath $afterPath
         [System.IO.File]::ReadAllText($afterPath) | Should -BeExactly $before
+        [void] $motion.Add('later-target', [ChartForgeX.Motion.VisualMotionEffect]::Fade)
+        $presentation.ToSvg() | Should -Match 'data-cfx-motion-target="requests"'
+        $presentation.ToSvg() | Should -Not -Match 'data-cfx-motion-target="later-target"'
+    }
+
+    It 'saves completed static pixels for motion output as <Extension>' -TestCases @(
+        @{ Extension = 'ppm'; Signature = 'UDY=' }
+        @{ Extension = 'png'; Signature = 'iVA=' }
+        @{ Extension = 'tiff'; Signature = 'SUk=' }
+    ) {
+        param($Extension, $Signature)
+        $motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('requests')
+        $content = New-ImageVisualGridItem -TargetId requests -Block (New-ImageMetricCard -Label Requests -Value 12840)
+        $staticPath = Join-Path -Path $TestDir -ChildPath ('static-grid.' + $Extension)
+        $motionPath = Join-Path -Path $TestDir -ChildPath ('motion-grid.' + $Extension)
+
+        New-ImageVisualGrid -Content $content -FilePath $staticPath
+        $presentation = New-ImageVisualGrid -Content $content -Motion $motion -FilePath $motionPath -PassThru
+
+        $presentation | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
+        $bytes = [System.IO.File]::ReadAllBytes($motionPath)
+        $bytes.Length | Should -BeGreaterThan 2
+        [Convert]::ToBase64String([byte[]] $bytes[0..1]) | Should -Be $Signature
+        [Convert]::ToBase64String($bytes) | Should -BeExactly ([Convert]::ToBase64String([System.IO.File]::ReadAllBytes($staticPath)))
         [void] $motion.Add('later-target', [ChartForgeX.Motion.VisualMotionEffect]::Fade)
         $presentation.ToSvg() | Should -Match 'data-cfx-motion-target="requests"'
         $presentation.ToSvg() | Should -Not -Match 'data-cfx-motion-target="later-target"'
