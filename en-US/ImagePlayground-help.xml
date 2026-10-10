@@ -36017,6 +36017,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
+            <maml:para>Requested width or maximum width when both bounds are supplied.</maml:para>
             <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
@@ -36119,6 +36120,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
+            <maml:para>Requested width or maximum width when both bounds are supplied.</maml:para>
             <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
@@ -36245,6 +36247,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
+          <maml:para>Requested width or maximum width when both bounds are supplied.</maml:para>
           <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>

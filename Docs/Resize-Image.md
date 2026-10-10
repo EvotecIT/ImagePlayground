@@ -151,6 +151,8 @@ Accept wildcard characters: False
 ```
 
 ### -Width
+Requested width or maximum width when both bounds are supplied.
+
 The shared owner validates pixel and working-memory limits before allocation.
 
 ```yaml

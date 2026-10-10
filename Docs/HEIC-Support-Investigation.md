@@ -21,6 +21,8 @@ The shared container reader handles file-backed, multi-extent, and `idat`-backed
 
 EXIF-only operations read and write only EXIF; XMP-only operations read and write only XMP. An unrelated metadata item's opaque payload, unreadable location, or unsupported write layout does not block those selective operations, and its bytes are preserved. A full metadata import replaces all supported supplied families and rejects ICC or IPTC profiles. Metadata snapshots leave resolution fields null when the container reader does not expose a physical density.
 
+Metadata import and removal finish all selected profile edits in memory before one atomic destination write. No intermediate file contains a partially edited metadata set. An unsupported requested item or invalid UTF-8 XMP rejects the operation without changing an existing destination. Removing an absent profile leaves the encoded container unchanged; importing a nonempty profile requires its matching writable item to exist.
+
 Container information preserves protected item and content-encoding declarations. Reading, replacing, or clearing a protected EXIF item or a protected/encoded XMP item raises an unsupported-operation error; interpreting those payloads requires the corresponding protection or encoding support.
 
 An EXIF item includes a HEIF-specific offset header and a classic TIFF profile. OfficeIMO.Core unwraps the item and exposes its owned EXIF tag and value APIs. Metadata access does not require an HEVC decoder or a native Windows imaging extension.
