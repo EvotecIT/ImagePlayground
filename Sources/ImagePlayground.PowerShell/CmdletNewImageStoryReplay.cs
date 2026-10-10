@@ -49,7 +49,9 @@ public sealed class NewImageStoryReplayCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        if (_events.Count + InputObject.Length > 4096) throw new PSArgumentException("Replay supports at most 4096 events.");
+        if (_events.Count + InputObject.Length > 4096) {
+            throw new PSArgumentException("Replay supports at most 4096 events.");
+        }
         _events.AddRange(InputObject);
     }
 
@@ -60,18 +62,42 @@ public sealed class NewImageStoryReplayCmdlet : PSCmdlet {
             var at = TimeSpan.FromSeconds(Required<double>(item, "TimestampSeconds"));
             var kind = Required<StoryReplayEventKind>(item, "Kind");
             switch (kind) {
-                case StoryReplayEventKind.Command: replay.Command(at, Required<string>(item, "Text")); break;
-                case StoryReplayEventKind.Output: replay.Output(at, Required<string>(item, "Text"), Optional(item, "Tone", TerminalTextTone.Default)); break;
-                case StoryReplayEventKind.ReplaceLine: replay.ReplaceLine(at, Required<string>(item, "Text"), Optional(item, "Tone", TerminalTextTone.Default)); break;
-                case StoryReplayEventKind.Clear: replay.Clear(at); break;
-                case StoryReplayEventKind.Directory: replay.ChangeDirectory(at, Required<string>(item, "Text")); break;
-                case StoryReplayEventKind.Marker: replay.Marker(at, Required<string>(item, "Text")); break;
-                case StoryReplayEventKind.SelectTab: replay.SelectTab(at, Required<string>(item, "TabId")); break;
-                case StoryReplayEventKind.OpenTab:
+                case StoryReplayEventKind.Command: {
+                    replay.Command(at, Required<string>(item, "Text"));
+                    break;
+                }
+                case StoryReplayEventKind.Output: {
+                    replay.Output(at, Required<string>(item, "Text"), Optional(item, "Tone", TerminalTextTone.Default));
+                    break;
+                }
+                case StoryReplayEventKind.ReplaceLine: {
+                    replay.ReplaceLine(at, Required<string>(item, "Text"), Optional(item, "Tone", TerminalTextTone.Default));
+                    break;
+                }
+                case StoryReplayEventKind.Clear: {
+                    replay.Clear(at);
+                    break;
+                }
+                case StoryReplayEventKind.Directory: {
+                    replay.ChangeDirectory(at, Required<string>(item, "Text"));
+                    break;
+                }
+                case StoryReplayEventKind.Marker: {
+                    replay.Marker(at, Required<string>(item, "Text"));
+                    break;
+                }
+                case StoryReplayEventKind.SelectTab: {
+                    replay.SelectTab(at, Required<string>(item, "TabId"));
+                    break;
+                }
+                case StoryReplayEventKind.OpenTab: {
                     replay.OpenTab(at, Required<string>(item, "TabId"), Required<string>(item, "Title"),
                         Optional(item, "Dialect", TerminalDialect.PowerShell), Optional(item, "WorkingDirectory", "."), Optional<string?>(item, "CustomPrompt", null));
                     break;
-                default: throw new PSArgumentException("Unknown replay event kind.");
+                }
+                default: {
+                    throw new PSArgumentException("Unknown replay event kind.");
+                }
             }
         }
         WriteObject(replay);
@@ -79,7 +105,9 @@ public sealed class NewImageStoryReplayCmdlet : PSCmdlet {
 
     private static T Required<T>(PSObject item, string name) {
         var value = Value(item, name);
-        if (value == null) throw new PSArgumentException("Replay event requires " + name + ".");
+        if (value == null) {
+            throw new PSArgumentException("Replay event requires " + name + ".");
+        }
         return LanguagePrimitives.ConvertTo<T>(value);
     }
     private static T Optional<T>(PSObject item, string name, T fallback) {
