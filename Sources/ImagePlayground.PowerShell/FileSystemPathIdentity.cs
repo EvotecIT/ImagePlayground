@@ -141,6 +141,13 @@ internal static class FileSystemPathIdentity {
               leftDevice == rightDevice && leftInode == rightInode;
     }
 
+    internal static bool AreSamePath(string left, string right) {
+        if (AreSameExistingFile(left, right)) return true;
+        var canonicalLeft = GetCanonicalPath(left);
+        var canonicalRight = GetCanonicalPath(right);
+        return string.Equals(canonicalLeft, canonicalRight, GetPathComparison(canonicalLeft));
+    }
+
     private static bool TryGetWindowsFileIdentity(string path, out uint volume, out ulong index) {
         volume = 0;
         index = 0;

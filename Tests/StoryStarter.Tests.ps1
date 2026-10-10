@@ -113,4 +113,42 @@ Describe 'Script and captured-output story starter' {
         $rows = @($frame.SelectNodes("//*[@data-cfx-role='terminal-viewport-text']"))
         $rows[-1].InnerText | Should -Be '42'
     }
+
+    It 'protects the <InputKind> input through a linked <Route> before exporting any layout' -ForEach @(
+        @{ InputKind = 'script'; Route = 'destination' }, @{ InputKind = 'output'; Route = 'destination' },
+        @{ InputKind = 'script'; Route = 'input' }, @{ InputKind = 'output'; Route = 'input' },
+        @{ InputKind = 'script'; Route = 'layout' }, @{ InputKind = 'output'; Route = 'layout' }
+    ) {
+        $caseRoot = Join-Path $TestDrive "$InputKind-$Route"
+        $physical = Join-Path $caseRoot 'physical'
+        $destination = Join-Path $caseRoot 'exports'
+        $null = New-Item -ItemType Directory -Path (Join-Path $physical 'portrait') -Force
+        $scriptFile = Join-Path $caseRoot 'script.ps1'
+        $outputFile = Join-Path $caseRoot 'output.txt'
+        [IO.File]::WriteAllText($scriptFile, '$x = 42')
+        [IO.File]::WriteAllText($outputFile, '42')
+        $name = if ($InputKind -eq 'script') { 'story.html' } else { 'story.txt' }
+        $protected = Join-Path (Join-Path $physical 'portrait') $name
+        $original = if ($InputKind -eq 'script') { '$x = 42' } else { '42' }
+        [IO.File]::WriteAllText($protected, $original)
+        $linkKind = if ($PSVersionTable.PSVersion.Major -le 5 -or $PSVersionTable.Platform -ne 'Unix') { 'Junction' } else { 'SymbolicLink' }
+        if ($Route -eq 'destination') {
+            $null = New-Item -ItemType $linkKind -Path $destination -Target $physical
+            $input = $protected
+        } elseif ($Route -eq 'input') {
+            $destination = $physical
+            $alias = Join-Path $caseRoot 'input-alias'
+            $null = New-Item -ItemType $linkKind -Path $alias -Target $physical
+            $input = Join-Path (Join-Path $alias 'portrait') $name
+        } else {
+            $null = New-Item -ItemType Directory -Path $destination
+            $null = New-Item -ItemType $linkKind -Path (Join-Path $destination 'portrait') -Target (Join-Path $physical 'portrait')
+            $input = $protected
+        }
+        if ($InputKind -eq 'script') { $scriptFile = $input } else { $outputFile = $input }
+        { & $starter -ScriptPath $scriptFile -OutputPath $outputFile -OutputDirectory $destination -Overwrite @fast } |
+            Should -Throw '*outside OutputDirectory*'
+        [IO.File]::ReadAllText($protected) | Should -BeExactly $original
+        Test-Path -LiteralPath (Join-Path $destination 'square') | Should -BeFalse
+    }
 }

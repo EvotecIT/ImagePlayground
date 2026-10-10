@@ -295,11 +295,7 @@ public sealed partial class NewImageStoryCmdlet : PSCmdlet {
     }
 
     private static bool AreSameDestination(string left, string right) {
-        if (FileSystemPathIdentity.AreSameExistingFile(left, right)) return true;
-        var canonicalLeft = FileSystemPathIdentity.GetCanonicalPath(left);
-        var canonicalRight = FileSystemPathIdentity.GetCanonicalPath(right);
-        var comparison = FileSystemPathIdentity.GetPathComparison(canonicalLeft);
-        return string.Equals(canonicalLeft, canonicalRight, comparison);
+        return FileSystemPathIdentity.AreSamePath(left, right);
     }
 
     private readonly struct BundleArtifact {

@@ -25,7 +25,8 @@ Dark or light surfaces and syntax colors. Syntax colors appear during typing.
 .PARAMETER Command
 Display-only terminal command. Defaults to ./ followed by the script filename.
 .PARAMETER Overwrite
-Replaces existing story exports. Input files must remain outside the destination.
+Replaces existing story exports. Input files must remain outside the physical
+destination and every linked export path; all layouts are checked before writing.
 .EXAMPLE
 Import-Module ImagePlayground
 ./Story.ScriptAndOutput.ps1 -ScriptPath ./demo.ps1 -OutputPath ./output.txt `
@@ -95,30 +96,29 @@ if (-not (Get-Command -Name New-ImageStory -ErrorAction SilentlyContinue)) {
     throw 'Import ImagePlayground with the Stories cmdlets before running this starter.'
 }
 $destination = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
-if ($PSCmdlet.ParameterSetName -eq 'Files') {
-    foreach ($inputPath in @($ScriptPath, $OutputPath)) {
-        $resolved = (Get-Item -LiteralPath $inputPath).FullName
-        $prefix = $destination.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
-        if ($resolved.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
-            throw 'Keep script and captured-output input files outside OutputDirectory.'
+$layouts = @($Formats | ForEach-Object { ([ChartForgeX.Stories.VisualStoryFormat] $_).ToString() } | Select-Object -Unique)
+[string[]] $exports = @(
+    foreach ($format in $layouts) {
+        $folder = Join-Path $destination $format.ToLowerInvariant()
+        foreach ($name in @('story.html', 'story.gif', 'story.png', 'story.txt', 'story.json')) {
+            Join-Path $folder $name
         }
     }
+)
+if ($PSCmdlet.ParameterSetName -eq 'Files') {
     $scriptFile = Get-Item -LiteralPath $ScriptPath
+    $outputFile = Get-Item -LiteralPath $OutputPath
+    [ImagePlayground.PowerShell.ImageStoryFileSafety]::ValidateInputs($destination, [string[]] @($scriptFile.FullName, $outputFile.FullName), $exports)
     $ScriptText = [IO.File]::ReadAllText($scriptFile.FullName)
-    $OutputText = [IO.File]::ReadAllText((Get-Item -LiteralPath $OutputPath).FullName)
+    $OutputText = [IO.File]::ReadAllText($outputFile.FullName)
     if ([string]::IsNullOrWhiteSpace($ScriptName)) { $ScriptName = $scriptFile.Name }
 }
 if ([string]::IsNullOrWhiteSpace($ScriptText)) { throw 'The displayed script must contain text.' }
 if ([string]::IsNullOrWhiteSpace($ScriptName)) { $ScriptName = 'script.ps1' }
 if ([string]::IsNullOrWhiteSpace($Command)) { $Command = './' + $ScriptName }
-$layouts = @($Formats | ForEach-Object { ([ChartForgeX.Stories.VisualStoryFormat] $_).ToString() } | Select-Object -Unique)
-foreach ($format in $layouts) {
-    $folder = Join-Path $destination $format.ToLowerInvariant()
-    foreach ($name in @('story.html', 'story.gif', 'story.png', 'story.txt', 'story.json')) {
-        $path = Join-Path $folder $name
-        if (-not $Overwrite -and (Test-Path -LiteralPath $path)) {
-            throw "Export already exists: $path. Choose another OutputDirectory or use -Overwrite."
-        }
+foreach ($path in $exports) {
+    if (-not $Overwrite -and (Test-Path -LiteralPath $path)) {
+        throw "Export already exists: $path. Choose another OutputDirectory or use -Overwrite."
     }
 }
 
