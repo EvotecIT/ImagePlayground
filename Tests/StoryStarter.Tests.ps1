@@ -96,4 +96,21 @@ Describe 'Script and captured-output story starter' {
         [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($existing), 0, 6) | Should -Be 'GIF89a'
         [IO.File]::ReadAllText($inputFile) | Should -BeExactly '42'
     }
+
+    It 'keeps a Graphite light replay light with the minimal title bar' {
+        $export = & $starter -ScriptText '$x = 42' -OutputText '42' -Formats Square `
+            -Appearance Graphite -ColorMode Light -OutputDirectory (Join-Path $TestDrive 'graphite-light') @fast
+        $html = [IO.File]::ReadAllText($export.Html)
+        $start = $html.IndexOf('<svg ')
+        $end = $html.IndexOf('</svg>', $start) + 6
+        [xml] $animation = $html.Substring($start, $end - $start)
+        $replay = @($animation.SelectNodes("//*[local-name()='g' and @data-cfx-scene='replay']"))
+        $image = $replay[-1].SelectSingleNode(".//*[local-name()='image']")
+        $payload = $image.GetAttribute('href').Substring('data:image/svg+xml;base64,'.Length)
+        [xml] $frame = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($payload))
+        $viewport = $frame.SelectSingleNode("//*[@data-cfx-role='terminal-viewport']")
+        $viewport.GetAttribute('fill') | Should -Be '#FFFFFF'
+        $rows = @($frame.SelectNodes("//*[@data-cfx-role='terminal-viewport-text']"))
+        $rows[-1].InnerText | Should -Be '42'
+    }
 }
