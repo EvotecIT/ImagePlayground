@@ -608,6 +608,18 @@ Replay events also support `ReplaceLine`, `Clear`, `Directory`, `Marker`, `OpenT
 
 [`Story.WriteFixReplay.ps1`](Examples/Story.WriteFixReplay.ps1) captures an actual PowerShell error and corrected result, animates the source correction, and creates a player with SVG, PNG, GIF, APNG, and transcript artifacts. MP4 integration is deferred.
 
+[`Story.ScriptAndOutput.ps1`](Examples/Story.ScriptAndOutput.ps1) is a reusable starter for your own script and saved output. It types the source, pauses on the highlighted script, and reveals the output line by line. The default export includes square (720×720), portrait (720×1280), and widescreen (1280×720) versions, each with a GIF, HTML player, completed PNG, transcript, and story manifest.
+
+```powershell
+Import-Module ImagePlayground
+./Examples/Story.ScriptAndOutput.ps1 -ScriptPath ./demo.ps1 -OutputPath ./output.txt `
+    -Title 'My PowerShell demo' -OutputDirectory ./stories
+```
+
+Supply UTF-8 files, or use `-ScriptText` and `-OutputText` for inline strings. Capture output separately from a script you trust; the starter never executes the displayed source. Its replay timing is authored from the saved lines. Use `-WritingSeconds`, `-ReadingSeconds`, `-ReplaySeconds`, and `-EndHoldSeconds` to change pacing; `-FontSize` sets readable source and terminal text, and `-Formats Square,Portrait` selects layouts. `-PlayCount 1` plays once; the default loops. Existing exports require `-Overwrite` or a different destination. Keep input files outside the destination folder.
+
+Use the GIF for a short silent social post. For a narrated video, open the widescreen HTML player, restart playback, and record it with your usual video capture tool. Use the portrait player for a vertical video. Long scripts and output scroll within fixed-font viewports; split lengthy demonstrations into focused stories so viewers can read each step.
+
 ## Portable visual artifacts and Office workflows
 
 `ConvertTo-ImageVisualArtifact` attaches static SVG and versioned semantic JSON bytes to a pipeline object. The SVG is suitable for flat placement; the semantic payload lets a compatible consumer rebuild editable shapes and connectors.
