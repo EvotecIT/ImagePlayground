@@ -1,6 +1,7 @@
 using ChartForgeX;
 using ChartForgeX.Composition;
 using ChartForgeX.Primitives;
+using ChartForgeX.Themes;
 using ImagePlayground;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 /// <example>
 ///   <summary>Create a social preview</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageCanvas -Preset SocialPreview -Title 'ChartForgeX 1.3' -Backdrop TechHorizon -LayerDefinition { New-ImageCanvasText -X 72 -Y 72 -Width 1000 -Text 'ChartForgeX 1.3' -FontSize 58 -Color White -Emphasized; New-ImageCanvasInfoTile -X 72 -Y 190 -Width 360 -Height 150 -Icon SVG -Label 'Renderer' -Value 'Dependency-free' } -FilePath preview.png</code>
+///   <code>New-ImageCanvas -Preset SocialPreview -Theme Dark -Title 'Service health' -LayerDefinition { New-ImageCanvasText -X 72 -Y 72 -Width 1000 -Text 'Service health' -FontSize 58 -Color White -Emphasized; New-ImageCanvasInfoTile -X 72 -Y 220 -Width 360 -Height 176 -Icon API -Label 'Requests' -Value '12,840' -Detail '+12% this week' } -FilePath preview.png</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageCanvas", DefaultParameterSetName = DefinitionSet)]
 [OutputType(typeof(VisualCanvas))]
@@ -57,6 +58,11 @@ public sealed class NewImageCanvasCmdlet : PSCmdlet {
     /// <summary>Accessibility title for SVG output.</summary>
     [Parameter]
     public string Title { get; set; } = string.Empty;
+
+    /// <summary>Canonical light or dark canvas theme. An existing canvas keeps its theme unless this parameter is supplied.</summary>
+    [Parameter]
+    [ValidateSet("Light", "Dark")]
+    public string Theme { get; set; } = "Dark";
 
     /// <summary>Top or solid background color.</summary>
     [Parameter]
@@ -102,6 +108,11 @@ public sealed class NewImageCanvasCmdlet : PSCmdlet {
         PowerShellPathResolver.ValidateFileDestination(output, nameof(FilePath), nameof(FilePath));
         ValidateCanvasInput();
         var canvas = _canvases.Count == 1 ? _canvases[0] : CreateCanvas();
+        if (_canvases.Count == 0 || MyInvocation.BoundParameters.ContainsKey(nameof(Theme))) {
+            canvas.WithDesignTokens(Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
+                ? VisualDesignTokens.GraphiteDark()
+                : VisualDesignTokens.GraphiteLight());
+        }
         ApplyBackground(canvas);
         if (LayerDefinition != null) {
             foreach (var result in LayerDefinition.Invoke()) AddLayer(result);

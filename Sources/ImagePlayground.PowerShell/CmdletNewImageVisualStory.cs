@@ -158,7 +158,7 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
 
     private VisualGrid BuildGrid() {
         if (StoryScript != null) {
-            var grid = VisualGrid.Create();
+            var grid = VisualGrid.Create().WithTheme(ChartThemeResolver.Resolve(ChartTheme.Default));
             foreach (var result in StoryScript.Invoke(grid)) {
                 var value = result is PSObject psObject ? psObject.BaseObject : result;
                 if (value is VisualGrid returnedGrid) {

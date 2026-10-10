@@ -298,7 +298,7 @@ Accept wildcard characters: False
 ```
 
 ### -Theme
-Optional visual-story theme.
+Optional visual-story theme. Authored stories use the canonical dark theme by default; supply VisualStoryTheme.GraphiteLight() for its light counterpart or a custom theme.
 
 ```yaml
 Type: VisualStoryTheme

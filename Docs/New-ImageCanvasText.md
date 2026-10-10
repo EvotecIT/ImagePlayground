@@ -44,7 +44,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Text color.
+Explicit text color. Omit this parameter to follow the canvas foreground; explicitly supplied white, transparent, or custom colors are retained.
 
 ```yaml
 Type: ChartColor

@@ -54,9 +54,9 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter(ValueFromPipeline = true, Mandatory = true, ParameterSetName = ChartSet)]
     public Chart? Chart { get; set; }
 
-    /// <summary>Chart definitions provided directly.</summary>
+    /// <summary>Typed definitions produced by New-ImageChart data cmdlets, supplied directly or through the pipeline.</summary>
     [Parameter(ValueFromPipeline = true, Mandatory = true, ParameterSetName = DefinitionSet)]
-    public object[]? Definition { get; set; }
+    public ChartDefinition[]? Definition { get; set; }
 
     /// <summary>ScriptBlock producing annotations.</summary>
     [Parameter]
@@ -75,6 +75,16 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter]
     [ValidateRange(1, 1000)]
     public int Height { get; set; } = 400;
+
+    /// <summary>Chart heading. A supplied native chart keeps its heading unless this parameter is supplied.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>Supporting chart heading. Supply an empty string to clear a supplied chart's subtitle.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string Subtitle { get; set; } = string.Empty;
 
     /// <summary>X axis title.</summary>
     [Parameter]
@@ -200,6 +210,12 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     }
 
     private void SaveChart(Chart chart) {
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Title))) {
+            chart.WithTitle(Title);
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Subtitle))) {
+            chart.WithSubtitle(Subtitle);
+        }
         VisualWatermark[] watermarks = Watermark ?? System.Array.Empty<VisualWatermark>();
         var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         string? directory = System.IO.Path.GetDirectoryName(output);

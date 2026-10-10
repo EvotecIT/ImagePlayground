@@ -9,21 +9,19 @@ meta.project_hub_path: "/projects/imageplayground/"
 meta.project_link_examples: "/projects/imageplayground/examples/"
 ---
 
-ImagePlayground keeps chart construction in ChartForgeX and provides a thin PowerShell rendering command. The same native chart can be written as PNG, SVG, or a standalone HTML page.
+ImagePlayground keeps chart construction in ChartForgeX and provides a thin PowerShell rendering command. Reuse the same definitions for PNG, SVG, or a standalone HTML page. The light/dark selections share canonical color roles and typography, while explicit series colors remain available.
 
 ```powershell
-using module ImagePlayground
+Import-Module ImagePlayground
 
-$cpu = [ChartForgeX.Core.ChartPoints]::FromValues(31,42,37,55,68,61,74,58,49,63)
-$memory = [ChartForgeX.Core.ChartPoints]::FromValues(48,51,55,57,60,62,59,64,66,69)
-$chart = [ChartForgeX.Core.Chart]::Create()
-$chart.WithTitle('Workstation health').WithSize(920, 520).WithTheme([ChartForgeX.Themes.ChartTheme]::ReportDark()).WithXAxis('Sample').WithYAxis('Usage %').WithGrid().WithLegend() | Out-Null
-$chart.AddSmoothLine('CPU', $cpu, [ChartForgeX.Primitives.ChartColor]::FromHex('#38BDF8')) | Out-Null
-$chart.AddSmoothLine('Memory', $memory, [ChartForgeX.Primitives.ChartColor]::FromHex('#34D399')) | Out-Null
-
-$chart | New-ImageChart -FilePath .\Examples\Samples\ChartsChartForgeXTrend.png
-$chart | New-ImageChart -FilePath .\Examples\Samples\ChartsChartForgeXTrend.svg
-$chart | New-ImageChart -FilePath .\Examples\Samples\ChartsChartForgeXTrend.html
+$definitions = @(
+    New-ImageChartLine -Name CPU -Value 31,42,37,55,68,61,74,58,49,63 -Smooth
+    New-ImageChartLine -Name Memory -Value 48,51,55,57,60,62,59,64,66,69 -Smooth
+)
+$options = New-ImageChartOptions -ShowLegend -LegendPosition Bottom -TickCount 4
+foreach ($extension in 'png', 'svg', 'html') {
+    New-ImageChart -Definition $definitions -Title 'Workstation health' -Subtitle 'Ten samples of resource usage' -Theme Dark -ShowGrid -XTitle Sample -YTitle 'Usage %' -Options $options -Width 760 -Height 420 -FilePath ".\workstation-health.$extension"
+}
 ```
 
-The repository script `Examples\Charts.ChartForgeX.Showcase.ps1` contains the complete example.
+The repository script `Examples\Charts.ChartForgeX.Showcase.ps1` contains the complete example and a separately authored 368px chart. Fixed SVG and PNG output keep their design size; select the compact export when a wide chart would make its labels too small.

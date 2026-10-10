@@ -36,7 +36,7 @@ public sealed class NewImageCanvasTextCmdlet : PSCmdlet {
     [ValidateRange(1, 1000)]
     public double FontSize { get; set; } = 32;
 
-    /// <summary>Text color.</summary>
+    /// <summary>Explicit text color. Omit this parameter to follow the canvas foreground; explicitly supplied white, transparent, or custom colors are retained.</summary>
     [Parameter]
     [ChartColorArgumentTransformation]
     public ChartColor Color { get; set; } = ChartColor.White;
@@ -51,9 +51,11 @@ public sealed class NewImageCanvasTextCmdlet : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        WriteObject(new VisualCanvasTextLayer(X, Y, Width, Text, FontSize, ChartColorConverter.Convert(Color) ?? ChartColor.White) {
-            Alignment = Alignment,
-            Emphasized = Emphasized.IsPresent
-        });
+        var layer = MyInvocation.BoundParameters.ContainsKey(nameof(Color))
+            ? new VisualCanvasTextLayer(X, Y, Width, Text, FontSize, Color)
+            : new VisualCanvasTextLayer(X, Y, Width, Text, FontSize);
+        layer.Alignment = Alignment;
+        layer.Emphasized = Emphasized.IsPresent;
+        WriteObject(layer);
     }
 }
