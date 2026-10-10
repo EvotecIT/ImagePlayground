@@ -608,13 +608,15 @@ Replay events also support `ReplaceLine`, `Clear`, `Directory`, `Marker`, `OpenT
 
 [`Story.WriteFixReplay.ps1`](Examples/Story.WriteFixReplay.ps1) captures an actual PowerShell error and corrected result, animates the source correction, and creates a player with SVG, PNG, GIF, APNG, and transcript artifacts. MP4 integration is deferred.
 
-[`Story.ScriptAndOutput.ps1`](Examples/Story.ScriptAndOutput.ps1) is a reusable starter for your own script and saved output. It types the source, pauses on the highlighted script, and reveals the output line by line. The default export includes square (720×720), portrait (720×1280), and widescreen (1280×720) versions, each with a GIF, HTML player, completed PNG, transcript, and story manifest.
+[`Story.ScriptAndOutput.ps1`](Examples/Story.ScriptAndOutput.ps1) is a reusable starter for your own script and saved output. It types the source with syntax colors, pauses on the completed script, and reveals the output line by line. The default export uses a macOS dark appearance and includes square (720×720), portrait (720×1280), and widescreen (1280×720) versions, each with a GIF, HTML player, completed PNG, transcript, and story manifest.
 
 ```powershell
 Import-Module ImagePlayground
 ./Examples/Story.ScriptAndOutput.ps1 -ScriptPath ./demo.ps1 -OutputPath ./output.txt `
-    -Title 'My PowerShell demo' -OutputDirectory ./stories
+    -Title 'My PowerShell demo' -Appearance MacOS -ColorMode Dark -OutputDirectory ./stories
 ```
+
+Choose `-Appearance MacOS`, `Windows` or `Linux` for coordinated editor and replay windows with desktop gradients; `Graphite` keeps minimal chrome. `-ColorMode Dark` or `Light` changes surfaces and syntax colors. PowerShell tokens are resolved before playback, so colored characters appear during typing without executing source or reparsing each frame. Appearance changes the presentation, while the displayed language and captured output remain PowerShell.
 
 Supply UTF-8 files, or use `-ScriptText` and `-OutputText` for inline strings. Capture output separately from a script you trust; the starter never executes the displayed source. Its replay timing is authored from the saved lines. Use `-WritingSeconds`, `-ReadingSeconds`, `-ReplaySeconds`, and `-EndHoldSeconds` to change pacing; `-FontSize` sets readable source and terminal text, and `-Formats Square,Portrait` selects layouts. `-PlayCount 1` plays once; the default loops. Existing exports require `-Overwrite` or a different destination. Keep input files outside the destination folder.
 

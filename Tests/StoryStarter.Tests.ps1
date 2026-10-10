@@ -28,6 +28,8 @@ Describe 'Script and captured-output story starter' {
             $html = [IO.File]::ReadAllText($export.Html)
             $html | Should -Match 'data-cfx-motion-duration='
             $html | Should -Match 'Replay the output'
+            $export.Appearance | Should -Be 'MacOS'
+            $export.ColorMode | Should -Be 'Dark'
             $transcript = [IO.File]::ReadAllText($export.Transcript)
             $transcript | Should -Match 'First line'
             $transcript | Should -Match 'Last line'
@@ -49,6 +51,30 @@ Describe 'Script and captured-output story starter' {
             $manifest = [IO.File]::ReadAllText($export.Manifest) | ConvertFrom-Json
             $manifest.playback.playCount | Should -Be 1
             $manifest.playback.durationSeconds | Should -Be 4
+        }
+    }
+
+    It 'selects Windows and Linux palettes and highlights the source during typing' {
+        foreach ($appearance in @('Windows', 'Linux')) {
+            $export = & $starter -ScriptText '$answer = 42' -OutputText '42' -Formats Square `
+                -Appearance $appearance -ColorMode Light -OutputDirectory (Join-Path $TestDrive $appearance) @fast
+            $html = [IO.File]::ReadAllText($export.Html)
+            $export.ColorMode | Should -Be 'Light'
+            $start = $html.IndexOf('<svg ')
+            $end = $html.IndexOf('</svg>', $start) + 6
+            [xml] $animation = $html.Substring($start, $end - $start)
+            $writing = @($animation.SelectNodes("//*[local-name()='g' and @data-cfx-scene='write']"))
+            $image = $writing[1].SelectSingleNode(".//*[local-name()='image']")
+            $payload = $image.GetAttribute('href').Substring('data:image/svg+xml;base64,'.Length)
+            [xml] $frame = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($payload))
+            $style = if ($appearance -eq 'Windows') { 'WindowsTerminal' } else { 'Linux' }
+            $chrome = $frame.SelectSingleNode("//*[@data-cfx-role='story-window-chrome']")
+            $chrome.GetAttribute('data-cfx-window-style') | Should -Be $style
+            $runs = @($frame.SelectNodes("//*[@data-cfx-role='source-text']"))
+            # At half a second the script is still being typed, with resolved variable ink.
+            ($runs | ForEach-Object { $_.InnerText }) -join '' | Should -BeExactly '$answe'
+            $runs[0].SelectSingleNode(".//*[@fill='#175FD4']") | Should -Not -BeNullOrEmpty
+            [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($export.Gif), 0, 6) | Should -Be 'GIF89a'
         }
     }
 

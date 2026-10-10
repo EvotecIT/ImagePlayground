@@ -18,6 +18,10 @@ Captured output as text. An empty string represents a run with no output.
 Destination for the square, portrait and widescreen folders.
 .PARAMETER Formats
 Layouts to generate. All three are selected by default.
+.PARAMETER Appearance
+Desktop window style: MacOS, Windows or Linux. Graphite uses minimal chrome.
+.PARAMETER ColorMode
+Dark or light surfaces and syntax colors. Syntax colors appear during typing.
 .PARAMETER Command
 Display-only terminal command. Defaults to ./ followed by the script filename.
 .PARAMETER Overwrite
@@ -61,6 +65,10 @@ param(
     [ValidateSet('Square', 'Portrait', 'Widescreen')]
     [ValidateNotNullOrEmpty()]
     [string[]] $Formats = @('Square', 'Portrait', 'Widescreen'),
+    [ValidateSet('MacOS', 'Windows', 'Linux', 'Graphite')]
+    [string] $Appearance = 'MacOS',
+    [ValidateSet('Dark', 'Light')]
+    [string] $ColorMode = 'Dark',
     [ValidateRange(480, 1080)]
     [int] $ShortSide = 720,
     [ValidateRange(14, 32)]
@@ -117,7 +125,7 @@ foreach ($format in $layouts) {
 $source = ConvertTo-ImageStorySource -Text $ScriptText -Language PowerShell
 $empty = ConvertTo-ImageStorySource -Text '' -Language PowerShell
 $writing = [ChartForgeX.Stories.StorySourceTimeline]::Create($empty).
-    Type($ScriptText, [TimeSpan]::FromSeconds($WritingSeconds))
+    Type($source, [TimeSpan]::FromSeconds($WritingSeconds))
 $editor = [ChartForgeX.Stories.VisualStorySourceOptions]::new($ScriptName, $FontSize)
 $terminal = [ChartForgeX.Stories.VisualStoryTerminalOptions]::new($FontSize)
 
@@ -152,10 +160,20 @@ if ($OutputText.Length -eq 0) {
     $outcome = New-ImageStoryOutcome -Id captured -Label 'The captured run produced no output.' -PanelId terminal
 }
 
+$light = $ColorMode -eq 'Light'
+$theme = switch ($Appearance) {
+    'MacOS' { [ChartForgeX.Stories.VisualStoryTheme]::MacOS($light) }
+    'Windows' { [ChartForgeX.Stories.VisualStoryTheme]::Windows($light) }
+    'Linux' { [ChartForgeX.Stories.VisualStoryTheme]::Linux($light) }
+    'Graphite' {
+        if ($light) { [ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight() }
+        else { [ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark() }
+    }
+}
 foreach ($format in $layouts) {
     $story = [ChartForgeX.Stories.VisualStory]::Create($Title).
         WithFormat([ChartForgeX.Stories.VisualStoryFormat] $format, $ShortSide).
-        WithTheme([ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark()).
+        WithTheme($theme).
         WithDescription('PowerShell source writing followed by captured output with authored replay timing.')
     foreach ($scene in $scenes) {
         $nativeScene = $story.Scene($scene.Id, $scene.Title, $scene.DurationSeconds, $scene.Layout)
@@ -173,6 +191,8 @@ foreach ($format in $layouts) {
         Format = $format
         Width = $story.Width
         Height = $story.Height
+        Appearance = $Appearance
+        ColorMode = $ColorMode
         Gif = Join-Path $folder 'story.gif'
         Html = $html
         Poster = Join-Path $folder 'story.png'
