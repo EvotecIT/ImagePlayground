@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OfficeIMO.Core" Version="3.4.4" Condition="'$(OfficeImoCoreProjectPath)' == ''" />
+    <PackageReference Include="OfficeIMO.Core" Version="3.4.5" Condition="'$(OfficeImoCoreProjectPath)' == ''" />
     <PackageReference Include="ChartForgeX" Version="2.0.0" Condition="'$(ChartForgeXProjectPath)' == ''" />
     <PackageReference Include="ChartForgeX.Visuals" Version="2.0.0" Condition="'$(ChartForgeXVisualsProjectPath)' == ''" />
     <PackageReference Include="ChartForgeX.Stories" Version="2.0.0" Condition="'$(ChartForgeXStoriesProjectPath)' == ''" />

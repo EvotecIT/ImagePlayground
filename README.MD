@@ -584,6 +584,44 @@ The profile and terminal examples include separately authored compact versions. 
 
 ![A complete PowerShell recipe alongside its weekly builds chart](Examples/Samples/StoryChartRecipe.png)
 
+For an animated editor, pass a `StorySourceTimeline` to `New-ImageStoryPanel -SourceTimeline`. `-SourceOptions` sets the filename, line numbers, wrapping, and fixed font size. For captured sessions, `New-ImageStoryReplay` accepts ordered dictionaries or JSON objects with `TimestampSeconds`, `Kind`, and event-specific fields:
+
+```powershell
+$events = @(
+    @{ TimestampSeconds = 0; Kind = 'Command'; Text = './Test-Project.ps1' }
+    @{ TimestampSeconds = 20; Kind = 'Output'; Text = '24 checks passed'; Tone = 'Success' }
+)
+$recording = New-ImageStoryReplay -DurationSeconds 25 -Events $events
+$replay = $recording.CompressPauses([TimeSpan]::FromSeconds(2))
+$panel = New-ImageStoryPanel -Id terminal -Replay $replay `
+    -TerminalOptions ([ChartForgeX.Stories.VisualStoryTerminalOptions]::new(18))
+$scene = New-ImageStoryScene -Id result -Title 'Replay the result' `
+    -DurationSeconds $replay.Duration.TotalSeconds -Panels $panel
+$outcome = New-ImageStoryOutcome -Id passed -Label '24 checks passed' -PanelId terminal
+New-ImageStory -Title 'Project validation' -Scenes $scene -Outcomes $outcome `
+    -FilePath './validation.html' -Player -PlayCount 1 -EndHoldSeconds 2
+```
+
+Replay events also support `ReplaceLine`, `Clear`, `Directory`, `Marker`, `OpenTab`, and `SelectTab`. Commands remain observations. Execute trusted scripts explicitly before capturing their results. `Trim` and `CompressPauses` return edited presentations with original timestamps; trimming keeps earlier context in the transcript. `Explain` adds presentation annotations.
+
+`New-ImageStory` prepares once for its primary output and portable bundle. `-EndHoldSeconds`, `-TransitionSeconds`, `-PlayCount`, `-FramesPerSecond`, `-AnimationScale`, and `-MaximumFrames` share playback and sampling settings across animated outputs. `-Player` adds controls to HTML; HTML is script-free when omitted. GIF accepts at most 50 frames per second and requires a rounded final delay of at least 20 milliseconds. APNG supports up to 60 frames per second. PNG remains the completed poster. An export error leaves an existing output file intact; each successfully exported bundle artifact commits independently.
+
+[`Story.WriteFixReplay.ps1`](Examples/Story.WriteFixReplay.ps1) captures an actual PowerShell error and corrected result, animates the source correction, and creates a player with SVG, PNG, GIF, APNG, and transcript artifacts. MP4 integration is deferred.
+
+[`Story.ScriptAndOutput.ps1`](Examples/Story.ScriptAndOutput.ps1) is a reusable starter for your own script and saved output. It types the source with syntax colors, pauses on the completed script, and reveals the output line by line. The default export uses a macOS dark appearance and includes square (720×720), portrait (720×1280), and widescreen (1280×720) versions, each with a GIF, HTML player, completed PNG, transcript, and story manifest.
+
+```powershell
+Import-Module ImagePlayground
+./Examples/Story.ScriptAndOutput.ps1 -ScriptPath ./demo.ps1 -OutputPath ./output.txt `
+    -Title 'My PowerShell demo' -Appearance MacOS -ColorMode Dark -OutputDirectory ./stories
+```
+
+Choose `-Appearance MacOS`, `Windows` or `Linux` for coordinated editor and replay windows with desktop gradients; `Graphite` keeps minimal chrome. `-ColorMode Dark` or `Light` changes surfaces and syntax colors. PowerShell tokens are resolved before playback, so colored characters appear during typing without executing source or reparsing each frame. Appearance changes the presentation, while the displayed language and captured output remain PowerShell.
+
+Supply UTF-8 files, or use `-ScriptText` and `-OutputText` for inline strings. Capture output separately from a script you trust; the starter never executes the displayed source. Its replay timing is authored from the saved lines. Use `-WritingSeconds`, `-ReadingSeconds`, `-ReplaySeconds`, and `-EndHoldSeconds` to change pacing; `-FontSize` sets readable source and terminal text, and `-Formats Square,Portrait` selects layouts. `-PlayCount 1` plays once; the default loops. Existing exports require `-Overwrite` or a different destination. Keep input files outside the physical destination and all linked export paths. The starter checks every requested layout before writing, including directory, file and hard-link aliases. Destination environment variables expand once; use a directly resolved path when a variable contains another variable reference.
+
+Use the GIF for a short silent social post. For a narrated video, open the widescreen HTML player, restart playback, and record it with your usual video capture tool. Use the portrait player for a vertical video. Long scripts and output scroll within fixed-font viewports; split lengthy demonstrations into focused stories so viewers can read each step.
+
 ## Portable visual artifacts and Office workflows
 
 `ConvertTo-ImageVisualArtifact` attaches static SVG and versioned semantic JSON bytes to a pipeline object. The SVG is suitable for flat placement; the semantic payload lets a compatible consumer rebuild editable shapes and connectors.
