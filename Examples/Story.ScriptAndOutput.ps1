@@ -16,6 +16,7 @@ Inline script text. Used with OutputText instead of file paths.
 Captured output as text. An empty string represents a run with no output.
 .PARAMETER OutputDirectory
 Destination for the square, portrait and widescreen folders.
+Environment variables expand once; use a direct path instead of nested variables.
 .PARAMETER Formats
 Layouts to generate. All three are selected by default.
 .PARAMETER Appearance
@@ -95,7 +96,12 @@ $ErrorActionPreference = 'Stop'
 if (-not (Get-Command -Name New-ImageStory -ErrorAction SilentlyContinue)) {
     throw 'Import ImagePlayground with the Stories cmdlets before running this starter.'
 }
-$destination = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
+$destination = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
+    [Environment]::ExpandEnvironmentVariables($OutputDirectory))
+# The writer expands paths too; its resolved destination must match this preflight.
+if ([Environment]::ExpandEnvironmentVariables($destination) -cne $destination) {
+    throw 'OutputDirectory contains nested environment variables. Supply a directly resolved path so preflight and export use the same destination.'
+}
 $layouts = @($Formats | ForEach-Object { ([ChartForgeX.Stories.VisualStoryFormat] $_).ToString() } | Select-Object -Unique)
 [string[]] $exports = @(
     foreach ($format in $layouts) {

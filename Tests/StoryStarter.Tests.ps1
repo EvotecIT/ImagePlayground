@@ -114,6 +114,75 @@ Describe 'Script and captured-output story starter' {
         $rows[-1].InnerText | Should -Be '42'
     }
 
+    It 'protects the <InputKind> input when the destination contains an environment variable' -ForEach @(
+        @{ InputKind = 'script' }, @{ InputKind = 'output' }
+    ) {
+        $caseRoot = Join-Path $TestDrive "environment-$InputKind"
+        $destination = Join-Path $caseRoot 'exports'
+        $portrait = Join-Path $destination 'portrait'
+        $null = New-Item -ItemType Directory -Path $portrait -Force
+        $scriptFile = Join-Path $caseRoot 'script.ps1'
+        $outputFile = Join-Path $caseRoot 'output.txt'
+        [IO.File]::WriteAllText($scriptFile, '$x = 42')
+        [IO.File]::WriteAllText($outputFile, '42')
+        if ($InputKind -eq 'script') { $scriptFile = Join-Path $portrait 'story.html' }
+        else { $outputFile = Join-Path $portrait 'story.txt' }
+        $protected = if ($InputKind -eq 'script') { $scriptFile } else { $outputFile }
+        $original = if ($InputKind -eq 'script') { '$x = 42' } else { '42' }
+        [IO.File]::WriteAllText($protected, $original)
+        $oldValue = [Environment]::GetEnvironmentVariable('IMAGESTORY_TEST_EXPORT_FOLDER')
+        try {
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_EXPORT_FOLDER', 'exports')
+            { & $starter -ScriptPath $scriptFile -OutputPath $outputFile `
+                -OutputDirectory (Join-Path $caseRoot '%IMAGESTORY_TEST_EXPORT_FOLDER%') -Overwrite @fast } |
+                Should -Throw '*outside OutputDirectory*'
+            [IO.File]::ReadAllText($protected) | Should -BeExactly $original
+            Test-Path -LiteralPath (Join-Path $destination 'square') | Should -BeFalse
+        } finally {
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_EXPORT_FOLDER', $oldValue)
+        }
+    }
+
+    It 'checks existing exports at the expanded destination and reports the actual output paths' {
+        $caseRoot = Join-Path $TestDrive 'environment-existing'
+        $destination = Join-Path $caseRoot 'exports'
+        $portrait = Join-Path $destination 'portrait'
+        $null = New-Item -ItemType Directory -Path $portrait -Force
+        $existing = Join-Path $portrait 'story.html'
+        [IO.File]::WriteAllText($existing, 'Existing deliverable')
+        $oldValue = [Environment]::GetEnvironmentVariable('IMAGESTORY_TEST_EXPORT_FOLDER')
+        try {
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_EXPORT_FOLDER', 'exports')
+            $unresolved = Join-Path $caseRoot '%IMAGESTORY_TEST_EXPORT_FOLDER%'
+            { & $starter -ScriptText '42' -OutputText '42' -OutputDirectory $unresolved @fast } |
+                Should -Throw '*Export already exists*'
+            [IO.File]::ReadAllText($existing) | Should -BeExactly 'Existing deliverable'
+            Test-Path -LiteralPath (Join-Path $destination 'square') | Should -BeFalse
+            $export = & $starter -ScriptText '42' -OutputText '42' -OutputDirectory $unresolved -Formats Portrait -Overwrite @fast
+            $export.Html | Should -BeExactly $existing
+            [IO.File]::ReadAllText($existing) | Should -Match 'data-cfx-motion-duration='
+        } finally {
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_EXPORT_FOLDER', $oldValue)
+        }
+    }
+
+    It 'rejects a destination whose expansion would change again during export' {
+        $caseRoot = Join-Path $TestDrive 'environment-nested'
+        $oldOuter = [Environment]::GetEnvironmentVariable('IMAGESTORY_TEST_OUTER_FOLDER')
+        $oldInner = [Environment]::GetEnvironmentVariable('IMAGESTORY_TEST_INNER_FOLDER')
+        try {
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_OUTER_FOLDER', '%IMAGESTORY_TEST_INNER_FOLDER%')
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_INNER_FOLDER', 'exports')
+            { & $starter -ScriptText '42' -OutputText '42' `
+                -OutputDirectory (Join-Path $caseRoot '%IMAGESTORY_TEST_OUTER_FOLDER%') @fast } |
+                Should -Throw '*nested environment variables*'
+            Test-Path -LiteralPath $caseRoot | Should -BeFalse
+        } finally {
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_OUTER_FOLDER', $oldOuter)
+            [Environment]::SetEnvironmentVariable('IMAGESTORY_TEST_INNER_FOLDER', $oldInner)
+        }
+    }
+
     It 'protects the <InputKind> input through a linked <Route> before exporting any layout' -ForEach @(
         @{ InputKind = 'script'; Route = 'destination' }, @{ InputKind = 'output'; Route = 'destination' },
         @{ InputKind = 'script'; Route = 'input' }, @{ InputKind = 'output'; Route = 'input' },
