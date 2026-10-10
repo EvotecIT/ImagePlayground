@@ -166,6 +166,59 @@ Describe 'Script and captured-output story starter' {
         }
     }
 
+    It 'rejects colliding <Route> exports before replacing an earlier layout' -ForEach @(
+        @{ Route = 'hard-linked' }, @{ Route = 'aliased-layout' }
+    ) {
+        $destination = Join-Path $TestDrive $Route
+        $square = Join-Path $destination 'square'
+        $portrait = Join-Path $destination 'portrait'
+        $null = New-Item -ItemType Directory -Path $square -Force
+        $previous = Join-Path $square 'story.html'
+        [IO.File]::WriteAllText($previous, 'Previous square export')
+        if ($Route -eq 'hard-linked') {
+            $null = New-Item -ItemType Directory -Path $portrait
+            [IO.File]::WriteAllText((Join-Path $portrait 'story.gif'), 'Existing shared file')
+            $null = New-Item -ItemType HardLink -Path (Join-Path $portrait 'story.png') -Target (Join-Path $portrait 'story.gif')
+        } else {
+            $linkKind = if ($PSVersionTable.PSVersion.Major -le 5 -or $PSVersionTable.Platform -ne 'Unix') { 'Junction' } else { 'SymbolicLink' }
+            $null = New-Item -ItemType $linkKind -Path $portrait -Target $square
+        }
+        { & $starter -ScriptText '42' -OutputText '42' -OutputDirectory $destination -Overwrite @fast } |
+            Should -Throw '*distinct physical files*'
+        [IO.File]::ReadAllText($previous) | Should -BeExactly 'Previous square export'
+        Test-Path -LiteralPath (Join-Path $square 'story.gif') | Should -BeFalse
+    }
+
+    It 'resolves <ProviderKind> destinations in the PowerShell location without losing provider identity' -ForEach @(
+        @{ ProviderKind = 'Environment'; Prefix = 'Env:' },
+        @{ ProviderKind = 'Variable'; Prefix = 'Variable:' },
+        @{ ProviderKind = 'FileSystem'; Prefix = './' }
+    ) {
+        $caseRoot = Join-Path $TestDrive "provider-$ProviderKind"
+        $processRoot = Join-Path $caseRoot 'process'
+        $locationRoot = Join-Path $caseRoot 'location'
+        $destination = Join-Path $locationRoot 'IMAGESTORY_TEST_OUTPUT'
+        $portrait = Join-Path $destination 'portrait'
+        $null = New-Item -ItemType Directory -Path $processRoot,$portrait -Force
+        $scriptFile = Join-Path $portrait 'story.html'
+        $outputFile = Join-Path $locationRoot 'output.txt'
+        [IO.File]::WriteAllText($scriptFile, '$x = 42')
+        [IO.File]::WriteAllText($outputFile, '42')
+        $oldDirectory = [Environment]::CurrentDirectory
+        Push-Location $locationRoot
+        try {
+            [Environment]::CurrentDirectory = $processRoot
+            $message = if ($ProviderKind -eq 'FileSystem') { '*outside OutputDirectory*' } else { '*FileSystem provider*' }
+            { & $starter -ScriptPath $scriptFile -OutputPath $outputFile -OutputDirectory ($Prefix + 'IMAGESTORY_TEST_OUTPUT') -Overwrite @fast } |
+                Should -Throw $message
+            [IO.File]::ReadAllText($scriptFile) | Should -BeExactly '$x = 42'
+            Test-Path -LiteralPath (Join-Path $destination 'square') | Should -BeFalse
+        } finally {
+            [Environment]::CurrentDirectory = $oldDirectory
+            Pop-Location
+        }
+    }
+
     It 'checks existing exports at the expanded destination and reports the actual output paths' {
         $caseRoot = Join-Path $TestDrive 'environment-existing'
         $destination = Join-Path $caseRoot 'exports'
