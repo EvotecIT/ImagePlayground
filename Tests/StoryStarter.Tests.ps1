@@ -114,6 +114,29 @@ Describe 'Script and captured-output story starter' {
         $rows[-1].InnerText | Should -Be '42'
     }
 
+    It 'preserves earlier exports when a later layout has a <InvalidKind> destination' -ForEach @(
+        @{ InvalidKind = 'file-valued folder' }, @{ InvalidKind = 'directory-valued output' }
+    ) {
+        $destination = Join-Path $TestDrive $InvalidKind.Replace(' ', '-')
+        $square = Join-Path $destination 'square'
+        $portrait = Join-Path $destination 'portrait'
+        $null = New-Item -ItemType Directory -Path $square -Force
+        $previous = Join-Path $square 'story.html'
+        [IO.File]::WriteAllText($previous, 'Previous square export')
+        if ($InvalidKind -eq 'file-valued folder') {
+            [IO.File]::WriteAllText($portrait, 'Keep this file')
+        } else {
+            $null = New-Item -ItemType Directory -Path (Join-Path $portrait 'story.gif') -Force
+        }
+        { & $starter -ScriptText '42' -OutputText '42' -OutputDirectory $destination -Overwrite @fast } |
+            Should -Throw '*existing*'
+        [IO.File]::ReadAllText($previous) | Should -BeExactly 'Previous square export'
+        Test-Path -LiteralPath (Join-Path $square 'story.gif') | Should -BeFalse
+        if ($InvalidKind -eq 'file-valued folder') {
+            [IO.File]::ReadAllText($portrait) | Should -BeExactly 'Keep this file'
+        } else { Test-Path -LiteralPath (Join-Path $portrait 'story.html') | Should -BeFalse }
+    }
+
     It 'protects the <InputKind> input when the destination contains an environment variable' -ForEach @(
         @{ InputKind = 'script' }, @{ InputKind = 'output' }
     ) {

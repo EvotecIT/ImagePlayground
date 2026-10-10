@@ -111,6 +111,7 @@ $layouts = @($Formats | ForEach-Object { ([ChartForgeX.Stories.VisualStoryFormat
         }
     }
 )
+[ImagePlayground.PowerShell.ImageStoryFileSafety]::ValidateDestinations($destination, $exports)
 if ($PSCmdlet.ParameterSetName -eq 'Files') {
     $scriptFile = Get-Item -LiteralPath $ScriptPath
     $outputFile = Get-Item -LiteralPath $OutputPath
