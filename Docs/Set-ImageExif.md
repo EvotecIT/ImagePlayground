@@ -11,17 +11,17 @@ Sets an EXIF tag value in an image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <ExifTag> [-Value] <Object> [<CommonParameters>]
+Set-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] [-ExifTag] <OfficeExifTag> [-Value] <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The value must match the type declared by the selected EXIF tag, including ImageSharp wrapper types such as Number or Rational.
+The shared metadata API validates the selected tag and its value. Use OfficeRational values for unsigned EXIF fractions.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)
+PS> Set-ImageExif -FilePath img.jpg -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal) -Value (Get-Date -Format 'yyyy:MM:dd HH:mm:ss')
 ```
 
 
@@ -31,7 +31,7 @@ PS> Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Pro
 Tag to set.
 
 ```yaml
-Type: ExifTag
+Type: OfficeExifTag
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

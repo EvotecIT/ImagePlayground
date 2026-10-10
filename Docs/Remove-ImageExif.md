@@ -11,7 +11,7 @@ Removes EXIF metadata from an image.
 ## SYNTAX
 ### Tag (Default)
 ```powershell
-Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <ExifTag[]> [<CommonParameters>]
+Remove-ImageExif [-FilePath] <string> [[-FilePathOutput] <string>] -ExifTag <OfficeExifTag[]> [<CommonParameters>]
 ```
 
 ### All
@@ -26,7 +26,7 @@ Removes EXIF metadata from an image.
 
 ### EXAMPLE 1
 ```powershell
-Remove-ImageExif -FilePath img.jpg -ExifTag ExifIFD.DateTimeOriginal
+Remove-ImageExif -FilePath img.jpg -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal)
 ```
 
 
@@ -58,7 +58,7 @@ Accept wildcard characters: False
 Tags to remove.
 
 ```yaml
-Type: ExifTag[]
+Type: OfficeExifTag[]
 Parameter Sets: Tag
 Aliases: None
 Possible values:

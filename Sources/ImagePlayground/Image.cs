@@ -1,242 +1,140 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Codeuctivity.ImageSharpCompare;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Metadata;
-using SixLabors.ImageSharp.PixelFormats;
+using ChartForgeX.Raster;
+using ChartForgeX.Primitives;
 
 namespace ImagePlayground;
 
-/// <summary>
-/// Represents an image loaded using ImageSharp and exposes basic manipulation helpers.
-/// </summary>
+/// <summary>A managed image with editable raster frames and metadata.</summary>
+/// <remarks>Dispose the wrapper after use. Raster buffers belong to this wrapper; clone them when retaining an independent image.</remarks>
 public partial class Image : IDisposable {
-    private SixLabors.ImageSharp.Image _image = null!;
+    private OfficeRasterFrames _frames = new OfficeRasterFrames(new[] { new OfficeRasterFrame(new OfficeRasterImage(1, 1)) });
+    private OfficeImageMetadata _metadata = new OfficeImageMetadata();
     private string _filePath = string.Empty;
+    private ImageType _imageType = ImageType.Png;
+    private OfficeImageFormat _sourceFormat = OfficeImageFormat.Unknown;
+    private bool _sourceIsAnimation;
+    private bool _disposed;
+    private OfficeRasterImage _image => Raster;
 
-    /// <summary>Gets the width of the image.</summary>
-    public int Width => _image.Width;
+    /// <summary>Width of the first frame in pixels.</summary>
+    public int Width => Raster.Width;
+    /// <summary>Height of the first frame in pixels.</summary>
+    public int Height => Raster.Height;
+    /// <summary>Resolved path associated with a loaded or created image, or an empty string for pixel and byte inputs.</summary>
+    public string FilePath { get { EnsureUsable(); return _filePath; } }
+    /// <summary>Detected source container, independent of its filename; pixel-created images have an unknown source format.</summary>
+    public OfficeImageFormat SourceFormat { get { EnsureUsable(); return _sourceFormat; } }
+    /// <summary>Supported mapped format used by default stream export; unsupported source containers fall back to PNG.</summary>
+    public ImageType DefaultOutputFormat { get { EnsureUsable(); return _imageType; } }
 
-    /// <summary>Gets the height of the image.</summary>
-    public int Height => _image.Height;
+    /// <summary>Editable metadata whose profiles are preserved when the output format supports them.</summary>
+    public OfficeImageMetadata Metadata { get { EnsureUsable(); return _metadata; } }
+    /// <summary>Decoded frames, TIFF pages, or icon resolutions, including animation timing and play count.</summary>
+    public OfficeRasterFrames Frames { get { EnsureUsable(); return _frames; } }
+    /// <summary>Managed RGBA pixels of the first frame.</summary>
+    public OfficeRasterImage Raster { get { EnsureUsable(); return _frames[0].Image; } }
 
-    /// <summary>Gets the path the image was loaded from.</summary>
-    public string FilePath => _filePath;
-
-    /// <summary>Gets the metadata associated with the image.</summary>
-    public ImageMetadata Metadata => _image.Metadata;
-
-    /// <summary>Gets information about the underlying pixel type.</summary>
-    public PixelTypeInfo PixelType => _image.PixelType;
-
-    /// <summary>Gets the frame collection for multi-frame images.</summary>
-    public ImageFrameCollection Frames => _image.Frames;
-
-    /// <summary>
-    /// Compares the current image with <paramref name="imageToCompare"/>.
-    /// </summary>
-    /// <param name="imageToCompare">Image to compare with.</param>
-    /// <returns>Comparison result.</returns>
-    public ICompareResult Compare(Image imageToCompare) {
-        return ImageSharpCompare.CalcDiff(_image, imageToCompare._image);
+    /// <summary>Reports metadata profile families the selected output format cannot preserve.</summary>
+    /// <remarks>This is a preflight profile-family estimate; Encode returns the completed output evidence. The current metadata remains unchanged. Save retains the supported families; lossless metadata editing remains strict about unsupported profiles. TIFF-relative opaque fields must be explicitly removed or replaced before raster re-encoding.</remarks>
+    public OfficeImageMetadataProfileKinds GetEncodingMetadataOmissions(ImageType type) {
+        EnsureUsable();
+        _metadata.PrepareForEncoding(Helpers.GetContainerFormat(type), out var omittedProfiles);
+        return omittedProfiles;
     }
 
-    /// <summary>
-    /// Compares the current image with the file at <paramref name="filePathToCompare"/>.
-    /// </summary>
-    /// <param name="filePathToCompare">Path to the image to compare with.</param>
-    /// <returns>Comparison result.</returns>
-    public ICompareResult Compare(string filePathToCompare) {
-        string fullPath = Helpers.ResolvePath(filePathToCompare);
-
-        using (var imageToCompare = GetImage(fullPath)) {
-            return ImageSharpCompare.CalcDiff(_image, imageToCompare);
+    /// <summary>Creates an image wrapper around an existing raster buffer without copying its pixels.</summary>
+    public static Image FromRaster(OfficeRasterImage raster, ImageType imageType = ImageType.Png) {
+        if (raster == null) {
+            throw new ArgumentNullException(nameof(raster));
         }
+        return FromFrames(new OfficeRasterFrames(new[] { new OfficeRasterFrame(raster) }), imageType);
     }
 
-    /// <summary>
-    /// Creates a difference mask between this image and <paramref name="imageToCompare"/> and saves it.
-    /// </summary>
-    /// <param name="imageToCompare">Image to compare with.</param>
-    /// <param name="filePathToSave">Output path for the mask image.</param>
-    public void Compare(Image imageToCompare, string filePathToSave) {
-        string outFullPath = Helpers.ResolvePath(filePathToSave);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-        using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
-            using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare._image)) {
-                SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
-            }
+    /// <summary>Creates a wrapper retaining the supplied frames and their mutable pixel buffers without copying.</summary>
+    public static Image FromFrames(OfficeRasterFrames frames, ImageType imageType = ImageType.Png) {
+        if (frames == null) {
+            throw new ArgumentNullException(nameof(frames));
         }
+        return new Image { _frames = frames, _imageType = imageType };
     }
 
-    /// <summary>
-    /// Creates a difference mask between this image and the file at <paramref name="filePathToCompare"/> and saves it.
-    /// </summary>
-    /// <param name="filePathToCompare">Path to the image to compare with.</param>
-    /// <param name="filePathToSave">Output path for the mask image.</param>
-    public void Compare(string filePathToCompare, string filePathToSave) {
-        string fullPath = Helpers.ResolvePath(filePathToCompare);
-        string outFullPath = Helpers.ResolvePath(filePathToSave);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
-            using (var imageToCompare = GetImage(fullPath)) {
-                using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(_image, imageToCompare)) {
-                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
-                }
-            }
-        }
+    /// <summary>Creates an independent copy of pixels, frame timing, and metadata.</summary>
+    public Image Clone(CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        var clone = FromFrames(_frames.Transform(frame => frame.Clone(), cancellationToken: cancellationToken), _imageType);
+        clone._filePath = _filePath;
+        clone._sourceFormat = _sourceFormat;
+        clone._sourceIsAnimation = _sourceIsAnimation;
+        clone._metadata = _metadata.Clone();
+        return clone;
     }
 
-    /// <summary>
-    /// Loads an <see cref="SixLabors.ImageSharp.Image"/> from disk.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <returns>The loaded image.</returns>
-    public static SixLabors.ImageSharp.Image GetImage(string filePath) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        using (var inStream = System.IO.File.OpenRead(fullPath)) {
-            return SixLabors.ImageSharp.Image.Load(inStream);
-        }
-    }
+    /// <summary>Loads an image for further managed processing.</summary>
+    public static Image GetImage(string filePath) => Load(filePath);
 
-    /// <summary>
-    /// Creates a new blank image and assigns the provided <paramref name="filePath"/>.
-    /// </summary>
-    /// <param name="filePath">Path where the image will be saved.</param>
-    /// <param name="width">Image width.</param>
-    /// <param name="height">Image height.</param>
+    /// <summary>Initializes a transparent image and associates its output path.</summary>
     public void Create(string filePath, int width, int height) {
-        _filePath = filePath;
-        _image = new Image<Rgba32>(width, height);
+        EnsureUsable();
+        _filePath = Helpers.ResolvePath(filePath);
+        _imageType = Helpers.GetImageType(Path.GetExtension(_filePath));
+        _frames = new OfficeRasterFrames(new[] { new OfficeRasterFrame(new OfficeRasterImage(width, height)) });
+        _metadata = new OfficeImageMetadata();
+        _sourceFormat = OfficeImageFormat.Unknown;
+        _sourceIsAnimation = false;
     }
 
-    /// <summary>
-    /// Loads an image from the specified path.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <returns>Loaded <see cref="Image"/> instance.</returns>
-    public static Image Load(string filePath) {
-        string fullPath = Helpers.ResolvePath(filePath);
-
-        using var stream = System.IO.File.OpenRead(fullPath);
-        Image image = new Image {
-            _filePath = fullPath,
-            _image = SixLabors.ImageSharp.Image.Load(stream)
-        };
-
-        return image;
-    }
-
-    /// <summary>
-    /// Loads an image from the specified path asynchronously.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Loaded <see cref="Image"/> instance.</returns>
-    public static async Task<Image> LoadAsync(string filePath, CancellationToken cancellationToken = default) {
-        string fullPath = Helpers.ResolvePath(filePath);
-
-        using var stream = System.IO.File.OpenRead(fullPath);
-        Image image = new Image {
-            _filePath = fullPath,
-            _image = await SixLabors.ImageSharp.Image.LoadAsync(stream, cancellationToken).ConfigureAwait(false)
-        };
-
-        return image;
-    }
-
-    /// <summary>
-    /// Saves the image to disk.
-    /// </summary>
-    /// <param name="filePath">Target path or empty to overwrite the original file.</param>
-    /// <param name="openImage">Whether to open the saved file.</param>
-    /// <param name="quality">Optional quality for lossy formats.</param>
-    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
-    public void Save(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null) {
-        if (filePath == "") {
-            filePath = _filePath;
-        } else {
-            filePath = Helpers.ResolvePath(filePath);
+    /// <summary>Compares the first frames, returning pixel metrics and a difference image.</summary>
+    public OfficeRasterComparisonResult Compare(Image imageToCompare, CancellationToken cancellationToken = default) {
+        if (imageToCompare == null) {
+            throw new ArgumentNullException(nameof(imageToCompare));
         }
+        return OfficeRasterComparison.Compare(Raster, imageToCompare.Raster, cancellationToken);
+    }
 
-        string? directory = System.IO.Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrEmpty(directory) && !System.IO.Directory.Exists(directory)) {
-            System.IO.Directory.CreateDirectory(directory);
+    /// <summary>Compares the first frame with an image file.</summary>
+    public OfficeRasterComparisonResult Compare(string filePathToCompare, CancellationToken cancellationToken = default) {
+        using var other = Load(filePathToCompare, new OfficeRasterDecodeOptions { CancellationToken = cancellationToken, ApplyExifOrientation = false });
+        return Compare(other, cancellationToken);
+    }
+
+    /// <summary>Saves a PNG difference mask between two first frames.</summary>
+    public void Compare(Image imageToCompare, string filePathToSave, CancellationToken cancellationToken = default) {
+        using var mask = FromRaster(Compare(imageToCompare, cancellationToken).DifferenceImage);
+        string output = Helpers.ResolvePath(filePathToSave);
+        Helpers.CreateParentDirectory(output);
+        OfficeImageFileWriter.WriteAllBytes(output, mask.Encode(ImageType.Png, null, cancellationToken).EncodedBytes, cancellationToken);
+    }
+
+    /// <summary>Saves a PNG difference mask against another image file.</summary>
+    public void Compare(string filePathToCompare, string filePathToSave, CancellationToken cancellationToken = default) {
+        using var other = Load(filePathToCompare, new OfficeRasterDecodeOptions { CancellationToken = cancellationToken, ApplyExifOrientation = false });
+        Compare(other, filePathToSave, cancellationToken);
+    }
+
+    private string ResolveOutputPath(string filePath) {
+        EnsureUsable();
+        string path = string.IsNullOrEmpty(filePath) ? _filePath : Helpers.ResolvePath(filePath);
+        if (string.IsNullOrEmpty(path)) {
+            throw new InvalidOperationException("An output path is required for an image created from pixels or bytes.");
         }
-
-        var encoder = Helpers.GetEncoder(System.IO.Path.GetExtension(filePath), quality, compressionLevel);
-        _image.Save(filePath, encoder);
-        Helpers.Open(filePath, openImage);
+        return path;
     }
 
-    /// <summary>
-    /// Saves the image to disk asynchronously.
-    /// </summary>
-    /// <param name="filePath">Target path or empty to overwrite the original file.</param>
-    /// <param name="openImage">Whether to open the saved file.</param>
-    /// <param name="quality">Optional quality for lossy formats.</param>
-    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    public async Task SaveAsync(string filePath = "", bool openImage = false, int? quality = null, int? compressionLevel = null, CancellationToken cancellationToken = default) {
-        if (filePath == "") {
-            filePath = _filePath;
-        } else {
-            filePath = Helpers.ResolvePath(filePath);
+    private void Apply(Func<OfficeRasterImage, OfficeRasterImage> transform, Func<OfficeRasterImage, (int Width, int Height)>? outputSize = null, long additionalRetainedBytes = 0, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        _frames = _frames.Transform(transform, outputSize, cancellationToken, additionalRetainedBytes);
+    }
+
+    private void EnsureUsable() {
+        if (_disposed) {
+            throw new ObjectDisposedException(nameof(Image));
         }
-
-        string? directory = System.IO.Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrEmpty(directory) && !System.IO.Directory.Exists(directory)) {
-            System.IO.Directory.CreateDirectory(directory);
-        }
-
-        var encoder = Helpers.GetEncoder(System.IO.Path.GetExtension(filePath), quality, compressionLevel);
-        await _image.SaveAsync(filePath, encoder, cancellationToken).ConfigureAwait(false);
-        Helpers.Open(filePath, openImage);
     }
 
-    /// <summary>
-    /// Saves the image overwriting the original file and optionally opens it.
-    /// </summary>
-    /// <param name="openImage">Whether to open the saved file.</param>
-    public void Save(bool openImage) {
-        Save("", openImage, null, null);
-    }
-
-    /// <summary>
-    /// Saves the image to the provided <paramref name="stream"/>.
-    /// </summary>
-    /// <param name="stream">Destination stream.</param>
-    /// <param name="quality">Optional quality for lossy formats.</param>
-    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
-    public void Save(Stream stream, int? quality = null, int? compressionLevel = null) {
-        string extension = System.IO.Path.GetExtension(_filePath).ToLowerInvariant();
-        var encoder = Helpers.GetEncoder(extension, quality, compressionLevel);
-        _image.Save(stream, encoder);
-        stream.Seek(0, SeekOrigin.Begin);
-    }
-
-    /// <summary>
-    /// Converts the image to a memory stream.
-    /// </summary>
-    /// <param name="quality">Optional quality for lossy formats.</param>
-    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
-    /// <returns>Stream containing the image data.</returns>
-    public MemoryStream ToStream(int? quality = null, int? compressionLevel = null) {
-        var ms = new MemoryStream();
-        Save(ms, quality, compressionLevel);
-        return ms;
-    }
-
-    /// <summary>
-    /// Disposes the underlying image resources.
-    /// </summary>
+    /// <summary>Releases references to managed pixel buffers. Later image access throws.</summary>
     public void Dispose() {
-        if (_image != null) {
-            _image.Dispose();
-        }
+        if (_disposed) { return; }
+        _disposed = true;
+        _frames = null!;
+        _metadata = null!;
     }
 }

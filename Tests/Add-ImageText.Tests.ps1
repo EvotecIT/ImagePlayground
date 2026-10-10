@@ -20,7 +20,7 @@ Describe 'Add-ImageText' {
 
         if (Test-Path $dest) { Remove-Item $dest }
 
-        Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red)
 
         Test-Path $dest | Should -BeTrue
 
@@ -31,7 +31,7 @@ Describe 'Add-ImageText' {
         $src = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/QRCode1.png'
         $dest = Join-Path $TestDir 'text_pipeline.png'
         if (Test-Path $dest) { Remove-Item $dest }
-        $src | Add-ImageText -OutputPath $dest -Text 'Pipe' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red)
+        $src | Add-ImageText -OutputPath $dest -Text 'Pipe' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red)
         Test-Path $dest | Should -BeTrue
 
     }
@@ -43,7 +43,7 @@ Describe 'Add-ImageText' {
 
         if (Test-Path $dest) { Remove-Item $dest }
 
-        Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 1 -Y 1 -Color ([SixLabors.ImageSharp.Color]::Red) -ShadowColor ([SixLabors.ImageSharp.Color]::Black) -ShadowOffsetX 1 -ShadowOffsetY 1 -OutlineColor ([SixLabors.ImageSharp.Color]::Yellow) -OutlineWidth 1
+        Add-ImageText -FilePath $src -OutputPath $dest -Text 'Test' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red) -ShadowColor ([OfficeIMO.Drawing.OfficeColor]::Black) -ShadowOffsetX 1 -ShadowOffsetY 1 -OutlineColor ([OfficeIMO.Drawing.OfficeColor]::Yellow) -OutlineWidth 1
 
         Test-Path $dest | Should -BeTrue
 
@@ -54,8 +54,8 @@ Describe 'Add-ImageText' {
         $dest = Join-Path $TestDir 'text_and_box.png'
         if (Test-Path $dest) { Remove-Item $dest }
         $img = Get-Image -FilePath $src
-        $img.AddText(10,10,'Demo',[SixLabors.ImageSharp.Color]::Green,12)
-        $img.AddTextBox(10,30,'Long text for wrap',80,[SixLabors.ImageSharp.Color]::Blue,12)
+        $img.AddText(10,10,'Demo',[OfficeIMO.Drawing.OfficeColor]::Green,12)
+        $img.AddTextBox(10,30,'Long text for wrap',80,[OfficeIMO.Drawing.OfficeColor]::Blue,12)
         Save-Image -Image $img -FilePath $dest
         $img.Dispose()
         Test-Path $dest | Should -BeTrue

@@ -1,9 +1,10 @@
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
-using SixLabors.ImageSharp.Metadata.Profiles.Xmp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System.IO;
 using Xunit;
-using PlaygroundImage = ImagePlayground.Image;
+using PlaygroundImage = global::ImagePlayground.Image;
 
 namespace ImagePlayground.Tests;
 
@@ -21,8 +22,8 @@ public partial class ImagePlayground {
         using (var img = new PlaygroundImage()) {
             img.Create(imgPath, 20, 20);
             img.SetExifValue(ExifTag.Software, "ImagePlayground");
-            img.Metadata.XmpProfile = new XmpProfile();
-            img.Metadata.IptcProfile = new IptcProfile();
+            img.Metadata.XmpProfile = System.Text.Encoding.UTF8.GetBytes("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />");
+            img.Metadata.IptcProfile = new byte[] { 0x1c, 2, 5, 0, 4, 84, 101, 115, 116 };
             img.Save();
         }
 

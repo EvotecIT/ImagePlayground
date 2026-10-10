@@ -50,7 +50,7 @@ public partial class ImagePlayground {
             new global::ImagePlayground.ChartHistogram("Requested width", new[] { 0d, 1d, 3d, 5d, 6d, 9d, 10d }, 3)
         });
 
-        Assert.Equal(new[] { "0-3", "3-6", "6-9", "9-10" }, chart.Options.XAxisLabels.Select(label => label.Text));
+        Assert.Equal(new[] { "0-3", "3-6", "6-9", "9-12" }, chart.Options.XAxisLabels.Select(label => label.Text));
         Assert.Equal(new[] { 2d, 2d, 1d, 2d }, chart.Series[0].Points.Select(point => point.Y));
     }
 

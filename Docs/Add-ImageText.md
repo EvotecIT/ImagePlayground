@@ -12,7 +12,7 @@ image to disk.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Add-ImageText [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Color <OfficeColor>] [-FontSize <float>] [-FontFamily <string>] [-ShadowColor <OfficeColor>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <OfficeColor>] [-OutlineWidth <float>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,11 +29,13 @@ Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10
 
 ### EXAMPLE 2
 ```powershell
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.ColorSpaces;
-using var img = Image.Load("in.png");
-img.AddText(10, 10, "Sample", Color.Black, 24);
-img.Save("out.png");
+$img = Get-Image -FilePath in.png
+try {
+    $img.AddText(10, 10, 'Sample', [OfficeIMO.Drawing.OfficeColor]::Black, 24)
+    Save-Image -Image $img -FilePath out.png
+} finally {
+    $img.Dispose()
+}
 ```
 
 
@@ -43,7 +45,7 @@ img.Save("out.png");
 Text color.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -107,7 +109,7 @@ Accept wildcard characters: False
 Outline color.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -155,7 +157,7 @@ Accept wildcard characters: False
 Color of shadow.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

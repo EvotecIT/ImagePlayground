@@ -1,353 +1,84 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Processors.Transforms;
-using Color = SixLabors.ImageSharp.Color;
+using ChartForgeX.Composition;
+using ChartForgeX.Primitives;
+using ChartForgeX.Raster;
 
 namespace ImagePlayground;
-/// <summary>
-/// Provides helper methods for image manipulation.
-/// </summary>
+
+/// <summary>File workflows over the shared managed raster and composition engines.</summary>
 public partial class ImageHelper {
-    /// <summary>
-    /// Converts an image from one format to another.
-    /// Following image formats are supported: bmp, gif, jpeg, pbm, png, tga, tiff, webp
-    /// </summary>
-    /// <param name="filePath">Source image path.</param>
-    /// <param name="outFilePath">Destination image path.</param>
-    /// <param name="quality">Optional quality value for lossy formats.</param>
-    /// <param name="compressionLevel">Optional compression level for PNG/WebP.</param>
-    /// <exception cref="UnknownImageFormatException"></exception>
+    /// <summary>Converts a decoded image to the format selected by the output extension.</summary>
     public static void ConvertTo(string filePath, string outFilePath, int? quality = null, int? compressionLevel = null) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-        using (var inStream = System.IO.File.OpenRead(fullPath))
-        using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-            FileInfo fileInfo = new FileInfo(outFullPath);
-            if (fileInfo.Extension == ".ico") {
-                if (System.IO.Path.GetExtension(fullPath).Equals(".ico", StringComparison.OrdinalIgnoreCase)) {
-                    System.IO.File.Copy(fullPath, outFullPath, true);
-                } else {
-                    throw new NotSupportedException("Conversion to .ico is only supported from .ico files.");
-                }
-            } else {
-                var encoder = Helpers.GetEncoder(fileInfo.Extension, quality, compressionLevel);
-                image.Save(outFullPath, encoder);
-            }
+        string input = Helpers.ResolvePath(filePath);
+        string output = Helpers.ResolvePath(outFilePath);
+        byte[] inputBytes = Helpers.ReadEncodedFile(input);
+        using var image = Image.Load(inputBytes);
+        if (Helpers.GetImageType(Path.GetExtension(output)) == ImageType.Icon && image.SourceFormat == OfficeImageFormat.Icon) {
+            Helpers.CreateParentDirectory(output);
+            OfficeImageFileWriter.WriteAllBytes(output, inputBytes);
+            return;
         }
+        image.Save(output, quality: quality, compressionLevel: compressionLevel);
     }
-
-    /// <summary>
-    /// Resizes an image to the specified width and height.
-    /// Following image formats are supported: GIF, JPEG, PNG and JFIF.
-    /// </summary>
-    /// <param name="filePath">Path to the source image.</param>
-    /// <param name="outFilePath">Path where the resized image will be saved.</param>
-    /// <param name="width">Desired width or <c>null</c> to calculate automatically.</param>
-    /// <param name="height">Desired height or <c>null</c> to calculate automatically.</param>
-    /// <param name="keepAspectRatio">Preserve the original aspect ratio if <c>true</c>.</param>
-    /// <param name="sampler">Optional resampling algorithm to use.</param>
-    /// <remarks>
-    /// When <paramref name="keepAspectRatio"/> is <c>true</c> and one dimension is unspecified,
-    /// the missing dimension is calculated to maintain the aspect ratio.
-    /// </remarks>
-    /// <example>
-    ///   <code>ImageHelper.Resize("input.png", "output.png", 200, 100);</code>
-    /// </example>
+    /// <summary>Resizes all image frames and saves the result, fitting within supplied bounds when preserving aspect ratio.</summary>
     public static void Resize(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
-        if (width.HasValue && width.Value <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than 0.");
-        }
-        if (height.HasValue && height.Value <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than 0.");
-        }
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        using (var inStream = System.IO.File.OpenRead(fullPath))
-        using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-            Resize(image, width, height, keepAspectRatio, sampler);
-            image.Save(outFullPath);
-        }
+        using var image = Image.Load(filePath); image.Resize(width, height, keepAspectRatio, sampler); image.Save(outFilePath);
     }
-
-    /// <summary>
-    /// Asynchronously resizes an image to the specified width and height.
-    /// </summary>
-    /// <param name="filePath">Path to the source image.</param>
-    /// <param name="outFilePath">Path where the resized image will be saved.</param>
-    /// <param name="width">Desired width or <c>null</c> to calculate automatically.</param>
-    /// <param name="height">Desired height or <c>null</c> to calculate automatically.</param>
-    /// <param name="keepAspectRatio">Preserve the original aspect ratio if <c>true</c>.</param>
-    /// <param name="sampler">Optional resampling algorithm to use.</param>
-    /// <returns>A task that represents the asynchronous resize operation.</returns>
-    /// <remarks>
-    /// This method offloads the processing to a background task, which can improve responsiveness in UI applications.
-    /// </remarks>
-    /// <example>
-    ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 400, 300);</code>
-    /// </example>
+    /// <summary>Loads, resizes, and saves while observing cancellation.</summary>
     public static async Task ResizeAsync(string filePath, string outFilePath, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null, CancellationToken cancellationToken = default) {
-        cancellationToken.ThrowIfCancellationRequested();
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        using var inStream = System.IO.File.OpenRead(fullPath);
-        using SixLabors.ImageSharp.Image image = await SixLabors.ImageSharp.Image.LoadAsync(inStream, cancellationToken).ConfigureAwait(false);
-        Resize(image, width, height, keepAspectRatio, sampler);
-        await image.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); using var image = await Image.LoadAsync(filePath, cancellationToken).ConfigureAwait(false);
+        image.Resize(width, height, keepAspectRatio, sampler, cancellationToken); await image.SaveAsync(outFilePath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
+    /// <summary>Returns independently resized raster pixels, fitting within supplied bounds when preserving aspect ratio; the input remains unchanged.</summary>
+    public static OfficeRasterImage Resize(OfficeRasterImage image, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null, CancellationToken cancellationToken = default) =>
+        OfficeRasterResampler.Resize(image, new OfficeRasterResizeOptions {
+            Width = width, Height = height, Fit = keepAspectRatio ? OfficeImageFit.Contain : OfficeImageFit.Stretch,
+            ResamplingMode = sampler.HasValue ? Helpers.GetResampler(sampler.Value) : OfficeRasterResamplingMode.Bicubic
+        }, cancellationToken);
 
-    /// <summary>
-    /// Resizes the provided <paramref name="image"/> to the specified dimensions.
-    /// </summary>
-    /// <param name="image">Image instance to resize.</param>
-    /// <param name="width">Desired width or <c>null</c> to auto calculate.</param>
-    /// <param name="height">Desired height or <c>null</c> to auto calculate.</param>
-    /// <param name="keepAspectRatio">Preserve the original aspect ratio.</param>
-    /// <param name="sampler">Optional resampler algorithm.</param>
-    /// <returns>Resized image instance.</returns>
-    public static SixLabors.ImageSharp.Image Resize(SixLabors.ImageSharp.Image image, int? width, int? height, bool keepAspectRatio = true, Sampler? sampler = null) {
-        if (width.HasValue && width.Value <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than 0.");
-        }
-        if (height.HasValue && height.Value <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than 0.");
-        }
-        if (width == null && height == null) {
-            return image;
-        }
-
-        if (width != null && height != null && image.Width == width && image.Height == height) {
-            return image;
-        } else if (width != null && height == null && image.Width == width) {
-            return image;
-        } else if (height != null && width == null && image.Height == height) {
-            return image;
-        }
-
-        var options = new ResizeOptions();
-        if (keepAspectRatio && (width == null || height == null)) {
-            options.Mode = ResizeMode.Max;
-            if (width == null) {
-                int calculatedWidth = (int)Math.Round(height!.Value * image.Width / (double)image.Height);
-                options.Size = new Size(calculatedWidth, height.Value);
-            } else {
-                int calculatedHeight = (int)Math.Round(width.Value * image.Height / (double)image.Width);
-                options.Size = new Size(width.Value, calculatedHeight);
-            }
-        } else {
-            options.Mode = ResizeMode.Stretch;
-            options.Size = new Size(width ?? image.Width, height ?? image.Height);
-        }
-
-        if (sampler != null) {
-            options.Sampler = Helpers.GetResampler(sampler.Value);
-        }
-
-        image.Mutate(x => x.Resize(options));
-        return image;
-    }
-
-    /// <summary>
-    /// Resizes an image to the specified percentage.
-    /// </summary>
-    /// <param name="filePath">Path to the source image.</param>
-    /// <param name="outFilePath">Path where the resized image will be saved.</param>
-    /// <param name="percentage">Scale factor expressed as a percentage.</param>
-    /// <example>
-    ///   <code>ImageHelper.Resize("in.png", "out.png", 50);</code>
-    /// </example>
+    /// <summary>Scales all image frames by a positive percentage and saves the result.</summary>
     public static void Resize(string filePath, string outFilePath, int percentage) {
-        if (percentage <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(percentage));
-        }
-
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        using (var inStream = System.IO.File.OpenRead(fullPath))
-        using (SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream)) {
-            int width = image.Width * percentage / 100;
-            int height = image.Height * percentage / 100;
-            Resize(image, width, height, false);
-            image.Save(outFullPath);
-        }
+        using var image = Image.Load(filePath); image.Resize(percentage); image.Save(outFilePath);
     }
-
-    /// <summary>
-    /// Asynchronously resizes an image to the specified percentage.
-    /// </summary>
-    /// <param name="filePath">Path to the source image.</param>
-    /// <param name="outFilePath">Path where the resized image will be saved.</param>
-    /// <param name="percentage">Scale factor expressed as a percentage.</param>
-    /// <returns>A task that represents the asynchronous resize operation.</returns>
-    /// <example>
-    ///   <code>await ImageHelper.ResizeAsync("in.jpg", "out.jpg", 75);</code>
-    /// </example>
+    /// <summary>Scales and saves the image while observing cancellation.</summary>
     public static async Task ResizeAsync(string filePath, string outFilePath, int percentage, CancellationToken cancellationToken = default) {
-        if (percentage <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(percentage));
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        using var inStream = System.IO.File.OpenRead(fullPath);
-        using SixLabors.ImageSharp.Image image = await SixLabors.ImageSharp.Image.LoadAsync(inStream, cancellationToken).ConfigureAwait(false);
-        int width = image.Width * percentage / 100;
-        int height = image.Height * percentage / 100;
-        Resize(image, width, height, false);
-        await image.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); using var image = await Image.LoadAsync(filePath, cancellationToken).ConfigureAwait(false);
+        image.Resize(percentage, cancellationToken); await image.SaveAsync(outFilePath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
-
-    /// <summary>
-    /// Combines two images either horizontally or vertically.
-    /// </summary>
-    /// <param name="filePath">Path to the first image.</param>
-    /// <param name="filePath2">Path to the second image.</param>
-    /// <param name="outFilePath">Destination path of the combined image.</param>
-    /// <param name="resizeToFit">Resize images so they fit next to each other.</param>
-    /// <param name="imagePlacement">Determines placement of <paramref name="filePath2"/>.</param>
+    /// <summary>Combines the first frames of two images at the requested relative placement.</summary>
     public static void Combine(string filePath, string filePath2, string outFilePath, bool resizeToFit = false, ImagePlacement imagePlacement = ImagePlacement.Bottom) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string fullPath2 = Helpers.ResolvePath(filePath2);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Helpers.CreateParentDirectory(outFullPath);
-
-        using (var inStream = System.IO.File.OpenRead(fullPath))
-        using (var inStream2 = System.IO.File.OpenRead(fullPath2))
-        using (SixLabors.ImageSharp.Image imageIn1 = SixLabors.ImageSharp.Image.Load(inStream)) {
-            using (SixLabors.ImageSharp.Image imageIn2 = SixLabors.ImageSharp.Image.Load(inStream2)) {
-                var image = imageIn1;
-                var image2 = imageIn2;
-
-                int outputWidth = 0;
-                int outputHeight = 0;
-                if (imagePlacement == ImagePlacement.Bottom) {
-                    outputWidth = image.Width > image2.Width ? image.Width : image2.Width;
-                    outputHeight = image.Height + image2.Height;
-                    if (resizeToFit) {
-                        image = Resize(image, outputWidth, null);
-                        image2 = Resize(image2, outputWidth, null);
-                    }
-                } else if (imagePlacement == ImagePlacement.Top) {
-                    outputWidth = image.Width > image2.Width ? image.Width : image2.Width;
-                    outputHeight = image.Height + image2.Height;
-                    if (resizeToFit) {
-                        image = Resize(image, outputWidth, null);
-                        image2 = Resize(image2, outputWidth, null);
-                    }
-                } else if (imagePlacement == ImagePlacement.Left) {
-                    outputWidth = image.Width + image2.Width;
-                    outputHeight = image.Height > image2.Height ? image.Height : image2.Height;
-                    if (resizeToFit) {
-                        image = Resize(image, null, outputHeight);
-                        image2 = Resize(image2, null, outputHeight);
-                    }
-                } else if (imagePlacement == ImagePlacement.Right) {
-                    outputWidth = image.Width + image2.Width;
-                    outputHeight = image.Height > image2.Height ? image.Height : image2.Height;
-                    if (resizeToFit) {
-                        image = Resize(image, null, outputHeight);
-                        image2 = Resize(image2, null, outputHeight);
-                    }
-                } else {
-                    // this is not going to happen
-                    throw new ArgumentException("Invalid ImagePlacement");
-                }
-
-                using (Image<Rgba32> outputImage = new Image<Rgba32>(outputWidth, outputHeight)) {
-                    if (imagePlacement == ImagePlacement.Bottom) {
-                        outputImage.Mutate(x => x
-                            .DrawImage(image, new Point(0, 0), 1f)
-                            .DrawImage(image2, new Point(0, image.Height), 1f)
-                        );
-                    } else if (imagePlacement == ImagePlacement.Top) {
-                        outputImage.Mutate(x => x
-                            .DrawImage(image2, new Point(0, 0), 1f)
-                            .DrawImage(image, new Point(0, image2.Height), 1f)
-                        );
-                    } else if (imagePlacement == ImagePlacement.Left) {
-                        outputImage.Mutate(x => x
-                            .DrawImage(image2, new Point(0, 0), 1f)
-                            .DrawImage(image, new Point(image2.Width, 0), 1f)
-                        );
-                    } else if (imagePlacement == ImagePlacement.Right) {
-                        outputImage.Mutate(x => x
-                            .DrawImage(image, new Point(0, 0), 1f)
-                            .DrawImage(image2, new Point(image.Width, 0), 1f)
-                        );
-                    }
-
-                    outputImage.Save(outFullPath);
-                }
-            }
+        using var first = Image.Load(filePath); using var second = Image.Load(filePath2);
+        if (!Enum.IsDefined(typeof(ImagePlacement), imagePlacement)) {
+            throw new ArgumentOutOfRangeException(nameof(imagePlacement));
         }
-
+        bool vertical = imagePlacement == ImagePlacement.Top || imagePlacement == ImagePlacement.Bottom;
+        if (resizeToFit) {
+            if (vertical) { int width = Math.Max(first.Width, second.Width); first.Resize(width, null); second.Resize(width, null); }
+            else { int height = Math.Max(first.Height, second.Height); first.Resize(null, height); second.Resize(null, height); }
+        }
+        int outputWidth = vertical ? Math.Max(first.Width, second.Width) : checked(first.Width + second.Width);
+        int outputHeight = vertical ? checked(first.Height + second.Height) : Math.Max(first.Height, second.Height);
+        var composition = ImageComposition.CreateTransparent(outputWidth, outputHeight);
+        bool secondFirst = imagePlacement == ImagePlacement.Top || imagePlacement == ImagePlacement.Left;
+        Image leading = secondFirst ? second : first, trailing = secondFirst ? first : second;
+        composition.DrawImage(ToChartImage(leading.Raster), 0, 0, leading.Width, leading.Height);
+        composition.DrawImage(ToChartImage(trailing.Raster), vertical ? 0 : leading.Width, vertical ? leading.Height : 0, trailing.Width, trailing.Height);
+        using var output = Image.FromRaster(ToOfficeImage(composition.ToImage())); output.Save(outFilePath);
     }
-
-    /// <summary>
-    /// Generates a patterned image and saves it to disk.
-    /// </summary>
-    /// <param name="filePath">Destination image path.</param>
-    /// <param name="width">Image width.</param>
-    /// <param name="height">Image height.</param>
-    /// <param name="color">Background color.</param>
-    /// <param name="open">Open the image after saving.</param>
-    public static void Create(string filePath, int width, int height, Color color, bool open = false) {
-        string fullPath = Helpers.ResolvePath(filePath);
+    /// <summary>Creates a background with a grid of randomly colored squares.</summary>
+    public static void Create(string filePath, int width, int height, OfficeColor color, bool open = false) {
         if (width < 20) {
-            throw new ArgumentOutOfRangeException(nameof(width), "Width must be at least 20.");
+            throw new ArgumentOutOfRangeException(nameof(width), "Width must be at least twenty pixels.");
         }
         if (height < 20) {
-            throw new ArgumentOutOfRangeException(nameof(height), "Height must be at least 20.");
+            throw new ArgumentOutOfRangeException(nameof(height), "Height must be at least twenty pixels.");
         }
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath)!);
-
-        using (Image<Rgba32> outputImage = new Image<Rgba32>(width, height)) {
-            //outputImage.Mutate(x => x.Fill(color));
-            //outputImage.Mutate(x => x.BackgroundColor(color));
-
-            int sizeRow = 20;
-            int sizeColumn = 20;
-            int rowCount = height / sizeRow;
-            int columnCount = width / sizeColumn;
-            int imageRadius = 20;
-
-            outputImage.Mutate(ic => {
-                ic.Fill(color);
-
-                var rotation = GeometryUtilities.DegreeToRadian(45);
-                var rand = new Random();
-
-                for (var row = 1; row < rowCount; row++) {
-                    for (var col = 1; col < columnCount; col++) {
-                        var r = (byte)rand.Next(0, 255);
-                        var g = (byte)rand.Next(0, 255);
-                        var b = (byte)rand.Next(0, 255);
-                        var squareColor = new Color(new Rgba32(r, g, b, 255));
-
-                        var polygon = new RegularPolygon(sizeColumn * col, sizeRow * row, 4, imageRadius, rotation);
-                        ic.Fill(squareColor, polygon);
-                    }
-                }
-            });
-            outputImage.Save(fullPath);
+        var composition = ImageComposition.Create(width, height, ChartColor.FromRgba(color.R, color.G, color.B, color.A));
+        var random = new Random();
+        for (int y = 20; y < height / 20 * 20; y += 20) {
+            for (int x = 20; x < width / 20 * 20; x += 20) composition.FillRectangle(x-14, y-14, 28, 28, ChartColor.FromRgba((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255), 255));
         }
-
-        Helpers.Open(fullPath, open);
+        using var image = Image.FromRaster(ToOfficeImage(composition.ToImage())); image.Save(filePath, open);
     }
-
+    internal static RgbaImage ToChartImage(OfficeRasterImage image) => new RgbaImage(image.Width, image.Height, image.GetPixels());
+    internal static OfficeRasterImage ToOfficeImage(RgbaImage image) => OfficeRasterImage.FromRgba32(image.Width, image.Height, image.Pixels);
 }

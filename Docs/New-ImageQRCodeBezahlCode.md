@@ -11,42 +11,42 @@ Generates a BezahlCode QR for German banking payloads.
 ## SYNTAX
 ### ContactAccount
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> [-Reason <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> [-Reason <string>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### ContactSepa
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> [-Reason <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> [-Reason <string>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### NonSepaPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <DateTime>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <DateTime>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### SepaPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> [-Reason <string>] [-Currency <string>] [-ExecutionDate <DateTime>] [-SepaReference <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> [-Reason <string>] [-Currency <string>] [-ExecutionDate <DateTime>] [-SepaReference <string>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### NonSepaDirectDebit
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <DateTime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <DateTime>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <DateTime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-ExecutionDate <DateTime>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### SepaDirectDebit
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <DateTime> [-Reason <string>] [-Currency <string>] [-ExecutionDate <DateTime>] [-SepaReference <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> -CreditorId <string> -MandateId <string> -DateOfSignature <DateTime> [-Reason <string>] [-Currency <string>] [-ExecutionDate <DateTime>] [-SepaReference <string>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### NonSepaPeriodicPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> -PeriodicUnitRotation <Int32> -PeriodicFirstExecutionDate <DateTime> -PeriodicLastExecutionDate <DateTime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Account] <string> [-Bnc] <string> [-FilePath] <string> -Amount <Decimal> -PeriodicUnitRotation <Int32> -PeriodicFirstExecutionDate <DateTime> -PeriodicLastExecutionDate <DateTime> [-Reason <string>] [-Currency <string>] [-PostingKey <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ### SepaPeriodicPayment
 ```powershell
-New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> -PeriodicUnitRotation <Int32> -PeriodicFirstExecutionDate <DateTime> -PeriodicLastExecutionDate <DateTime> [-Reason <string>] [-Currency <string>] [-SepaReference <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeBezahlCode [-Authority] <QrBezahlAuthorityType> [-Name] <string> [-Iban] <string> [-Bic] <string> [-FilePath] <string> -Amount <Decimal> -PeriodicUnitRotation <Int32> -PeriodicFirstExecutionDate <DateTime> -PeriodicLastExecutionDate <DateTime> [-Reason <string>] [-Currency <string>] [-SepaReference <string>] [-PeriodicUnit <QrBezahlPeriodicUnit>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 Background color of the QR code.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
 Aliases: None
 Possible values:
@@ -250,7 +250,7 @@ Accept wildcard characters: False
 Foreground color of QR modules.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: ContactAccount, ContactSepa, NonSepaPayment, SepaPayment, NonSepaDirectDebit, SepaDirectDebit, NonSepaPeriodicPayment, SepaPeriodicPayment
 Aliases: None
 Possible values:

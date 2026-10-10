@@ -11,7 +11,7 @@ Adds wrapped text to an image within a box.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <Color>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <HorizontalAlignment>] [-VerticalAlignment <VerticalAlignment>] [-ShadowColor <Color>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <Color>] [-OutlineWidth <float>] [<CommonParameters>]
+Add-ImageTextBox [-FilePath] <string> [-OutputPath] <string> [-Text] <string> [-X] <float> [-Y] <float> [-Width] <float> [[-Height] <float>] [-Color <OfficeColor>] [-FontSize <float>] [-FontFamily <string>] [-HorizontalAlignment <OfficeTextAlignment>] [-VerticalAlignment <OfficeTextVerticalAlignment>] [-ShadowColor <OfficeColor>] [-ShadowOffsetX <float>] [-ShadowOffsetY <float>] [-OutlineColor <OfficeColor>] [-OutlineWidth <float>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ Add-ImageTextBox -FilePath in.png -OutputPath out.png -Text "Sample text" -X 10 
 Text color.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -111,10 +111,10 @@ Accept wildcard characters: False
 Horizontal alignment.
 
 ```yaml
-Type: HorizontalAlignment
+Type: OfficeTextAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Left, Right, Center
+Possible values: Left, Center, Right, Justify
 
 Required: False
 Position: named
@@ -127,7 +127,7 @@ Accept wildcard characters: False
 Outline color.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -175,7 +175,7 @@ Accept wildcard characters: False
 Color of shadow.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -239,7 +239,7 @@ Accept wildcard characters: False
 Vertical alignment.
 
 ```yaml
-Type: VerticalAlignment
+Type: OfficeTextVerticalAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Top, Center, Bottom

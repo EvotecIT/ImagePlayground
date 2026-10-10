@@ -15,10 +15,9 @@ internal partial class Example {
         //string filePath = System.IO.Path.Combine(folderPath, "CalculatorBefore.png");
         //string filePathToCompare = System.IO.Path.Combine(folderPath, "CalculatorAfter.png");
         //var results = ImageHelper.Compare(filePath, filePathToCompare);
-        //Console.WriteLine("+ AbsoluteError: " + results.AbsoluteError);
-        //Console.WriteLine("+ MeanError: " + results.MeanError);
-        //Console.WriteLine("+ PixelErrorCount: " + results.PixelErrorCount);
-        //Console.WriteLine("+ PixelErrorPercentage: " + results.PixelErrorPercentage);
+        //Console.WriteLine("+ MeanAbsoluteDifference: " + results.MeanAbsoluteDifference);
+        //Console.WriteLine("+ ChangedPixels: " + results.ChangedPixels);
+        //Console.WriteLine("+ Similarity: " + results.Similarity);
 
         //Console.WriteLine("[*] Comparing two images - saving output");
         //filePath = System.IO.Path.Combine(folderPath, "CalculatorBefore.png");

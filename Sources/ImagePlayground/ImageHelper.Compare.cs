@@ -1,41 +1,13 @@
-﻿using System.IO;
-using Codeuctivity.ImageSharpCompare;
-
 namespace ImagePlayground;
-/// <summary>
-/// Provides helper methods for image manipulation.
-/// </summary>
+
+/// <summary>Managed image comparison file workflows.</summary>
 public partial class ImageHelper {
-
-    /// <summary>
-    /// Compares two images and returns the difference result.
-    /// </summary>
-    /// <param name="filePath">Path to the first image.</param>
-    /// <param name="filePathToCompare">Path to the image to compare against.</param>
-    /// <returns>Comparison result.</returns>
-    public static ICompareResult Compare(string filePath, string filePathToCompare) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
-
-        return ImageSharpCompare.CalcDiff(fullPath, fullPathToCompare);
+    /// <summary>Compares the first frames of two files and returns observable pixel metrics.</summary>
+    public static OfficeRasterComparisonResult Compare(string filePath, string filePathToCompare) {
+        using var image = Image.Load(filePath); return image.Compare(filePathToCompare);
     }
-
-    /// <summary>
-    /// Compares two images and saves the difference mask.
-    /// </summary>
-    /// <param name="filePath">Path to the first image.</param>
-    /// <param name="filePathToCompare">Path to the image to compare against.</param>
-    /// <param name="filePathToSave">Destination path for the difference mask.</param>
+    /// <summary>Compares two files and saves a PNG difference mask.</summary>
     public static void Compare(string filePath, string filePathToCompare, string filePathToSave) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string fullPathToCompare = Helpers.ResolvePath(filePathToCompare);
-        string outFullPath = Helpers.ResolvePath(filePathToSave);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        using (var fileStreamDifferenceMask = File.Create(outFullPath)) {
-            using (var maskImage = ImageSharpCompare.CalcDiffMaskImage(fullPath, fullPathToCompare)) {
-                SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage, fileStreamDifferenceMask);
-            }
-        }
+        using var image = Image.Load(filePath); image.Compare(filePathToCompare, filePathToSave);
     }
 }

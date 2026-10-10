@@ -1,14 +1,14 @@
 using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
+using OfficeIMO.Drawing;
 
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Removes EXIF metadata from an image.</summary>
 /// <example>
 ///   <summary>Remove specific tag</summary>
-///   <code>Remove-ImageExif -FilePath img.jpg -ExifTag ExifIFD.DateTimeOriginal</code>
+///   <code>Remove-ImageExif -FilePath img.jpg -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal)</code>
 /// </example>
 /// <example>
 ///   <summary>Remove all tags</summary>
@@ -31,7 +31,7 @@ public sealed class RemoveImageExifCmdlet : ImageCmdlet {
 
     /// <summary>Tags to remove.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetTag)]
-    public ExifTag[] ExifTag { get; set; } = null!;
+    public OfficeExifTag[] ExifTag { get; set; } = null!;
 
     /// <summary>Remove all tags.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetAll)]

@@ -115,7 +115,7 @@ Describe 'New-ImageChart' {
         New-ImageChart -ChartsDefinition {
             New-ImageChartBar -Name 'Jan' -Value @(1,2)
             New-ImageChartBar -Name 'Feb' -Value @(3,4)
-        } -FilePath $file -Width 200 -Height 150 -Background ([SixLabors.ImageSharp.Color]::Aqua)
+        } -FilePath $file -Width 200 -Height 150 -Background ([OfficeIMO.Drawing.OfficeColor]::Aqua)
 
         Test-Path -Path $file | Should -BeTrue
     }
@@ -205,7 +205,7 @@ Describe 'New-ImageChart' {
         $svg | Should -Match '>0-3</text>'
         $svg | Should -Match '>3-6</text>'
         $svg | Should -Match '>6-9</text>'
-        $svg | Should -Match '>9-10</text>'
+        $svg | Should -Match '>9-12</text>'
     }
 
     It 'rejects point callouts for exclusive polar charts before rendering' {
@@ -347,7 +347,7 @@ Describe 'New-ImageChart' {
         $second = [ImagePlayground.Image]::Load($pipeFile)
         $comparison = $first.Compare($second)
 
-        $comparison.PixelErrorCount | Should -Be 0
+        $comparison.ChangedPixels | Should -Be 0
 
         $first.Dispose()
         $second.Dispose()

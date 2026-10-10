@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
 /// <summary>
@@ -10,6 +9,7 @@ public partial class ImageHelper {
     /// <summary>
     /// Generates resized copies for all images found in <paramref name="directoryPath"/>.
     /// </summary>
+    /// <remarks>Decodable inputs whose extension has no encoder are copied unchanged. Invalid image inputs are skipped; failures while resizing or encoding a supported output are propagated.</remarks>
     /// <param name="directoryPath">Folder containing the source images.</param>
     /// <param name="outputDirectory">Destination folder for the thumbnails.</param>
     /// <param name="width">Thumbnail width.</param>
@@ -29,17 +29,26 @@ public partial class ImageHelper {
         }
 
         foreach (var file in Directory.EnumerateFiles(inputDir)) {
+            string destPath = Path.Combine(outDir, Path.GetFileName(file));
+            bool canEncode = true;
             try {
-                using var inStream = File.OpenRead(file);
-                using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(inStream);
-                Resize(image, width, height, keepAspectRatio, sampler);
-                string destPath = Path.Combine(outDir, Path.GetFileName(file));
-                try {
-                    image.Save(destPath);
-                } catch (Exception ex) when (ex is SixLabors.ImageSharp.UnknownImageFormatException || ex is NotSupportedException) {
+                Helpers.GetImageType(Path.GetExtension(destPath));
+            } catch (NotSupportedException) {
+                canEncode = false;
+            }
+            Image image;
+            try {
+                image = Image.Load(file);
+            } catch (InvalidDataException) {
+                continue;
+            }
+            using (image) {
+                if (!canEncode) {
                     File.Copy(file, destPath, true);
+                    continue;
                 }
-            } catch (SixLabors.ImageSharp.UnknownImageFormatException) {
+                image.Resize(width, height, keepAspectRatio, sampler);
+                image.Save(destPath);
             }
         }
     }

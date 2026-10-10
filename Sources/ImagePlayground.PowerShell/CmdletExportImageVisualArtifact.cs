@@ -77,12 +77,11 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
         string output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         string extension = Path.GetExtension(output);
         var options = new VisualArtifactRenderOptions();
-        foreach (VisualWatermark watermark in Watermark ?? Array.Empty<VisualWatermark>()) {
+        VisualWatermark[] watermarks = Watermark ?? Array.Empty<VisualWatermark>();
+        foreach (VisualWatermark watermark in watermarks) {
             if (watermark == null) {
                 throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
             }
-
-            options.Watermarks.Add(watermark);
         }
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
             options.Raster = new RasterImageOptions { Dpi = Dpi };
@@ -93,13 +92,14 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
                 IncludeLayoutDiagnosticOverlay = IncludeTopologyDiagnostics.IsPresent
             };
         }
+        VisualArtifact rendered = watermarks.Length == 0 ? artifact.Clone() : artifact.ToWatermarkedArtifact(options, watermarks);
         EnsureDirectory(output);
         if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
-            artifact.SaveSvg(output, options);
+            rendered.SaveSvg(output, options);
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
-            artifact.SaveHtml(output, options);
+            rendered.SaveHtml(output, options);
         } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
-            artifact.SavePng(output, options);
+            rendered.SavePng(output, options);
         } else {
             throw new PSArgumentException("Visual artifact output supports only .svg, .html, .htm, or .png file extensions.", nameof(FilePath));
         }

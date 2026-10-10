@@ -15,7 +15,7 @@ Get-Image [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Returns a SixLabors.ImageSharp.Image object for further processing.
+Returns an editable Image. Save it with Save-Image after applying transformations, and dispose it when finished.
 
 ## EXAMPLES
 
@@ -58,7 +58,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `ImagePlayground.Image`
 
 ## RELATED LINKS
 

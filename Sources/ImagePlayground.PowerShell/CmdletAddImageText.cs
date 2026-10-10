@@ -13,13 +13,15 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10</code>
 /// </example>
 /// <example>
-///   <summary>Draw text using ImageSharp</summary>
+///   <summary>Edit an image and save it</summary>
 ///   <code>
-/// using SixLabors.ImageSharp;
-/// using SixLabors.ImageSharp.ColorSpaces;
-/// using var img = Image.Load("in.png");
-/// img.AddText(10, 10, "Sample", Color.Black, 24);
-/// img.Save("out.png");
+/// $img = Get-Image -FilePath in.png
+/// try {
+///     $img.AddText(10, 10, 'Sample', [OfficeIMO.Drawing.OfficeColor]::Black, 24)
+///     Save-Image -Image $img -FilePath out.png
+/// } finally {
+///     $img.Dispose()
+/// }
 /// </code>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "ImageText")]
@@ -51,7 +53,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
 
     /// <summary>Text color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color Color { get; set; } = SixLabors.ImageSharp.Color.Black;
+    public OfficeIMO.Drawing.OfficeColor Color { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
 
     /// <summary>Font size.</summary>
     [Parameter]
@@ -63,7 +65,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
 
     /// <summary>Color of shadow.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? ShadowColor { get; set; }
+    public OfficeIMO.Drawing.OfficeColor? ShadowColor { get; set; }
 
     /// <summary>X offset for shadow.</summary>
     [Parameter]
@@ -75,7 +77,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
 
     /// <summary>Outline color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? OutlineColor { get; set; }
+    public OfficeIMO.Drawing.OfficeColor? OutlineColor { get; set; }
 
     /// <summary>Outline width.</summary>
     [Parameter]

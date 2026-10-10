@@ -1,29 +1,29 @@
 using ImagePlayground;
+using OfficeIMO.Drawing;
 using System.Management.Automation;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Saves an image to disk or returns its encoded bytes as a stream.</summary>
-/// <para>Use this cmdlet to persist an <see cref="ImagePlayground.Image"/> instance after applying transformations.</para>
+/// <summary>Saves an image object to disk or returns its encoded bytes as a stream.</summary>
+/// <para>Accepts editable image objects from Get-Image and Resize-Image.</para>
 /// <example>
-///   <summary>Overwrite the source file</summary>
+///   <summary>Resize and save an image object</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Save-Image -Image $img</code>
+///   <code>Get-Image in.png | Resize-Image -Width 1200 | Save-Image -FilePath out.png</code>
 /// </example>
 /// <example>
-///   <summary>Save as JPEG with quality 80</summary>
+///   <summary>Return an explicit PNG stream</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Save-Image -Image $img -FilePath out.jpg -Quality 80</code>
+///   <code>Get-Image in.jpg | Save-Image -AsStream -Format Png</code>
 /// </example>
-[Cmdlet(VerbsData.Save, "Image")]
-public sealed class SaveImageCmdlet : PSCmdlet {
-    /// <summary>Image object to save.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+[Cmdlet(VerbsData.Save, "Image", DefaultParameterSetName = "File")]
+public sealed class SaveImageCmdlet : AsyncImageCmdlet {
+    /// <summary>Editable image object to save.</summary>
+    [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public ImagePlayground.Image Image { get; set; } = null!;
 
-    /// <summary>Optional path for the new file.</summary>
-    /// <para>When omitted, the image is saved using the path already associated with the image object.</para>
-    [Parameter(ValueFromPipeline = true, Position = 1)]
+    /// <summary>Optional destination path; omitted uses the path associated with the image.</summary>
+    [Parameter(Position = 1, ParameterSetName = "File")]
     public string? FilePath { get; set; }
 
     /// <summary>Quality for JPEG or WEBP images.</summary>
@@ -34,25 +34,43 @@ public sealed class SaveImageCmdlet : PSCmdlet {
     [Parameter]
     public int? CompressionLevel { get; set; }
 
-    /// <summary>Return the image as a stream instead of saving.</summary>
-    /// <para>When used without FilePath, the cmdlet writes a stream object to the pipeline.</para>
+    /// <summary>Owned encoder settings; simple quality and compression controls override their matching settings.</summary>
     [Parameter]
+    public OfficeRasterEncodingOptions? EncodingOptions { get; set; }
+
+    /// <summary>Returns an encoded stream at position zero; the caller owns the stream.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = "Stream")]
     public SwitchParameter AsStream { get; set; }
 
-    /// <summary>Open file after saving.</summary>
-    [Parameter]
+    /// <summary>Explicit stream output format; omitted uses the image's detected supported default.</summary>
+    [Parameter(ParameterSetName = "Stream")]
+    public ImageType? Format { get; set; }
+
+    /// <summary>Opens the completed file.</summary>
+    [Parameter(ParameterSetName = "File")]
     public SwitchParameter Open { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
-        var filePath = FilePath;
-        if (!string.IsNullOrWhiteSpace(filePath)) {
-            var output = PowerShellPathResolver.ResolveFileSystemPath(this, filePath!);
-            Image.Save(output, Open.IsPresent, Quality, CompressionLevel);
-        } else if (AsStream.IsPresent) {
-            WriteObject(Image.ToStream(Quality, CompressionLevel));
+    protected override async Task ProcessRecordAsync() {
+        string? output = string.IsNullOrWhiteSpace(FilePath) ? null : PowerShellPathResolver.ResolveFileSystemPath(this, FilePath!);
+        bool asStream = AsStream.IsPresent;
+        bool open = Open.IsPresent;
+        if (!asStream && output == null && string.IsNullOrWhiteSpace(Image.FilePath)) {
+            ThrowTerminatingError(new ErrorRecord(new PSArgumentException("FilePath is required when the image has no associated file path."), "SaveImageMissingPath", ErrorCategory.InvalidArgument, Image));
+            return;
+        }
+        ImageType format = asStream ? Format ?? Image.DefaultOutputFormat : Helpers.GetImageType(System.IO.Path.GetExtension(output ?? Image.FilePath));
+        var options = EncodingOptions?.Clone() ?? new OfficeRasterEncodingOptions();
+        var simple = Helpers.GetEncodingOptions(format, Quality, CompressionLevel);
+        if (Quality.HasValue) {
+            options.Jpeg.Quality = simple.Jpeg.Quality;
+            if (format == ImageType.WebP) { options.Webp.Mode = simple.Webp.Mode; options.Webp.Quality = simple.Webp.Quality; }
+        }
+        if (CompressionLevel.HasValue) { options.Png.Compression = simple.Png.Compression; }
+        if (asStream) {
+            WriteObject(Image.ToStream(format, options, CancelToken));
         } else {
-            Image.Save("", Open.IsPresent, Quality, CompressionLevel);
+            await Image.SaveAsync(output ?? "", options, open, CancelToken).ConfigureAwait(false);
         }
     }
 }

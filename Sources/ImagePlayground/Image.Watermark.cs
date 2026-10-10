@@ -1,201 +1,86 @@
-﻿using System;
-using SixLabors.Fonts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.Processing;
-using FontStyle = SixLabors.Fonts.FontStyle;
-using PointF = SixLabors.ImageSharp.PointF;
-
 namespace ImagePlayground;
-/// <summary>
-/// Provides image manipulation operations.
-/// </summary>
-public partial class Image : IDisposable {
 
+/// <summary>Text and raster watermark workflows.</summary>
+public partial class Image {
+    /// <summary>Draws a text watermark at explicit pixel coordinates.</summary>
+    public void Watermark(string text, float x, float y, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f, CancellationToken cancellationToken = default) => AddText(x, y, text, color, fontSize, fontFamilyName, cancellationToken: cancellationToken);
 
-
-    /// <summary>
-    /// Draws a text watermark at the specified coordinates.
-    /// </summary>
-    /// <param name="text">Watermark text.</param>
-    /// <param name="x">X coordinate.</param>
-    /// <param name="y">Y coordinate.</param>
-    /// <param name="color">Watermark color.</param>
-    /// <param name="fontSize">Font size.</param>
-    /// <param name="fontFamilyName">Font family name.</param>
-    /// <param name="padding">Optional padding around the watermark.</param>
-    public void Watermark(string text, float x, float y, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f) {
-        if (!SystemFonts.TryGet(fontFamilyName, out var fontFamily)) {
-            throw new Exception($"Couldn't find font {fontFamilyName}");
-        }
-
-        var font = fontFamily.CreateFont(fontSize, FontStyle.Regular);
-        //var styles = fontFamily.GetAvailableStyles();
-        //var families = SystemFonts.Families;
-
-        var pointF = new PointF(x, y);
-        _image.Mutate(mx => mx.DrawText(text, font, color, pointF));
-
+    /// <summary>Draws a text watermark at a predefined placement.</summary>
+    public void Watermark(string text, WatermarkPlacement placement, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f, CancellationToken cancellationToken = default) {
+        var size = GetTextSize(text, fontSize, fontFamilyName, cancellationToken);
+        var point = GetWatermarkLocation(placement, size.Width, size.Height, padding);
+        Watermark(text, (float)point.X, (float)point.Y, color, fontSize, fontFamilyName, padding, cancellationToken);
     }
 
-    /// <summary>
-    /// Places a text watermark using a predefined placement.
-    /// </summary>
-    /// <param name="text">Watermark text.</param>
-    /// <param name="placement">Placement of the watermark.</param>
-    /// <param name="color">Text color.</param>
-    /// <param name="fontSize">Font size.</param>
-    /// <param name="fontFamilyName">Font family.</param>
-    /// <param name="padding">Padding around the text.</param>
-    public void Watermark(string text, WatermarkPlacement placement, SixLabors.ImageSharp.Color color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f) {
-        var textSize = GetTextSize(text, fontSize, fontFamilyName);
-
-        if (placement == WatermarkPlacement.TopLeft) {
-            Watermark(text, padding, padding, color, fontSize, fontFamilyName, padding);
-        } else if (placement == WatermarkPlacement.TopRight) {
-            Watermark(text, _image.Width - textSize.Width - padding, padding, color, fontSize, fontFamilyName, padding);
-        } else if (placement == WatermarkPlacement.BottomLeft) {
-            Watermark(text, padding, _image.Height - textSize.Height - padding, color, fontSize, fontFamilyName, padding);
-        } else if (placement == WatermarkPlacement.BottomRight) {
-            Watermark(text, _image.Width - textSize.Width - padding, _image.Height - textSize.Height - padding, color, fontSize, fontFamilyName, padding);
-        } else if (placement == WatermarkPlacement.Middle) {
-            Watermark(text, (_image.Width - textSize.Width) / 2, (_image.Height - textSize.Height) / 2, color, fontSize, fontFamilyName, padding);
-        }
+    /// <summary>Draws an image watermark at a predefined placement.</summary>
+    public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
+        AddImage(watermark.Raster, GetWatermarkLocation(placement, watermark.Width, watermark.Height, padding), opacity, cancellationToken);
     }
 
-    /// <summary>
-    /// Adds an image watermark using a predefined placement.
-    /// </summary>
-    /// <param name="filePath">Path to the watermark image.</param>
-    /// <param name="placement">Placement for the watermark.</param>
-    /// <param name="opacity">Opacity of the watermark.</param>
-    /// <param name="padding">Padding around the watermark.</param>
-    /// <param name="rotate">Rotation angle.</param>
-    /// <param name="flipMode">Flip mode for the watermark.</param>
-    /// <param name="watermarkPercentage">Size of the watermark in percent (1-100).</param>
-    public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        if (watermarkPercentage < 1 || watermarkPercentage > 100) {
-            throw new ArgumentOutOfRangeException(nameof(watermarkPercentage), "Watermark percentage must be between 1 and 100.");
-        }
-
-        var location = new Point(0, 0);
-        using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-            var watermarkWidth = image.Width * watermarkPercentage / 100;
-            var watermarkHeight = image.Height * watermarkPercentage / 100;
-
-            if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
-                image.Mutate(mx => {
-                    if (watermarkPercentage != 100) {
-                        mx.Resize(watermarkWidth, watermarkHeight);
-                    }
-
-                    if (flipMode != FlipMode.None) {
-                        mx.Flip(flipMode);
-                    }
-
-                    if (rotate != 0) {
-                        mx.Rotate(rotate);
-                    }
-                });
-            }
-
-            if (placement == WatermarkPlacement.TopLeft) {
-                location = new Point((int)padding, (int)padding);
-            } else if (placement == WatermarkPlacement.TopRight) {
-                location = new Point((int)(_image.Width - image.Width - padding), (int)padding);
-            } else if (placement == WatermarkPlacement.BottomLeft) {
-                location = new Point((int)padding, (int)(_image.Height - image.Height - padding));
-            } else if (placement == WatermarkPlacement.BottomRight) {
-                location = new Point((int)(_image.Width - image.Width - padding), (int)(_image.Height - image.Height - padding));
-            } else if (placement == WatermarkPlacement.Middle) {
-                location = new Point((int)((_image.Width - image.Width) / 2), (int)((_image.Height - image.Height) / 2));
-            }
-            AddImage(image, location, opacity);
-        }
+    /// <summary>Draws an image watermark at explicit pixel coordinates.</summary>
+    public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
+        AddImage(watermark.Raster, x, y, opacity, cancellationToken);
     }
 
-    /// <summary>
-    /// Adds an image watermark at the specified coordinates.
-    /// </summary>
-    /// <param name="filePath">Path to the watermark image.</param>
-    /// <param name="x">X coordinate.</param>
-    /// <param name="y">Y coordinate.</param>
-    /// <param name="opacity">Opacity of the watermark.</param>
-    /// <param name="rotate">Rotation angle.</param>
-    /// <param name="flipMode">Flip mode for the watermark.</param>
-    /// <param name="watermarkPercentage">Size of the watermark in percent (1-100).</param>
-    public void WatermarkImage(string filePath, int x, int y, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        if (watermarkPercentage < 1 || watermarkPercentage > 100) {
-            throw new ArgumentOutOfRangeException(nameof(watermarkPercentage), "Watermark percentage must be between 1 and 100.");
+    /// <summary>Draws repeated image watermarks within each frame's canvas, observing cancellation during tiling.</summary>
+    /// <remarks>Each target frame is copied once. Timing and playback count remain unchanged, and a failed or canceled operation leaves the original frame sequence intact.</remarks>
+    public void WatermarkImageTiled(string filePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (spacing < 0) { throw new ArgumentOutOfRangeException(nameof(spacing)); }
+        if (opacity < 0 || opacity > 1 || float.IsNaN(opacity)) {
+            throw new ArgumentOutOfRangeException(nameof(opacity));
         }
-
-        var location = new Point(x, y);
-        using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-            var watermarkWidth = image.Width * watermarkPercentage / 100;
-            var watermarkHeight = image.Height * watermarkPercentage / 100;
-
-            // apply changes
-            if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
-                image.Mutate(mx => {
-                    if (watermarkPercentage != 100) {
-                        mx.Resize(watermarkWidth, watermarkHeight);
-                    }
-
-                    if (flipMode != FlipMode.None) {
-                        mx.Flip(flipMode);
-                    }
-
-                    if (rotate != 0) {
-                        mx.Rotate(rotate);
-                    }
-                });
-            }
-            AddImage(image, location, opacity);
+        using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
+        if (opacity == 0) {
+            return;
         }
-    }
-
-    /// <summary>
-    /// Adds a tiled watermark image over the entire picture.
-    /// </summary>
-    /// <param name="filePath">Path to the watermark image.</param>
-    /// <param name="spacing">Spacing between tiles.</param>
-    /// <param name="opacity">Opacity of each tile.</param>
-    /// <param name="rotate">Rotation angle applied to the watermark.</param>
-    /// <param name="flipMode">Flip mode for the watermark.</param>
-    /// <param name="watermarkPercentage">Size of the watermark in percent (1-100).</param>
-    public void WatermarkImageTiled(string filePath, int spacing, float opacity = 1f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        if (watermarkPercentage < 1 || watermarkPercentage > 100) {
-            throw new ArgumentOutOfRangeException(nameof(watermarkPercentage), "Watermark percentage must be between 1 and 100.");
-        }
-
-        using (var image = SixLabors.ImageSharp.Image.Load(fullPath)) {
-            var watermarkWidth = image.Width * watermarkPercentage / 100;
-            var watermarkHeight = image.Height * watermarkPercentage / 100;
-
-            if (watermarkPercentage != 100 || rotate != 0 || flipMode != FlipMode.None) {
-                image.Mutate(mx => {
-                    if (watermarkPercentage != 100) {
-                        mx.Resize(watermarkWidth, watermarkHeight);
-                    }
-
-                    if (flipMode != FlipMode.None) {
-                        mx.Flip(flipMode);
-                    }
-
-                    if (rotate != 0) {
-                        mx.Rotate(rotate);
-                    }
-                });
-            }
-
-            for (int y = spacing; y < _image.Height; y += image.Height + spacing) {
-                for (int x = spacing; x < _image.Width; x += image.Width + spacing) {
-                    AddImage(image, x, y, opacity);
+        long stepX = (long)watermark.Width + spacing;
+        long stepY = (long)watermark.Height + spacing;
+        long watermarkBytes = watermark.Frames.Sum(frame => (long)frame.Image.Width * frame.Image.Height * 4);
+        _frames = _frames.Transform(source => {
+            var result = source.Clone();
+            var canvas = new OfficeRasterCanvas(result, font: null, fonts: null, cancellationToken: cancellationToken);
+            for (long y = spacing; y < source.Height; y += stepY) {
+                cancellationToken.ThrowIfCancellationRequested();
+                for (long x = spacing; x < source.Width; x += stepX) {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    canvas.DrawAffineImage(watermark.Raster, OfficeTransform.Translate(x, y), opacity);
                 }
             }
-        }
+            return result;
+        }, cancellationToken: cancellationToken, additionalRetainedBytes: watermarkBytes);
     }
+
+    private static Image PrepareWatermark(string filePath, int percentage, int rotate, FlipMode flipMode, CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (percentage < 1 || percentage > 100) { throw new ArgumentOutOfRangeException(nameof(percentage), "Watermark percentage must be between 1 and 100."); }
+        var image = Load(filePath, new OfficeRasterDecodeOptions { ApplyExifOrientation = false, CancellationToken = cancellationToken });
+        try {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (image.Frames.Count > 1) {
+                var firstFrame = FromRaster(image.Raster);
+                image.Dispose();
+                image = firstFrame;
+            }
+            if (percentage != 100) { image.Resize(Math.Max(1, checked((int)((long)image.Width * percentage / 100))), Math.Max(1, checked((int)((long)image.Height * percentage / 100))), cancellationToken: cancellationToken); }
+            cancellationToken.ThrowIfCancellationRequested();
+            if (flipMode != FlipMode.None) { image.Flip(flipMode, cancellationToken); }
+            cancellationToken.ThrowIfCancellationRequested();
+            if (rotate != 0) { image.Rotate(rotate, cancellationToken); }
+            cancellationToken.ThrowIfCancellationRequested();
+            return image;
+        } catch { image.Dispose(); throw; }
+    }
+
+    private OfficePoint GetWatermarkLocation(WatermarkPlacement placement, double width, double height, double padding) => placement switch {
+        WatermarkPlacement.TopLeft => new OfficePoint(padding, padding),
+        WatermarkPlacement.TopRight => new OfficePoint(Width - width - padding, padding),
+        WatermarkPlacement.BottomLeft => new OfficePoint(padding, Height - height - padding),
+        WatermarkPlacement.BottomRight => new OfficePoint(Width - width - padding, Height - height - padding),
+        WatermarkPlacement.Middle => new OfficePoint((Width - width) / 2, (Height - height) / 2),
+        _ => throw new ArgumentOutOfRangeException(nameof(placement))
+    };
 }
