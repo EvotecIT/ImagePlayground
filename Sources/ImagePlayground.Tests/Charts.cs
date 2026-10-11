@@ -70,8 +70,11 @@ public partial class ImagePlayground {
             new global::ImagePlayground.ChartHistogram("Requested width", new[] { 0d, 1d, 3d, 5d, 6d, 9d, 10d }, 3)
         });
 
-        Assert.Equal(new[] { "0-3", "3-6", "6-9", "9-12" }, chart.Options.XAxisLabels.Select(label => label.Text));
-        Assert.Equal(new[] { 2d, 2d, 1d, 2d }, chart.Series[0].Points.Select(point => point.Y));
+        var bins = chart.Series[0].HistogramBins;
+        Assert.Equal(new[] { 0d, 3d, 6d, 9d }, bins.Select(bin => bin.LowerBound));
+        Assert.Equal(new[] { 3d, 6d, 9d, 12d }, bins.Select(bin => bin.UpperBound));
+        Assert.All(bins, bin => Assert.Equal(3d, bin.Width));
+        Assert.Equal(new[] { 2, 2, 1, 2 }, bins.Select(bin => bin.Count));
     }
 
     [Fact]
