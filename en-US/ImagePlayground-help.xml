@@ -12701,6 +12701,7 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TerminalWindowStyle</maml:name>
@@ -13044,6 +13045,7 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TerminalWindowStyle</maml:name>
@@ -13510,6 +13512,7 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TerminalWindowStyle</maml:name>
@@ -13913,6 +13916,7 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TerminalWindowStyle</maml:name>
