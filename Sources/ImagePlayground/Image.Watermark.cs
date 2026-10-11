@@ -5,17 +5,20 @@ public partial class Image {
     /// <summary>Draws a text watermark at explicit pixel coordinates.</summary>
     public void Watermark(string text, float x, float y, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f, CancellationToken cancellationToken = default) => AddText(x, y, text, color, fontSize, fontFamilyName, cancellationToken: cancellationToken);
 
-    /// <summary>Draws a text watermark at a predefined placement.</summary>
+    /// <summary>Draws a text watermark at a predefined placement within each frame's canvas.</summary>
     public void Watermark(string text, WatermarkPlacement placement, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", float padding = 18f, CancellationToken cancellationToken = default) {
-        var size = GetTextSize(text, fontSize, fontFamilyName, cancellationToken);
-        var point = GetWatermarkLocation(placement, size.Width, size.Height, padding);
-        Watermark(text, (float)point.X, (float)point.Y, color, fontSize, fontFamilyName, padding, cancellationToken);
+        var options = new OfficeRasterTextOptions { FontSize = fontSize, FontFamily = fontFamilyName };
+        var size = GetTextSize(text, options, cancellationToken: cancellationToken);
+        AddText(source => {
+            var point = GetWatermarkLocation(placement, source.Width, source.Height, size.Width, size.Height, padding);
+            return new OfficePoint((float)point.X, (float)point.Y);
+        }, text, Math.Max(1, size.Width), Math.Max(1, size.Height), color, options, cancellationToken);
     }
 
-    /// <summary>Draws an image watermark at a predefined placement.</summary>
+    /// <summary>Draws an image watermark at a predefined placement within each frame's canvas.</summary>
     public void WatermarkImage(string filePath, WatermarkPlacement placement, float opacity = 1f, float padding = 18f, int rotate = 0, FlipMode flipMode = FlipMode.None, int watermarkPercentage = 20, CancellationToken cancellationToken = default) {
         using var watermark = PrepareWatermark(filePath, watermarkPercentage, rotate, flipMode, cancellationToken);
-        AddImage(watermark.Raster, GetWatermarkLocation(placement, watermark.Width, watermark.Height, padding), opacity, cancellationToken);
+        AddImage(watermark.Raster, source => GetWatermarkLocation(placement, source.Width, source.Height, watermark.Width, watermark.Height, padding), opacity, cancellationToken);
     }
 
     /// <summary>Draws an image watermark at explicit pixel coordinates.</summary>
@@ -75,12 +78,12 @@ public partial class Image {
         } catch { image.Dispose(); throw; }
     }
 
-    private OfficePoint GetWatermarkLocation(WatermarkPlacement placement, double width, double height, double padding) => placement switch {
+    private static OfficePoint GetWatermarkLocation(WatermarkPlacement placement, double canvasWidth, double canvasHeight, double width, double height, double padding) => placement switch {
         WatermarkPlacement.TopLeft => new OfficePoint(padding, padding),
-        WatermarkPlacement.TopRight => new OfficePoint(Width - width - padding, padding),
-        WatermarkPlacement.BottomLeft => new OfficePoint(padding, Height - height - padding),
-        WatermarkPlacement.BottomRight => new OfficePoint(Width - width - padding, Height - height - padding),
-        WatermarkPlacement.Middle => new OfficePoint((Width - width) / 2, (Height - height) / 2),
+        WatermarkPlacement.TopRight => new OfficePoint(canvasWidth - width - padding, padding),
+        WatermarkPlacement.BottomLeft => new OfficePoint(padding, canvasHeight - height - padding),
+        WatermarkPlacement.BottomRight => new OfficePoint(canvasWidth - width - padding, canvasHeight - height - padding),
+        WatermarkPlacement.Middle => new OfficePoint((canvasWidth - width) / 2, (canvasHeight - height) / 2),
         _ => throw new ArgumentOutOfRangeException(nameof(placement))
     };
 }

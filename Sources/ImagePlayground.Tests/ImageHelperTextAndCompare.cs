@@ -73,23 +73,69 @@ public partial class ImagePlayground {
     }
 
     [Fact]
-    public void Test_AddTextBoxAutoHeightEqualsExplicitHeight() {
+    public void Test_AddTextBoxAutoHeightMatchesMeasuredUnclippedText() {
         string src = Path.Combine(_directoryWithImages, "QRCode1.png");
         string autoDest = Path.Combine(_directoryWithTests, "textbox_autoheight.png");
-        string explicitDest = Path.Combine(_directoryWithTests, "textbox_explicitheight.png");
-        if (File.Exists(autoDest)) File.Delete(autoDest);
-        if (File.Exists(explicitDest)) File.Delete(explicitDest);
+        string expectedDest = Path.Combine(_directoryWithTests, "textbox_measured_unclipped.png");
+        if (File.Exists(autoDest)) { File.Delete(autoDest); }
+        if (File.Exists(expectedDest)) { File.Delete(expectedDest); }
 
         ImageHelper.AddTextBox(src, autoDest, 1, 1, "Wrapped Text", 100, OfficeColor.Red);
 
-        using var img = global::ImagePlayground.Image.Load(src);
-        float height = (float)OfficeRasterText.Measure("Wrapped Text", 16f, "Arial", 100).Height;
+        var options = new OfficeRasterTextOptions {
+            FontSize = 16,
+            FontFamily = "Arial",
+            Wrap = true,
+            Clip = false
+        };
+        var measured = OfficeRasterText.Measure("Wrapped Text", options, 100);
+        using var expected = global::ImagePlayground.Image.Load(src);
+        OfficeRasterText.Draw(expected.Raster, "Wrapped Text", 1, 1, 100, measured.Height, OfficeColor.Red, options);
+        expected.Save(expectedDest);
 
-        ImageHelper.AddTextBox(src, explicitDest, 1, 1, "Wrapped Text", 100, height, OfficeColor.Red);
+        using var actual = global::ImagePlayground.Image.Load(autoDest);
+        Assert.Equal(expected.Raster.GetPixels(), actual.Raster.GetPixels());
+        Assert.True(ImageHelper.Compare(src, autoDest).ChangedPixels > 0);
+    }
 
-        byte[] autoBytes = File.ReadAllBytes(autoDest);
-        byte[] explicitBytes = File.ReadAllBytes(explicitDest);
-        Assert.Equal(explicitBytes, autoBytes);
+    [Fact]
+    public void Test_AddTextBoxExplicitHeightClipsTextAndShadow() {
+        string src = Path.Combine(_directoryWithTests, "textbox_clip_source.png");
+        string dest = Path.Combine(_directoryWithTests, "textbox_clipped.png");
+        using (var source = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(160, 120, OfficeColor.White))) {
+            source.Save(src);
+        }
+        ImageHelper.AddTextBox(src, dest, 20, 20, "Clipped text", 80, 20, OfficeColor.Red,
+            shadowColor: OfficeColor.Black, shadowOffsetY: 30);
+
+        using var actual = global::ImagePlayground.Image.Load(dest);
+        using var unclipped = global::ImagePlayground.Image.Load(src);
+        OfficeRasterText.Draw(unclipped.Raster, "Clipped text", 20, 20, 80, 20, OfficeColor.Red,
+            new OfficeRasterTextOptions {
+                FontSize = 16,
+                FontFamily = "Arial",
+                Wrap = true,
+                Clip = false,
+                ShadowColor = OfficeColor.Black,
+                ShadowOffsetY = 30
+            });
+        unclipped.Save(Path.Combine(_directoryWithTests, "textbox_unclipped_control.png"));
+
+        int paintedInside = 0;
+        int paintedOutside = 0;
+        int unclippedPaintedOutside = 0;
+        for (int y = 0; y < actual.Height; y++) {
+            for (int x = 0; x < actual.Width; x++) {
+                bool inside = x >= 20 && x < 100 && y >= 20 && y < 40;
+                bool painted = actual.Raster.GetPixel(x, y) != OfficeColor.White;
+                if (inside && painted) { paintedInside++; }
+                if (!inside && painted) { paintedOutside++; }
+                if (!inside && unclipped.Raster.GetPixel(x, y) != OfficeColor.White) { unclippedPaintedOutside++; }
+            }
+        }
+        Assert.True(paintedInside > 0);
+        Assert.Equal(0, paintedOutside);
+        Assert.True(unclippedPaintedOutside > 0);
     }
 
     [Fact]

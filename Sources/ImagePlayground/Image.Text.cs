@@ -19,7 +19,11 @@ public partial class Image {
 
     /// <summary>Draws text inside a rectangle with shared font, layout, clipping and effect options.</summary>
     /// <remarks>Every frame is updated atomically; cancellation leaves the original sequence intact.</remarks>
-    public void AddText(double x, double y, string text, double width, double height, OfficeColor color, OfficeRasterTextOptions options, CancellationToken cancellationToken = default) {
+    public void AddText(double x, double y, string text, double width, double height, OfficeColor color, OfficeRasterTextOptions options, CancellationToken cancellationToken = default) =>
+        AddText(_ => new OfficePoint(x, y), text, width, height, color, options, cancellationToken);
+
+    /// <summary>Resolves text placement per canvas using the same layout, atomic updates and aggregate memory budget as explicit drawing.</summary>
+    private void AddText(Func<OfficeRasterImage, OfficePoint> locate, string text, double width, double height, OfficeColor color, OfficeRasterTextOptions options, CancellationToken cancellationToken) {
         EnsureUsable();
         cancellationToken.ThrowIfCancellationRequested();
         if (options == null) { throw new ArgumentNullException(nameof(options)); }
@@ -32,7 +36,8 @@ public partial class Image {
         }
         Apply(source => {
             var result = source.Clone();
-            OfficeRasterText.Draw(result, text, x, y, width, height, color, settings, cancellationToken);
+            var location = locate(source);
+            OfficeRasterText.Draw(result, text, location.X, location.Y, width, height, color, settings, cancellationToken);
             return result;
         }, additionalRetainedBytes: additionalWorkingBytes, cancellationToken: cancellationToken);
     }
