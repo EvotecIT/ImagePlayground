@@ -1,6 +1,5 @@
 using ImagePlayground;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+
 
 namespace ImagePlayground.PowerShell;
 

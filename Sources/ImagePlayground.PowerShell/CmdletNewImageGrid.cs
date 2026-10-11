@@ -26,7 +26,7 @@ public sealed class NewImageGridCmdlet : PSCmdlet {
 
     /// <summary>Background color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color Color { get; set; } = SixLabors.ImageSharp.Color.White;
+    public OfficeIMO.Drawing.OfficeColor Color { get; set; } = OfficeIMO.Drawing.OfficeColor.White;
 
     /// <summary>Open the image after creation.</summary>
     [Parameter]

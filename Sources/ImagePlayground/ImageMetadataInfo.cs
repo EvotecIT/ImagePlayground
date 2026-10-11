@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp.Metadata;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 
 namespace ImagePlayground;
 
@@ -13,17 +11,21 @@ public sealed class ImageMetadataInfo {
     private readonly byte[]? _xmpProfile;
     private readonly byte[]? _iccProfile;
     private readonly byte[]? _iptcProfile;
+    private readonly bool _hasExif;
 
     internal ImageMetadataInfo(
         string filePath,
         double? horizontalResolution,
         double? verticalResolution,
-        PixelResolutionUnit? resolutionUnits,
+        OfficeImageResolutionUnit? resolutionUnits,
         byte[]? exifProfile,
         byte[]? xmpProfile,
         byte[]? iccProfile,
         byte[]? iptcProfile,
-        ImageProvenanceInfo provenance) {
+        ImageProvenanceInfo provenance,
+        IReadOnlyList<OfficeExifValue>? exifValues = null,
+        bool hasExif = false,
+        bool requiresOriginalTiffContainer = false) {
         FilePath = filePath;
         HorizontalResolution = horizontalResolution;
         VerticalResolution = verticalResolution;
@@ -33,10 +35,12 @@ public sealed class ImageMetadataInfo {
         _iccProfile = Clone(iccProfile);
         _iptcProfile = Clone(iptcProfile);
         Provenance = provenance;
+        _hasExif = hasExif || _exifProfile != null;
+        RequiresOriginalTiffContainer = requiresOriginalTiffContainer;
 
-        ExifValues = _exifProfile is null
-            ? new List<IExifValue>().AsReadOnly()
-            : new List<IExifValue>(new ExifProfile(_exifProfile).Values).AsReadOnly();
+        ExifValues = exifValues != null ? new List<OfficeExifValue>(exifValues).AsReadOnly() : _exifProfile is null
+            ? new List<OfficeExifValue>().AsReadOnly()
+            : new List<OfficeExifValue>(OfficeImageMetadata.ParseExifProfile(_exifProfile).ExifValues).AsReadOnly();
     }
 
     /// <summary>Resolved path to the inspected image.</summary>
@@ -49,10 +53,10 @@ public sealed class ImageMetadataInfo {
     public double? VerticalResolution { get; }
 
     /// <summary>Resolution measurement unit, or <c>null</c> when the format reader does not expose it.</summary>
-    public PixelResolutionUnit? ResolutionUnits { get; }
+    public OfficeImageResolutionUnit? ResolutionUnits { get; }
 
     /// <summary>Decoded EXIF values.</summary>
-    public IReadOnlyList<IExifValue> ExifValues { get; }
+    public IReadOnlyList<OfficeExifValue> ExifValues { get; }
 
     /// <summary>Raw serialized EXIF profile, or <c>null</c> when absent.</summary>
     public byte[]? ExifProfile => Clone(_exifProfile);
@@ -73,7 +77,11 @@ public sealed class ImageMetadataInfo {
     public ImageProvenanceInfo Provenance { get; }
 
     /// <summary>Whether the image contains an EXIF profile.</summary>
-    public bool HasExif => _exifProfile is not null;
+    public bool HasExif => _hasExif;
+
+    /// <summary>True when TIFF-relative metadata can only be safely edited in the original container.</summary>
+    /// <remarks>Typed EXIF values remain readable. ExifProfile is unavailable because exporting it would relocate opaque offsets.</remarks>
+    public bool RequiresOriginalTiffContainer { get; }
 
     /// <summary>Whether the image contains an XMP profile.</summary>
     public bool HasXmp => _xmpProfile is not null;

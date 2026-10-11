@@ -115,7 +115,7 @@ Describe 'New-ImageChart' {
         New-ImageChart -ChartsDefinition {
             New-ImageChartBar -Name 'Jan' -Value @(1,2)
             New-ImageChartBar -Name 'Feb' -Value @(3,4)
-        } -FilePath $file -Width 200 -Height 150 -Background ([SixLabors.ImageSharp.Color]::Aqua)
+        } -FilePath $file -Width 200 -Height 150 -Background ([OfficeIMO.Drawing.OfficeColor]::Aqua)
 
         Test-Path -Path $file | Should -BeTrue
     }
@@ -191,21 +191,28 @@ Describe 'New-ImageChart' {
         Test-Path -Path $file | Should -BeFalse
     }
 
-    It 'preserves the requested histogram bin size in rendered labels' {
+    It 'preserves the requested histogram bin boundaries and observation counts' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_histogram_bin_size.svg'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
         }
 
-        New-ImageChart -ChartsDefinition {
+        $chart = New-ImageChart -ChartsDefinition {
             New-ImageChartHistogram -Name 'Requested width' -Values 0, 1, 3, 5, 6, 9, 10 -BinSize 3
-        } -FilePath $file -Width 500 -Height 320
+        } -FilePath $file -Width 500 -Height 320 -PassThru
 
-        $svg = Get-Content -Path $file -Raw
-        $svg | Should -Match '>0-3</text>'
-        $svg | Should -Match '>3-6</text>'
-        $svg | Should -Match '>6-9</text>'
-        $svg | Should -Match '>9-10</text>'
+        $bins = @($chart.Series[0].HistogramBins)
+        $bins.Count | Should -Be 4
+        for ($index = 0; $index -lt $bins.Count; $index++) {
+            $bins[$index].LowerBound | Should -Be (3 * $index)
+            $bins[$index].UpperBound | Should -Be (3 * ($index + 1))
+            $bins[$index].Width | Should -Be 3
+        }
+        $bins[0].Count | Should -Be 2
+        $bins[1].Count | Should -Be 2
+        $bins[2].Count | Should -Be 1
+        $bins[3].Count | Should -Be 2
+        Test-Path -LiteralPath $file | Should -BeTrue
     }
 
     It 'rejects point callouts for exclusive polar charts before rendering' {
@@ -347,7 +354,7 @@ Describe 'New-ImageChart' {
         $second = [ImagePlayground.Image]::Load($pipeFile)
         $comparison = $first.Compare($second)
 
-        $comparison.PixelErrorCount | Should -Be 0
+        $comparison.ChangedPixels | Should -Be 0
 
         $first.Dispose()
         $second.Dispose()

@@ -11,7 +11,7 @@ Creates a barcode image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageBarCode [-Type] <BarcodeType> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
+New-ImageBarCode [-Type] <SymbolFormat> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,13 +44,13 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-Barcode type.
+QR formats use New-ImageQRCode. MaxiCode requires specialized rendering, and GS1 Composite requires separate payloads; neither is supported by this single-value command.
 
 ```yaml
-Type: BarcodeType
+Type: SymbolFormat
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Code128, GS1_128, Code39, Code93, EAN, UPCA, UPCE, ITF14, ITF, Industrial2of5, Matrix2of5, IATA2of5, PatchCode, Codabar, MSI, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, GS1DataBarTruncated, GS1DataBarOmni, GS1DataBarStacked, GS1DataBarExpanded, GS1DataBarExpandedStacked, UspsImb, KixCode, DataMatrix, PDF417, MicroPDF417, GS1DataBarLimited, GS1DataBarStackedOmni, MaxiCode, DotCode, HanXin, GS1Composite
+Possible values: QrCode, MicroQrCode, Aztec, Code128, Gs1Code128, Code39, Code93, Ean, UpcA, UpcE, Itf14, Itf, Industrial2Of5, Matrix2Of5, Iata2Of5, PatchCode, Codabar, Msi, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, Gs1DataBarTruncated, Gs1DataBarOmnidirectional, Gs1DataBarStacked, Gs1DataBarExpanded, Gs1DataBarExpandedStacked, UspsIntelligentMail, KixCode, DataMatrix, Pdf417, MicroPdf417, RmQrCode, Gs1DataBarLimited, Gs1DataBarStackedOmnidirectional, MaxiCode, DotCode, HanXin, Gs1Composite
 
 Required: True
 Position: 0

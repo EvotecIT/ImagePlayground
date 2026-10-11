@@ -1,16 +1,16 @@
 using ImagePlayground;
 using System.IO;
 using System.Management.Automation;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
+using OfficeIMO.Drawing;
 
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Sets an EXIF tag value in an image.</summary>
-/// <para>The value must match the type declared by the selected EXIF tag, including ImageSharp wrapper types such as Number or Rational.</para>
+/// <para>The shared metadata API validates the selected tag and its value. Use OfficeRational values for unsigned EXIF fractions.</para>
 /// <example>
 ///   <summary>Update DateTimeOriginal tag</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-ImageExif -FilePath img.jpg -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal) -Value (Get-Date)</code>
+///   <code>Set-ImageExif -FilePath img.jpg -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal) -Value (Get-Date -Format 'yyyy:MM:dd HH:mm:ss')</code>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "ImageExif")]
 public sealed class SetImageExifCmdlet : ImageCmdlet {
@@ -25,7 +25,7 @@ public sealed class SetImageExifCmdlet : ImageCmdlet {
 
     /// <summary>Tag to set.</summary>
     [Parameter(Mandatory = true, Position = 2)]
-    public ExifTag ExifTag { get; set; } = null!;
+    public OfficeExifTag ExifTag { get; set; }
 
     /// <summary>Value for the tag.</summary>
     [Parameter(Mandatory = true, Position = 3)]
@@ -38,13 +38,6 @@ public sealed class SetImageExifCmdlet : ImageCmdlet {
         var value = Value;
         if (value is null) {
             throw new ArgumentNullException(nameof(Value));
-        }
-
-        Type expectedType = ExifTag.GetType().GenericTypeArguments[0];
-        if (!expectedType.IsInstanceOfType(value)) {
-            throw new ArgumentException(
-                $"Value type '{value.GetType()}' does not match tag type '{expectedType}'.",
-                nameof(Value));
         }
 
         var output = string.IsNullOrWhiteSpace(FilePathOutput) ? filePath : PowerShellPathResolver.ResolveFileSystemPath(this, FilePathOutput!);

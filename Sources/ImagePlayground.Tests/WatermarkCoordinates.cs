@@ -1,4 +1,7 @@
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.IO;
 using Xunit;
@@ -21,7 +24,7 @@ public partial class ImagePlayground {
 
         using var orig = Image.Load(src);
         using var result = Image.Load(dest);
-        Assert.True(orig.Compare(result).PixelErrorCount > 0);
+        Assert.True(orig.Compare(result).ChangedPixels > 0);
     }
 
     [Theory]

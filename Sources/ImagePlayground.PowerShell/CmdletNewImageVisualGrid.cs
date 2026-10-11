@@ -13,13 +13,14 @@ namespace ImagePlayground.PowerShell;
 
 /// <summary>Creates a reusable dashboard grid from charts and visual blocks.</summary>
 /// <para>Render the grid directly, pass it to <c>New-ImageVisualStory</c>, or compose it inside a ChartForgeX visual canvas.</para>
+/// <para>With Motion, the output is a detached VisualMotionPresentation accepted by New-ImageVisualStory. Static grids remain VisualGrid objects.</para>
 /// <example>
 ///   <summary>Create a status dashboard</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { New-ImageMetricCard -Label 'Requests' -Value 12840 -Status Positive; New-ImageListBlock -Title 'Checks' -Item API,Database -Status Positive,Warning } -FilePath dashboard.svg</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageVisualGrid", DefaultParameterSetName = DefinitionSet)]
-[OutputType(typeof(VisualGrid))]
+[OutputType(typeof(VisualGrid), typeof(VisualMotionPresentation))]
 public sealed class NewImageVisualGridCmdlet : PSCmdlet {
     private const string DefinitionSet = "Definition";
     private const string ContentSet = "Content";
@@ -86,7 +87,7 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
     [Parameter]
     public VisualMotionTimeline? Motion { get; set; }
 
-    /// <summary>Optional output path. Omit it to return the grid without rendering.</summary>
+    /// <summary>Optional output path. Omit it to return the grid or detached motion presentation.</summary>
     [Parameter]
     public string FilePath { get; set; } = string.Empty;
 
@@ -94,7 +95,7 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Show { get; set; }
 
-    /// <summary>Return the grid when an output file is also written.</summary>
+    /// <summary>Return the grid or detached motion presentation when an output file is also written.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
@@ -133,15 +134,18 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualGridIncompletePanelSize", ErrorCategory.InvalidArgument, null));
         }
         if (MyInvocation.BoundParameters.ContainsKey(nameof(PanelWidth))) grid.WithPanelSize(PanelWidth, PanelHeight);
-        if (Motion != null) grid.WithMotion(Motion);
         foreach (var item in _content) AddToGrid(grid, item);
+        var presentation = Motion == null ? null : VisualMotionPresentation.Create(grid, Motion);
         if (output != null) {
             var directory = Path.GetDirectoryName(output);
             if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
-            grid.Save(output);
+            if (presentation == null) grid.Save(output);
+            else if (Path.GetExtension(output).Equals(".svg", StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, presentation.ToSvg());
+            else if (Path.GetExtension(output).Equals(".html", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(output).Equals(".htm", StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, presentation.ToHtmlPage());
+            else grid.Save(output);
             if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         }
-        if (output == null || PassThru.IsPresent) WriteObject(grid);
+        if (output == null || PassThru.IsPresent) WriteObject(presentation == null ? (object)grid : presentation);
     }
 
     private void ValidateExtension(string extension, string output) {
@@ -179,10 +183,10 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
         else if (item is IVisualBlock block) grid.Add(block);
         else if (item is VisualGridItem placement) {
             if (placement.Chart != null) {
-                if (string.IsNullOrWhiteSpace(placement.MotionTargetId)) grid.Add(placement.Chart, placement.ColumnSpan, placement.RowSpan);
-                else grid.Add(placement.MotionTargetId!, placement.Chart, placement.ColumnSpan, placement.RowSpan);
-            } else if (string.IsNullOrWhiteSpace(placement.MotionTargetId)) grid.Add(placement.Block!, placement.ColumnSpan, placement.RowSpan);
-            else grid.Add(placement.MotionTargetId!, placement.Block!, placement.ColumnSpan, placement.RowSpan);
+                if (string.IsNullOrWhiteSpace(placement.TargetId)) grid.Add(placement.Chart, placement.ColumnSpan, placement.RowSpan);
+                else grid.Add(placement.TargetId!, placement.Chart, placement.ColumnSpan, placement.RowSpan);
+            } else if (string.IsNullOrWhiteSpace(placement.TargetId)) grid.Add(placement.Block!, placement.ColumnSpan, placement.RowSpan);
+            else grid.Add(placement.TargetId!, placement.Block!, placement.ColumnSpan, placement.RowSpan);
         }
     }
 }

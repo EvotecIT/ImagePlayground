@@ -1,4 +1,7 @@
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System.IO;
 using Xunit;
 
@@ -43,7 +46,7 @@ public partial class ImagePlayground {
         Assert.Equal(0, ms.Position);
         Assert.True(ms.Length > 0);
         ms.Position = 0;
-        using var avatar = SixLabors.ImageSharp.Image.Load(ms);
+        using var avatar = global::ImagePlayground.Image.Load(ms.ToArray());
         Assert.Equal(32, avatar.Width);
         Assert.Equal(32, avatar.Height);
     }

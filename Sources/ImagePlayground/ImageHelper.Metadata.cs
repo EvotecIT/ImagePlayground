@@ -1,384 +1,90 @@
-using System.IO;
 using System.Text.Json;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
-using SixLabors.ImageSharp.Metadata.Profiles.Icc;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
-using SixLabors.ImageSharp.Metadata.Profiles.Xmp;
+using System.Text.Json.Serialization;
 
 namespace ImagePlayground;
-/// <summary>
-/// Provides helper methods for image manipulation.
-/// </summary>
+
+/// <summary>Metadata inspection and import/export over the shared profile model.</summary>
 public partial class ImageHelper {
-    private const string HeifExifReadNotSupportedMessage = "The HEIF/HEIC file declares an EXIF item, but the EXIF payload could not be read.";
-    private const string HeifExifWriteNotSupportedMessage = "Updating HEIF/HEIC EXIF requires an existing EXIF item with a single writable file extent. Creating a brand-new HEIF EXIF item is not supported yet.";
-    private const string HeifXmpReadNotSupportedMessage = "The HEIF/HEIC file declares an XMP item, but the XMP payload could not be read.";
-    private const string HeifXmpWriteNotSupportedMessage = "Updating HEIF/HEIC XMP requires an existing XMP item with a single writable file extent. Creating a brand-new HEIF XMP item is not supported yet.";
+    private static readonly JsonSerializerOptions MetadataJsonOptions = CreateMetadataJsonOptions();
 
-    /// <summary>
-    /// Serialization model for image metadata.
-    /// </summary>
+    private static JsonSerializerOptions CreateMetadataJsonOptions() {
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new JsonStringEnumConverter());
+        return options;
+    }
     private sealed class SerializedImageMetadata {
-        /// <summary>Horizontal resolution.</summary>
         public double HorizontalResolution { get; set; }
-
-        /// <summary>Vertical resolution.</summary>
         public double VerticalResolution { get; set; }
-
-        /// <summary>Resolution measurement units.</summary>
-        public PixelResolutionUnit ResolutionUnits { get; set; }
-
-        /// <summary>Serialized Exif profile.</summary>
+        public OfficeImageResolutionUnit ResolutionUnits { get; set; }
         public byte[]? ExifProfile { get; set; }
-
-        /// <summary>Serialized XMP profile.</summary>
         public byte[]? XmpProfile { get; set; }
-
-        /// <summary>Serialized ICC profile.</summary>
         public byte[]? IccProfile { get; set; }
-
-        /// <summary>Serialized IPTC profile.</summary>
         public byte[]? IptcProfile { get; set; }
     }
-
-    /// <summary>Options for importing metadata.</summary>
+    /// <summary>Paths used by a metadata import operation.</summary>
     public sealed class ImportMetadataOptions {
+        /// <summary>Creates an import operation, overwriting the input when no output is supplied.</summary>
+        public ImportMetadataOptions(string filePath,string metadataPath,string? outputPath=null) { FilePath=filePath; MetadataPath=metadataPath; OutputPath=outputPath; }
         /// <summary>Source image path.</summary>
         public string FilePath { get; }
-
-        /// <summary>JSON metadata file.</summary>
+        /// <summary>Metadata JSON path.</summary>
         public string MetadataPath { get; }
-
-        /// <summary>Destination image path.</summary>
+        /// <summary>Optional destination image path.</summary>
         public string? OutputPath { get; }
-
-        /// <summary>Create import options.</summary>
-        /// <param name="filePath">Path to the source image.</param>
-        /// <param name="metadataPath">Path to the metadata file.</param>
-        /// <param name="outputPath">Destination image path.</param>
-        public ImportMetadataOptions(string filePath, string metadataPath, string? outputPath = null) {
-            FilePath = filePath;
-            MetadataPath = metadataPath;
-            OutputPath = outputPath;
-        }
     }
-
-    /// <summary>
-    /// Reads supported metadata profiles and provenance indicators from an image.
-    /// </summary>
-    /// <param name="filePath">Path to the image to inspect.</param>
-    /// <returns>A metadata snapshot containing supported profiles and provenance indicators.</returns>
+    /// <summary>Inspects raw metadata profiles and provenance without decoding raster pixels.</summary>
     public static ImageMetadataInfo InspectMetadata(string filePath) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        byte[]? exifProfile;
-        byte[]? xmpProfile;
-        byte[]? iccProfile = null;
-        byte[]? iptcProfile = null;
-        double? horizontalResolution = null;
-        double? verticalResolution = null;
-        PixelResolutionUnit? resolutionUnits = null;
-
-        if (Helpers.IsHeifExtension(fullPath)) {
-            if (HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
-                exifProfile = heifProfile?.ToByteArray();
-            } else if (HeifMetadataReader.HasExifItem(fullPath)) {
-                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
-            } else {
-                exifProfile = null;
-            }
-
-            if (HeifMetadataReader.TryReadXmp(fullPath, out string? heifXmp)) {
-                xmpProfile = heifXmp is null ? null : Encoding.UTF8.GetBytes(heifXmp);
-            } else if (HeifMetadataReader.HasXmpItem(fullPath)) {
-                throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
-            } else {
-                xmpProfile = null;
-            }
-        } else {
-            IImageInfo? imageInfo = SixLabors.ImageSharp.Image.Identify(fullPath);
-            if (imageInfo is null) {
-                throw new InvalidDataException($"Unable to identify image metadata: {fullPath}");
-            }
-
-            ImageMetadata metadata = imageInfo.Metadata;
-            horizontalResolution = metadata.HorizontalResolution;
-            verticalResolution = metadata.VerticalResolution;
-            resolutionUnits = metadata.ResolutionUnits;
-            exifProfile = metadata.ExifProfile?.ToByteArray();
-            xmpProfile = metadata.XmpProfile?.ToByteArray();
-            iccProfile = metadata.IccProfile?.ToByteArray();
-            iptcProfile = metadata.IptcProfile?.Data;
-        }
-
-        ImageProvenanceInfo provenance = InspectProvenanceCore(fullPath, xmpProfile);
-        return new ImageMetadataInfo(
-            fullPath,
-            horizontalResolution,
-            verticalResolution,
-            resolutionUnits,
-            exifProfile,
-            xmpProfile,
-            iccProfile,
-            iptcProfile,
-            provenance);
+        string fullPath=Helpers.ResolvePath(filePath); OfficeImageMetadata metadata=Image.ReadMetadataFile(fullPath);
+        bool hasContainerResolution = !Helpers.IsHeifExtension(fullPath);
+        return new ImageMetadataInfo(fullPath,hasContainerResolution ? metadata.HorizontalResolution : (double?)null,hasContainerResolution ? metadata.VerticalResolution : (double?)null,hasContainerResolution ? metadata.ResolutionUnits : (OfficeImageResolutionUnit?)null,metadata.RequiresOriginalTiffContainer ? null : metadata.ExifProfile,metadata.XmpProfile,metadata.IccProfile,metadata.IptcProfile,InspectProvenanceCore(fullPath,metadata.XmpProfile),metadata.ExifValues,metadata.HasExifProfile,metadata.RequiresOriginalTiffContainer);
     }
-
-    /// <summary>
-    /// Exports metadata from an image to a JSON string.
-    /// </summary>
-    /// <param name="filePath">Path to the source image.</param>
-    /// <returns>Serialized metadata.</returns>
+    /// <summary>Exports metadata to JSON with base64-encoded binary profiles.</summary>
     public static string ExportMetadata(string filePath) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        if (Helpers.IsHeifExtension(fullPath)) {
-            byte[]? exifProfile = null;
-            if (HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
-                exifProfile = heifProfile?.ToByteArray();
-            } else if (HeifMetadataReader.HasExifItem(fullPath)) {
-                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
-            }
-
-            byte[]? xmpProfile = null;
-            if (HeifMetadataReader.TryReadXmp(fullPath, out string? heifXmp) && heifXmp is not null) {
-                xmpProfile = Encoding.UTF8.GetBytes(heifXmp);
-            } else if (HeifMetadataReader.HasXmpItem(fullPath)) {
-                throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
-            }
-
-            var heifData = new SerializedImageMetadata {
-                ExifProfile = exifProfile,
-                XmpProfile = xmpProfile
-            };
-            return JsonSerializer.Serialize(heifData, new JsonSerializerOptions { WriteIndented = true });
-        }
-
-        using var img = Image.Load(fullPath);
-        var meta = img.Metadata;
-        var data = new SerializedImageMetadata {
-            HorizontalResolution = meta.HorizontalResolution,
-            VerticalResolution = meta.VerticalResolution,
-            ResolutionUnits = meta.ResolutionUnits,
-            ExifProfile = meta.ExifProfile?.ToByteArray(),
-            XmpProfile = meta.XmpProfile?.ToByteArray(),
-            IccProfile = meta.IccProfile?.ToByteArray(),
-            IptcProfile = meta.IptcProfile?.Data
-        };
-        return JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+        var metadata=Image.ReadMetadataFile(Helpers.ResolvePath(filePath));
+        return JsonSerializer.Serialize(new SerializedImageMetadata { HorizontalResolution=metadata.HorizontalResolution,VerticalResolution=metadata.VerticalResolution,ResolutionUnits=metadata.ResolutionUnits,ExifProfile=metadata.ExifProfile,XmpProfile=metadata.XmpProfile,IccProfile=metadata.IccProfile,IptcProfile=metadata.IptcProfile }, MetadataJsonOptions);
     }
-
-    /// <summary>
-    /// Exports metadata from an image and writes it to a file.
-    /// </summary>
-    /// <param name="filePath">Path to the source image.</param>
-    /// <param name="outFilePath">Destination file for metadata.</param>
-    public static void ExportMetadata(string filePath, string outFilePath) {
-        string json = ExportMetadata(filePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-        File.WriteAllText(outFullPath, json);
-    }
-
-    /// <summary>
-    /// Imports metadata using the specified <see cref="ImportMetadataOptions"/>.
-    /// </summary>
-    /// <param name="options">Import options.</param>
+    /// <summary>Writes exported metadata JSON to a file.</summary>
+    public static void ExportMetadata(string filePath,string outFilePath) { string output=Helpers.ResolvePath(outFilePath);Helpers.CreateParentDirectory(output);File.WriteAllText(output,ExportMetadata(filePath)); }
+    /// <summary>Imports metadata and preserves encoded image data where the format supports profile editing.</summary>
     public static void ImportMetadata(ImportMetadataOptions options) {
-        if (options is null) {
-            throw new ArgumentNullException(nameof(options));
-        }
-
-        string output = string.IsNullOrWhiteSpace(options.OutputPath)
-            ? options.FilePath
-            : options.OutputPath!;
-
-        ImportMetadata(options.FilePath, options.MetadataPath, output);
+        if(options==null) throw new ArgumentNullException(nameof(options));
+        ImportMetadata(options.FilePath,options.MetadataPath,options.OutputPath??options.FilePath);
     }
-
-    /// <summary>
-    /// Imports metadata from a JSON file and saves the updated image.
-    /// </summary>
-    /// <param name="filePath">Source image path.</param>
-    /// <param name="metadataFilePath">Path to JSON metadata file.</param>
-    /// <param name="outFilePath">Destination image path.</param>
-    public static void ImportMetadata(string filePath, string metadataFilePath, string outFilePath) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string metaFullPath = Helpers.ResolvePath(metadataFilePath);
-        string outFullPath = Helpers.ResolvePath(outFilePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
-
-        string json = File.ReadAllText(metaFullPath);
-        SerializedImageMetadata? data;
-
+    /// <summary>Imports profile JSON into an existing encoded image.</summary>
+    public static void ImportMetadata(string filePath,string metadataFilePath,string outFilePath) {
+        using var metadataStream = new MemoryStream(Helpers.ReadEncodedFile(Helpers.ResolvePath(metadataFilePath)), writable: false);
+        using var metadataReader = new StreamReader(metadataStream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+        string json = metadataReader.ReadToEnd();
+        SerializedImageMetadata data;
         try {
-            using JsonDocument doc = JsonDocument.Parse(json);
-            JsonElement root = doc.RootElement;
-            if (root.ValueKind != JsonValueKind.Object ||
-                !root.TryGetProperty(nameof(SerializedImageMetadata.HorizontalResolution), out JsonElement hRes) || hRes.ValueKind != JsonValueKind.Number ||
-                !root.TryGetProperty(nameof(SerializedImageMetadata.VerticalResolution), out JsonElement vRes) || vRes.ValueKind != JsonValueKind.Number ||
-                !root.TryGetProperty(nameof(SerializedImageMetadata.ResolutionUnits), out JsonElement unit)) {
-                throw new InvalidDataException("Metadata file is invalid");
+            using(var document=JsonDocument.Parse(json)) {
+            var root=document.RootElement;
+            if(root.ValueKind!=JsonValueKind.Object || !root.TryGetProperty(nameof(SerializedImageMetadata.HorizontalResolution),out var horizontal) || horizontal.ValueKind!=JsonValueKind.Number || !root.TryGetProperty(nameof(SerializedImageMetadata.VerticalResolution),out var vertical) || vertical.ValueKind!=JsonValueKind.Number || !root.TryGetProperty(nameof(SerializedImageMetadata.ResolutionUnits),out _)) throw new InvalidDataException("Metadata JSON must include numeric resolution values and resolution units.");
             }
-
-            if (unit.ValueKind == JsonValueKind.Number) {
-                int intVal = unit.GetInt32();
-                object val = Enum.ToObject(typeof(PixelResolutionUnit), intVal);
-                if (!Enum.IsDefined(typeof(PixelResolutionUnit), val)) {
-                    throw new InvalidDataException("Metadata file is invalid");
-                }
-            } else if (unit.ValueKind == JsonValueKind.String) {
-                string? text = unit.GetString();
-                if (!Enum.TryParse(text, true, out PixelResolutionUnit _)) {
-                    throw new InvalidDataException("Metadata file is invalid");
-                }
-            } else {
-                throw new InvalidDataException("Metadata file is invalid");
-            }
-        } catch (JsonException ex) {
-            throw new InvalidDataException("Metadata file is invalid", ex);
-        }
-
-        data = JsonSerializer.Deserialize<SerializedImageMetadata>(json);
-        if (data is null) {
-            throw new InvalidDataException("Metadata file is invalid");
-        }
-
-        if (Helpers.IsHeifExtension(fullPath)) {
-            ImportHeifMetadata(fullPath, outFullPath, data);
-            return;
-        }
-
-        using var img = Image.Load(fullPath);
-        img.Metadata.HorizontalResolution = data.HorizontalResolution;
-        img.Metadata.VerticalResolution = data.VerticalResolution;
-        img.Metadata.ResolutionUnits = data.ResolutionUnits;
-        img.Metadata.ExifProfile = data.ExifProfile != null ? new ExifProfile(data.ExifProfile) : null;
-        img.Metadata.XmpProfile = data.XmpProfile != null ? new XmpProfile(data.XmpProfile) : null;
-        img.Metadata.IccProfile = data.IccProfile != null ? new IccProfile(data.IccProfile) : null;
-        img.Metadata.IptcProfile = data.IptcProfile != null ? new IptcProfile(data.IptcProfile) : null;
-        img.Save(outFullPath);
+            data=JsonSerializer.Deserialize<SerializedImageMetadata>(json, MetadataJsonOptions)??throw new InvalidDataException("Metadata JSON cannot be null.");
+        } catch (JsonException exception) { throw new InvalidDataException("Metadata JSON cannot be parsed.", exception); }
+        if(!Enum.IsDefined(typeof(OfficeImageResolutionUnit),data.ResolutionUnits)) throw new InvalidDataException("The metadata resolution unit is unknown.");
+        var resolution = new OfficeImageResolution(data.HorizontalResolution, data.VerticalResolution, data.ResolutionUnits);
+        var metadata = new OfficeImageMetadata { ExifProfile=data.ExifProfile,XmpProfile=data.XmpProfile,IccProfile=data.IccProfile,IptcProfile=data.IptcProfile };
+        // Profile parsing restores its stored density; the editable JSON resolution fields take precedence.
+        metadata.Resolution = resolution;
+        Image.WriteMetadataFile(Helpers.ResolvePath(filePath),outFilePath,metadata);
     }
-
-    /// <summary>
-    /// Removes all supported metadata from an image and saves it to the specified path.
-    /// </summary>
-    /// <param name="filePath">Source image path.</param>
-    /// <param name="outFilePath">Destination image path.</param>
-    public static void RemoveMetadata(string filePath, string outFilePath) =>
-        RemoveMetadata(new ImageMetadataRemovalOptions(filePath, outFilePath));
-
-    private static void ImportHeifMetadata(string fullPath, string outFullPath, SerializedImageMetadata data) {
-        string currentPath = fullPath;
-        bool wroteMetadata = false;
-        var temporaryFiles = new List<string>();
-
-        try {
-            if (data.ExifProfile is not null || HeifMetadataReader.HasExifItem(currentPath)) {
-                ExifProfile? heifProfile = data.ExifProfile != null
-                    ? new ExifProfile(data.ExifProfile)
-                    : null;
-                string temporaryPath = GetTemporaryHeifPath(outFullPath);
-                temporaryFiles.Add(temporaryPath);
-                if (!HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, heifProfile)) {
-                    throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
-                }
-
-                currentPath = temporaryPath;
-                wroteMetadata = true;
-            }
-
-            if (data.XmpProfile is not null || HeifMetadataReader.HasXmpItem(currentPath)) {
-                string? xmp = data.XmpProfile != null
-                    ? Encoding.UTF8.GetString(data.XmpProfile)
-                    : null;
-                string temporaryPath = GetTemporaryHeifPath(outFullPath);
-                temporaryFiles.Add(temporaryPath);
-                if (!HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, xmp)) {
-                    throw new NotSupportedException(HeifXmpWriteNotSupportedMessage);
-                }
-
-                currentPath = temporaryPath;
-                wroteMetadata = true;
-            }
-
-            if (wroteMetadata) {
-                File.Copy(currentPath, outFullPath, true);
-            } else {
-                CopyIfDifferent(fullPath, outFullPath);
-            }
-        } finally {
-            DeleteTemporaryFiles(temporaryFiles);
-        }
-    }
-
-    private static ImageMetadataType RemoveHeifMetadata(
-        string fullPath,
-        string outFullPath,
-        ImageMetadataType requested) {
-        ImageMetadataType unsupported = requested & ~(ImageMetadataType.Exif | ImageMetadataType.Xmp);
-        if (unsupported != ImageMetadataType.None && requested != ImageMetadataType.All) {
-            throw new NotSupportedException($"HEIF and HEIC metadata removal currently supports EXIF and XMP, not {unsupported}.");
-        }
-
-        string currentPath = fullPath;
-        bool wroteMetadata = false;
+    /// <summary>Removes all supported metadata profiles.</summary>
+    public static void RemoveMetadata(string filePath,string outFilePath) => RemoveMetadata(new ImageMetadataRemovalOptions(filePath,outFilePath));
+    private static ImageMetadataType RemoveHeifMetadata(string filePath,string outputPath,ImageMetadataType requested) {
+        if((requested&~(ImageMetadataType.Exif|ImageMetadataType.Xmp))!=0 && requested!=ImageMetadataType.All) throw new NotSupportedException("HEIF metadata removal supports EXIF and XMP profiles.");
         ImageMetadataType removed = ImageMetadataType.None;
-        var temporaryFiles = new List<string>();
-
-        try {
-            if ((requested & ImageMetadataType.Exif) != 0 && HeifMetadataReader.HasExifItem(currentPath)) {
-                string temporaryPath = GetTemporaryHeifPath(outFullPath);
-                temporaryFiles.Add(temporaryPath);
-                if (!HeifMetadataReader.TryWriteExifProfile(currentPath, temporaryPath, null)) {
-                    throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
-                }
-
-                currentPath = temporaryPath;
-                wroteMetadata = true;
-                removed |= ImageMetadataType.Exif;
-            }
-
-            if ((requested & ImageMetadataType.Xmp) != 0 && HeifMetadataReader.HasXmpItem(currentPath)) {
-                string temporaryPath = GetTemporaryHeifPath(outFullPath);
-                temporaryFiles.Add(temporaryPath);
-                if (!HeifMetadataReader.TryWriteXmp(currentPath, temporaryPath, null)) {
-                    throw new NotSupportedException(HeifXmpWriteNotSupportedMessage);
-                }
-
-                currentPath = temporaryPath;
-                wroteMetadata = true;
-                removed |= ImageMetadataType.Xmp;
-            }
-
-            if (wroteMetadata) {
-                File.Copy(currentPath, outFullPath, true);
-            } else {
-                CopyIfDifferent(fullPath, outFullPath);
-            }
-        } finally {
-            DeleteTemporaryFiles(temporaryFiles);
+        OfficeImageMetadataProfileKinds profiles = OfficeImageMetadataProfileKinds.None;
+        if ((requested & ImageMetadataType.Exif) != 0 && OfficeHeifMetadataReader.HasExifItem(filePath)) {
+            profiles |= OfficeImageMetadataProfileKinds.Exif;
+            removed |= ImageMetadataType.Exif;
         }
-
+        if ((requested & ImageMetadataType.Xmp) != 0 && OfficeHeifMetadataReader.HasXmpItem(filePath)) {
+            profiles |= OfficeImageMetadataProfileKinds.Xmp;
+            removed |= ImageMetadataType.Xmp;
+        }
+        Image.WriteMetadataFile(filePath, outputPath, new OfficeImageMetadata(), profiles);
         return removed;
-    }
-
-    private static string GetTemporaryHeifPath(string outFullPath) =>
-        Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(outFullPath)}");
-
-    private static void DeleteTemporaryFiles(List<string> temporaryFiles) {
-        foreach (string temporaryFile in temporaryFiles) {
-            if (File.Exists(temporaryFile)) {
-                File.Delete(temporaryFile);
-            }
-        }
-    }
-
-    private static void CopyIfDifferent(string fullPath, string outFullPath) {
-        if (fullPath.Equals(outFullPath, StringComparison.OrdinalIgnoreCase)) {
-            return;
-        }
-
-        File.Copy(fullPath, outFullPath, true);
     }
 }

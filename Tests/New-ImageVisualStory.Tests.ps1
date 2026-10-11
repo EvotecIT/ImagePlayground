@@ -25,8 +25,9 @@ Describe 'New-ImageVisualStory' {
             New-ImageVisualMotionCue -TargetId projects -Effect Rise -DelaySeconds 0.35 -DistancePixels 10
         } -FilePath $file -PassThru
 
-        $story | Should -BeOfType 'ChartForgeX.VisualBlocks.VisualGrid'
-        $story.Motion.Cues.Count | Should -Be 3
+        $story | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
+        $story.ToSvg() | Should -Match 'data-cfx-motion-target="title"'
+        $story.ToSvg() | Should -Match 'data-cfx-motion-target="subtitle"'
         Test-Path -Path $file | Should -BeTrue
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-motion="timeline"'
@@ -46,7 +47,7 @@ Describe 'New-ImageVisualStory' {
         $motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('metric')
         $story = $grid | New-ImageVisualStory -Motion $motion -FilePath $file -PassThru
 
-        $story | Should -BeOfType 'ChartForgeX.VisualBlocks.VisualGrid'
+        $story | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
         Test-Path -Path $file | Should -BeTrue
         $bytes = [System.IO.File]::ReadAllBytes($file)
         $bytes[0] | Should -Be 137

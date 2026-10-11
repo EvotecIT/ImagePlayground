@@ -1,66 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
 namespace ImagePlayground;
-/// <summary>
-/// Provides image manipulation operations.
-/// </summary>
+
+/// <summary>Icon export using the shared managed ICO writer.</summary>
 public partial class Image {
-    /// <summary>
-    /// Saves the image in ICO format using multiple resolutions.
-    /// </summary>
-    /// <param name="filePath">Destination ICO file path.</param>
-    /// <param name="sizes">Optional list of icon sizes.</param>
-    public void SaveAsIcon(string filePath, params int[] sizes) {
+    /// <summary>Saves the first frame as an ICO containing the requested square resolutions.</summary>
+    public void SaveAsIcon(string filePath, params int[] sizes) => SaveAsIcon(filePath, sizes, default);
+    /// <summary>Saves an ICO while observing cancellation during resizing, encoding and atomic writing.</summary>
+    public void SaveAsIcon(string filePath, IReadOnlyList<int> sizes, CancellationToken cancellationToken) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (sizes == null || sizes.Count == 0) { sizes = new[] { 16, 32, 48, 64, 128, 256 }; }
+        int[] dimensions = sizes.Distinct().OrderBy(size => size).ToArray();
+        if (dimensions.Any(size => size < 1 || size > 256)) { throw new ArgumentOutOfRangeException(nameof(sizes), "ICO resolutions must be between 1 and 256 pixels."); }
+        var images = dimensions.Select(size => OfficeRasterResampler.Resize(Raster, new OfficeRasterResizeOptions { Width = size, Height = size, Fit = OfficeImageFit.Stretch }, cancellationToken)).ToArray();
+        byte[] encoded = OfficeRasterImageEncoder.EncodeWithMetadata(new OfficeRasterFrames(images.Select(image => new OfficeRasterFrame(image))), OfficeImageExportFormat.Icon, _metadata, cancellationToken: cancellationToken).EncodedBytes;
         string fullPath = Helpers.ResolvePath(filePath);
-        if (sizes == null || sizes.Length == 0) {
-            sizes = new[] { 16, 32, 48, 64, 128, 256 };
-        }
-
-        List<byte[]> frames = new();
-        List<(int Width, int Height)> dims = new();
-
-        foreach (int size in sizes.Distinct().OrderBy(s => s)) {
-            using Image<Rgba32> clone = _image.CloneAs<Rgba32>();
-            clone.Mutate(ctx => ctx.Resize(new ResizeOptions {
-                Mode = ResizeMode.Stretch,
-                Size = new Size(size, size)
-            }));
-            using MemoryStream ms = new();
-            clone.SaveAsPng(ms);
-            frames.Add(ms.ToArray());
-            dims.Add((size, size));
-        }
-
-        using FileStream fs = File.Create(fullPath);
-        using BinaryWriter bw = new(fs);
-        bw.Write((ushort)0); // reserved
-        bw.Write((ushort)1); // type icon
-        bw.Write((ushort)frames.Count);
-
-        int offset = 6 + 16 * frames.Count;
-        for (int i = 0; i < frames.Count; i++) {
-            var (w, h) = dims[i];
-            bw.Write((byte)(w >= 256 ? 0 : w));
-            bw.Write((byte)(h >= 256 ? 0 : h));
-            bw.Write((byte)0);
-            bw.Write((byte)0);
-            bw.Write((ushort)1);
-            bw.Write((ushort)32);
-            bw.Write(frames[i].Length);
-            bw.Write(offset);
-            offset += frames[i].Length;
-        }
-
-        foreach (byte[] data in frames) {
-            bw.Write(data);
-        }
-
-        bw.Flush();
+        Helpers.CreateParentDirectory(fullPath);
+        OfficeImageFileWriter.WriteAllBytes(fullPath, encoded, cancellationToken);
     }
 }

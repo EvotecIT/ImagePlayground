@@ -1,7 +1,5 @@
 using System.IO;
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
 /// <summary>
@@ -46,9 +44,9 @@ public partial class ImageHelper {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
-        using SixLabors.ImageSharp.Image img = await SixLabors.ImageSharp.Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.Mutate(x => x.Rotate(rotateMode));
-        await img.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.Rotate(rotateMode, cancellationToken: cancellationToken);
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -59,8 +57,8 @@ public partial class ImageHelper {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
-        using SixLabors.ImageSharp.Image img = await SixLabors.ImageSharp.Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.Mutate(x => x.Rotate(degrees));
-        await img.SaveAsync(outFullPath, cancellationToken).ConfigureAwait(false);
+        using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        img.Rotate(degrees, cancellationToken: cancellationToken);
+        await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

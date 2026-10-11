@@ -2,8 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeGlyphX;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using CodeGlyphXPixelFormat = CodeGlyphX.PixelFormat;
 
 namespace ImagePlayground;
@@ -67,22 +65,8 @@ public partial class QrCode {
     public static async Task<QrDecoded?> ReadAsync(string filePath, CancellationToken cancellationToken, QrPixelDecodeOptions? decodeOptions) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = Helpers.ResolvePath(filePath);
-        using Image<Rgba32> image = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(fullPath, cancellationToken).ConfigureAwait(false);
-        var pixels = new byte[checked(image.Width * image.Height * 4)];
-        image.ProcessPixelRows(accessor => {
-            for (var y = 0; y < accessor.Height; y++) {
-                cancellationToken.ThrowIfCancellationRequested();
-                Span<Rgba32> row = accessor.GetRowSpan(y);
-                var offset = y * image.Width * 4;
-                for (var x = 0; x < row.Length; x++) {
-                    var pixel = row[x];
-                    pixels[offset++] = pixel.R;
-                    pixels[offset++] = pixel.G;
-                    pixels[offset++] = pixel.B;
-                    pixels[offset++] = pixel.A;
-                }
-            }
-        });
+        using Image image = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        byte[] pixels = image.Raster.GetPixels();
 
         cancellationToken.ThrowIfCancellationRequested();
         if (TryDecodePixels(pixels, image.Width, image.Height, decodeOptions, cancellationToken, out var decoded)) {

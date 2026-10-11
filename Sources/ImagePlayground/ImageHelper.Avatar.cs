@@ -1,5 +1,4 @@
 using System.IO;
-using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
 /// <summary>

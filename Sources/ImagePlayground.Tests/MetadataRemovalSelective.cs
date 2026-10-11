@@ -1,6 +1,7 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
-using SixLabors.ImageSharp.Metadata.Profiles.Xmp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,7 @@ public partial class ImagePlayground {
         string outputPath = Path.Combine(_directoryWithTests, "metadata-selective-output.png");
         CreatePngWithXmp(cleanPath);
         byte[] clean = File.ReadAllBytes(cleanPath);
-        File.WriteAllBytes(sourcePath, InsertPngChunk(clean, "caBX", Encoding.ASCII.GetBytes("c2pa manifest")));
+        File.WriteAllBytes(sourcePath, InsertPngChunk(clean, "caBX", CreateC2paManifestStore()));
 
         ImageMetadataRemovalResult result = ImageHelper.RemoveMetadata(new ImageMetadataRemovalOptions(sourcePath, outputPath) {
             MetadataTypes = ImageMetadataType.C2pa
@@ -173,17 +174,17 @@ public partial class ImagePlayground {
     }
 
     private static void CreatePngWithXmp(string path) {
-        using var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10);
-        image.Metadata.XmpProfile = new XmpProfile(Encoding.UTF8.GetBytes("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />"));
+        using var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10));
+        image.Metadata.XmpProfile = Encoding.UTF8.GetBytes("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />");
         image.Save(path);
     }
 
     private static void CreateJpegWithExifAndXmp(string path) {
-        using var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10);
-        image.Metadata.ExifProfile = new ExifProfile();
-        image.Metadata.ExifProfile.SetValue(ExifTag.Software, "ImagePlayground");
-        image.Metadata.XmpProfile = new XmpProfile(Encoding.UTF8.GetBytes("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />"));
-        image.SaveAsJpeg(path);
+        using var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10));
+
+        image.Metadata.SetExifValue(ExifTag.Software, "ImagePlayground");
+        image.Metadata.XmpProfile = Encoding.UTF8.GetBytes("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />");
+        image.Save(path);
     }
 
     private static byte[] InsertPngChunk(byte[] png, string chunkType, byte[] payload) {
@@ -198,18 +199,7 @@ public partial class ImagePlayground {
     }
 
     private static byte[][] CreateFragmentedC2paPayloads() {
-        byte[] manifestStore = new byte[50];
-        WriteUInt32BigEndian(manifestStore, 0, (uint)manifestStore.Length);
-        Encoding.ASCII.GetBytes("jumb").CopyTo(manifestStore, 4);
-        WriteUInt32BigEndian(manifestStore, 8, 30);
-        Encoding.ASCII.GetBytes("jumd").CopyTo(manifestStore, 12);
-        byte[] c2paUuid = {
-            0x63, 0x32, 0x70, 0x61, 0x00, 0x11, 0x00, 0x10,
-            0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71
-        };
-        c2paUuid.CopyTo(manifestStore, 16);
-        manifestStore[32] = 0x03;
-        Encoding.ASCII.GetBytes("c2pa\0").CopyTo(manifestStore, 33);
+        byte[] manifestStore = CreateC2paManifestStore();
 
         const int firstManifestLength = 38;
         byte[] first = new byte[8 + firstManifestLength];

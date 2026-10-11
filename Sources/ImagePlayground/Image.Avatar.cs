@@ -1,104 +1,60 @@
-using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
 namespace ImagePlayground;
-/// <summary>
-/// Provides image manipulation operations.
-/// </summary>
-public partial class Image : IDisposable {
-    /// <summary>
-    /// Converts the image into an avatar with the specified size and corner radius.
-    /// </summary>
-    /// <param name="width">Desired avatar width.</param>
-    /// <param name="height">Desired avatar height.</param>
-    /// <param name="cornerRadius">Radius of the rounded corners.</param>
-    public void Avatar(int width, int height, float cornerRadius) {
-        _image.Mutate(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
+
+/// <summary>Avatar and transparent corner workflows.</summary>
+public partial class Image {
+    /// <summary>Fits the image to the requested canvas with centered cropping and rounded corners.</summary>
+    public void Avatar(int width, int height, float cornerRadius, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        _frames = CreateAvatarFrames(width, height, cornerRadius, cancellationToken);
     }
-
-    /// <summary>
-    /// Saves the image as an avatar file.
-    /// </summary>
-    /// <param name="filePath">Destination file path.</param>
-    /// <param name="width">Width of the avatar.</param>
-    /// <param name="height">Height of the avatar.</param>
-    /// <param name="cornerRadius">Radius of the rounded corners.</param>
-    public void SaveAsAvatar(string filePath, int width, int height, float cornerRadius) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath)!);
-        using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
-        clone.Save(fullPath);
+    /// <summary>Saves a rounded avatar without changing this image's pixels or metadata.</summary>
+    public void SaveAsAvatar(string filePath, int width, int height, float cornerRadius, CancellationToken cancellationToken = default) {
+        using var clone = CreateAvatarCopy(width, height, cornerRadius, cancellationToken);
+        clone.Save(filePath, options: null, cancellationToken: cancellationToken);
     }
-
-    /// <summary>
-    /// Writes the avatar image to a stream.
-    /// </summary>
-    /// <param name="stream">Stream to write the avatar to.</param>
-    /// <param name="width">Width of the avatar.</param>
-    /// <param name="height">Height of the avatar.</param>
-    /// <param name="cornerRadius">Radius of the rounded corners.</param>
-    public void SaveAsAvatar(Stream stream, int width, int height, float cornerRadius) {
-        using var clone = _image.Clone(x => ConvertToAvatar(x, new Size(width, height), cornerRadius));
-        clone.SaveAsPng(stream);
-        stream.Seek(0, SeekOrigin.Begin);
-    }
-
-    /// <summary>
-    /// Saves the image as a circular avatar file.
-    /// </summary>
-    /// <param name="filePath">Destination file path.</param>
-    /// <param name="size">Diameter of the avatar.</param>
-    public void SaveAsCircularAvatar(string filePath, int size) {
-        SaveAsAvatar(filePath, size, size, size / 2f);
-    }
-
-    /// <summary>
-    /// Writes a circular avatar to a stream.
-    /// </summary>
-    /// <param name="stream">Destination stream.</param>
-    /// <param name="size">Diameter of the avatar.</param>
-    public void SaveAsCircularAvatar(Stream stream, int size) {
-        SaveAsAvatar(stream, size, size, size / 2f);
-    }
-
-    private static IImageProcessingContext ConvertToAvatar(IImageProcessingContext context, Size size, float cornerRadius) {
-        return ApplyRoundedCorners(context.Resize(new ResizeOptions {
-            Size = size,
-            Mode = ResizeMode.Crop
-        }), cornerRadius);
-    }
-
-    private static IImageProcessingContext ApplyRoundedCorners(IImageProcessingContext context, float cornerRadius) {
-        Size size = context.GetCurrentSize();
-        IPathCollection corners = BuildCorners(size.Width, size.Height, cornerRadius);
-
-        context.SetGraphicsOptions(new GraphicsOptions {
-            Antialias = true,
-            AlphaCompositionMode = PixelAlphaCompositionMode.DestOut
-        });
-
-        foreach (IPath path in corners) {
-            context = context.Fill(Color.Red, path);
+    /// <summary>Writes a PNG rounded avatar to a caller-owned stream without changing this image.</summary>
+    public void SaveAsAvatar(Stream stream, int width, int height, float cornerRadius, CancellationToken cancellationToken = default) {
+        if (stream == null) {
+            throw new ArgumentNullException(nameof(stream));
         }
+        using var clone = CreateAvatarCopy(width, height, cornerRadius, cancellationToken);
+        clone.Save(stream, ImageType.Png, cancellationToken: cancellationToken);
+    }
+    /// <summary>Saves a circular avatar without changing this image's pixels or metadata.</summary>
+    public void SaveAsCircularAvatar(string filePath, int size, CancellationToken cancellationToken = default) => SaveAsAvatar(filePath, size, size, size / 2f, cancellationToken);
+    /// <summary>Writes a PNG circular avatar to a caller-owned stream without changing this image.</summary>
+    public void SaveAsCircularAvatar(Stream stream, int size, CancellationToken cancellationToken = default) => SaveAsAvatar(stream, size, size, size / 2f, cancellationToken);
 
-        return context;
+    private Image CreateAvatarCopy(int width, int height, float cornerRadius, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        return new Image {
+            _frames = CreateAvatarFrames(width, height, cornerRadius, cancellationToken),
+            _metadata = _metadata.Clone(),
+            _filePath = _filePath,
+            _imageType = _imageType,
+            _sourceFormat = _sourceFormat,
+            _sourceIsAnimation = _sourceIsAnimation
+        };
     }
 
-    private static PathCollection BuildCorners(int imageWidth, int imageHeight, float cornerRadius) {
-        var rect = new RectangularPolygon(-0.5f, -0.5f, cornerRadius, cornerRadius);
-        IPath cornerTopLeft = rect.Clip(new EllipsePolygon(cornerRadius - 0.5f, cornerRadius - 0.5f, cornerRadius));
-
-        float rightPos = imageWidth - cornerTopLeft.Bounds.Width + 1;
-        float bottomPos = imageHeight - cornerTopLeft.Bounds.Height + 1;
-
-        IPath cornerTopRight = cornerTopLeft.RotateDegree(90).Translate(rightPos, 0);
-        IPath cornerBottomLeft = cornerTopLeft.RotateDegree(-90).Translate(0, bottomPos);
-        IPath cornerBottomRight = cornerTopLeft.RotateDegree(180).Translate(rightPos, bottomPos);
-
-        return new PathCollection(cornerTopLeft, cornerBottomLeft, cornerTopRight, cornerBottomRight);
+    private OfficeRasterFrames CreateAvatarFrames(int width, int height, float cornerRadius, CancellationToken cancellationToken = default) {
+        if (width <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(width));
+        }
+        if (height <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(height));
+        }
+        var options = new OfficeRasterResizeOptions { Width = width, Height = height, Fit = OfficeImageFit.Cover };
+        long avatarBytes = checked((long)width * height * 4);
+        long additionalWorkingBytes = 0;
+        foreach (var frame in _frames) {
+            var plan = OfficeRasterResampler.PlanResize(frame.Image.Width, frame.Image.Height, options, cancellationToken);
+            // The sequence reserves source and final pixels; masking also retains the fitted image and mask.
+            additionalWorkingBytes = Math.Max(additionalWorkingBytes, Math.Max(plan.AdditionalWorkingBytes, avatarBytes * 2));
+        }
+        return _frames.Transform(source => {
+            var resized = OfficeRasterResampler.Resize(source, options, cancellationToken);
+            return OfficeRasterTransforms.MaskRoundedRectangle(resized, cornerRadius, cancellationToken);
+        }, _ => (width, height), cancellationToken, additionalWorkingBytes);
     }
 }

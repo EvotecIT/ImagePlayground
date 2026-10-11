@@ -14,7 +14,7 @@ public partial class Image {
     /// </summary>
     /// <param name="filePath">Path to a HEIF or HEIC file.</param>
     /// <returns>Basic HEIF container and item metadata.</returns>
-    public static HeifImageInfo GetHeifInfo(string filePath) {
+    public static OfficeHeifImageInfo GetHeifInfo(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
         if (!Helpers.IsHeifExtension(fullPath)) {
             throw new NotSupportedException("HEIF metadata can only be read from .heic or .heif files.");
@@ -24,7 +24,7 @@ public partial class Image {
             throw new FileNotFoundException("HEIF file was not found.", fullPath);
         }
 
-        if (!HeifMetadataReader.TryReadInfo(fullPath, out HeifImageInfo? info) || info is null) {
+        if (!OfficeHeifMetadataReader.TryReadInfo(fullPath, out OfficeHeifImageInfo? info) || info is null) {
             throw new InvalidDataException("The HEIF container metadata could not be read.");
         }
 
@@ -46,11 +46,11 @@ public partial class Image {
             throw new FileNotFoundException("HEIF file was not found.", fullPath);
         }
 
-        if (HeifMetadataReader.TryReadXmp(fullPath, out string? xmp)) {
+        if (OfficeHeifMetadataReader.TryReadXmp(fullPath, out string? xmp)) {
             return xmp;
         }
 
-        if (HeifMetadataReader.HasXmpItem(fullPath)) {
+        if (OfficeHeifMetadataReader.HasXmpItem(fullPath)) {
             throw new NotSupportedException(HeifXmpReadNotSupportedMessage);
         }
 
@@ -93,7 +93,7 @@ public partial class Image {
             ? fullPath
             : Helpers.ResolvePath(filePathOutput!);
 
-        if (!HeifMetadataReader.TryWriteXmp(fullPath, outputPath, xmp)) {
+        if (!OfficeHeifMetadataReader.TryWriteXmp(fullPath, outputPath, xmp)) {
             throw new NotSupportedException(HeifXmpWriteNotSupportedMessage);
         }
     }

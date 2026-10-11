@@ -1,230 +1,83 @@
-using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-
 namespace ImagePlayground;
 
-/// <summary>
-/// Provides image filter operations.
-/// </summary>
-public partial class Image : IDisposable {
-    /// <summary>
-    /// Applies an adaptive threshold filter to the current image.
-    /// </summary>
-    public void AdaptiveThreshold() {
-        _image.Mutate(x => x.AdaptiveThreshold());
+/// <summary>Pixel filters delegated to the shared managed raster engine.</summary>
+public partial class Image {
+    /// <summary>Thresholds pixels relative to their local luminance.</summary>
+    public void AdaptiveThreshold(CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
+        long scratch = _frames.Max(frame => OfficeRasterFilters.EstimateAdaptiveThresholdAdditionalWorkingBytes(frame.Image.Width, frame.Image.Height));
+        Apply(image => OfficeRasterFilters.AdaptiveThreshold(image, cancellationToken: cancellationToken), additionalRetainedBytes: scratch, cancellationToken: cancellationToken);
     }
-
-    /// <summary>
-    /// Converts the image to black and white.
-    /// </summary>
-    public void BlackWhite() {
-        _image.Mutate(x => x.BlackWhite());
+    /// <summary>Converts pixels to black or white at the midpoint of their luminance.</summary>
+    public void BlackWhite(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Threshold(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Multiplies the RGB brightness by the requested factor.</summary>
+    public void Brightness(float amount, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Brightness(image, amount, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies a circular bokeh blur.</summary>
+    public void BokehBlur(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.BokehBlur(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies a box blur.</summary>
+    public void BoxBlur(CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
+        long scratch = _frames.Max(frame => OfficeRasterFilters.EstimateBoxBlurAdditionalWorkingBytes(frame.Image.Width, frame.Image.Height));
+        Apply(image => OfficeRasterFilters.BoxBlur(image, cancellationToken: cancellationToken), additionalRetainedBytes: scratch, cancellationToken: cancellationToken);
     }
-
-    /// <summary>
-    /// Adjusts brightness by the specified <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">Brightness adjustment factor.</param>
-    public void Brightness(float amount) {
-        _image.Mutate(x => x.Brightness(amount));
+    /// <summary>Adjusts contrast around the midpoint of the RGB range.</summary>
+    public void Contrast(float amount, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Contrast(image, amount, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies monochrome error diffusion dithering.</summary>
+    public void Dither(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Dither(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Transforms normalized RGBA channels with the supplied matrix.</summary>
+    public void Filter(OfficeRasterColorMatrix colorMatrix, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.ColorMatrix(image, colorMatrix, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies a Gaussian blur with the requested standard deviation.</summary>
+    public void GaussianBlur(float? sigma = null, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
+        double amount = sigma ?? 3;
+        long scratch = _frames.Max(frame => OfficeRasterFilters.EstimateGaussianBlurAdditionalWorkingBytes(frame.Image.Width, frame.Image.Height, amount));
+        Apply(image => OfficeRasterFilters.GaussianBlur(image, amount, cancellationToken: cancellationToken), additionalRetainedBytes: scratch, cancellationToken: cancellationToken);
     }
-
-    /// <summary>
-    /// Applies a bokeh blur effect.
-    /// </summary>
-    public void BokehBlur() {
-        _image.Mutate(x => x.BokehBlur());
+    /// <summary>Sharpens using a Gaussian unsharp mask.</summary>
+    public void GaussianSharpen(float? sigma = null, CancellationToken cancellationToken = default) {
+        EnsureUsable();
+        cancellationToken.ThrowIfCancellationRequested();
+        double amount = sigma ?? 3;
+        long scratch = _frames.Max(frame => OfficeRasterFilters.EstimateGaussianSharpenAdditionalWorkingBytes(frame.Image.Width, frame.Image.Height, amount));
+        Apply(image => OfficeRasterFilters.GaussianSharpen(image, amount, cancellationToken: cancellationToken), additionalRetainedBytes: scratch, cancellationToken: cancellationToken);
     }
-
-    /// <summary>
-    /// Applies a simple box blur.
-    /// </summary>
-    public void BoxBlur() {
-        _image.Mutate(x => x.BoxBlur());
-    }
-
-    /// <summary>
-    /// Adjusts contrast by the specified <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">Contrast adjustment factor.</param>
-    public void Contrast(float amount) {
-        _image.Mutate(x => x.Contrast(amount));
-    }
-
-    /// <summary>
-    /// Applies a dithering effect.
-    /// </summary>
-    public void Dither() {
-        _image.Mutate(x => x.Dither());
-    }
-
-    /// <summary>
-    /// Applies a color <paramref name="colorMatrix"/> filter.
-    /// </summary>
-    /// <param name="colorMatrix">Color matrix to apply.</param>
-    public void Filter(ColorMatrix colorMatrix) {
-        _image.Mutate(x => x.Filter(colorMatrix));
-    }
-
-    /// <summary>
-    /// Applies a Gaussian blur using the optional <paramref name="sigma"/> value.
-    /// </summary>
-    /// <param name="sigma">Blur radius.</param>
-    public void GaussianBlur(float? sigma) {
-        if (sigma != null) {
-            _image.Mutate(x => x.GaussianBlur(sigma.Value));
-        } else {
-            _image.Mutate(x => x.GaussianBlur());
-        }
-    }
-
-    /// <summary>
-    /// Sharpens the image using a Gaussian algorithm.
-    /// </summary>
-    /// <param name="sigma">Sharpen strength.</param>
-    public void GaussianSharpen(float? sigma) {
-        if (sigma != null) {
-            _image.Mutate(x => x.GaussianSharpen(sigma.Value));
-        } else {
-            _image.Mutate(x => x.GaussianSharpen());
-        }
-    }
-
-    /// <summary>
-    /// Performs histogram equalization on the image.
-    /// </summary>
-    public void HistogramEqualization() {
-        _image.Mutate(x => x.HistogramEqualization());
-    }
-
-    /// <summary>
-    /// Shifts hue by the specified <paramref name="degrees"/>.
-    /// </summary>
-    /// <param name="degrees">Hue rotation in degrees.</param>
-    public void Hue(float degrees) {
-        _image.Mutate(x => x.Hue(degrees));
-    }
-
-    /// <summary>
-    /// Converts the image to grayscale using the specified <paramref name="grayscaleMode"/>.
-    /// </summary>
-    /// <param name="grayscaleMode">Grayscale conversion mode.</param>
-    public void Grayscale(GrayscaleMode grayscaleMode = GrayscaleMode.Bt709) {
-        _image.Mutate(x => x.Grayscale(grayscaleMode));
-    }
-
-    /// <summary>
-    /// Applies a Kodachrome color filter.
-    /// </summary>
-    public void Kodachrome() {
-        _image.Mutate(x => x.Kodachrome());
-    }
-
-    /// <summary>
-    /// Adjusts lightness by <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">Lightness factor.</param>
-    public void Lightness(float amount) {
-        _image.Mutate(x => x.Lightness(amount));
-    }
-
-    /// <summary>
-    /// Applies a lomograph effect.
-    /// </summary>
-    public void Lomograph() {
-        _image.Mutate(x => x.Lomograph());
-    }
-
-    /// <summary>
-    /// Inverts the colors of the image.
-    /// </summary>
-    public void Invert() {
-        _image.Mutate(x => x.Invert());
-    }
-
-    /// <summary>
-    /// Changes opacity by the given <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">Opacity factor.</param>
-    public void Opacity(float amount) {
-        _image.Mutate(x => x.Opacity(amount));
-    }
-
-    /// <summary>
-    /// Applies a Polaroid style filter.
-    /// </summary>
-    public void Polaroid() {
-        _image.Mutate(x => x.Polaroid());
-    }
-
-    /// <summary>
-    /// Pixelates the image with a default size.
-    /// </summary>
-    public void Pixelate() {
-        _image.Mutate(x => x.Pixelate());
-    }
-
-    /// <summary>
-    /// Pixelates the image using the specified <paramref name="size"/>.
-    /// </summary>
-    /// <param name="size">Pixel block size.</param>
-    public void Pixelate(int size) {
-        _image.Mutate(x => x.Pixelate(size));
-    }
-
-    /// <summary>
-    /// Applies an oil paint effect using default options.
-    /// </summary>
-    public void OilPaint() {
-        _image.Mutate(x => x.OilPaint());
-    }
-
-    /// <summary>
-    /// Applies an oil paint effect with the given parameters.
-    /// </summary>
-    /// <param name="levels">Number of intensity levels.</param>
-    /// <param name="brushSize">Brush size.</param>
-    public void OilPaint(int levels, int brushSize) {
-        _image.Mutate(x => x.OilPaint(levels, brushSize));
-    }
-
-    /// <summary>
-    /// Changes saturation by the specified <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">Saturation factor.</param>
-    public void Saturate(float amount) {
-        _image.Mutate(x => x.Saturate(amount));
-    }
-
-    /// <summary>
-    /// Applies a sepia tone effect.
-    /// </summary>
-    public void Sepia() {
-        _image.Mutate(x => x.Sepia());
-    }
-
-    /// <summary>
-    /// Applies a sepia tone effect with the given <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">Sepia intensity.</param>
-    public void Sepia(float amount) {
-        _image.Mutate(x => x.Sepia(amount));
-    }
-
-    /// <summary>
-    /// Adds a vignette effect using default options.
-    /// </summary>
-    public void Vignette() {
-        _image.Mutate(x => x.Vignette());
-    }
-
-    /// <summary>
-    /// Adds a vignette effect using the specified <paramref name="color"/>.
-    /// </summary>
-    /// <param name="color">Vignette color.</param>
-    public void Vignette(Color color) {
-        _image.Mutate(x => x.Vignette(color));
-    }
+    /// <summary>Equalizes the luminance histogram.</summary>
+    public void HistogramEqualization(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.HistogramEqualization(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Rotates hue in degrees.</summary>
+    public void Hue(float degrees, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Hue(image, degrees, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Converts to grayscale while preserving alpha.</summary>
+    public void Grayscale(OfficeRasterGrayscaleMode grayscaleMode = OfficeRasterGrayscaleMode.Bt709, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Grayscale(image, grayscaleMode, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies the shared Kodachrome color transform.</summary>
+    public void Kodachrome(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Kodachrome(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Adjusts HSL lightness.</summary>
+    public void Lightness(float amount, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Lightness(image, amount, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies the shared Lomograph color transform.</summary>
+    public void Lomograph(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Lomograph(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Inverts RGB channels while preserving alpha.</summary>
+    public void Invert(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Invert(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Multiplies pixel opacity by the requested factor.</summary>
+    public void Opacity(float amount, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Opacity(image, amount, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies the shared Polaroid color transform.</summary>
+    public void Polaroid(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Polaroid(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Pixelates using blocks of four pixels.</summary>
+    public void Pixelate(CancellationToken cancellationToken = default) => Pixelate(4, cancellationToken);
+    /// <summary>Pixelates with the requested block size.</summary>
+    public void Pixelate(int size, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Pixelate(image, size, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies an oil painting filter.</summary>
+    public void OilPaint(CancellationToken cancellationToken = default) => OilPaint(10, 15, cancellationToken);
+    /// <summary>Applies an oil painting filter with explicit levels and brush size.</summary>
+    public void OilPaint(int levels, int brushSize, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.OilPaint(image, levels, brushSize, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Adjusts saturation by the requested factor.</summary>
+    public void Saturate(float amount, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Saturate(image, amount, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Applies the full sepia transform.</summary>
+    public void Sepia(CancellationToken cancellationToken = default) => Sepia(1, cancellationToken);
+    /// <summary>Blends the sepia transform by the requested amount.</summary>
+    public void Sepia(float amount, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Sepia(image, amount, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Darkens the image towards its edges.</summary>
+    public void Vignette(CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Vignette(image, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+    /// <summary>Blends a color towards the image edges.</summary>
+    public void Vignette(OfficeColor color, CancellationToken cancellationToken = default) => Apply(image => OfficeRasterFilters.Vignette(image, color, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
 }
-

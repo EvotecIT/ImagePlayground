@@ -11,7 +11,7 @@ Creates a simple grid-based image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageGrid [-FilePath] <string> [-Width] <int> [-Height] <int> [-Color <Color>] [-Open] [<CommonParameters>]
+New-ImageGrid [-FilePath] <string> [-Width] <int> [-Height] <int> [-Color <OfficeColor>] [-Open] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ New-ImageGrid -FilePath out.png -Width 100 -Height 100
 Background color.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

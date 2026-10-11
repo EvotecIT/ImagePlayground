@@ -215,14 +215,15 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
                 if (watermark == null) {
                     throw new PSArgumentException("Watermark cannot contain null entries.", nameof(Watermark));
                 }
-
-                render.Watermarks.Add(watermark);
             }
             if (MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
                 render.Raster = new RasterImageOptions { Dpi = Dpi };
             }
 
             VisualArtifact artifact = chart.ToVisualArtifact();
+            if (watermarks.Length > 0) {
+                artifact = artifact.ToWatermarkedArtifact(render, watermarks);
+            }
             var extension = System.IO.Path.GetExtension(output);
             if (extension.Equals(".svg", System.StringComparison.OrdinalIgnoreCase)) {
                 artifact.SaveSvg(output, render);

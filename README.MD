@@ -25,10 +25,11 @@ ImagePlayground turns scripts and application data into finished visual assets. 
 
 Automation often ends with something a person must read: a chart in a report, a service map in an incident, a QR code on a device, a sanitized image for publication, or an animated terminal session in documentation. ImagePlayground keeps those results reproducible.
 
-The PowerShell module provides one scripting surface over three reusable .NET owners:
+The PowerShell module provides one scripting surface over reusable .NET libraries:
 
-- **ImagePlayground** handles image loading, processing, composition, metadata, and file output.
-- **ChartForgeX** handles charts, visual blocks, canvases, topology, hierarchy, and story rendering.
+- **ImagePlayground** provides the editable image wrapper and file workflows.
+- **OfficeIMO.Core** handles managed raster decoding, filters, transforms, metadata, and pixel comparison.
+- **ChartForgeX** handles charts, topology, hierarchy, and raster primitives. **ChartForgeX.Visuals** handles composition, visual blocks, and canvases; **ChartForgeX.Stories** handles animation encoding and story rendering.
 - **CodeGlyphX** handles QR-code and barcode generation and decoding.
 
 PowerShell users install one module. .NET applications reference only the package that owns the capability they need.
@@ -120,7 +121,7 @@ dotnet add package ChartForgeX
 dotnet add package CodeGlyphX
 ```
 
-The ImagePlayground .NET package does not wrap ChartForgeX or CodeGlyphX. That aggregation belongs to the PowerShell module.
+The ImagePlayground .NET package uses OfficeIMO.Core for raster processing, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding. These ChartForgeX packages use version 2.0.0 together. The PowerShell module also exposes ChartForgeX charts and stories and CodeGlyphX QR codes and barcodes.
 
 ## Quick start
 
@@ -172,13 +173,13 @@ ImageHelper.Resize(
     filePath: "photo.jpg",
     outFilePath: "photo-small.jpg",
     width: 1200,
-    height: 1200,
+    height: null,
     keepAspectRatio: true);
 ```
 
 ## Image processing and composition
 
-ImagePlayground uses [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) for the main image engine. The primary package does not depend on `System.Drawing`.
+ImagePlayground uses the managed raster APIs in [OfficeIMO.Core](https://github.com/EvotecIT/OfficeIMO), composition in [ChartForgeX.Visuals](https://www.nuget.org/packages/ChartForgeX.Visuals), and GIF/APNG encoding in [ChartForgeX.Stories](https://www.nuget.org/packages/ChartForgeX.Stories). Image APIs expose owned value types and buffers. See the [migration guide](Docs/Managed-Image-Migration.md) for type, assembly, comparison, and format changes.
 
 ### Focused commands for one operation
 
@@ -197,22 +198,21 @@ New-ImageCrop `
 
 ConvertTo-Image `
     -FilePath '.\photo-square.jpg' `
-    -OutputPath '.\photo-square.webp' `
-    -Quality 85
+    -OutputPath '.\photo-square.webp'
 ```
 
-The destination extension selects the output format. JPEG and WebP support `-Quality`; PNG supports `-CompressionLevel`.
+The destination extension selects the output format. JPEG supports `-Quality`; WebP output is lossless by default and uses the managed lossy encoder when `-Quality` is supplied. PNG supports `-CompressionLevel` through the shared compression profiles.
 
 ### Keep an image open for several edits
 
 ```powershell
 $image = Get-Image -FilePath '.\photo.jpg'
 try {
-    $image.Resize(1200, 1200, $true)
+    $image.Resize(1200, $null, $true)
     $image.Watermark(
         'Internal',
         [ImagePlayground.WatermarkPlacement]::BottomRight,
-        [SixLabors.ImageSharp.Color]::White,
+        [OfficeIMO.Drawing.OfficeColor]::White,
         28)
 
     Save-Image -Image $image -FilePath '.\photo-watermarked.jpg' -Quality 88
@@ -687,14 +687,14 @@ The core package targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .N
 
 ```csharp
 using ImagePlayground;
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
 
 using var image = ImagePlayground.Image.Load("photo.jpg");
-image.Resize(1200, 1200, keepAspectRatio: true);
+image.Resize(1200, null, keepAspectRatio: true);
 image.Watermark(
     "Internal",
     WatermarkPlacement.BottomRight,
-    Color.White,
+    OfficeColor.White,
     fontSize: 28);
 image.Save("photo-watermarked.jpg");
 ```
@@ -704,7 +704,9 @@ image.Save("photo-watermarked.jpg");
 | Need | Package |
 | --- | --- |
 | Image loading, processing, composition, metadata, thumbnails, icons, mosaics, avatars, or GIFs | [`ImagePlayground`](https://www.nuget.org/packages/ImagePlayground) |
-| Charts, topology, hierarchy, visual blocks, canvases, or stories | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
+| Charts, topology, hierarchy, and raster primitives | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
+| Composition, visual blocks, canvases, and watermark decoration | [`ChartForgeX.Visuals`](https://www.nuget.org/packages/ChartForgeX.Visuals) |
+| Stories, terminal playback, motion, and GIF/APNG encoding | [`ChartForgeX.Stories`](https://www.nuget.org/packages/ChartForgeX.Stories) |
 | QR codes, barcodes, GS1 data, renderers, or image decoding | [`CodeGlyphX`](https://www.nuget.org/packages/CodeGlyphX) |
 | PowerShell access to all three owners | [`ImagePlayground`](https://www.powershellgallery.com/packages/ImagePlayground) module |
 
@@ -712,7 +714,7 @@ image.Save("photo-watermarked.jpg");
 
 | Surface | Typical output |
 | --- | --- |
-| Image processing | PNG, JPEG, WebP, GIF, BMP, and other ImageSharp-supported formats selected by extension |
+| Image processing | PNG, JPEG, WebP, GIF, BMP, PBM, TGA, TIFF, and ICO output selected by extension; supported managed codec subsets for loading |
 | Charts and static report visuals | PNG and SVG, with standalone HTML where supported |
 | Topology | PNG, SVG, interactive HTML, GIF, and APNG |
 | Console stories | SVG, HTML, PNG, GIF, and APNG |
@@ -753,12 +755,12 @@ Generated command Markdown and external help come from the C# XML documentation 
 
 - PowerShell: Windows PowerShell 5.1 and PowerShell 7+
 - Core library: .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .NET 10
-- Main image engine: SixLabors.ImageSharp
-- Chart, topology, canvas, and story engine: ChartForgeX
+- Raster processing, metadata, and comparison engine: OfficeIMO.Core
+- Chart and topology engine: ChartForgeX; canvas and composition engine: ChartForgeX.Visuals; story and animation engine: ChartForgeX.Stories
 - QR-code and barcode engine: CodeGlyphX
 - Optional C# and Bash source highlighting: `ImagePlayground.Syntax.TreeSitter`
 
-HEIF and HEIC support is deliberately narrower than normal ImageSharp-backed image processing. The HEIF commands inspect container data and manage EXIF/XMP paths described by their command documentation; they do not imply unrestricted HEIF pixel editing.
+HEIF and HEIC commands inspect container data and manage EXIF/XMP paths described by their command documentation. HEIC pixel decoding and HEVC encoding are unsupported; AVIF loading accepts the documented managed decoder subset.
 
 ## Breaking changes in 3.0
 
