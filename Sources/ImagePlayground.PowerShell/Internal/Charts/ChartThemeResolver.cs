@@ -8,7 +8,7 @@ internal static class ChartThemeResolver {
     public static CfxTheme Resolve(ChartTheme theme) {
         switch (theme) {
             case ChartTheme.Dark:
-                return CfxTheme.ReportDark();
+                return CfxTheme.GraphiteDark();
             case ChartTheme.Colorblind:
                 return CfxTheme.Colorblind();
             case ChartTheme.Aurora:
@@ -32,7 +32,7 @@ internal static class ChartThemeResolver {
             case ChartTheme.RestaurantDashboardLight:
                 return CfxTheme.RestaurantDashboardLight();
             default:
-                return CfxTheme.ReportLight();
+                return CfxTheme.GraphiteLight();
         }
     }
 }

@@ -512,7 +512,7 @@ Accept wildcard characters: False
 ```
 
 ### -Theme
-Built-in terminal color palette used by composed and captured stories.
+Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.
 
 ```yaml
 Type: String
@@ -582,7 +582,7 @@ Visible terminal window chrome, independent of the color palette and prompt dial
 Type: TerminalWindowStyle
 Parameter Sets: Content, Step, Transcript
 Aliases: None
-Possible values: MacOS, WindowsTerminal, Minimal, None
+Possible values: MacOS, WindowsTerminal, Minimal, None, Linux
 
 Required: False
 Position: named

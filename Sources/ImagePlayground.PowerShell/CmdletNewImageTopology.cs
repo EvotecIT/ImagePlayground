@@ -2,6 +2,7 @@ using ChartForgeX.Topology;
 using ChartForgeX.Interactivity.Html;
 using ChartForgeX.Core;
 using ChartForgeX.VisualArtifacts;
+using ChartForgeX.Themes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -107,7 +108,7 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     [Parameter]
     public TopologyCanvasSurfaceStyle CanvasSurfaceStyle { get; set; } = TopologyCanvasSurfaceStyle.Plain;
 
-    /// <para>Topology theme name.</para>
+    /// <para>Canonical light or dark topology theme. A supplied chart keeps its theme unless this parameter is supplied.</para>
     [Parameter]
     [ValidateSet("Light", "Dark")]
     public string Theme { get; set; } = "Light";
@@ -460,12 +461,13 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
     }
 
     private TopologyTheme CreateTheme() {
-        var theme = Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
-            ? TopologyTheme.Dark()
-            : TopologyTheme.Light();
+        var tokens = Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
+            ? VisualDesignTokens.GraphiteDark()
+            : VisualDesignTokens.GraphiteLight();
+        var theme = tokens.ApplyTo(new TopologyTheme());
 
         if (Transparent.IsPresent) {
-            theme.Background = Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase) ? "#0B112000" : "#FFFFFF00";
+            theme.Background = tokens.Background.WithOpacity(0).ToCss();
         }
 
         return theme;

@@ -24,6 +24,8 @@ Render the grid directly, pass it to New-ImageVisualStory, or compose it inside 
 
 With Motion, the output is a detached VisualMotionPresentation accepted by New-ImageVisualStory. Static grids remain VisualGrid objects.
 
+HTML reflows panels on narrow screens. SVG and raster output keep their authored dimensions; use one column and appropriately sized child blocks for a compact fixed export. Apply the same theme to the grid and its children for a consistent report.
+
 ## EXAMPLES
 
 ### EXAMPLE 1
