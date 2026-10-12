@@ -1,5 +1,7 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Xunit;
-using PlaygroundImage = ImagePlayground.Image;
+using PlaygroundImage = global::ImagePlayground.Image;
 
 namespace ImagePlayground.Tests;
 
@@ -26,7 +28,7 @@ public partial class ImagePlayground {
 
         using var loaded = Image.Load(filePath);
         var values = loaded.GetExifValues();
-        Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "ImagePlayground");
+        Assert.Contains(values, v => v.Tag.Equals(ExifTag.Software) && v.Value?.ToString() == "ImagePlayground");
     }
 
     [Fact]
@@ -46,13 +48,13 @@ public partial class ImagePlayground {
         }
 
         using (var img = Image.Load(dest)) {
-            Assert.Equal("Modified", img.GetExifValues()[0].GetValue());
+            Assert.Equal("Modified", Assert.Single(img.GetExifValues(), value => value.Tag.Equals(ExifTag.Software)).Value);
             img.RemoveExifValues(ExifTag.Software);
             img.Save();
         }
 
         using var check = Image.Load(dest);
-        Assert.Empty(check.GetExifValues());
+        Assert.DoesNotContain(check.GetExifValues(), value => value.Tag.Equals(ExifTag.Software));
     }
 
     [Fact]
@@ -68,25 +70,24 @@ public partial class ImagePlayground {
         using var img = new PlaygroundImage();
         img.Create(Path.Combine(_directoryWithTests, "number-tag.jpg"), 10, 10);
 
-        var imageWidth = new Number(123);
-        img.SetExifValue(ExifTag.ImageWidth, imageWidth);
+        const uint imageWidth = 123;
+        img.SetExifValue(OfficeExifTag.ImageWidth, imageWidth);
 
-        var exifValue = Assert.Single(img.GetExifValues(), v => v.Tag == ExifTag.ImageWidth);
-        Assert.Equal(typeof(Number), exifValue.GetValue()?.GetType());
-        Assert.Equal(imageWidth.ToString(), exifValue.GetValue()?.ToString());
+        var exifValue = Assert.Single(img.GetExifValues(), v => v.Tag.Equals(OfficeExifTag.ImageWidth));
+        Assert.Equal(imageWidth, exifValue.Value);
     }
 
     [Fact]
     public void Test_ReadHeifExif() {
         string filePath = Path.Combine(_directoryWithTests, "exif-read.heic");
-        var profile = new ExifProfile();
-        profile.SetValue(ExifTag.Software, "ImagePlayground");
+        var profile = new OfficeImageMetadata();
+        profile.SetExifValue(ExifTag.Software, "ImagePlayground");
 
-        File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(profile.ToByteArray()));
+        File.WriteAllBytes(filePath, CreateMinimalHeifWithExif(Assert.IsType<byte[]>(profile.EncodeExifProfile())));
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(filePath);
 
-        Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "ImagePlayground");
+        Assert.Contains(values, v => v.Tag.Equals(ExifTag.Software) && v.Value?.ToString() == "ImagePlayground");
     }
 
     [Fact]
@@ -94,7 +95,7 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithTests, "exif-empty.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithoutExif());
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(filePath);
 
         Assert.Empty(values);
     }
@@ -114,8 +115,8 @@ public partial class ImagePlayground {
 
         PlaygroundImage.SetExifValue(filePath, null, ExifTag.Software, "Changed");
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
-        Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "Changed");
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        Assert.Contains(values, v => v.Tag.Equals(ExifTag.Software) && v.Value?.ToString() == "Changed");
         Assert.False(ContainsSequence(File.ReadAllBytes(filePath), Encoding.ASCII.GetBytes("Original")));
     }
 
@@ -126,7 +127,7 @@ public partial class ImagePlayground {
 
         PlaygroundImage.RemoveExifValues(filePath, null, ExifTag.Software);
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(filePath);
         Assert.Empty(values);
     }
 
@@ -137,7 +138,7 @@ public partial class ImagePlayground {
 
         PlaygroundImage.ClearExifValues(filePath, null);
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(filePath);
         Assert.Empty(values);
     }
 
@@ -149,8 +150,8 @@ public partial class ImagePlayground {
         PlaygroundImage.ClearExifValues(filePath, null);
         PlaygroundImage.SetExifValue(filePath, null, ExifTag.Software, "Recreated");
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(filePath);
-        Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "Recreated");
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(filePath);
+        Assert.Contains(values, v => v.Tag.Equals(ExifTag.Software) && v.Value?.ToString() == "Recreated");
     }
 
     [Fact]
@@ -190,7 +191,7 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithTests, "info.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageAndExif(320, 240, CreateExifPayload("ImagePlayground")));
 
-        HeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
+        OfficeHeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
 
         Assert.Equal("heic", info.MajorBrand);
         Assert.Contains("mif1", info.CompatibleBrands);
@@ -212,7 +213,7 @@ public partial class ImagePlayground {
         Assert.Equal((ushort)0, info.ExifItem.Location.DataReferenceIndex);
         Assert.True(info.ExifItem.Location.IsFileBacked);
         Assert.True(info.ExifItem.Location.CanWriteSingleFileExtent);
-        HeifItemExtentInfo exifExtent = Assert.Single(info.ExifItem.Location.Extents);
+        OfficeHeifItemExtentInfo exifExtent = Assert.Single(info.ExifItem.Location.Extents);
         Assert.True(exifExtent.Offset > 0);
         Assert.True(exifExtent.Length > 0);
         Assert.Contains(info.Items, item => item.HasExif && item.ItemType == "Exif");
@@ -223,7 +224,7 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithTests, "info-transform.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageTransformProperties(320, 240, CreateExifPayload("ImagePlayground")));
 
-        HeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
+        OfficeHeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
 
         Assert.NotNull(info.PrimaryItem);
         Assert.Equal((uint)320, info.Width);
@@ -261,18 +262,18 @@ public partial class ImagePlayground {
         string xmp = "<?xpacket begin=\"\"?><x:xmpmeta xmlns:x=\"adobe:ns:meta/\"><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" /></x:xmpmeta>";
         File.WriteAllBytes(filePath, CreateMinimalHeifWithPrimaryImageExifAndXmp(640, 480, CreateExifPayload("ImagePlayground"), xmp));
 
-        HeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
+        OfficeHeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
 
         Assert.True(info.HasXmp);
         Assert.NotNull(info.XmpItem);
         Assert.Equal("mime", info.XmpItem!.ItemType);
         Assert.Equal("application/rdf+xml", info.XmpItem.MimeType);
-        Assert.Equal("utf-8", info.XmpItem.ContentEncoding);
+        Assert.Equal(string.Empty, info.XmpItem.ContentEncoding);
         Assert.True(info.XmpItem.IsHidden);
-        Assert.Equal((ushort)7, info.XmpItem.ItemProtectionIndex);
+        Assert.Equal((ushort)0, info.XmpItem.ItemProtectionIndex);
         Assert.NotNull(info.XmpItem.Location);
         Assert.True(info.XmpItem.Location!.CanWriteSingleFileExtent);
-        HeifItemExtentInfo xmpExtent = Assert.Single(info.XmpItem.Location.Extents);
+        OfficeHeifItemExtentInfo xmpExtent = Assert.Single(info.XmpItem.Location.Extents);
         Assert.Equal(Encoding.UTF8.GetByteCount(xmp), xmpExtent.Length);
         Assert.Contains(info.References, reference => reference.ReferenceType == "cdsc" && reference.FromItemId == 2 && reference.ToItemIds.Contains(1u));
         Assert.Contains(info.References, reference => reference.ReferenceType == "cdsc" && reference.FromItemId == 3 && reference.ToItemIds.Contains(1u));
@@ -291,7 +292,7 @@ public partial class ImagePlayground {
         string xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />";
         File.WriteAllBytes(filePath, CreateMinimalHeifWithIdatXmp(xmp));
 
-        HeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
+        OfficeHeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
 
         Assert.True(info.HasXmp);
         Assert.NotNull(info.XmpItem);
@@ -301,7 +302,7 @@ public partial class ImagePlayground {
         Assert.False(info.XmpItem.Location.IsFileBacked);
         Assert.True(info.XmpItem.Location.IsItemDataBoxBacked);
         Assert.False(info.XmpItem.Location.CanWriteSingleFileExtent);
-        HeifItemExtentInfo extent = Assert.Single(info.XmpItem.Location.Extents);
+        OfficeHeifItemExtentInfo extent = Assert.Single(info.XmpItem.Location.Extents);
         Assert.Equal(Encoding.UTF8.GetByteCount(xmp), extent.Length);
         Assert.True(extent.Offset > 0);
         Assert.Equal((byte)'<', File.ReadAllBytes(filePath)[extent.Offset]);
@@ -328,9 +329,9 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithTests, "info-auxiliary.heic");
         File.WriteAllBytes(filePath, CreateMinimalHeifWithAuxiliaryImage());
 
-        HeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
+        OfficeHeifImageInfo info = PlaygroundImage.GetHeifInfo(filePath);
 
-        HeifItemInfo auxiliaryItem = Assert.Single(info.Items, item => item.AuxiliaryType is not null);
+        OfficeHeifItemInfo auxiliaryItem = Assert.Single(info.Items, item => item.AuxiliaryType is not null);
         Assert.Equal((uint)2, auxiliaryItem.ItemId);
         Assert.Equal("urn:mpeg:hevc:2015:auxid:1", auxiliaryItem.AuxiliaryType);
         Assert.Equal(new byte[] { 0x10, 0x20 }, auxiliaryItem.AuxiliarySubtypes);
@@ -349,8 +350,8 @@ public partial class ImagePlayground {
 
         global::ImagePlayground.ImageHelper.ImportMetadata(filePath, metadataPath, outputPath);
 
-        IReadOnlyList<IExifValue> values = PlaygroundImage.GetExifValues(outputPath);
-        Assert.Contains(values, v => v.Tag == ExifTag.Software && v.GetValue()?.ToString() == "Imported");
+        IReadOnlyList<OfficeExifValue> values = PlaygroundImage.GetExifValues(outputPath);
+        Assert.Contains(values, v => v.Tag.Equals(ExifTag.Software) && v.Value?.ToString() == "Imported");
         Assert.Equal(updatedXmp, PlaygroundImage.GetHeifXmp(outputPath));
         byte[] outputBytes = File.ReadAllBytes(outputPath);
         Assert.False(ContainsSequence(outputBytes, Encoding.ASCII.GetBytes("Original")));
@@ -442,7 +443,7 @@ public partial class ImagePlayground {
         return Combine(ftyp, meta, mdat);
     }
 
-    private static byte[] CreateMinimalHeifWithPrimaryImageExifAndXmp(uint width, uint height, byte[] tiffPayload, string xmp) {
+    private static byte[] CreateMinimalHeifWithPrimaryImageExifAndXmp(uint width, uint height, byte[] tiffPayload, string xmp, ushort xmpProtectionIndex = 0, string xmpContentEncoding = "") {
         byte[] exifItemData = Combine(
             UInt32BigEndian(6),
             Encoding.ASCII.GetBytes("Exif\0\0"),
@@ -455,10 +456,10 @@ public partial class ImagePlayground {
             Encoding.ASCII.GetBytes("heic"),
             Encoding.ASCII.GetBytes("mif1")));
 
-        byte[] metaWithPlaceholder = CreateMetaBoxWithPrimaryImageExifAndXmp(0, exifItemData.Length, 0, xmpItemData.Length, width, height);
+        byte[] metaWithPlaceholder = CreateMetaBoxWithPrimaryImageExifAndXmp(0, exifItemData.Length, 0, xmpItemData.Length, width, height, xmpProtectionIndex, xmpContentEncoding);
         uint exifOffset = (uint)(ftyp.Length + metaWithPlaceholder.Length + 8);
         uint xmpOffset = (uint)(exifOffset + exifItemData.Length);
-        byte[] meta = CreateMetaBoxWithPrimaryImageExifAndXmp(exifOffset, exifItemData.Length, xmpOffset, xmpItemData.Length, width, height);
+        byte[] meta = CreateMetaBoxWithPrimaryImageExifAndXmp(exifOffset, exifItemData.Length, xmpOffset, xmpItemData.Length, width, height, xmpProtectionIndex, xmpContentEncoding);
         byte[] mdat = Box("mdat", Combine(exifItemData, xmpItemData));
 
         return Combine(ftyp, meta, mdat);
@@ -554,9 +555,9 @@ public partial class ImagePlayground {
     }
 
     private static byte[] CreateExifPayload(string software) {
-        var profile = new ExifProfile();
-        profile.SetValue(ExifTag.Software, software);
-        return profile.ToByteArray();
+        var profile = new OfficeImageMetadata();
+        profile.SetExifValue(ExifTag.Software, software);
+        return Assert.IsType<byte[]>(profile.EncodeExifProfile());
     }
 
     private static void WriteHeifMetadataJson(string sourceFilePath, string metadataPath, byte[]? exifProfile, string? xmp) {
@@ -566,7 +567,7 @@ public partial class ImagePlayground {
         var metadata = new Dictionary<string, object?> {
             ["HorizontalResolution"] = root.GetProperty("HorizontalResolution").GetDouble(),
             ["VerticalResolution"] = root.GetProperty("VerticalResolution").GetDouble(),
-            ["ResolutionUnits"] = root.GetProperty("ResolutionUnits").GetInt32(),
+            ["ResolutionUnits"] = root.GetProperty("ResolutionUnits").GetString(),
             ["ExifProfile"] = exifProfile,
             ["XmpProfile"] = xmp != null ? Encoding.UTF8.GetBytes(xmp) : null,
             ["IccProfile"] = null,
@@ -745,7 +746,7 @@ public partial class ImagePlayground {
             new byte[] { 0 },
             Encoding.ASCII.GetBytes("application/rdf+xml"),
             new byte[] { 0 },
-            Encoding.ASCII.GetBytes("utf-8"),
+            Array.Empty<byte>(),
             new byte[] { 0 }));
         byte[] iinf = FullBox("iinf", 0, Combine(
             UInt16BigEndian(1),
@@ -772,7 +773,7 @@ public partial class ImagePlayground {
             new byte[] { 0 },
             Encoding.ASCII.GetBytes("application/rdf+xml"),
             new byte[] { 0 },
-            Encoding.ASCII.GetBytes("utf-8"),
+            Array.Empty<byte>(),
             new byte[] { 0 }));
         byte[] iinf = FullBox("iinf", 0, Combine(
             UInt16BigEndian(1),
@@ -804,7 +805,7 @@ public partial class ImagePlayground {
         return FullBox("meta", 0, Combine(iinf, iloc, idat));
     }
 
-    private static byte[] CreateMetaBoxWithPrimaryImageExifAndXmp(uint exifOffset, int exifLength, uint xmpOffset, int xmpLength, uint width, uint height) {
+    private static byte[] CreateMetaBoxWithPrimaryImageExifAndXmp(uint exifOffset, int exifLength, uint xmpOffset, int xmpLength, uint width, uint height, ushort xmpProtectionIndex = 0, string xmpContentEncoding = "") {
         byte[] imageInfe = FullBox("infe", 2, Combine(
             UInt16BigEndian(1),
             UInt16BigEndian(0),
@@ -817,12 +818,12 @@ public partial class ImagePlayground {
             new byte[] { 0 }));
         byte[] xmpInfe = FullBoxWithFlags("infe", 2, 1, Combine(
             UInt16BigEndian(3),
-            UInt16BigEndian(7),
+            UInt16BigEndian(xmpProtectionIndex),
             Encoding.ASCII.GetBytes("mime"),
             new byte[] { 0 },
             Encoding.ASCII.GetBytes("application/rdf+xml"),
             new byte[] { 0 },
-            Encoding.ASCII.GetBytes("utf-8"),
+            Encoding.ASCII.GetBytes(xmpContentEncoding),
             new byte[] { 0 }));
 
         byte[] iinf = FullBox("iinf", 0, Combine(

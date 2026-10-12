@@ -11,22 +11,22 @@ Creates an image chart from definitions.
 ## SYNTAX
 ### ScriptBlock (Default)
 ```powershell
-New-ImageChart [-ChartsDefinition] <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart [-ChartsDefinition] <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### ChartScript
 ```powershell
-New-ImageChart -ChartScript <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart -ChartScript <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Chart
 ```powershell
-New-ImageChart -Chart <Chart> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart -Chart <Chart> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Definition
 ```powershell
-New-ImageChart -Definition <Object[]> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart -Definition <ChartDefinition[]> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -156,10 +156,10 @@ Accept wildcard characters: False
 ```
 
 ### -Definition
-Chart definitions provided directly.
+Typed definitions produced by New-ImageChart data cmdlets, supplied directly or through the pipeline.
 
 ```yaml
-Type: Object[]
+Type: ChartDefinition[]
 Parameter Sets: Definition
 Aliases: None
 Possible values:
@@ -283,6 +283,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Subtitle
+Supporting chart heading. Supply an empty string to clear a supplied chart's subtitle.
+
+```yaml
+Type: String
+Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Theme
 Chart theme.
 
@@ -291,6 +307,22 @@ Type: ChartTheme
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
 Aliases: None
 Possible values: Default, Dark, Light, Colorblind, Aurora, Editorial, Candy, PeopleInfographic, Terminal, TransparentOverlayDark, Minimal, DashboardLight, SaasDashboardLight, RestaurantDashboardLight
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Title
+Chart heading. A supplied native chart keeps its heading unless this parameter is supplied.
+
+```yaml
+Type: String
+Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -369,7 +401,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 - `ChartForgeX.Core.Chart`
-- `System.Object[]`
+- `ImagePlayground.ChartDefinition[]`: Base class for chart definitions.
 
 ## OUTPUTS
 

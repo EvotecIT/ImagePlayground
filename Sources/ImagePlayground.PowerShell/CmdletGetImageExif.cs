@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
+using OfficeIMO.Drawing;
 
 namespace ImagePlayground.PowerShell;
 
@@ -30,12 +30,12 @@ public sealed class GetImageExifCmdlet : ImageCmdlet {
     protected override void ProcessRecord() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageExifFileNotFound", FilePath);
 
-        IReadOnlyList<IExifValue> values = ImagePlayground.Image.GetExifValues(filePath);
+        IReadOnlyList<OfficeExifValue> values = ImagePlayground.Image.GetExifValues(filePath);
 
         if (Translate.IsPresent) {
             var obj = new PSObject();
-            foreach (IExifValue v in values) {
-                obj.Properties.Add(new PSNoteProperty(v.Tag.ToString(), v.GetValue()));
+            foreach (OfficeExifValue v in values) {
+                obj.Properties.Add(new PSNoteProperty(v.Tag.ToString(), v.Value));
             }
 
             WriteObject(obj);

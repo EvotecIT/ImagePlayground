@@ -109,7 +109,6 @@ public partial class ImagePlayground {
         Assert.Equal(15, decoded.Version);
         Assert.Equal(QrErrorCorrectionLevel.M, decoded.ErrorCorrectionLevel);
         Assert.Equal(expected.Length, decoded.Bytes.Length);
-        // ISO-8859-2 represents capital Z with caron as one byte, unlike UTF-8.
         Assert.Equal((byte)0xAE, decoded.Bytes[expected.IndexOf('Ž')]);
     }
 

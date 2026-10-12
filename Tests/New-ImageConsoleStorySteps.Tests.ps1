@@ -1,7 +1,11 @@
 Describe 'Image console story step cmdlets' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        }
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
@@ -33,6 +37,7 @@ Describe 'Image console story step cmdlets' {
 
         $story | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
         $story.Title | Should -Be 'pwsh - C:\OpenSource'
+        $story.Theme.Background.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalTheme]::PowerShell()).Background.ToCss()
         $story.WindowStyle.ToString() | Should -Be 'WindowsTerminal'
         $story.Steps.Count | Should -Be 4
         $story.Steps[0].Kind.ToString() | Should -Be 'Command'

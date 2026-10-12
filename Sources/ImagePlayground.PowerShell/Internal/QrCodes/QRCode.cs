@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
 
 namespace ImagePlayground;
 /// <summary>
@@ -36,7 +36,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.Generate("https://evotec.xyz", "qr.png");</code>
     /// </example>
-    public static void Generate(string content, string filePath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void Generate(string content, string filePath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(new QrPayloadData(content), filePath, options, errorCorrectionLevel: eccLevel);
     }
@@ -52,7 +52,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color used for non-transparent output. Defaults to white.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateAsync(string content, string filePath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateAsync(string content, string filePath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(new QrPayloadData(content), filePath, options, cancellationToken, errorCorrectionLevel: eccLevel);
     }
@@ -71,7 +71,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.Generate("https://evotec.xyz", "qr-logo.png", "logo.png");</code>
     /// </example>
-    public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void Generate(string content, string filePath, string logoPath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFileWithCenteredLogo(new QrPayloadData(content), filePath, logoPath, options, errorCorrectionLevel: eccLevel);
     }
@@ -88,7 +88,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color used for non-transparent output. Defaults to white.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateAsync(string content, string filePath, string logoPath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateAsync(string content, string filePath, string logoPath, bool transparent = false, QrErrorCorrectionLevel eccLevel = QrErrorCorrectionLevel.Q, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileWithCenteredLogoAsync(new QrPayloadData(content), filePath, logoPath, options, cancellationToken, errorCorrectionLevel: eccLevel);
     }
@@ -106,7 +106,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateWiFi("OfficeWiFi", "pass123!", "wifi.png");</code>
     /// </example>
-    public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateWiFi(string ssid, string password, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Wifi(ssid, password, "WPA", false);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.H);
@@ -123,7 +123,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateWiFiAsync(string ssid, string password, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateWiFiAsync(string ssid, string password, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Wifi(ssid, password, "WPA", false);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.H);
@@ -138,7 +138,7 @@ public partial class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void GenerateWhatsAppMessage(string message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateWhatsAppMessage(string message, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.WhatsAppMessage(message);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -154,7 +154,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateWhatsAppMessageAsync(string message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateWhatsAppMessageAsync(string message, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.WhatsAppMessage(message);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -168,7 +168,7 @@ public partial class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void GenerateUrl(string url, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateUrl(string url, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Url(url);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -183,7 +183,7 @@ public partial class QrCode {
     /// <param name="foregroundColor">Foreground color of QR modules.</param>
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
-    public static void GenerateBookmark(string bookmarkUrl, string bookmarkName, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateBookmark(string bookmarkUrl, string bookmarkName, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Bookmark(bookmarkUrl, bookmarkName);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -200,7 +200,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateBookmarkAsync(string bookmarkUrl, string bookmarkName, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateBookmarkAsync(string bookmarkUrl, string bookmarkName, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Bookmark(bookmarkUrl, bookmarkName);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -225,7 +225,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateCalendarEvent("Meeting", "Project sync", "Warsaw", DateTime.Today, DateTime.Today.AddHours(1), "meeting.png", false);</code>
     /// </example>
-    public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateCalendarEvent(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.CalendarEvent(calendarEntry, calendarMessage, calendarGeoLocation, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -247,7 +247,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateCalendarEventAsync(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateCalendarEventAsync(string calendarEntry, string? calendarMessage, string? calendarGeoLocation, DateTime calendarFrom, DateTime calendarTo, string filePath, bool allDayEvent, QrCalendarEncoding calendarEventEncoding = QrCalendarEncoding.ICalComplete, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.CalendarEvent(calendarEntry, calendarMessage, calendarGeoLocation, calendarFrom, calendarTo, allDayEvent, calendarEventEncoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -285,7 +285,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateContact("contact.png", QrContactOutputType.MeCard, "John", "Doe");</code>
     /// </example>
-    public static void GenerateContact(string filePath, QrContactOutputType outputType, string firstname, string lastname, string? nickname = null, string? phone = null, string? mobilePhone = null, string? workPhone = null, string? email = null, DateTime? birthday = null, string? website = null, string? street = null, string? houseNumber = null, string? city = null, string? zipCode = null, string? country = null, string? note = null, string? stateRegion = null, QrContactAddressOrder addressOrder = QrContactAddressOrder.Default, string? org = null, string? orgTitle = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, QrContactAddressType addressType = QrContactAddressType.HomePreferred) {
+    public static void GenerateContact(string filePath, QrContactOutputType outputType, string firstname, string lastname, string? nickname = null, string? phone = null, string? mobilePhone = null, string? workPhone = null, string? email = null, DateTime? birthday = null, string? website = null, string? street = null, string? houseNumber = null, string? city = null, string? zipCode = null, string? country = null, string? note = null, string? stateRegion = null, QrContactAddressOrder addressOrder = QrContactAddressOrder.Default, string? org = null, string? orgTitle = null, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, QrContactAddressType addressType = QrContactAddressType.HomePreferred) {
         var payload = QrPayloads.Contact(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, stateRegion, addressOrder, org, orgTitle, addressType);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -321,7 +321,7 @@ public partial class QrCode {
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="addressType">Address type used in the contact payload.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateContactAsync(string filePath, QrContactOutputType outputType, string firstname, string lastname, string? nickname = null, string? phone = null, string? mobilePhone = null, string? workPhone = null, string? email = null, DateTime? birthday = null, string? website = null, string? street = null, string? houseNumber = null, string? city = null, string? zipCode = null, string? country = null, string? note = null, string? stateRegion = null, QrContactAddressOrder addressOrder = QrContactAddressOrder.Default, string? org = null, string? orgTitle = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, QrContactAddressType addressType = QrContactAddressType.HomePreferred, CancellationToken cancellationToken = default) {
+    public static Task GenerateContactAsync(string filePath, QrContactOutputType outputType, string firstname, string lastname, string? nickname = null, string? phone = null, string? mobilePhone = null, string? workPhone = null, string? email = null, DateTime? birthday = null, string? website = null, string? street = null, string? houseNumber = null, string? city = null, string? zipCode = null, string? country = null, string? note = null, string? stateRegion = null, QrContactAddressOrder addressOrder = QrContactAddressOrder.Default, string? org = null, string? orgTitle = null, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, QrContactAddressType addressType = QrContactAddressType.HomePreferred, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Contact(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, stateRegion, addressOrder, org, orgTitle, addressType);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -342,7 +342,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateEmail("email.png", "user@example.com", "Hello", "Body");</code>
     /// </example>
-    public static void GenerateEmail(string filePath, string email, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateEmail(string filePath, string email, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Email(email, subject, message, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -361,7 +361,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateEmailAsync(string filePath, string email, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateEmailAsync(string filePath, string email, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Email(email, subject, message, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -381,7 +381,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateMMS("mms.png", "+123456789", "Hi");</code>
     /// </example>
-    public static void GenerateMMS(string filePath, string phoneNumber, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mmsto, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateMMS(string filePath, string phoneNumber, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mmsto, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Mms(phoneNumber, subject, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -399,7 +399,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateMMSAsync(string filePath, string phoneNumber, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mmsto, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateMMSAsync(string filePath, string phoneNumber, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mmsto, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Mms(phoneNumber, subject, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -419,7 +419,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSms("+123456789", "Hello", "sms.png");</code>
     /// </example>
-    public static void GenerateSms(string number, string? message, string filePath, QrSmsEncoding encoding = QrSmsEncoding.Sms, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateSms(string number, string? message, string filePath, QrSmsEncoding encoding = QrSmsEncoding.Sms, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Sms(number, message, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -437,7 +437,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateSmsAsync(string number, string? message, string filePath, QrSmsEncoding encoding = QrSmsEncoding.Sms, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateSmsAsync(string number, string? message, string filePath, QrSmsEncoding encoding = QrSmsEncoding.Sms, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Sms(number, message, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -457,7 +457,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateGeoLocation("46.0569", "14.5058", "geo.png");</code>
     /// </example>
-    public static void GenerateGeoLocation(string latitude, string longitude, string filePath, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateGeoLocation(string latitude, string longitude, string filePath, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Geo(latitude, longitude, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -475,7 +475,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateGeoLocationAsync(string latitude, string longitude, string filePath, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateGeoLocationAsync(string latitude, string longitude, string filePath, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Geo(latitude, longitude, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -502,7 +502,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateGirocode("DE02120300000000202051", "BYLADEM1001", "ACME", 10m, "giro.png");</code>
     /// </example>
-    public static void GenerateGirocode(string iban, string bic, string name, decimal amount, string filePath, string? remittanceInformation = null, QrGirocodeRemittanceType type = QrGirocodeRemittanceType.Unstructured, string? purposeOfCreditTransfer = null, string? messageToGirocodeUser = null, QrGirocodeVersion version = QrGirocodeVersion.Version1, QrGirocodeEncoding encoding = QrGirocodeEncoding.Iso8859_1, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateGirocode(string iban, string bic, string name, decimal amount, string filePath, string? remittanceInformation = null, QrGirocodeRemittanceType type = QrGirocodeRemittanceType.Unstructured, string? purposeOfCreditTransfer = null, string? messageToGirocodeUser = null, QrGirocodeVersion version = QrGirocodeVersion.Version1, QrGirocodeEncoding encoding = QrGirocodeEncoding.Iso8859_1, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Girocode(iban, bic, name, amount, remittanceInformation ?? string.Empty, type, purposeOfCreditTransfer ?? string.Empty, messageToGirocodeUser ?? string.Empty, version, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options);
@@ -527,7 +527,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateGirocodeAsync(string iban, string bic, string name, decimal amount, string filePath, string? remittanceInformation = null, QrGirocodeRemittanceType type = QrGirocodeRemittanceType.Unstructured, string? purposeOfCreditTransfer = null, string? messageToGirocodeUser = null, QrGirocodeVersion version = QrGirocodeVersion.Version1, QrGirocodeEncoding encoding = QrGirocodeEncoding.Iso8859_1, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateGirocodeAsync(string iban, string bic, string name, decimal amount, string filePath, string? remittanceInformation = null, QrGirocodeRemittanceType type = QrGirocodeRemittanceType.Unstructured, string? purposeOfCreditTransfer = null, string? messageToGirocodeUser = null, QrGirocodeVersion version = QrGirocodeVersion.Version1, QrGirocodeEncoding encoding = QrGirocodeEncoding.Iso8859_1, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Girocode(iban, bic, name, amount, remittanceInformation ?? string.Empty, type, purposeOfCreditTransfer ?? string.Empty, messageToGirocodeUser ?? string.Empty, version, encoding);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken);
@@ -549,7 +549,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateBitcoinAddress(QrBitcoinLikeType.Bitcoin, "addr", 0.5, null, null, "btc.png");</code>
     /// </example>
-    public static void GenerateBitcoinAddress(QrBitcoinLikeType currency, string address, double? amount, string? label, string? message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateBitcoinAddress(QrBitcoinLikeType currency, string address, double? amount, string? label, string? message, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.BitcoinLike(currency, address, amount, label, message);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -569,7 +569,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateBitcoinAddressAsync(QrBitcoinLikeType currency, string address, double? amount, string? label, string? message, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateBitcoinAddressAsync(QrBitcoinLikeType currency, string address, double? amount, string? label, string? message, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.BitcoinLike(currency, address, amount, label, message);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -591,7 +591,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateMoneroTransaction("addr", 1.0f, null, null, null, "xmr.png");</code>
     /// </example>
-    public static void GenerateMoneroTransaction(string address, float? amount, string? paymentId, string? recipientName, string? description, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateMoneroTransaction(string address, float? amount, string? paymentId, string? recipientName, string? description, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Monero(address, amount, paymentId, recipientName, description);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -611,7 +611,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateMoneroTransactionAsync(string address, float? amount, string? paymentId, string? recipientName, string? description, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateMoneroTransactionAsync(string address, float? amount, string? paymentId, string? recipientName, string? description, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Monero(address, amount, paymentId, recipientName, description);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -629,7 +629,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GeneratePhoneNumber("+123456789", "phone.png");</code>
     /// </example>
-    public static void GeneratePhoneNumber(string number, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GeneratePhoneNumber(string number, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.Phone(number);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -645,7 +645,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GeneratePhoneNumberAsync(string number, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GeneratePhoneNumberAsync(string number, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.Phone(number);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -663,7 +663,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSkypeCall("user", "skype.png");</code>
     /// </example>
-    public static void GenerateSkypeCall(string username, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateSkypeCall(string username, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.SkypeCall(username);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -679,7 +679,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateSkypeCallAsync(string username, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateSkypeCallAsync(string username, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.SkypeCall(username);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -701,7 +701,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateShadowSocks("host", 8388, "pass", QrShadowSocksMethod.Aes256Gcm, "ss.png");</code>
     /// </example>
-    public static void GenerateShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, string filePath, string? tag = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, string filePath, string? tag = null, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.ShadowSocks(hostname, port, password, method, tag);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -721,7 +721,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateShadowSocksAsync(string hostname, int port, string password, QrShadowSocksMethod method, string filePath, string? tag = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateShadowSocksAsync(string hostname, int port, string password, QrShadowSocksMethod method, string filePath, string? tag = null, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.ShadowSocks(hostname, port, password, method, tag);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -746,7 +746,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateOneTimePassword(OtpAuthType.Totp, "BASE32SECRET", "otp.png");</code>
     /// </example>
-    public static void GenerateOneTimePassword(OtpAuthType type, string secretBase32, string filePath, string? label = null, string? issuer = null, OtpAlgorithm algorithm = OtpAlgorithm.Sha1, int digits = 6, int? period = 30, int? counter = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateOneTimePassword(OtpAuthType type, string secretBase32, string filePath, string? label = null, string? issuer = null, OtpAlgorithm algorithm = OtpAlgorithm.Sha1, int digits = 6, int? period = 30, int? counter = null, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = QrPayloads.OneTimePassword(type, secretBase32, label, issuer, algorithm, digits, period, counter);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -769,7 +769,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateOneTimePasswordAsync(OtpAuthType type, string secretBase32, string filePath, string? label = null, string? issuer = null, OtpAlgorithm algorithm = OtpAlgorithm.Sha1, int digits = 6, int? period = 30, int? counter = null, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateOneTimePasswordAsync(OtpAuthType type, string secretBase32, string filePath, string? label = null, string? issuer = null, OtpAlgorithm algorithm = OtpAlgorithm.Sha1, int digits = 6, int? period = 30, int? counter = null, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = QrPayloads.OneTimePassword(type, secretBase32, label, issuer, algorithm, digits, period, counter);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -788,7 +788,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSlovenianUpnQr(upn, "upn.png");</code>
     /// </example>
-    public static void GenerateSlovenianUpnQr(SlovenianUpnQrPayload upn, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateSlovenianUpnQr(SlovenianUpnQrPayload upn, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         if (upn is null) {
             throw new ArgumentNullException(nameof(upn));
         }
@@ -806,7 +806,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateSlovenianUpnQrAsync(SlovenianUpnQrPayload upn, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateSlovenianUpnQrAsync(SlovenianUpnQrPayload upn, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         if (upn is null) {
             throw new ArgumentNullException(nameof(upn));
         }
@@ -832,7 +832,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateBezahlCode(QrBezahlAuthorityType.Contact, "John", "123", "10020030", "DE89...", "BICCODE", "Invoice", "bezahl.png");</code>
     /// </example>
-    public static void GenerateBezahlCode(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateBezahlCode(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         var payload = BuildBezahlPayloadData(authority, name, account, bnc, iban, bic, reason, null, "EUR", null, null, null, null, null, QrBezahlPeriodicUnit.Monthly, null, null, null);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         RenderToFile(payload, filePath, options, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -887,8 +887,8 @@ public partial class QrCode {
         DateTime? periodicFirstExecutionDate = null,
         DateTime? periodicLastExecutionDate = null,
         bool transparent = false,
-        Color? foregroundColor = null,
-        Color? backgroundColor = null,
+        OfficeColor? foregroundColor = null,
+        OfficeColor? backgroundColor = null,
         int pixelSize = 20) {
         var payload = BuildBezahlPayloadData(authority, name, account, bnc, iban, bic, reason, amount, currency, postingKey, executionDate, sepaReference, creditorId, mandateId, periodicUnit, periodicUnitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, dateOfSignature);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
@@ -911,7 +911,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateBezahlCodeAsync(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateBezahlCodeAsync(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         var payload = BuildBezahlPayloadData(authority, name, account, bnc, iban, bic, reason, null, "EUR", null, null, null, null, null, QrBezahlPeriodicUnit.Monthly, null, null, null);
         var options = BuildOptions(transparent, foregroundColor, backgroundColor, pixelSize);
         return RenderToFileAsync(payload, filePath, options, cancellationToken, errorCorrectionLevel: QrErrorCorrectionLevel.Q);
@@ -967,8 +967,8 @@ public partial class QrCode {
         DateTime? periodicFirstExecutionDate = null,
         DateTime? periodicLastExecutionDate = null,
         bool transparent = false,
-        Color? foregroundColor = null,
-        Color? backgroundColor = null,
+        OfficeColor? foregroundColor = null,
+        OfficeColor? backgroundColor = null,
         int pixelSize = 20,
         CancellationToken cancellationToken = default) {
         var payload = BuildBezahlPayloadData(authority, name, account, bnc, iban, bic, reason, amount, currency, postingKey, executionDate, sepaReference, creditorId, mandateId, periodicUnit, periodicUnitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, dateOfSignature);
@@ -988,7 +988,7 @@ public partial class QrCode {
     /// <example>
     ///   <code>QrCode.GenerateSwissQrCode(swissPayload, "swiss.png");</code>
     /// </example>
-    public static void GenerateSwissQrCode(SwissQrCodePayload swiss, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20) {
+    public static void GenerateSwissQrCode(SwissQrCodePayload swiss, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20) {
         if (swiss is null) {
             throw new ArgumentNullException(nameof(swiss));
         }
@@ -1006,7 +1006,7 @@ public partial class QrCode {
     /// <param name="backgroundColor">Background color of the QR code.</param>
     /// <param name="pixelSize">Pixel size for each QR module.</param>
     /// <param name="cancellationToken">Cancellation token used to abort image generation or save operations.</param>
-    public static Task GenerateSwissQrCodeAsync(SwissQrCodePayload swiss, string filePath, bool transparent = false, Color? foregroundColor = null, Color? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
+    public static Task GenerateSwissQrCodeAsync(SwissQrCodePayload swiss, string filePath, bool transparent = false, OfficeColor? foregroundColor = null, OfficeColor? backgroundColor = null, int pixelSize = 20, CancellationToken cancellationToken = default) {
         if (swiss is null) {
             throw new ArgumentNullException(nameof(swiss));
         }

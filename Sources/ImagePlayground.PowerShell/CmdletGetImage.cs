@@ -5,7 +5,7 @@ using System.Management.Automation;
 namespace ImagePlayground.PowerShell;
 
 /// <summary>Loads an image from disk.</summary>
-/// <para>Returns a SixLabors.ImageSharp.Image object for further processing.</para>
+/// <para>Returns an editable <see cref="ImagePlayground.Image"/>. Save it with Save-Image after applying transformations, and dispose it when finished.</para>
 /// <example>
 ///   <summary>Read an image</summary>
 ///   <code>$img = Get-Image -FilePath sample.png</code>
@@ -15,6 +15,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>(Get-Image -FilePath sample.png).Width</code>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "Image")]
+[OutputType(typeof(ImagePlayground.Image))]
 public sealed class GetImageCmdlet : ImageCmdlet {
     /// <summary>Path to the image file.</summary>
     /// <para>The file must exist.</para>

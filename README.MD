@@ -25,10 +25,11 @@ ImagePlayground turns scripts and application data into finished visual assets. 
 
 Automation often ends with something a person must read: a chart in a report, a service map in an incident, a QR code on a device, a sanitized image for publication, or an animated terminal session in documentation. ImagePlayground keeps those results reproducible.
 
-The PowerShell module provides one scripting surface over three reusable .NET owners:
+The PowerShell module provides one scripting surface over reusable .NET libraries:
 
-- **ImagePlayground** handles image loading, processing, composition, metadata, and file output.
-- **ChartForgeX** handles charts, visual blocks, canvases, topology, hierarchy, and story rendering.
+- **ImagePlayground** provides the editable image wrapper and file workflows.
+- **OfficeIMO.Core** handles managed raster decoding, filters, transforms, metadata, and pixel comparison.
+- **ChartForgeX** handles charts, topology, hierarchy, and raster primitives. **ChartForgeX.Visuals** handles composition, visual blocks, and canvases; **ChartForgeX.Stories** handles animation encoding and story rendering.
 - **CodeGlyphX** handles QR-code and barcode generation and decoding.
 
 PowerShell users install one module. .NET applications reference only the package that owns the capability they need.
@@ -120,7 +121,7 @@ dotnet add package ChartForgeX
 dotnet add package CodeGlyphX
 ```
 
-The ImagePlayground .NET package does not wrap ChartForgeX or CodeGlyphX. That aggregation belongs to the PowerShell module.
+The ImagePlayground .NET package uses OfficeIMO.Core for raster processing, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding. These ChartForgeX packages use version 2.0.0 together. The PowerShell module also exposes ChartForgeX charts and stories and CodeGlyphX QR codes and barcodes.
 
 ## Quick start
 
@@ -172,13 +173,13 @@ ImageHelper.Resize(
     filePath: "photo.jpg",
     outFilePath: "photo-small.jpg",
     width: 1200,
-    height: 1200,
+    height: null,
     keepAspectRatio: true);
 ```
 
 ## Image processing and composition
 
-ImagePlayground uses [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) for the main image engine. The primary package does not depend on `System.Drawing`.
+ImagePlayground uses the managed raster APIs in [OfficeIMO.Core](https://github.com/EvotecIT/OfficeIMO), composition in [ChartForgeX.Visuals](https://www.nuget.org/packages/ChartForgeX.Visuals), and GIF/APNG encoding in [ChartForgeX.Stories](https://www.nuget.org/packages/ChartForgeX.Stories). Image APIs expose owned value types and buffers. See the [migration guide](Docs/Managed-Image-Migration.md) for type, assembly, comparison, and format changes.
 
 ### Focused commands for one operation
 
@@ -197,22 +198,21 @@ New-ImageCrop `
 
 ConvertTo-Image `
     -FilePath '.\photo-square.jpg' `
-    -OutputPath '.\photo-square.webp' `
-    -Quality 85
+    -OutputPath '.\photo-square.webp'
 ```
 
-The destination extension selects the output format. JPEG and WebP support `-Quality`; PNG supports `-CompressionLevel`.
+The destination extension selects the output format. JPEG supports `-Quality`; WebP output is lossless by default and uses the managed lossy encoder when `-Quality` is supplied. PNG supports `-CompressionLevel` through the shared compression profiles.
 
 ### Keep an image open for several edits
 
 ```powershell
 $image = Get-Image -FilePath '.\photo.jpg'
 try {
-    $image.Resize(1200, 1200, $true)
+    $image.Resize(1200, $null, $true)
     $image.Watermark(
         'Internal',
         [ImagePlayground.WatermarkPlacement]::BottomRight,
-        [SixLabors.ImageSharp.Color]::White,
+        [OfficeIMO.Drawing.OfficeColor]::White,
         28)
 
     Save-Image -Image $image -FilePath '.\photo-watermarked.jpg' -Quality 88
@@ -313,7 +313,9 @@ Use `New-ImageBarCode` and `Get-ImageBarCode` for barcode generation and readbac
 
 ## Charts and report graphics
 
-ImagePlayground provides a PowerShell DSL over ChartForgeX. `New-ImageChart` renders definitions emitted by the typed chart commands, accepts definitions from the pipeline, or accepts a native `ChartForgeX.Core.Chart`.
+ImagePlayground provides a PowerShell DSL over ChartForgeX. `New-ImageChart` renders definitions emitted by the typed chart commands, accepts definitions from the pipeline, or accepts a native `ChartForgeX.Core.Chart` through `-Chart` or the pipeline. `-Definition` accepts `ImagePlayground.ChartDefinition[]`; ordinary arrays containing results from `New-ImageChart*` data commands bind to this type. Arbitrary objects are rejected during parameter binding.
+
+Charts and factual blocks use the canonical light design by default. `-Theme Dark` selects the matching dark colors, typography, and frame treatment; named presentation presets and explicit colors remain available. Use `-Title` and `-Subtitle` for chart headings. Exporting an existing native chart preserves its headings, size, and theme unless you supply an override.
 
 ```powershell
 $annotations = New-ImageChartAnnotation `
@@ -326,14 +328,14 @@ New-ImageChart {
     New-ImageChartLine `
         -Name CPU `
         -Value 31, 42, 37, 55, 74, 61 `
-        -Color CornflowerBlue `
         -Smooth
     New-ImageChartLine `
         -Name Memory `
         -Value 48, 51, 55, 57, 60, 62 `
-        -Color MediumSeaGreen `
         -Smooth
 } -Annotation $annotations `
+  -Title 'Workstation health' `
+  -Subtitle 'Six samples of resource usage' `
   -FilePath '.\workstation-health.svg' `
   -XTitle Sample `
   -YTitle 'Usage %' `
@@ -353,12 +355,12 @@ The same chart definition can produce PNG, SVG, or standalone HTML where the sel
 
 ## Canvases, dashboards, and visual blocks
 
-Use a canvas when every element needs an explicit position. Use a visual grid when charts and reusable blocks should flow into dashboard panels.
+Use a canvas when every element needs an explicit position. Use a visual grid when charts and reusable blocks should flow into dashboard panels. Canvas light/dark themes use the same canonical color and font roles; explicit layer colors and background overrides are retained.
 
 <table>
   <tr>
     <td width="50%"><img src="Examples/Samples/CanvasSocialPreview.png" alt="Fixed-size social preview canvas" width="100%" /><br /><strong>Fixed canvas</strong></td>
-    <td width="50%"><img src="Examples/Samples/VisualGridServiceHealth.svg" alt="Service-health dashboard made from visual blocks" width="100%" /><br /><strong>Adaptive visual grid</strong></td>
+    <td width="50%"><img src="Examples/Samples/VisualGridServiceHealth.svg" alt="Compact service-health dashboard made from full-size visual blocks" width="100%" /><br /><strong>Compact grid export</strong></td>
   </tr>
 </table>
 
@@ -367,18 +369,18 @@ Use a canvas when every element needs an explicit position. Use a visual grid wh
 ```powershell
 New-ImageCanvas `
     -Preset SocialPreview `
-    -Title 'ChartForgeX release' `
-    -Backdrop TechHorizon `
+    -Theme Dark `
+    -Title 'Service health' `
     -LayerDefinition {
         New-ImageCanvasText `
             -X 72 -Y 72 -Width 1000 `
-            -Text 'ChartForgeX 1.3' `
+            -Text 'Service health' `
             -FontSize 58 -Color White -Emphasized
 
         New-ImageCanvasInfoTile `
             -X 72 -Y 190 -Width 380 -Height 150 `
-            -Icon SVG -Label Renderer -Value 'Dependency-free' `
-            -Detail 'SVG + PNG' `
+            -Icon API -Label Requests -Value '12,840' `
+            -Detail '+12% this week' `
             -MiniChartKind Area -MiniValues 2, 4, 5, 8
     } `
     -FilePath '.\release-preview.png'
@@ -387,29 +389,31 @@ New-ImageCanvas `
 ### Dashboard grid
 
 ```powershell
+$theme = 'Light'
 New-ImageVisualGrid `
     -Title 'Service health' `
     -Subtitle 'Generated from PowerShell objects' `
     -Columns 2 `
-    -Theme DashboardLight `
+    -Theme $theme `
     -ContentDefinition {
         New-ImageMetricCard `
             -Label Requests -Value 12840 -Trend '+12%' `
-            -Status Positive -MiniValues 8, 9, 10, 12
+            -Status Positive -MiniValues 8, 9, 10, 12 -Theme $theme
 
         New-ImageListBlock `
             -Title Checks -Item API, Database `
-            -Status Positive, Warning
+            -Status Positive, Warning -Theme $theme
 
         New-ImageTableBlock `
             -Title Services `
+            -Theme $theme `
             -Column Name, Status `
             -Row @(
                 @{ Name = 'API'; Status = 'Healthy' }
                 @{ Name = 'Database'; Status = 'Warning' }
             )
 
-        New-ImageTimelineBlock -Title Activity -ItemDefinition {
+        New-ImageTimelineBlock -Title Activity -Theme $theme -ItemDefinition {
             New-ImageTimelineItem `
                 -Kind Event -Title 'Build completed' `
                 -Timestamp '14:20' -Status Positive
@@ -421,6 +425,8 @@ New-ImageVisualGrid `
 ```
 
 Omit `-FilePath` to retain a reusable grid and pass it to `New-ImageVisualStory` or a native ChartForgeX canvas.
+
+HTML grids reflow their panels on narrow screens. SVG and PNG grids keep their authored dimensions: reducing a wide image also reduces its text. For a compact fixed export, compose one column with blocks sized for that destination instead. [`VisualGrid.ServiceHealth.ps1`](Examples/VisualGrid.ServiceHealth.ps1) exports a reflowing HTML page, a wide fixed grid, and a separate 368px compact grid in either theme. [`Canvas.SocialPreview.ps1`](Examples/Canvas.SocialPreview.ps1) demonstrates the same distinction for positioned canvases. Canvas text without `-Color` follows the selected canvas foreground; explicitly supplied white, transparent and custom colors remain unchanged.
 
 ## Topology, scenarios, and organization charts
 
@@ -524,17 +530,25 @@ $story | Export-ImageConsoleStory -Path '.\audit.svg'
 
 Generic stories combine resolved source, terminal output, text, images, and SVG into timed scenes. Declared outcomes must be visible in the completed scene, so a story that promises a chart cannot finish with only “Saved chart.png.”
 
+New source-to-result stories use the canonical dark surfaces and syntax roles. Supply `-Theme ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight())` for a light story. Terminal `Light` and `Dark` palettes use the same design roles; named PowerShell, Ubuntu, Campbell and other shell palettes remain distinct. Custom themes and already-authored native stories retain their selected styling on export.
+
 ```powershell
 $chartPath = '.\weekly-builds.png'
 $sourceText = @'
+$options = New-ImageChartOptions -TickCount 4
 New-ImageChart {
-    New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
-} -FilePath '.\weekly-builds.png' -Width 900 -Height 500
+    New-ImageChartLine -Name Builds `
+        -Value 12, 18, 15, 24, 31
+} -Theme Light -Width 560 -Height 320 `
+    -Title 'Weekly builds' `
+    -FilePath '.\weekly-builds.png' `
+    -Options $options
 '@
 
+$options = New-ImageChartOptions -TickCount 4
 New-ImageChart {
     New-ImageChartLine -Name Builds -Value 12, 18, 15, 24, 31
-} -FilePath $chartPath -Width 900 -Height 500
+} -Title 'Weekly builds' -Theme Light -FilePath $chartPath -Width 560 -Height 320 -Options $options
 
 $source = ConvertTo-ImageStorySource `
     -Text $sourceText `
@@ -546,16 +560,17 @@ $chartPanel = New-ImageStoryPanel `
     -AccessibleText 'Weekly builds chart'
 
 $writeScene = New-ImageStoryScene `
-    -Id write -Title 'Write five lines' -Panels $codePanel
+    -Id write -Title 'Write the chart' -Panels $codePanel
 $resultScene = New-ImageStoryScene `
     -Id result -Title 'See the chart' -Layout Split `
     -Panels $codePanel, $chartPanel
 $outcome = New-ImageStoryOutcome `
-    -Id chart -Label 'The weekly builds chart is visible.' `
+    -Id chart -Label 'Weekly builds visible' `
     -PanelId chart
 
 New-ImageStory `
-    -Title 'Chart in five lines' `
+    -Title 'Weekly builds recipe' `
+    -Theme ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()) `
     -Scenes $writeScene, $resultScene `
     -Outcomes $outcome `
     -FilePath '.\chart-story.gif'
@@ -564,6 +579,12 @@ New-ImageStory `
 PowerShell source highlighting uses the PowerShell parser. C# and Bash can use the optional `ImagePlayground.Syntax.TreeSitter` package. There is no regex-coloring fallback and no Tree-sitter native payload in the normal PowerShell module.
 
 Use `New-ImageVisualStory` when a visual grid should reveal blocks through named motion cues. SVG and HTML preserve script-free animation; PNG, print, and reduced-motion output show the complete final state.
+
+The profile and terminal examples include separately authored compact versions. Terminal widths start at 480 design pixels; an SVG can scale below that size, but its text scales with it. Choose the compact composition when readability at a small viewing size matters.
+
+[`Story.ChartInFiveLines.ps1`](Examples/Story.ChartInFiveLines.ps1) also authors a stacked compact story titled “Weekly builds recipe.” Its multiline recipe uses short lines and a taller source panel, while a separately sized chart keeps the result labels readable.
+
+![A complete PowerShell recipe alongside its weekly builds chart](Examples/Samples/StoryChartRecipe.png)
 
 ## Portable visual artifacts and Office workflows
 
@@ -689,14 +710,14 @@ The core package targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .N
 
 ```csharp
 using ImagePlayground;
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
 
 using var image = ImagePlayground.Image.Load("photo.jpg");
-image.Resize(1200, 1200, keepAspectRatio: true);
+image.Resize(1200, null, keepAspectRatio: true);
 image.Watermark(
     "Internal",
     WatermarkPlacement.BottomRight,
-    Color.White,
+    OfficeColor.White,
     fontSize: 28);
 image.Save("photo-watermarked.jpg");
 ```
@@ -706,7 +727,9 @@ image.Save("photo-watermarked.jpg");
 | Need | Package |
 | --- | --- |
 | Image loading, processing, composition, metadata, thumbnails, icons, mosaics, avatars, or GIFs | [`ImagePlayground`](https://www.nuget.org/packages/ImagePlayground) |
-| Charts, topology, hierarchy, visual blocks, canvases, or stories | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
+| Charts, topology, hierarchy, and raster primitives | [`ChartForgeX`](https://www.nuget.org/packages/ChartForgeX) |
+| Composition, visual blocks, canvases, and watermark decoration | [`ChartForgeX.Visuals`](https://www.nuget.org/packages/ChartForgeX.Visuals) |
+| Stories, terminal playback, motion, and GIF/APNG encoding | [`ChartForgeX.Stories`](https://www.nuget.org/packages/ChartForgeX.Stories) |
 | QR codes, barcodes, GS1 data, renderers, or image decoding | [`CodeGlyphX`](https://www.nuget.org/packages/CodeGlyphX) |
 | PowerShell access to all three owners | [`ImagePlayground`](https://www.powershellgallery.com/packages/ImagePlayground) module |
 
@@ -714,7 +737,7 @@ image.Save("photo-watermarked.jpg");
 
 | Surface | Typical output |
 | --- | --- |
-| Image processing | PNG, JPEG, WebP, GIF, BMP, and other ImageSharp-supported formats selected by extension |
+| Image processing | PNG, JPEG, WebP, GIF, BMP, PBM, TGA, TIFF, and ICO output selected by extension; supported managed codec subsets for loading |
 | Charts and static report visuals | PNG and SVG, with standalone HTML where supported |
 | Topology | PNG, SVG, interactive HTML, GIF, and APNG |
 | Console stories | SVG, HTML, PNG, GIF, and APNG |
@@ -731,10 +754,11 @@ PowerShell commands have one execution path. Commands that can use asynchronous 
 | QR codes and barcodes | [`Examples/QrCode.ps1`](Examples/QrCode.ps1), [`Examples/QrCodeWithLogo.ps1`](Examples/QrCodeWithLogo.ps1), [`Examples/Barcode.Create.ps1`](Examples/Barcode.Create.ps1) |
 | Chart gallery | [`Examples/Charts.ChartForgeX.Showcase.ps1`](Examples/Charts.ChartForgeX.Showcase.ps1) |
 | Social preview canvas | [`Examples/Canvas.SocialPreview.ps1`](Examples/Canvas.SocialPreview.ps1) |
-| Service-health dashboard | [`Examples/VisualGrid.ServiceHealth.ps1`](Examples/VisualGrid.ServiceHealth.ps1) |
+| Light/dark service-health dashboard and compact fixed export | [`Examples/VisualGrid.ServiceHealth.ps1`](Examples/VisualGrid.ServiceHealth.ps1) |
 | Service topology and route animation | [`Examples/Topology.ServiceMap.ps1`](Examples/Topology.ServiceMap.ps1), [`Examples/Topology.RouteAnimation.ps1`](Examples/Topology.RouteAnimation.ps1) |
 | Organization hierarchy | [`Examples/Organization.Engineering.ps1`](Examples/Organization.Engineering.ps1) |
-| Console stories | [`Examples/ConsoleStory.TabNavigation.ps1`](Examples/ConsoleStory.TabNavigation.ps1), [`Examples/ConsoleStory.CapturedScript.ps1`](Examples/ConsoleStory.CapturedScript.ps1) |
+| Console stories and compact terminal presentation | [`Examples/ConsoleStory.PowerShell.ps1`](Examples/ConsoleStory.PowerShell.ps1), [`Examples/ConsoleStory.TabNavigation.ps1`](Examples/ConsoleStory.TabNavigation.ps1), [`Examples/ConsoleStory.CapturedScript.ps1`](Examples/ConsoleStory.CapturedScript.ps1) |
+| Animated grid with a compact composition | [`Examples/VisualStory.Profile.ps1`](Examples/VisualStory.Profile.ps1) |
 | Generic source-to-result story | [`Examples/Story.ChartInFiveLines.ps1`](Examples/Story.ChartInFiveLines.ps1) |
 
 The curated [Website examples](Website/content/examples/_index.md) provide shorter source-to-result walkthroughs. The generated [command reference](Docs/Readme.md) contains at least one example for every exported cmdlet.
@@ -755,12 +779,12 @@ Generated command Markdown and external help come from the C# XML documentation 
 
 - PowerShell: Windows PowerShell 5.1 and PowerShell 7+
 - Core library: .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .NET 10
-- Main image engine: SixLabors.ImageSharp
-- Chart, topology, canvas, and story engine: ChartForgeX
+- Raster processing, metadata, and comparison engine: OfficeIMO.Core
+- Chart and topology engine: ChartForgeX; canvas and composition engine: ChartForgeX.Visuals; story and animation engine: ChartForgeX.Stories
 - QR-code and barcode engine: CodeGlyphX
 - Optional C# and Bash source highlighting: `ImagePlayground.Syntax.TreeSitter`
 
-HEIF and HEIC support is deliberately narrower than normal ImageSharp-backed image processing. The HEIF commands inspect container data and manage EXIF/XMP paths described by their command documentation; they do not imply unrestricted HEIF pixel editing.
+HEIF and HEIC commands inspect container data and manage EXIF/XMP paths described by their command documentation. HEIC pixel decoding and HEVC encoding are unsupported; AVIF loading accepts the documented managed decoder subset.
 
 ## Breaking changes in 3.0
 

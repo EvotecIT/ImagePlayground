@@ -1,5 +1,7 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +29,7 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(dest));
         using var baseImg = Image.Load(baseFile);
         using var modified = Image.Load(dest);
-        Assert.True(baseImg.Compare(modified).PixelErrorCount > 0);
+        Assert.True(baseImg.Compare(modified).ChangedPixels > 0);
     }
 
     [Fact]
@@ -45,7 +47,7 @@ public partial class ImagePlayground {
         Assert.True(File.Exists(dest));
         using var orig = Image.Load(src);
         using var result = Image.Load(dest);
-        Assert.True(orig.Compare(result).PixelErrorCount > 0);
+        Assert.True(orig.Compare(result).ChangedPixels > 0);
     }
 
     [Fact]
@@ -94,8 +96,13 @@ public partial class ImagePlayground {
         ImageHelper.Combine(file1, file2, dest, true, ImagePlacement.Left);
         Assert.True(File.Exists(dest));
         using var img = Image.Load(dest);
-        Assert.Equal(2335, img.Width);
-        Assert.Equal(660, img.Height);
+        using var first = Image.Load(file1);
+        using var second = Image.Load(file2);
+        int fittedHeight = Math.Max(first.Height, second.Height);
+        int firstWidth = (int)Math.Round(first.Width * fittedHeight / (double)first.Height);
+        int secondWidth = (int)Math.Round(second.Width * fittedHeight / (double)second.Height);
+        Assert.Equal(firstWidth + secondWidth, img.Width);
+        Assert.Equal(fittedHeight, img.Height);
     }
 
     [Fact]
@@ -103,13 +110,13 @@ public partial class ImagePlayground {
         string file1 = Path.Combine(_directoryWithImages, "LogoEvotec.png");
         string file2 = Path.Combine(_directoryWithImages, "QRCode1.png");
         string dest = Path.Combine(_directoryWithTests, "invalid.png");
-        Assert.Throws<ArgumentException>(() => ImageHelper.Combine(file1, file2, dest, false, (ImagePlacement)999));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageHelper.Combine(file1, file2, dest, false, (ImagePlacement)999));
     }
 
     [Fact]
     public void Test_GetResampler_AllMapped() {
         foreach (Sampler sampler in Enum.GetValues(typeof(Sampler))) {
-            Assert.NotNull(Helpers.GetResampler(sampler));
+            Assert.True(Enum.IsDefined(typeof(OfficeRasterResamplingMode), Helpers.GetResampler(sampler)));
         }
     }
 

@@ -1,10 +1,10 @@
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.IO;
 using Xunit;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.Processing;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
 
@@ -38,8 +38,8 @@ public partial class ImagePlayground {
 
         Assert.True(File.Exists(filePath) == true);
 
-        using SixLabors.ImageSharp.Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
-        Assert.Equal(Color.Yellow.ToPixel<Rgba32>(), img[0, 0]);
+        using global::ImagePlayground.Image img = global::ImagePlayground.Image.Load(filePath);
+        Assert.Equal(Color.Yellow, img.Raster.GetPixel(0, 0));
 
         AssertQrDecoded(filePath, "https://evotec.xyz");
     }
@@ -63,8 +63,8 @@ public partial class ImagePlayground {
         string pngPath = Path.Combine(_directoryWithTests, "qr_webp_source.png");
         string webpPath = Path.Combine(_directoryWithTests, "qr_webp.webp");
         QrCode.Generate("https://evotec.xyz/webp", pngPath);
-        using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(pngPath)) {
-            image.Save(webpPath, new WebpEncoder { Quality = 100, FileFormat = WebpFileFormatType.Lossless });
+        using (global::ImagePlayground.Image image = global::ImagePlayground.Image.Load(pngPath)) {
+            image.Save(webpPath);
         }
 
         AssertQrDecoded(webpPath, "https://evotec.xyz/webp");
@@ -79,8 +79,8 @@ public partial class ImagePlayground {
         QrCode.GenerateWiFi("Evotec", "superHardPassword123!", filePath, true);
 
         Assert.True(File.Exists(filePath) == true);
-        using SixLabors.ImageSharp.Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath);
-        Assert.Equal(0, img[0, 0].A);
+        using global::ImagePlayground.Image img = global::ImagePlayground.Image.Load(filePath);
+        Assert.Equal(0, img.Raster.GetPixel(0, 0).A);
 
         AssertQrDecoded(filePath, QrPayloads.Wifi("Evotec", "superHardPassword123!", "WPA", false).Text);
     }
@@ -90,8 +90,8 @@ public partial class ImagePlayground {
         string filePath = Path.Combine(_directoryWithImages, "QRCodeTransparent.png");
         File.Delete(filePath);
         QrCode.Generate("https://evotec.xyz", filePath, true);
-        using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(filePath);
-        Assert.Equal(0, img[0, 0].A);
+        using global::ImagePlayground.Image img = global::ImagePlayground.Image.Load(filePath);
+        Assert.Equal(0, img.Raster.GetPixel(0, 0).A);
     }
 
     [Fact]
@@ -180,9 +180,9 @@ public partial class ImagePlayground {
         File.Delete(filePath);
         QrCode.Generate("https://evotec.xyz/rotated", filePath);
 
-        using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(filePath)) {
-            image.Mutate(context => context.Rotate(90));
-            image.SaveAsPng(filePath);
+        using (global::ImagePlayground.Image image = global::ImagePlayground.Image.Load(filePath)) {
+            image.Rotate(90);
+            image.Save(filePath);
         }
 
         AssertQrDecoded(filePath, "https://evotec.xyz/rotated");

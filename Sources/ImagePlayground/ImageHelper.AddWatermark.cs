@@ -1,8 +1,6 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
 /// <summary>
@@ -39,7 +37,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage);
+        img.WatermarkImage(watermarkFilePath, placement, opacity, padding, rotate, flipMode, watermarkPercentage, cancellationToken: cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
@@ -73,7 +71,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage);
+        img.WatermarkImage(watermarkFilePath, x, y, opacity, rotate, flipMode, watermarkPercentage, cancellationToken: cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
@@ -106,7 +104,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage);
+        img.WatermarkImageTiled(watermarkFilePath, spacing, opacity, rotate, flipMode, watermarkPercentage, cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

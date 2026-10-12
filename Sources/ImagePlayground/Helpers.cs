@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -20,7 +20,8 @@ public static partial class Helpers {
         ".pbm",
         ".tga",
         ".tiff",
-        ".webp"
+        ".webp",
+        ".ico"
     };
 
     /// <summary>
@@ -43,11 +44,11 @@ public static partial class Helpers {
     }
 
     /// <summary>
-    /// Converts a <see cref="SixLabors.ImageSharp.Color"/> to a 6 character hex string.
+    /// Converts a <see cref="OfficeColor"/> to a 6 character hex string.
     /// </summary>
-    /// <param name="c">Color value to convert.</param>
+    /// <param name="c">OfficeColor value to convert.</param>
     /// <returns>Hex string without alpha component.</returns>
-    public static string ToHexColor(this SixLabors.ImageSharp.Color c) {
+    public static string ToHexColor(this OfficeColor c) {
         string hex = c.ToHex();
         if (hex.Length < 6) {
             return hex;

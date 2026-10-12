@@ -1,5 +1,7 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Xmp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.IO;
 using System.Text;
@@ -27,7 +29,7 @@ public partial class ImagePlayground {
     [Fact]
     public void InspectProvenance_DetectsC2paContainerPng() {
         string path = Path.Combine(_directoryWithTests, "provenance-c2pa.png");
-        CreatePngWithC2pa(path, "trainedAlgorithmicMedia");
+        CreatePngWithC2pa(path);
 
         ImageProvenanceInfo result = ImageHelper.InspectProvenance(path);
 
@@ -70,9 +72,9 @@ public partial class ImagePlayground {
             File.Delete(path);
         }
 
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10)) {
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10))) {
             string xmp = "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:Iptc4xmpExt=\"http://iptc.org/std/Iptc4xmpExt/2008-02-29/\"><rdf:Description Iptc4xmpExt:DigitalSourceType=\"http://cv.iptc.org/newscodes/digitalsourcetype/compositeWithTrainedAlgorithmicMedia\" /></rdf:RDF>";
-            image.Metadata.XmpProfile = new XmpProfile(Encoding.UTF8.GetBytes(xmp));
+            image.Metadata.XmpProfile = Encoding.UTF8.GetBytes(xmp);
             image.Save(path);
         }
 
@@ -92,9 +94,9 @@ public partial class ImagePlayground {
             File.Delete(path);
         }
 
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10)) {
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10))) {
             string xmp = "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:Iptc4xmpExt=\"http://iptc.org/std/Iptc4xmpExt/2008-02-29/\"><rdf:Description><Iptc4xmpExt:DigitalSourceType rdf:resource=\"http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia\" /></rdf:Description></rdf:RDF>";
-            image.Metadata.XmpProfile = new XmpProfile(Encoding.UTF8.GetBytes(xmp));
+            image.Metadata.XmpProfile = Encoding.UTF8.GetBytes(xmp);
             image.Save(path);
         }
 
@@ -112,9 +114,9 @@ public partial class ImagePlayground {
             File.Delete(path);
         }
 
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10)) {
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10))) {
             string xmp = "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description><rdf:value>http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia</rdf:value></rdf:Description></rdf:RDF>";
-            image.Metadata.XmpProfile = new XmpProfile(Encoding.UTF8.GetBytes(xmp));
+            image.Metadata.XmpProfile = Encoding.UTF8.GetBytes(xmp);
             image.Save(path);
         }
 
@@ -128,7 +130,7 @@ public partial class ImagePlayground {
     public void RemoveMetadata_RemovesC2paContainer() {
         string path = Path.Combine(_directoryWithTests, "provenance-remove.png");
         string outputPath = Path.Combine(_directoryWithTests, "provenance-removed.png");
-        CreatePngWithC2pa(path, "trainedAlgorithmicMedia");
+        CreatePngWithC2pa(path);
         if (File.Exists(outputPath)) {
             File.Delete(outputPath);
         }
@@ -138,7 +140,7 @@ public partial class ImagePlayground {
         ImageProvenanceInfo result = ImageHelper.InspectProvenance(outputPath);
         Assert.False(result.HasC2paManifest);
         Assert.False(result.HasXmpAiDeclaration);
-        using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(outputPath);
+        using global::ImagePlayground.Image image = global::ImagePlayground.Image.Load(outputPath);
         Assert.Equal(10, image.Width);
         Assert.Equal(10, image.Height);
     }
@@ -150,7 +152,7 @@ public partial class ImagePlayground {
             File.Delete(path);
         }
 
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10)) {
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10))) {
             image.Save(path);
         }
 
@@ -161,17 +163,17 @@ public partial class ImagePlayground {
         Assert.Empty(result.Evidence);
     }
 
-    private static void CreatePngWithC2pa(string path, string digitalSourceType) {
+    private static void CreatePngWithC2pa(string path) {
         if (File.Exists(path)) {
             File.Delete(path);
         }
 
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10)) {
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10))) {
             image.Save(path);
         }
 
         byte[] png = File.ReadAllBytes(path);
-        byte[] payload = Encoding.UTF8.GetBytes($"jumb\0c2pa\0http://cv.iptc.org/newscodes/digitalsourcetype/{digitalSourceType}");
+        byte[] payload = CreateC2paManifestStore();
         byte[] chunk = CreatePngChunk("caBX", payload);
         int firstChunkLength = ReadUInt32BigEndian(png, 8);
         int insertOffset = 8 + 12 + firstChunkLength;
@@ -183,18 +185,7 @@ public partial class ImagePlayground {
     }
 
     private static void CreateJpegWithC2pa(string path) {
-        byte[] manifestStore = new byte[38];
-        WriteUInt32BigEndian(manifestStore, 0, (uint)manifestStore.Length);
-        Encoding.ASCII.GetBytes("jumb").CopyTo(manifestStore, 4);
-        WriteUInt32BigEndian(manifestStore, 8, 30);
-        Encoding.ASCII.GetBytes("jumd").CopyTo(manifestStore, 12);
-        byte[] c2paUuid = {
-            0x63, 0x32, 0x70, 0x61, 0x00, 0x11, 0x00, 0x10,
-            0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71
-        };
-        c2paUuid.CopyTo(manifestStore, 16);
-        manifestStore[32] = 0x03;
-        Encoding.ASCII.GetBytes("c2pa\0").CopyTo(manifestStore, 33);
+        byte[] manifestStore = CreateC2paManifestStore();
 
         byte[] payload = new byte[8 + manifestStore.Length];
         payload[0] = 0x4A;
@@ -206,13 +197,37 @@ public partial class ImagePlayground {
         CreateJpegWithApp11(path, payload);
     }
 
+    // Structurally complete carrier fixture; the placeholder CBOR signature is not a verified signature.
+    private static byte[] CreateC2paManifestStore() {
+        byte[] Description(string uuid, string label) => CreateC2paBox("jumd", CombineMetadataBytes(
+            Encoding.ASCII.GetBytes(uuid),
+            new byte[] { 0x00, 0x11, 0x00, 0x10, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71, 0x03 },
+            Encoding.ASCII.GetBytes(label + "\0")));
+        byte[] cbor = CreateC2paBox("cbor", new byte[] { 0xA0 });
+        byte[] assertions = CreateC2paBox("jumb", CombineMetadataBytes(
+            Description("c2as", "c2pa.assertions"),
+            CreateC2paBox("jumb", CombineMetadataBytes(Description("c2ac", "c2pa.test"), cbor))));
+        byte[] claim = CreateC2paBox("jumb", CombineMetadataBytes(Description("c2cl", "c2pa.claim"), cbor));
+        byte[] signature = CreateC2paBox("jumb", CombineMetadataBytes(Description("c2cs", "c2pa.signature"), cbor));
+        return CreateC2paBox("jumb", CombineMetadataBytes(Description("c2pa", "c2pa"),
+            CreateC2paBox("jumb", CombineMetadataBytes(Description("c2ma", "m"), assertions, claim, signature))));
+    }
+
+    private static byte[] CreateC2paBox(string type, byte[] payload) {
+        byte[] box = new byte[payload.Length + 8];
+        WriteUInt32BigEndian(box, 0, (uint)box.Length);
+        Encoding.ASCII.GetBytes(type).CopyTo(box, 4);
+        Buffer.BlockCopy(payload, 0, box, 8, payload.Length);
+        return box;
+    }
+
     private static void CreateJpegWithApp11(string path, byte[] payload) {
         if (File.Exists(path)) {
             File.Delete(path);
         }
 
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(10, 10)) {
-            image.SaveAsJpeg(path);
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(10, 10))) {
+            image.Save(path);
         }
 
         byte[] jpeg = File.ReadAllBytes(path);

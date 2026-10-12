@@ -1,255 +1,95 @@
-using System.Collections.Generic;
-using System.Reflection;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
-
 namespace ImagePlayground;
 
-/// <summary>
-/// Provides image manipulation operations.
-/// </summary>
+/// <summary>EXIF metadata workflows over the shared typed profile model.</summary>
 public partial class Image {
-    private static readonly MethodInfo SetExifValueGenericMethod = typeof(Image).GetMethod(nameof(SetExifValueGeneric), BindingFlags.Static | BindingFlags.NonPublic)!;
-    private const string HeifExifWriteNotSupportedMessage = "Updating HEIF/HEIC EXIF requires an existing EXIF item with a single writable file extent. Creating a brand-new HEIF EXIF item is not supported yet.";
-    private const string HeifExifReadNotSupportedMessage = "The HEIF/HEIC file declares an EXIF item, but the EXIF payload could not be read.";
-
-    /// <summary>
-    /// Gets all EXIF values from the image.
-    /// </summary>
-    /// <returns>List of EXIF values currently attached to the image, or an empty list when no EXIF profile exists.</returns>
-    public IReadOnlyList<IExifValue> GetExifValues() =>
-        _image.Metadata.ExifProfile?.Values ?? new List<IExifValue>();
-
-    /// <summary>
-    /// Gets all EXIF values from an image file without requiring callers to load pixels directly.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <returns>List of EXIF values attached to the image, or an empty list when no EXIF profile exists.</returns>
-    public static IReadOnlyList<IExifValue> GetExifValues(string filePath) {
+    /// <summary>Returns the decoded EXIF entries of the current image.</summary>
+    public IReadOnlyList<OfficeExifValue> GetExifValues() => Metadata.ExifValues;
+    /// <summary>Reads EXIF entries without decoding pixels.</summary>
+    public static IReadOnlyList<OfficeExifValue> GetExifValues(string filePath) => ReadMetadataFile(Helpers.ResolvePath(filePath), OfficeImageMetadataProfileKinds.Exif).ExifValues;
+    /// <summary>Sets a typed EXIF value on the current image metadata.</summary>
+    public void SetExifValue(OfficeExifTag tag, object value) => Metadata.SetExifValue(tag, value);
+    /// <summary>Removes selected EXIF values from the current image metadata.</summary>
+    public void RemoveExifValues(params OfficeExifTag[] tags) { foreach (var tag in tags) Metadata.RemoveExifValue(tag); }
+    /// <summary>Removes all EXIF entries from the current image metadata.</summary>
+    public void ClearExifValues() => Metadata.ClearExif();
+    /// <summary>Sets a typed EXIF value while preserving the encoded image data.</summary>
+    public static void SetExifValue(string filePath, string? filePathOutput, OfficeExifTag tag, object value) {
         string fullPath = Helpers.ResolvePath(filePath);
-        if (Helpers.IsHeifExtension(fullPath)) {
-            if (HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
-                return heifProfile is null
-                    ? new List<IExifValue>()
-                    : new List<IExifValue>(heifProfile.Values);
-            }
-
-            if (HeifMetadataReader.HasExifItem(fullPath)) {
-                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
-            }
-
-            return new List<IExifValue>();
-        }
-
-        using var image = Load(fullPath);
-        return new List<IExifValue>(image.GetExifValues());
+        var metadata = ReadMetadataFile(fullPath, OfficeImageMetadataProfileKinds.Exif);
+        metadata.SetExifValue(tag, value);
+        WriteMetadataFile(fullPath, filePathOutput, metadata, OfficeImageMetadataProfileKinds.Exif);
     }
-
-    /// <summary>
-    /// Sets an EXIF value on an image file.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <param name="filePathOutput">Optional output path. When omitted, the input file is overwritten.</param>
-    /// <param name="tag">Tag to set.</param>
-    /// <param name="value">Value for the tag.</param>
-    public static void SetExifValue(string filePath, string? filePathOutput, ExifTag tag, object value) {
+    /// <summary>Removes selected EXIF values while preserving the encoded image data.</summary>
+    public static void RemoveExifValues(string filePath, string? filePathOutput, params OfficeExifTag[] tags) {
         string fullPath = Helpers.ResolvePath(filePath);
-        string outputPath = string.IsNullOrWhiteSpace(filePathOutput)
-            ? fullPath
-            : Helpers.ResolvePath(filePathOutput!);
-
-        if (value is null) {
-            throw new ArgumentNullException(nameof(value));
+        var metadata = ReadMetadataFile(fullPath, OfficeImageMetadataProfileKinds.Exif);
+        foreach (var tag in tags) {
+            metadata.RemoveExifValue(tag);
         }
-
-        if (Helpers.IsHeifExtension(fullPath)) {
-            ExifProfile profile;
-            if (HeifMetadataReader.HasExifItem(fullPath)) {
-                if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? heifProfile)) {
-                    throw new NotSupportedException(HeifExifReadNotSupportedMessage);
-                }
-
-                profile = heifProfile ?? new ExifProfile();
-            } else {
-                profile = new ExifProfile();
-            }
-
-            if (!TrySetExifValue(profile, tag, value)) {
-                throw new ArgumentException($"Value of type '{value.GetType()}' does not match tag type '{tag.GetType()}'.", nameof(value));
-            }
-
-            if (!HeifMetadataReader.TryWriteExifProfile(fullPath, outputPath, profile)) {
-                throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
-            }
-
-            return;
-        }
-
-        using var img = Load(fullPath);
-        img.SetExifValue(tag, value);
-        img.Save(outputPath);
+        WriteMetadataFile(fullPath, filePathOutput, metadata, OfficeImageMetadataProfileKinds.Exif);
     }
-
-    /// <summary>
-    /// Removes specific EXIF values from an image file.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <param name="filePathOutput">Optional output path. When omitted, the input file is overwritten.</param>
-    /// <param name="tags">Tags to remove.</param>
-    public static void RemoveExifValues(string filePath, string? filePathOutput, params ExifTag[] tags) {
-        string fullPath = Helpers.ResolvePath(filePath);
-        string outputPath = string.IsNullOrWhiteSpace(filePathOutput)
-            ? fullPath
-            : Helpers.ResolvePath(filePathOutput!);
-
-        if (Helpers.IsHeifExtension(fullPath)) {
-            if (!HeifMetadataReader.HasExifItem(fullPath)) {
-                CopyIfNeeded(fullPath, outputPath);
-                return;
-            }
-
-            if (!HeifMetadataReader.TryReadExifProfile(fullPath, out ExifProfile? profile) || profile is null) {
-                throw new NotSupportedException(HeifExifReadNotSupportedMessage);
-            }
-
-            foreach (ExifTag tag in tags) {
-                profile.RemoveValue(tag);
-            }
-
-            ExifProfile? profileToWrite = profile.Values.Count == 0
-                ? null
-                : profile;
-            if (!HeifMetadataReader.TryWriteExifProfile(fullPath, outputPath, profileToWrite)) {
-                throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
-            }
-
-            return;
-        }
-
-        using var img = Load(fullPath);
-        img.RemoveExifValues(tags);
-        img.Save(outputPath);
-    }
-
-    /// <summary>
-    /// Clears all EXIF values from an image file.
-    /// </summary>
-    /// <param name="filePath">Path to the image file.</param>
-    /// <param name="filePathOutput">Optional output path. When omitted, the input file is overwritten.</param>
+    /// <summary>Removes all EXIF values while preserving the encoded image data.</summary>
     public static void ClearExifValues(string filePath, string? filePathOutput) {
         string fullPath = Helpers.ResolvePath(filePath);
-        string outputPath = string.IsNullOrWhiteSpace(filePathOutput)
-            ? fullPath
-            : Helpers.ResolvePath(filePathOutput!);
-
+        var metadata = ReadMetadataFile(fullPath, OfficeImageMetadataProfileKinds.Exif);
+        metadata.ClearExif();
+        WriteMetadataFile(fullPath, filePathOutput, metadata, OfficeImageMetadataProfileKinds.Exif);
+    }
+    // HEIF callers select the requested profile families so an unrelated item is never parsed.
+    internal static OfficeImageMetadata ReadMetadataFile(string fullPath, OfficeImageMetadataProfileKinds profiles = OfficeImageMetadataProfileKinds.All) {
+        if (!Helpers.IsHeifExtension(fullPath)) {
+            return OfficeImageMetadata.Read(Helpers.ReadEncodedFile(fullPath));
+        }
+        var metadata = new OfficeImageMetadata();
+        if ((profiles & OfficeImageMetadataProfileKinds.Exif) != 0) {
+            if (OfficeHeifMetadataReader.TryReadExifProfile(fullPath, out var exif)) {
+                metadata = exif ?? metadata;
+            } else if (OfficeHeifMetadataReader.HasExifItem(fullPath)) {
+                throw new NotSupportedException("The declared HEIF EXIF item cannot be read.");
+            }
+        }
+        if ((profiles & OfficeImageMetadataProfileKinds.Xmp) != 0) {
+            if (OfficeHeifMetadataReader.TryReadXmp(fullPath, out var xmp)) {
+                if (xmp != null) {
+                    metadata.XmpProfile = Encoding.UTF8.GetBytes(xmp);
+                }
+            } else if (OfficeHeifMetadataReader.HasXmpItem(fullPath)) {
+                throw new NotSupportedException("The declared HEIF XMP item cannot be read.");
+            }
+        }
+        return metadata;
+    }
+    // A full import replaces all supported families; a selective edit touches only its requested item.
+    internal static void WriteMetadataFile(string fullPath, string? filePathOutput, OfficeImageMetadata metadata, OfficeImageMetadataProfileKinds profiles = OfficeImageMetadataProfileKinds.All) {
+        string output = string.IsNullOrEmpty(filePathOutput) ? fullPath : Helpers.ResolvePath(filePathOutput!);
+        Helpers.CreateParentDirectory(output);
         if (Helpers.IsHeifExtension(fullPath)) {
-            if (!HeifMetadataReader.HasExifItem(fullPath)) {
-                CopyIfNeeded(fullPath, outputPath);
-                return;
+            if (((profiles & OfficeImageMetadataProfileKinds.Icc) != 0 && metadata.IccProfile != null) ||
+                ((profiles & OfficeImageMetadataProfileKinds.Iptc) != 0 && metadata.IptcProfile != null)) {
+                throw new NotSupportedException("HEIF metadata import supports EXIF and XMP profiles.");
             }
-
-            if (!HeifMetadataReader.TryWriteExifProfile(fullPath, outputPath, null)) {
-                throw new NotSupportedException(HeifExifWriteNotSupportedMessage);
+            byte[] source = Helpers.ReadEncodedFile(fullPath);
+            OfficeImageMetadataProfileKinds selected = OfficeImageMetadataProfileKinds.None;
+            if ((profiles & OfficeImageMetadataProfileKinds.Exif) != 0) {
+                bool hasExif = OfficeHeifMetadataReader.HasExifItem(source);
+                if (!hasExif && metadata.HasExifProfile) {
+                    throw new NotSupportedException("HEIF EXIF editing requires an existing writable metadata item.");
+                }
+                if (hasExif) { selected |= OfficeImageMetadataProfileKinds.Exif; }
             }
-
-            return;
-        }
-
-        using var img = Load(fullPath);
-        img.ClearExifValues();
-        img.Save(outputPath);
-    }
-
-    /// <summary>
-    /// Sets an EXIF value on the image.
-    /// </summary>
-    /// <para>
-    /// The supplied <paramref name="value"/> must match the value type declared by the specific
-    /// <paramref name="tag"/>, including specialized ImageSharp EXIF value wrappers such as
-    /// <see cref="Number"/>, <see cref="Rational"/>, or array-based tag payloads.
-    /// </para>
-    /// <param name="tag">Tag to set.</param>
-    /// <param name="value">Value for the tag.</param>
-    /// <example>
-    ///   <code>image.SetExifValue(ExifTag.Software, "ImagePlayground");</code>
-    /// </example>
-    public void SetExifValue(ExifTag tag, object value) {
-        _image.Metadata.ExifProfile ??= new ExifProfile();
-        if (value is null) {
-            throw new ArgumentNullException(nameof(value));
-        }
-
-        var profile = _image.Metadata.ExifProfile;
-        if (TrySetExifValue(profile, tag, value)) {
-            return;
-        }
-
-        throw new ArgumentException($"Value of type '{value.GetType()}' does not match tag type '{tag.GetType()}'.", nameof(value));
-    }
-
-    private static bool TrySetExifValue(ExifProfile profile, ExifTag tag, object value) {
-        if (!TryGetExifTagValueType(tag.GetType(), out Type tagValueType)) {
-            return false;
-        }
-
-        if (!tagValueType.IsInstanceOfType(value)) {
-            return false;
-        }
-
-        SetExifValueGenericMethod.MakeGenericMethod(tagValueType).Invoke(null, new[] { profile, tag, value });
-        return true;
-    }
-
-    private static void SetExifValueGeneric<TValue>(ExifProfile profile, ExifTag<TValue> tag, TValue value) {
-        profile.SetValue(tag, value);
-    }
-
-    private static bool TryGetExifTagValueType(Type tagType, out Type valueType) {
-        var currentType = tagType;
-        while (currentType != null) {
-            if (currentType.IsGenericType && currentType.GetGenericTypeDefinition() == typeof(ExifTag<>)) {
-                valueType = currentType.GenericTypeArguments[0];
-                return true;
+            if ((profiles & OfficeImageMetadataProfileKinds.Xmp) != 0) {
+                bool hasXmp = OfficeHeifMetadataReader.HasXmpItem(source);
+                if (!hasXmp && metadata.XmpProfile != null) {
+                    throw new NotSupportedException("HEIF XMP editing requires an existing writable metadata item.");
+                }
+                if (hasXmp) { selected |= OfficeImageMetadataProfileKinds.Xmp; }
             }
-
-            currentType = currentType.BaseType;
-        }
-
-        valueType = null!;
-        return false;
-    }
-
-    private static void CopyIfNeeded(string fullPath, string outputPath) {
-        if (fullPath.Equals(outputPath, StringComparison.OrdinalIgnoreCase)) {
-            return;
-        }
-
-        Helpers.CreateParentDirectory(outputPath);
-        File.Copy(fullPath, outputPath, true);
-    }
-
-    /// <summary>
-    /// Removes specific EXIF values from the image.
-    /// </summary>
-    /// <param name="tags">Tags to remove from the current EXIF profile.</param>
-    public void RemoveExifValues(params ExifTag[] tags) {
-        var profile = _image.Metadata.ExifProfile;
-        if (profile is null) { return; }
-        foreach (var t in tags) {
-            profile.RemoveValue(t);
-        }
-    }
-
-    /// <summary>
-    /// Clears all EXIF values from the image.
-    /// </summary>
-    /// <para>This removes all values from the existing EXIF profile but keeps the image object loaded and usable.</para>
-    public void ClearExifValues() {
-        var profile = _image.Metadata.ExifProfile;
-        if (profile != null) {
-            if (profile.Values is List<IExifValue> list) {
-                list.Clear();
+            if (!OfficeHeifMetadataReader.TryWriteMetadata(source, metadata, selected, out byte[]? completed)) {
+                throw new NotSupportedException("The selected HEIF metadata items cannot be rewritten. Requested items must use supported writable layouts, and XMP import requires valid UTF-8 metadata.");
             }
+            OfficeImageFileWriter.WriteAllBytes(output, completed!);
+        } else {
+            OfficeImageFileWriter.WriteAllBytes(output, OfficeImageMetadata.Apply(Helpers.ReadEncodedFile(fullPath), metadata));
         }
     }
 }

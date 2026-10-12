@@ -41,7 +41,7 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
 
     /// <summary>Text color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color Color { get; set; } = SixLabors.ImageSharp.Color.Black;
+    public OfficeIMO.Drawing.OfficeColor Color { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
 
     /// <summary>Font size.</summary>
     [Parameter]
@@ -53,15 +53,15 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
 
     /// <summary>Horizontal alignment.</summary>
     [Parameter]
-    public SixLabors.Fonts.HorizontalAlignment HorizontalAlignment { get; set; } = SixLabors.Fonts.HorizontalAlignment.Left;
+    public OfficeIMO.Drawing.OfficeTextAlignment HorizontalAlignment { get; set; } = OfficeIMO.Drawing.OfficeTextAlignment.Left;
 
     /// <summary>Vertical alignment.</summary>
     [Parameter]
-    public SixLabors.Fonts.VerticalAlignment VerticalAlignment { get; set; } = SixLabors.Fonts.VerticalAlignment.Top;
+    public OfficeIMO.Drawing.OfficeTextVerticalAlignment VerticalAlignment { get; set; } = OfficeIMO.Drawing.OfficeTextVerticalAlignment.Top;
 
     /// <summary>Color of shadow.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? ShadowColor { get; set; }
+    public OfficeIMO.Drawing.OfficeColor? ShadowColor { get; set; }
 
     /// <summary>X offset for shadow.</summary>
     [Parameter]
@@ -73,7 +73,7 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
 
     /// <summary>Outline color.</summary>
     [Parameter]
-    public SixLabors.ImageSharp.Color? OutlineColor { get; set; }
+    public OfficeIMO.Drawing.OfficeColor? OutlineColor { get; set; }
 
     /// <summary>Outline width.</summary>
     [Parameter]

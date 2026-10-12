@@ -34,7 +34,7 @@ public partial class ImagePlayground {
             Assert.Equal(expected, result.Text);
             Assert.Equal(type, result.Format);
         } else {
-            using var image = SixLabors.ImageSharp.Image.Load(filePath);
+            using var image = global::ImagePlayground.Image.Load(filePath);
             Assert.True(image.Width > 0 && image.Height > 0);
         }
     }

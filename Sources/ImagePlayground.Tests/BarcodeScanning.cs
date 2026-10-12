@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
 using Xunit;
 
 namespace ImagePlayground.Tests;
@@ -47,7 +47,9 @@ public partial class ImagePlayground {
     [Fact]
     public void BarcodeReadDistinguishesBlankAndInvalidImages() {
         string blankPath = Path.Combine(_directoryWithTests, "blank-barcode.png");
-        using (var blank = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(48, 48, new SixLabors.ImageSharp.PixelFormats.Rgba32(255, 255, 255, 255))) blank.SaveAsPng(blankPath);
+        using (var blank = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(48, 48, OfficeColor.White))) {
+            blank.Save(blankPath);
+        }
         var options = new ScanOptions { Formats = new[] { SymbolFormat.Ean }, TimeoutMilliseconds = 5000 };
         Assert.Null(BarCode.Read(blankPath, options));
         string invalidPath = Path.Combine(_directoryWithTests, "invalid-barcode.bin");
@@ -63,7 +65,7 @@ public partial class ImagePlayground {
         var document = System.Xml.Linq.XDocument.Load(path);
         Assert.Contains(document.Descendants(), element => element.Name.LocalName == "image" && element.Attributes().Any(attribute => attribute.Value.StartsWith("data:image/png;base64,")));
         string previous = File.ReadAllText(path);
-        await Assert.ThrowsAnyAsync<Exception>(() => QrCode.GenerateAsync("changed", path, path + ".missing"));
+        await Assert.ThrowsAsync<FileNotFoundException>(() => QrCode.GenerateAsync("changed", path, path + ".missing"));
         Assert.Equal(previous, File.ReadAllText(path));
     }
 

@@ -1,10 +1,10 @@
-﻿Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
+Import-Module $PSScriptRoot\..\ImagePlayground.psd1 -Force
 
 Get-ImageExif -FilePath "$PSScriptRoot\Samples\Snow.jpeg" -Translate | Format-List Datetime*, GPS*
 
 $setImageExifSplat = @{
     FilePath       = "$PSScriptRoot\Samples\Snow.jpeg"
-    ExifTag        = ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::DateTimeOriginal)
+    ExifTag        = ([OfficeIMO.Drawing.OfficeExifTag]::DateTimeOriginal)
     Value          = ([DateTime]::Now).ToString("yyyy:MM:dd HH:mm:ss")
     FilePathOutput = "$PSScriptRoot\Output\Snow_Updated.jpeg"
 }

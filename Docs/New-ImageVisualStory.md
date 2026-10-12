@@ -19,8 +19,15 @@ New-ImageVisualStory [-StoryScript] <scriptblock> -FilePath <string> [-Motion <V
 New-ImageVisualStory -Grid <VisualGrid> -FilePath <string> [-Motion <VisualMotionTimeline>] [-MotionDefinition <scriptblock>] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
+### Presentation
+```powershell
+New-ImageVisualStory -Presentation <VisualMotionPresentation> -FilePath <string> [-Show] [-PassThru] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 Use a native ChartForgeX VisualGrid or configure one in StoryScript. SVG and HTML preserve motion, while PNG renders the completed static state.
+
+A VisualMotionPresentation returned by New-ImageVisualGrid -Motion can also be piped directly into this command.
 
 ## EXAMPLES
 
@@ -39,6 +46,16 @@ PS> New-ImageVisualStory -StoryScript {
 
 Builds a dependency-free SVG whose one-shot motion honors reduced-motion preferences.
 
+### EXAMPLE 2
+```powershell
+PS> $motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('requests')
+New-ImageVisualGrid -ContentDefinition {
+  New-ImageVisualGridItem -TargetId requests -Block (New-ImageMetricCard -Label Requests -Value 12840)
+} -Motion $motion | New-ImageVisualStory -FilePath requests.svg
+```
+
+Reuses the typed presentation captured by the grid command without changing its source grid or timeline.
+
 ## PARAMETERS
 
 ### -FilePath
@@ -46,7 +63,7 @@ Output file path. Supported extensions are SVG, HTML, HTM, and PNG.
 
 ```yaml
 Type: String
-Parameter Sets: StoryScript, Grid
+Parameter Sets: StoryScript, Grid, Presentation
 Aliases: None
 Possible values:
 
@@ -106,11 +123,11 @@ Accept wildcard characters: False
 ```
 
 ### -PassThru
-Write the configured ChartForgeX VisualGrid to the pipeline.
+Write the detached motion presentation, or the static grid when no motion is supplied.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: StoryScript, Grid
+Parameter Sets: StoryScript, Grid, Presentation
 Aliases: None
 Possible values:
 
@@ -121,12 +138,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Presentation
+Detached motion presentation to export, including output from New-ImageVisualGrid -Motion.
+
+```yaml
+Type: VisualMotionPresentation
+Parameter Sets: Presentation
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### -Show
 Open the generated visual after creation.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: StoryScript, Grid
+Parameter Sets: StoryScript, Grid, Presentation
 Aliases: None
 Possible values:
 
@@ -159,10 +192,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 - `ChartForgeX.VisualBlocks.VisualGrid`
+- `ChartForgeX.Motion.VisualMotionPresentation`
 
 ## OUTPUTS
 
 - `ChartForgeX.VisualBlocks.VisualGrid`
+- `ChartForgeX.Motion.VisualMotionPresentation`
 
 ## RELATED LINKS
 

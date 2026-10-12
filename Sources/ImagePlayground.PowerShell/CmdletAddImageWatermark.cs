@@ -1,5 +1,5 @@
 using ImagePlayground;
-using SixLabors.ImageSharp.Processing;
+
 using System.IO;
 using System.Management.Automation;
 

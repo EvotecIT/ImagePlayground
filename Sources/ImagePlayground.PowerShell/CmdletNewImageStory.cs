@@ -62,7 +62,7 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
     [ValidateRange(320, 2160)]
     public int Height { get; set; } = 675;
 
-    /// <summary>Optional visual-story theme.</summary>
+    /// <summary>Optional visual-story theme. Authored stories use the canonical dark theme by default; supply VisualStoryTheme.GraphiteLight() for its light counterpart or a custom theme.</summary>
     [Parameter(ParameterSetName = PartsSet)]
     public VisualStoryTheme? Theme { get; set; }
 
@@ -169,9 +169,8 @@ public sealed class NewImageStoryCmdlet : PSCmdlet {
             if (_stories.Count != 1) throw new PSArgumentException("New-ImageStory accepts exactly one ChartForgeX VisualStory per output path.");
             return _stories[0];
         }
-        var story = VisualStory.Create(Title).WithSize(Width, Height);
+        var story = VisualStory.Create(Title).WithSize(Width, Height).WithTheme(Theme ?? VisualStoryTheme.GraphiteDark());
         if (Description.Length > 0) story.WithDescription(Description);
-        if (Theme != null) story.WithTheme(Theme);
         foreach (var sceneSpec in Scenes) {
             var scene = story.Scene(sceneSpec.Id, sceneSpec.Title, sceneSpec.DurationSeconds, sceneSpec.Layout);
             foreach (var panel in sceneSpec.Panels) scene.Panel(panel.Id, panel.Surface, panel.Title, panel.Weight);

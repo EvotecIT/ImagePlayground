@@ -22,6 +22,10 @@ New-ImageVisualGrid -Content <Object[]> [-Title <string>] [-Subtitle <string>] [
 ## DESCRIPTION
 Render the grid directly, pass it to New-ImageVisualStory, or compose it inside a ChartForgeX visual canvas.
 
+With Motion, the output is a detached VisualMotionPresentation accepted by New-ImageVisualStory. Static grids remain VisualGrid objects.
+
+HTML reflows panels on narrow screens. SVG and raster output keep their authored dimensions; use one column and appropriately sized child blocks for a compact fixed export. Apply the same theme to the grid and its children for a consistent report.
+
 ## EXAMPLES
 
 ### EXAMPLE 1
@@ -97,7 +101,7 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-Optional output path. Omit it to return the grid without rendering.
+Optional output path. Omit it to return the grid or detached motion presentation.
 
 ```yaml
 Type: String
@@ -225,7 +229,7 @@ Accept wildcard characters: False
 ```
 
 ### -PassThru
-Return the grid when an output file is also written.
+Return the grid or detached motion presentation when an output file is also written.
 
 ```yaml
 Type: SwitchParameter
@@ -314,6 +318,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `ChartForgeX.VisualBlocks.VisualGrid`
+- `ChartForgeX.Motion.VisualMotionPresentation`
 
 ## RELATED LINKS
 

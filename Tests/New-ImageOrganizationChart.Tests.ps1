@@ -1,7 +1,8 @@
 Describe 'New-ImageOrganizationChart' {
     BeforeAll {
         $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        $modulePath = if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) { $env:IMAGEPLAYGROUND_TEST_MODULE_PATH } else { "$PSScriptRoot/../ImagePlayground.psd1" }
+        Import-Module -Name $modulePath -Force
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null

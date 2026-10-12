@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -25,6 +28,45 @@ public partial class ImagePlayground {
         }
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => BarCode.ReadAsync(string.Empty, token, options));
         Assert.ThrowsAny<OperationCanceledException>(() => BarCode.Read(string.Empty, options, token));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Test_BarCodeRead_CancelledDuringInputResolutionPreservesToken(bool useOptionsToken) {
+        using var cancellation = new CancellationTokenSource();
+        using var unrelated = new CancellationTokenSource();
+        using var watchdog = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+        var methodToken = useOptionsToken ? unrelated.Token : cancellation.Token;
+        var options = new ScanOptions { CancellationToken = useOptionsToken ? cancellation.Token : unrelated.Token };
+        byte[] image = File.ReadAllBytes(Path.Combine(_directoryWithImages, "BarcodeEAN13.png"));
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        using var stopListener = watchdog.Token.Register(listener.Stop);
+        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        var response = Task.Run(async () => {
+            using var client = await listener.AcceptTcpClientAsync();
+            using var stopClient = watchdog.Token.Register(client.Close);
+            using var stream = client.GetStream();
+            using var reader = new StreamReader(stream, Encoding.ASCII, false, 1024, true);
+            while (!string.IsNullOrEmpty(await reader.ReadLineAsync())) { }
+            // The public read has passed its initial checks and is resolving this input.
+            cancellation.Cancel();
+            byte[] header = Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nContent-Length: {image.Length}\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(header, 0, header.Length);
+            await stream.WriteAsync(image, 0, image.Length);
+        });
+        try {
+            var error = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                BarCode.ReadAsync($"http://127.0.0.1:{port}/barcode.png", methodToken, options));
+            await response;
+            Assert.Equal(cancellation.Token, error.CancellationToken);
+            Assert.True(error.CancellationToken.IsCancellationRequested);
+            Assert.False(unrelated.IsCancellationRequested);
+        } finally {
+            listener.Stop();
+            Helpers.CleanupTempFiles();
+        }
     }
 
     [Theory]

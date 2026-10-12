@@ -5,34 +5,33 @@ using System.Threading.Tasks;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using Rgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+using OfficeIMO.Drawing;
+
+
 using CodeGlyphXRgba32 = CodeGlyphX.Rendering.Rgba32;
 
 namespace ImagePlayground;
 
 public partial class QrCode {
-    private static QrRenderOptions BuildOptions(bool transparent, Color? foregroundColor, Color? backgroundColor, int pixelSize) {
+    private static QrRenderOptions BuildOptions(bool transparent, OfficeColor? foregroundColor, OfficeColor? backgroundColor, int pixelSize) {
         if (pixelSize <= 0) {
             throw new ArgumentOutOfRangeException(nameof(pixelSize));
         }
         return new QrRenderOptions {
             ModuleSize = pixelSize,
-            Foreground = ToCodeGlyphXColor(foregroundColor ?? Color.Black),
-            Background = ToCodeGlyphXColor(transparent ? Color.Transparent : backgroundColor ?? Color.White)
+            Foreground = ToCodeGlyphXColor(foregroundColor ?? OfficeColor.Black),
+            Background = ToCodeGlyphXColor(transparent ? OfficeColor.Transparent : backgroundColor ?? OfficeColor.White)
         };
     }
 
-    private static CodeGlyphXRgba32 ToCodeGlyphXColor(Color color) {
-        var pixel = color.ToPixel<Rgba32>();
-        return new CodeGlyphXRgba32(pixel.R, pixel.G, pixel.B, pixel.A);
+    private static CodeGlyphXRgba32 ToCodeGlyphXColor(OfficeColor color) {
+        return new CodeGlyphXRgba32(color.R, color.G, color.B, color.A);
     }
 
     private static string ResolveValidatedOutputPath(string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
         if (string.IsNullOrWhiteSpace(Path.GetExtension(fullPath))) {
-            throw new UnknownImageFormatException("Specify an output image extension, for example .png or .svg.");
+            throw new NotSupportedException("Specify an output image extension, for example .png or .svg.");
         }
         Helpers.CreateParentDirectory(fullPath);
         return fullPath;
@@ -51,14 +50,13 @@ public partial class QrCode {
             int canvasPixels = (symbol.Size + 2 * options.QuietZone) * options.ModuleSize;
             int logoPixels = Math.Max(1, canvasPixels / 8);
             // Normalize with the same resampler as the image API; the owner then composites at 1:1.
-            using var logo = SixLabors.ImageSharp.Image.Load<Rgba32>(options.LogoPng);
-            logo.Mutate(context => context.Resize(new ResizeOptions {
-                Mode = ResizeMode.Max,
-                Size = new Size(logoPixels, logoPixels)
-            }));
-            using var stream = new MemoryStream();
-            logo.SaveAsPng(stream);
-            options.LogoPng = stream.ToArray();
+            using var logo = Image.Load(options.LogoPng);
+            double scale = Math.Min(logoPixels / (double)logo.Width, logoPixels / (double)logo.Height);
+            var normalized = OfficeRasterResampler.Resize(logo.Raster,
+                Math.Max(1, (int)Math.Round(logo.Width * scale)),
+                Math.Max(1, (int)Math.Round(logo.Height * scale)),
+                OfficeRasterResamplingMode.Bicubic);
+            options.LogoPng = OfficeRasterImageEncoder.Encode(normalized, OfficeImageExportFormat.Png);
             options.LogoScale = logoPixels / (double)symbolPixels;
             options.LogoPaddingPx = 0;
             options.LogoCornerRadiusPx = 0;
@@ -92,16 +90,13 @@ public partial class QrCode {
     }
 
     private static byte[] LoadLogoPng(string logoPath) {
-        using var logo = SixLabors.ImageSharp.Image.Load<Rgba32>(Helpers.ResolvePath(logoPath));
-        using var stream = new MemoryStream();
-        logo.SaveAsPng(stream);
-        return stream.ToArray();
+        using var logo = Image.Load(Helpers.ResolvePath(logoPath));
+        return OfficeRasterImageEncoder.Encode(logo.Raster, OfficeImageExportFormat.Png);
     }
 
     private static async Task<byte[]> LoadLogoPngAsync(string logoPath, CancellationToken cancellationToken) {
-        using var logo = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(Helpers.ResolvePath(logoPath), cancellationToken).ConfigureAwait(false);
-        using var stream = new MemoryStream();
-        await logo.SaveAsPngAsync(stream, cancellationToken).ConfigureAwait(false);
-        return stream.ToArray();
+        using var logo = await Image.LoadAsync(Helpers.ResolvePath(logoPath), cancellationToken).ConfigureAwait(false);
+        return OfficeRasterImageEncoder.Encode(logo.Raster, OfficeImageExportFormat.Png, options: null,
+            maximumEncodedBytes: 128L * 1024L * 1024L, cancellationToken: cancellationToken);
     }
 }

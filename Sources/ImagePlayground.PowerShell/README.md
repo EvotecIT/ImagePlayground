@@ -1,8 +1,8 @@
 # ImagePlayground.PowerShell
 
-This project builds the binary ImagePlayground PowerShell module. It provides one command surface over the `ImagePlayground`, `ChartForgeX`, and `CodeGlyphX` .NET packages.
+This project builds the binary ImagePlayground PowerShell module. It provides one command surface over the `ImagePlayground`, `OfficeIMO.Core`, `ChartForgeX`, `ChartForgeX.Visuals`, `ChartForgeX.Stories`, and `CodeGlyphX` .NET packages.
 
-Use it for image conversion, resizing, composition, text, watermarks, metadata, thumbnails, icons, mosaics, grids, avatars, GIFs, charts, topology diagrams, QR codes, and barcodes. The cmdlets stay thin: ChartForgeX owns chart rendering, CodeGlyphX owns code generation and decoding, and ImagePlayground owns image manipulation.
+Use it for image conversion, resizing, composition, text, watermarks, metadata, thumbnails, icons, mosaics, grids, avatars, GIFs, charts, topology diagrams, QR codes, and barcodes. The cmdlets stay thin: OfficeIMO.Core owns raster processing and metadata; ChartForgeX owns charts and topology; ChartForgeX.Visuals owns composition; ChartForgeX.Stories owns animation and stories; CodeGlyphX owns code generation and decoding.
 
 ```powershell
 Install-Module -Name ImagePlayground -Scope CurrentUser
@@ -40,4 +40,4 @@ Omitting `-ScanOptions` gives the adapter a five-second scan deadline. An explic
 
 DotCode, Han Xin, and stacked GS1 DataBar generation use the owner's matrix renderer. MaxiCode needs a renderer for its hexagonal geometry and is rejected. GS1 Composite needs separate linear and composite payloads and is rejected by the single-value barcode command; use CodeGlyphX's composite encoder for that workflow.
 
-Typed QR payment payloads retain the owner's recommended encoding. Slovenian UPN QR uses version 15, medium error correction, and ISO-8859-2. Explicit error correction selections on other QR helpers remain effective. `-LogoPath` embeds a validated logo in raster or SVG output through CodeGlyphX. The logo fits within one eighth of the image width, retaining its aspect ratio. ImageSharp normalizes the logo before the owner embeds it without a background plate. Invalid logos leave an existing destination intact.
+Typed QR payment payloads retain the owner's recommended encoding. Slovenian UPN QR uses version 15, medium error correction, and ISO-8859-2. Explicit error correction selections on other QR helpers remain effective. `-LogoPath` embeds a validated logo in raster or SVG output through CodeGlyphX. The logo fits within one eighth of the image width, retaining its aspect ratio. OfficeIMO.Core normalizes the logo before the owner embeds it without a background plate. Invalid logos leave an existing destination intact.
