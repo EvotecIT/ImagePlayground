@@ -69,6 +69,15 @@ Describe 'New-ImageQRCode' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz/logo'
     }
 
+    It 'embeds the logo in SVG output' {
+        $file = Join-Path $TestDir 'qr_logo.svg'
+        $logo = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        New-ImageQRCode -Content 'https://evotec.xyz/logo' -FilePath $file -LogoPath $logo
+        [xml] $svg = Get-Content -LiteralPath $file -Raw
+        $svg.SelectNodes("//*[local-name()='image']").Count | Should -BeGreaterThan 0
+        Get-Content -LiteralPath $file -Raw | Should -Match 'data:image/png;base64,'
+    }
+
     It 'throws before writing output when logo file is missing' {
         $file = Join-Path $TestDir 'qr_missing_logo.png'
         $missingLogo = Join-Path $TestDir 'missing-logo.png'

@@ -40,6 +40,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     public SwitchParameter Show { get; set; }
 
     /// <summary>Optional logo image to place at the center of the QR code.</summary>
+    /// <para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</para>
     [Parameter]
     public string? LogoPath { get; set; }
 

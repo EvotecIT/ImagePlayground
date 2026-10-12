@@ -29,7 +29,7 @@ Describe 'Get-ImageBarCode' {
 
         $result = Get-ImageBarCode -FilePath $mixedFile
 
-        $result.Kind | Should -Not -Be 'Qr'
+        $result.Format.ToString() | Should -Be 'Ean'
         $result.Text | Should -Be '9012341234571'
     }
 
@@ -38,6 +38,19 @@ Describe 'Get-ImageBarCode' {
         Set-Content -Path $file -Value 'not an image' -Encoding ASCII
 
         { Get-ImageBarCode -FilePath $file -ErrorAction Stop } | Should -Throw
+    }
+
+    It 'returns structured scan completion when detailed results are requested' {
+        $file = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/BarcodeEAN13.png'
+        $options = [CodeGlyphX.ScanOptions]::new()
+        $options.Formats = @([CodeGlyphX.SymbolFormat]::Ean)
+        $options.TimeoutMilliseconds = 5000
+        $options.MaxSymbols = 1
+        $result = Get-ImageBarCode -FilePath $file -ScanOptions $options -Detailed
+        $result.GetType().FullName | Should -Be 'CodeGlyphX.ScanResult'
+        $result.IsSuccess | Should -BeTrue
+        $result.Symbols[0].Format.ToString() | Should -Be 'Ean'
+        $result.Symbols[0].Text | Should -Be '9012341234571'
     }
 
 

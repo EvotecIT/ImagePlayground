@@ -45,4 +45,21 @@ Describe 'New-ImageBarCode' {
         (Get-ImageBarCode -FilePath $file).Text | Should -Be 'Pdf417Example'
     }
 
+    It 'generates <Format> through the matrix owner' -ForEach @(
+        @{ Format = 'DotCode' }
+        @{ Format = 'HanXin' }
+        @{ Format = 'Gs1DataBarStackedOmnidirectional' }
+    ) {
+        $file = Join-Path $TestDir "$Format.png"
+        New-ImageBarCode -Type $Format -Value '1234567890123' -FilePath $file
+        Test-Path $file | Should -BeTrue
+    }
+
+    It 'rejects MaxiCode without overwriting the destination' {
+        $file = Join-Path $TestDir 'maxicode.png'
+        Set-Content -LiteralPath $file -Value 'existing output'
+        { New-ImageBarCode -Type MaxiCode -Value '1234567890123' -FilePath $file -ErrorAction Stop } | Should -Throw
+        (Get-Content -LiteralPath $file -Raw).Trim() | Should -Be 'existing output'
+    }
+
 }

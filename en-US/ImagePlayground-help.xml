@@ -18419,7 +18419,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LogoPath</maml:name>
           <maml:description>
-            <maml:para>Optional logo image to place at the center of the QR code.</maml:para>
+            <maml:para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -18518,7 +18518,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LogoPath</maml:name>
         <maml:description>
-          <maml:para>Optional logo image to place at the center of the QR code.</maml:para>
+          <maml:para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
