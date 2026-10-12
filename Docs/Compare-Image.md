@@ -17,6 +17,8 @@ Compare-Image [-FilePath] <string> [-FilePathToCompare] <string> [[-OutputPath] 
 ## DESCRIPTION
 When OutputPath is omitted, the cmdlet writes the comparison result to the pipeline instead of creating a file.
 
+ChangedPixels counts pixels whose premultiplied RGB or alpha differs; Similarity ranges from zero to one.
+
 ## EXAMPLES
 
 ### EXAMPLE 1
@@ -84,7 +86,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `OfficeIMO.Drawing.OfficeRasterComparisonResult`
 
 ## RELATED LINKS
 

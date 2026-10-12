@@ -173,7 +173,7 @@ Accept wildcard characters: False
 ```
 
 ### -Preset
-Built-in palette used as the customization baseline.
+Built-in palette used as the customization baseline. Light and Dark use the canonical ChartForgeX tokens; shell-specific presets remain available.
 
 ```yaml
 Type: String

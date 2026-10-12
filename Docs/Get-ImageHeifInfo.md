@@ -15,7 +15,7 @@ Get-ImageHeifInfo [-FilePath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Returns brands, primary item information, item types, EXIF presence, and image dimensions when declared by HEIF item properties.
+Returns an OfficeIMO.Drawing.OfficeHeifImageInfo containing brands, primary item information, item types, EXIF presence, and image dimensions when declared by HEIF item properties.
 
 ## EXAMPLES
 
@@ -52,7 +52,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ImagePlayground.HeifImageInfo`
+- `OfficeIMO.Drawing.OfficeHeifImageInfo`
 
 ## RELATED LINKS
 

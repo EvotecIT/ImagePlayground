@@ -5,11 +5,11 @@ namespace ImagePlayground;
 /// </summary>
 public enum ChartTheme
 {
-    /// <summary>Use the default ChartForgeX report style.</summary>
+    /// <summary>Use the canonical light ChartForgeX colors, typography, and frame style.</summary>
     Default,
-    /// <summary>Apply the dark theme.</summary>
+    /// <summary>Apply the canonical dark ChartForgeX theme.</summary>
     Dark,
-    /// <summary>Apply the light theme.</summary>
+    /// <summary>Apply the canonical light ChartForgeX theme.</summary>
     Light,
     /// <summary>Apply the colorblind-friendly theme.</summary>
     Colorblind,

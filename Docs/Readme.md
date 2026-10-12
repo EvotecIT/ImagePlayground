@@ -2,7 +2,7 @@
 Module Name: ImagePlayground
 Module Guid: ff5469f2-c542-4318-909e-fd054d16821f
 Download Help Link: https://github.com/EvotecIT/ImagePlayground
-Help Version: 3.2.7
+Help Version: 3.2.8
 Locale: en-US
 ---
 # ImagePlayground Module
@@ -379,10 +379,10 @@ Removes the XMP metadata packet from a HEIF or HEIC file.
 Removes selected metadata from an image.
 
 ### [Resize-Image](Resize-Image.md)
-Resizes an image.
+Resizes an image object or a source file.
 
 ### [Save-Image](Save-Image.md)
-Saves an image to disk or returns its encoded bytes as a stream.
+Saves an image object to disk or returns its encoded bytes as a stream.
 
 ### [Select-ImageConsoleStoryTab](Select-ImageConsoleStoryTab.md)
 Switches an ImagePlayground console story to a previously declared persistent tab.

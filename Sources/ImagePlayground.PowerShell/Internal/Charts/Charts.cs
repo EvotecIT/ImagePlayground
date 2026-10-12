@@ -14,7 +14,7 @@ using CfxBubble = ChartForgeX.Core.ChartBubble;
 using CfxBoxPlot = ChartForgeX.Core.ChartBoxPlot;
 using CfxInterval = ChartForgeX.Core.ChartInterval;
 using CfxRangeBand = ChartForgeX.Core.ChartRangeBand;
-using CfxTreemapItem = ChartForgeX.Core.ChartTreemapItem;
+using CfxHierarchyItem = ChartForgeX.Core.ChartHierarchyItem;
 using CfxWordCloudItem = ChartForgeX.Core.ChartWordCloudItem;
 
 namespace ImagePlayground;
@@ -137,7 +137,7 @@ internal static class Charts {
             chart.AddFunnel("Values", list.Cast<ChartFunnel>().Select((funnel, index) => new ChartPoint(index + 1, funnel.Value)));
             ApplyPointColors(chart, list.Cast<ChartFunnel>().Select(funnel => funnel.Color).ToArray());
         } else if (type == typeof(ChartTreemap)) {
-            chart.AddTreemap("Values", list.Cast<ChartTreemap>().Select(item => new CfxTreemapItem(item.Name, item.Value)));
+            chart.AddTreemap("Values", list.Cast<ChartTreemap>().Select((item, index) => new CfxHierarchyItem("item-" + index.ToString(CultureInfo.InvariantCulture), item.Name, value: item.Value)));
             ApplyPointColors(chart, list.Cast<ChartTreemap>().Select(item => item.Color).ToArray());
         } else if (type == typeof(ChartProgress)) {
             chart.AddProgressBars("Values", list.Cast<ChartProgress>().Select(progress => new CfxProgressItem(progress.Name, progress.Value, progress.Color)), options?.ProgressMaximum ?? 100);
@@ -259,7 +259,7 @@ internal static class Charts {
         if (options.DonutInnerRadiusRatio.HasValue) chart.WithDonutInnerRadiusRatio(options.DonutInnerRadiusRatio.Value);
         if (!string.IsNullOrWhiteSpace(options.DonutCenterValue) || !string.IsNullOrWhiteSpace(options.DonutCenterLabel)) chart.WithDonutCenterText(options.DonutCenterValue, options.DonutCenterLabel);
         if (options.PieLabelContent.HasValue) chart.WithPieSliceLabelContent(ResolvePieLabelContent(options.PieLabelContent.Value));
-        if (options.ShowRadialBarCenterLabel.HasValue) chart.WithRadialBarCenterLabel(options.ShowRadialBarCenterLabel.Value);
+        if (options.ShowRadialBarCenterLabel.HasValue) chart.WithProgressRingCenterLabel(options.ShowRadialBarCenterLabel.Value);
         if (options.ShowCircleStatusLabel.HasValue) chart.WithCircleStatusLabel(options.ShowCircleStatusLabel.Value);
         if (options.ProgressMaximum.HasValue) chart.WithProgressMaximum(options.ProgressMaximum.Value);
         if (options.ShowProgressValues.HasValue) chart.WithProgressValues(options.ShowProgressValues.Value);

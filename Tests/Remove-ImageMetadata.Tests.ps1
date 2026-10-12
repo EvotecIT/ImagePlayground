@@ -15,7 +15,7 @@ Describe 'Remove-ImageMetadata' {
 
         $img = [ImagePlayground.Image]::new()
         $img.Create($source, 10, 10)
-        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Software, 'ImagePlayground')
         $img.Save()
         $img.Dispose()
 
@@ -53,7 +53,7 @@ Describe 'Remove-ImageMetadata' {
 
         $img = [ImagePlayground.Image]::new()
         $img.Create($source, 10, 10)
-        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Software, 'ImagePlayground')
         $img.Save()
         $img.Dispose()
 

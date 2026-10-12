@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeGlyphX;
@@ -8,194 +7,94 @@ using CodeGlyphX.UpcE;
 
 namespace ImagePlayground;
 
-/// <summary>
-/// PowerShell-facing barcode helpers backed by CodeGlyphX.
-/// </summary>
-public class BarCode {
-    /// <summary>Generates a QR code.</summary>
+/// <summary>PowerShell-facing barcode helpers backed by CodeGlyphX.</summary>
+public partial class BarCode {
+    /// <summary>Generates a QR code with the selected encoding.</summary>
     public static void GenerateQr(string content, string filePath, QrErrorCorrectionLevel errorCorrectionLevel = QrErrorCorrectionLevel.H, QrTextEncoding? encoding = null) {
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = errorCorrectionLevel
-        };
-        if (encoding.HasValue) {
-            options.TextEncoding = encoding;
-        }
-
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
-        CodeGlyphX.QrCode.Save(content, fullPath, options);
+        QR.Save(content, fullPath, encodingOptions: new QrEncodingOptions {
+            ErrorCorrectionLevel = errorCorrectionLevel,
+            TextEncoding = encoding ?? QrTextEncoding.Utf8
+        });
     }
 
     /// <summary>Generates a QR code asynchronously.</summary>
     public static Task GenerateQrAsync(string content, string filePath, QrErrorCorrectionLevel errorCorrectionLevel = QrErrorCorrectionLevel.H, QrTextEncoding? encoding = null, CancellationToken cancellationToken = default)
-        => Task.Run(() => {
-            cancellationToken.ThrowIfCancellationRequested();
-            GenerateQr(content, filePath, errorCorrectionLevel, encoding);
-        }, cancellationToken);
+        => Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); GenerateQr(content, filePath, errorCorrectionLevel, encoding); }, cancellationToken);
 
     /// <summary>Generates an EAN barcode.</summary>
-    public static void GenerateEan(string content, string filePath) {
-        Generate(BarcodeType.EAN, content, filePath);
-    }
+    public static void GenerateEan(string content, string filePath) => Generate(SymbolFormat.Ean, content, filePath);
 
-    /// <summary>Generates a Code 128 barcode.</summary>
+    /// <summary>Generates a Code 128 barcode, including its required checksum.</summary>
     public static void GenerateCode128(string content, string filePath, bool includeChecksum = true) {
         if (!includeChecksum) {
-            throw new NotSupportedException("Code128 generation via CodeGlyphX always includes the required checksum.");
+            throw new NotSupportedException("Code128 generation always includes the required checksum.");
         }
-
-        Generate(BarcodeType.Code128, content, filePath);
+        Generate(SymbolFormat.Code128, content, filePath);
     }
 
     /// <summary>Generates a Code 93 barcode.</summary>
-    public static void GenerateCode93(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false) {
-        var barcode = BarcodeEncoder.EncodeCode93(content, includeChecksum, fullAsciiMode);
-        SaveBarcode(barcode, filePath);
-    }
+    public static void GenerateCode93(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false)
+        => SaveBarcode(BarcodeEncoder.EncodeCode93(content, includeChecksum, fullAsciiMode), filePath);
 
     /// <summary>Generates a Code 39 barcode.</summary>
-    public static void GenerateCode39(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false) {
-        var barcode = BarcodeEncoder.EncodeCode39(content, includeChecksum, fullAsciiMode);
-        SaveBarcode(barcode, filePath);
-    }
+    public static void GenerateCode39(string content, string filePath, bool includeChecksum = true, bool fullAsciiMode = false)
+        => SaveBarcode(BarcodeEncoder.EncodeCode39(content, includeChecksum, fullAsciiMode), filePath);
 
     /// <summary>Generates a UPC-E barcode.</summary>
-    public static void GenerateUpcE(string content, string filePath, UpcENumberSystem upcNumberSystem = UpcENumberSystem.Zero) {
-        var barcode = BarcodeEncoder.EncodeUpcE(content, upcNumberSystem);
-        SaveBarcode(barcode, filePath);
-    }
+    public static void GenerateUpcE(string content, string filePath, UpcENumberSystem upcNumberSystem = UpcENumberSystem.Zero)
+        => SaveBarcode(BarcodeEncoder.EncodeUpcE(content, upcNumberSystem), filePath);
 
     /// <summary>Generates a UPC-A barcode.</summary>
-    public static void GenerateUpcA(string content, string filePath) {
-        Generate(BarcodeType.UPCA, content, filePath);
-    }
+    public static void GenerateUpcA(string content, string filePath) => Generate(SymbolFormat.UpcA, content, filePath);
 
     /// <summary>Generates a KIX barcode.</summary>
-    public static void GenerateKix(string content, string filePath) {
-        Generate(BarcodeType.KixCode, content, filePath);
-    }
+    public static void GenerateKix(string content, string filePath) => Generate(SymbolFormat.KixCode, content, filePath);
 
     /// <summary>Generates a Data Matrix barcode.</summary>
-    public static void GenerateDataMatrix(string content, string filePath) {
-        Generate(BarcodeType.DataMatrix, content, filePath);
-    }
+    public static void GenerateDataMatrix(string content, string filePath) => Generate(SymbolFormat.DataMatrix, content, filePath);
 
     /// <summary>Generates a PDF417 barcode.</summary>
-    public static void GeneratePdf417(string content, string filePath) {
-        Generate(BarcodeType.PDF417, content, filePath);
-    }
+    public static void GeneratePdf417(string content, string filePath) => Generate(SymbolFormat.Pdf417, content, filePath);
 
-    /// <summary>
-    /// Dispatches barcode generation based on <paramref name="barcodeType"/>.
-    /// </summary>
-    public static void Generate(BarcodeType barcodeType, string content, string filePath) {
-        if (!Enum.IsDefined(typeof(BarcodeType), barcodeType)) {
-            throw new ArgumentOutOfRangeException(nameof(barcodeType), barcodeType, "Unsupported barcode type.");
+    /// <summary>Generates a linear, matrix, stacked, or postal barcode using the owner's format catalogue.</summary>
+    /// <remarks>QR formats use QrCode.Generate. MaxiCode needs specialized geometry; GS1 Composite needs separate payloads and is not supported by this single-value helper.</remarks>
+    public static void Generate(SymbolFormat format, string content, string filePath) {
+        if (!SymbolCapabilities.TryGet(format, out var capability)) {
+            throw new ArgumentOutOfRangeException(nameof(format), format, "Unsupported symbol format.");
+        }
+        if (IsQrFormat(format)) {
+            throw new NotSupportedException("Use QrCode.Generate for QR symbols.");
+        }
+        if (format == SymbolFormat.MaxiCode) {
+            throw new NotSupportedException("MaxiCode requires a hexagonal geometry renderer and is not supported by this image helper.");
+        }
+        if (format == SymbolFormat.Gs1Composite) {
+            throw new NotSupportedException("GS1 Composite requires separate linear and composite payloads; use the CodeGlyphX composite encoder.");
+        }
+        if (!capability.CanEncode) {
+            throw new NotSupportedException($"{format} cannot be encoded.");
         }
 
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
-        if (IsMatrixBarcode(barcodeType)) {
-            MatrixBarcode.Save(barcodeType, content, fullPath);
-            return;
+        if (capability.Family == SymbolFamily.Linear) {
+            Barcode.Save(format, content, fullPath);
+        } else {
+            MatrixBarcode.Save(format, content, fullPath);
         }
-
-        Barcode.Save(barcodeType, content, fullPath);
     }
 
-    /// <summary>
-    /// Dispatches barcode generation asynchronously based on <paramref name="barcodeType"/>.
-    /// </summary>
-    public static Task GenerateAsync(BarcodeType barcodeType, string content, string filePath, CancellationToken cancellationToken = default)
-        => Task.Run(() => {
-            cancellationToken.ThrowIfCancellationRequested();
-            Generate(barcodeType, content, filePath);
-        }, cancellationToken);
-
-    /// <summary>
-    /// Reads and decodes a barcode from an image asynchronously.
-    /// </summary>
-    public static async Task<CodeGlyphDecoded?> ReadAsync(string filePath, CancellationToken cancellationToken = default) {
-        cancellationToken.ThrowIfCancellationRequested();
-        string fullPath = Helpers.ResolvePath(filePath);
-        byte[] imageBytes = await AsyncFile.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        var options = new CodeGlyphDecodeOptions {
-            CancellationToken = cancellationToken,
-            IncludeBarcode = true
-        };
-        DecodeResult<CodeGlyphDecoded> result = CodeGlyph.DecodeImageResult(imageBytes, options);
-        if (result.IsSuccess) {
-            CodeGlyphDecoded? decoded = result.Value;
-            if (decoded is not null && decoded.Kind != CodeGlyphKind.Qr && !IsAmbiguousBarcode(decoded)) {
-                return decoded;
-            }
-
-            var multipleOptions = new CodeGlyphDecodeOptions {
-                CancellationToken = cancellationToken,
-                IncludeBarcode = true,
-                Barcode = new BarcodeDecodeOptions {
-                    EnableTileScan = true
-                }
-            };
-            if (CodeGlyph.TryDecodeAllImage(imageBytes, out CodeGlyphDecoded[] decodedSymbols, multipleOptions)) {
-                return decodedSymbols.FirstOrDefault(symbol => symbol.Kind != CodeGlyphKind.Qr && !IsAmbiguousBarcode(symbol))
-                    ?? decodedSymbols.FirstOrDefault(symbol => symbol.Kind != CodeGlyphKind.Qr);
-            }
-
-            return decoded is not null && decoded.Kind != CodeGlyphKind.Qr ? decoded : null;
-        }
-
-        return result.Failure switch {
-            DecodeFailureReason.NoResult => null,
-            DecodeFailureReason.Cancelled => throw new OperationCanceledException(result.Message, cancellationToken),
-            DecodeFailureReason.InvalidInput => throw new InvalidDataException(result.Message),
-            DecodeFailureReason.UnsupportedFormat => throw new InvalidDataException(result.Message),
-            DecodeFailureReason.PlatformNotSupported => throw new PlatformNotSupportedException(result.Message),
-            DecodeFailureReason.Error => throw new InvalidOperationException(result.Message),
-            _ => throw new InvalidOperationException(result.Message)
-        };
-    }
-
-    /// <summary>
-    /// Reads and decodes a barcode from an image.
-    /// </summary>
-    public static CodeGlyphDecoded? Read(string filePath) {
-        return ReadAsync(filePath).GetAwaiter().GetResult();
-    }
+    /// <summary>Generates a barcode asynchronously.</summary>
+    public static Task GenerateAsync(SymbolFormat format, string content, string filePath, CancellationToken cancellationToken = default)
+        => Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); Generate(format, content, filePath); }, cancellationToken);
 
     private static void SaveBarcode(Barcode1D barcode, string filePath) {
-        if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
-        var format = OutputFormatInfo.Resolve(fullPath, OutputFormat.Png);
-        var output = Barcode.Render(barcode, format);
-        OutputWriter.Write(fullPath, output);
+        OutputWriter.Write(fullPath, Barcode.Render(barcode, OutputFormatInfo.Resolve(fullPath, OutputFormat.Png)));
     }
 
-    private static bool IsMatrixBarcode(BarcodeType barcodeType) {
-        return barcodeType switch {
-            BarcodeType.KixCode => true,
-            BarcodeType.PharmacodeTwoTrack => true,
-            BarcodeType.Postnet => true,
-            BarcodeType.Planet => true,
-            BarcodeType.RoyalMail4State => true,
-            BarcodeType.AustraliaPost => true,
-            BarcodeType.JapanPost => true,
-            BarcodeType.UspsImb => true,
-            BarcodeType.GS1DataBarOmni => true,
-            BarcodeType.GS1DataBarStacked => true,
-            BarcodeType.GS1DataBarExpandedStacked => true,
-            BarcodeType.DataMatrix => true,
-            BarcodeType.PDF417 => true,
-            BarcodeType.MicroPDF417 => true,
-            _ => false
-        };
-    }
-
-    private static bool IsAmbiguousBarcode(CodeGlyphDecoded decoded) {
-        // These symbologies intentionally accept short bar patterns, so mixed images can produce
-        // incidental matches. Prefer a stronger CodeGlyphX candidate when one is available.
-        return decoded.Kind == CodeGlyphKind.Barcode1D
-            && decoded.Barcode?.Type is BarcodeType.PatchCode or BarcodeType.Pharmacode or BarcodeType.PharmacodeTwoTrack;
-    }
+    private static bool IsQrFormat(SymbolFormat format) => format is SymbolFormat.QrCode or SymbolFormat.MicroQrCode or SymbolFormat.RmQrCode;
 }

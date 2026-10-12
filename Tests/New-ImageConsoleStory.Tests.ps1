@@ -1,7 +1,11 @@
 Describe 'New-ImageConsoleStory' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        }
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
@@ -22,6 +26,7 @@ Describe 'New-ImageConsoleStory' {
         } -FilePath $file -PassThru
 
         $story | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
+        $story.Theme.Background.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalTheme]::GraphiteDark()).Background.ToCss()
         Test-Path -Path $file | Should -BeTrue
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-terminal="PowerShell"'
@@ -42,6 +47,7 @@ Describe 'New-ImageConsoleStory' {
         $story.Steps.Count | Should -Be 4
         $story.Steps[0].Text | Should -Be '.\Invoke-EnvironmentAudit.ps1'
         $story.Steps[1].Text | Should -Be 'Checking domain...'
+        $story.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalTheme]::GraphiteDark()).Text.ToCss()
         [System.IO.File]::ReadAllText($file) | Should -Match 'PASS  Kerberos'
     }
 
@@ -60,15 +66,42 @@ Describe 'New-ImageConsoleStory' {
             Remove-Item -Path $file
         }
 
-        $story = [ChartForgeX.Terminal.TerminalStory]::Create().Command('Get-Date').Output('Ready')
+        $customTheme = [ChartForgeX.Terminal.TerminalTheme]::PowerShell()
+        $customTheme.Accent = [ChartForgeX.Primitives.ChartColor]::FromHex('#ABCDEF')
+        $story = [ChartForgeX.Terminal.TerminalStory]::Create().WithTheme($customTheme).Command('Get-Date').Output('Ready')
         $result = $story | Export-ImageConsoleStory -Path $file -PassThru
 
         $result | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
+        $result.Theme.Accent.ToCss() | Should -BeExactly '#ABCDEF'
         $bytes = [System.IO.File]::ReadAllBytes($file)
         $bytes[0] | Should -Be 137
         $bytes[1] | Should -Be 80
         $bytes[2] | Should -Be 78
         $bytes[3] | Should -Be 71
+    }
+
+    It 'uses canonical terminal presets and preserves explicit palette overrides' -TestCases @(
+        @{ Theme = 'Light' }
+        @{ Theme = 'Dark' }
+    ) {
+        param($Theme)
+        $expected = if ($Theme -eq 'Dark') {
+            [ChartForgeX.Terminal.TerminalTheme]::GraphiteDark()
+        } else {
+            [ChartForgeX.Terminal.TerminalTheme]::GraphiteLight()
+        }
+        $story = New-ImageConsoleStory -Theme $Theme -Content {
+            New-ImageConsoleStoryCommand -Text 'Get-Date'
+            New-ImageConsoleStoryOutput -Text Ready -Style Success
+        }
+        $story.Theme.Background.ToCss() | Should -BeExactly $expected.Background.ToCss()
+        $story.Theme.FontFamily | Should -BeExactly $expected.FontFamily
+        $palette = New-ImageConsoleStoryPalette -Preset $Theme -Accent '#9F1239'
+        $customStory = New-ImageConsoleStory -Theme $Theme -Palette $palette -Content {
+            New-ImageConsoleStoryOutput -Text Ready
+        }
+        $customStory.Theme.Accent.ToCss() | Should -BeExactly '#9F1239'
+        $customStory.Theme.Background.ToCss() | Should -BeExactly $expected.Background.ToCss()
     }
 
     It 'rejects multiple pipeline stories before writing a fixed output path' {

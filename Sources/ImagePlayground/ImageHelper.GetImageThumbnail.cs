@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
 /// <summary>
@@ -36,7 +35,8 @@ public partial class ImageHelper {
         string fullPath = Helpers.ResolvePath(filePath);
         string hash = ComputeFileHash(fullPath);
         string cacheDir = GetThumbnailCacheDirectory();
-        string thumbPath = Path.Combine(cacheDir, $"{hash}_{width}x{height}.png");
+        string kernel = sampler.HasValue ? sampler.Value.ToString() : nameof(OfficeRasterResamplingMode.Bicubic);
+        string thumbPath = Path.Combine(cacheDir, $"{hash}_{width}x{height}_{keepAspectRatio}_{kernel}.png");
 
         if (!File.Exists(thumbPath)) {
             Resize(fullPath, thumbPath, width, height, keepAspectRatio, sampler);

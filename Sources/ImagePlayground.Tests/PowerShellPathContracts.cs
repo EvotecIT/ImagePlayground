@@ -1,3 +1,7 @@
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +17,6 @@ using ChartForgeX;
 using ChartForgeX.Core;
 using ChartForgeX.Topology;
 using ChartForgeX.VisualArtifacts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
-using SixLabors.ImageSharp.PixelFormats;
 using Xunit;
 using PowerShellHost = System.Management.Automation.PowerShell;
 using PlaygroundImage = global::ImagePlayground.Image;
@@ -81,7 +82,7 @@ public partial class ImagePlayground {
         switch (command) {
             case "Add-ImageText":
             case "Add-ImageTextBox":
-                parameters.AddRange(new[] { ("Text", (object)"Path"), ("X", 1), ("Y", 1), ("FontSize", 8), ("FontFamily", SixLabors.Fonts.SystemFonts.Collection.Families.First().Name) });
+                parameters.AddRange(new[] { ("Text", (object)"Path"), ("X", 1), ("Y", 1), ("FontSize", 8), ("FontFamily", "Arial") });
                 if (command == "Add-ImageTextBox") {
                     parameters.Add(("Width", 48));
                 }
@@ -110,15 +111,15 @@ public partial class ImagePlayground {
             Assert.Empty(PlaygroundImage.GetExifValues(output));
         }
         if (command == "Set-ImageExif") {
-            Assert.Contains(PlaygroundImage.GetExifValues(output), value => value.Tag == ExifTag.Software && value.GetValue()?.ToString() == "path-contract");
+            Assert.Contains(PlaygroundImage.GetExifValues(output), value => value.Tag.Equals(ExifTag.Software) && value.Value?.ToString() == "path-contract");
         }
         if (command is "Add-ImageText" or "Add-ImageTextBox" or "Add-ImageWatermark" or "Set-ImageAdjust" or "Set-ImageBlur" or "Set-ImageSharpen") {
-            using var source = SixLabors.ImageSharp.Image.Load<Rgba32>(Path.Combine(fixture.Location, "source.png"));
-            using var edited = SixLabors.ImageSharp.Image.Load<Rgba32>(output);
-            Assert.Contains(Enumerable.Range(0, width * height), index => source[index % width, index / width] != edited[index % width, index / width]);
+            using var source = global::ImagePlayground.Image.Load(Path.Combine(fixture.Location, "source.png"));
+            using var edited = global::ImagePlayground.Image.Load(output);
+            Assert.Contains(Enumerable.Range(0, width * height), index => source.Raster.GetPixel(index % width, index / width) != edited.Raster.GetPixel(index % width, index / width));
         }
         if (command == "New-ImageGif") {
-            using var gif = SixLabors.ImageSharp.Image.Load(output);
+            using var gif = global::ImagePlayground.Image.Load(output);
             Assert.Equal(2, gif.Frames.Count);
         }
     }
@@ -138,7 +139,7 @@ public partial class ImagePlayground {
         }
         fixture.Invoke("Import-ImageMetadata", ("FilePath", "./other.png"), ("MetadataPath", "./metadata.json"), ("OutputPath", "./imported.png"));
         fixture.AssertImageOutput("imported.png", 64, 48);
-        Assert.Contains(PlaygroundImage.GetExifValues(Path.Combine(fixture.Location, "imported.png")), value => value.Tag == ExifTag.Software && value.GetValue()?.ToString() == "original-path-fixture");
+        Assert.Contains(PlaygroundImage.GetExifValues(Path.Combine(fixture.Location, "imported.png")), value => value.Tag.Equals(ExifTag.Software) && value.Value?.ToString() == "original-path-fixture");
 
         const string xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" />";
         File.WriteAllBytes(Path.Combine(fixture.Location, "source.heic"), CreateMinimalHeifWithPrimaryImageExifAndXmp(64, 48, CreateExifPayload("fixture"), "<x:xmpmeta />"));
@@ -232,6 +233,124 @@ public partial class ImagePlayground {
         }
     }
 
+    [Fact]
+    public void Test_PowerShell_V2MotionPresentationExportsWithoutChangingStaticGrid() {
+        using var fixture = new PowerShellPathFixture();
+        var grid = ChartForgeX.VisualBlocks.VisualGrid.Create().WithTitle("Detached motion");
+        grid.Add("requests", ChartForgeX.VisualBlocks.MetricCard.Create().WithMetric("Requests", "12840"));
+        string before = grid.ToSvg();
+        var motion = ChartForgeX.Motion.VisualMotionTimeline.Create().Rise("requests");
+        var presentation = Assert.IsType<ChartForgeX.Motion.VisualMotionPresentation>(fixture.Invoke("New-ImageVisualStory", ("Grid", grid), ("Motion", motion), ("FilePath", "./motion.svg"), ("PassThru", true)).Single().BaseObject);
+        Assert.Equal("ChartForgeX.Stories", presentation.GetType().Assembly.GetName().Name);
+        Assert.Equal("ChartForgeX.Visuals", grid.GetType().Assembly.GetName().Name);
+        Assert.Equal(before, grid.ToSvg());
+        Assert.Contains("data-cfx-motion-target=\"requests\"", File.ReadAllText(Path.Combine(fixture.Location, "motion.svg")));
+        var exported = fixture.Invoke("New-ImageVisualStory", ("Presentation", presentation), ("FilePath", "./motion.png"), ("PassThru", true)).Single().BaseObject;
+        Assert.Same(presentation, exported);
+        fixture.AssertImageOutput("motion.png", presentation.ToRgbaImage().Width, presentation.ToRgbaImage().Height);
+    }
+
+    [Fact]
+    public void Test_PowerShell_V2MotionGridReturnsTypedReusablePresentation() {
+        using var fixture = new PowerShellPathFixture();
+        var item = ChartForgeX.VisualBlocks.VisualGridItem.FromBlock("requests", ChartForgeX.VisualBlocks.MetricCard.Create().WithMetric("Requests", "12840"));
+        var motion = ChartForgeX.Motion.VisualMotionTimeline.Create().Rise("requests");
+        var presentation = Assert.IsType<ChartForgeX.Motion.VisualMotionPresentation>(fixture.Invoke("New-ImageVisualGrid", ("Content", new[] { item }), ("Motion", motion)).Single().BaseObject);
+        motion.Add("later-target", ChartForgeX.Motion.VisualMotionEffect.Fade);
+        Assert.Contains("data-cfx-motion-target=\"requests\"", presentation.ToSvg());
+        Assert.DoesNotContain("data-cfx-motion-target=\"later-target\"", presentation.ToSvg());
+    }
+
+    [Fact]
+    public void Test_PowerShell_V2WatermarkExportPreservesCallerArtifactAndPassThru() {
+        using var fixture = new PowerShellPathFixture();
+        var chart = Chart.Create().WithSize(240, 160).WithTitle("Caller artifact").AddBar("Requests", ChartPoints.FromValues(1, 2));
+        var artifact = chart.ToVisualArtifact();
+        artifact.Metadata.Add("caller", "preserved");
+        string before = artifact.ToSvg();
+        var renderSource = artifact.RenderSource;
+        var regions = artifact.Regions.ToArray();
+        var watermark = VisualWatermark.FromText("INTERNAL");
+        var returned = fixture.Invoke("Export-ImageVisualArtifact", ("Artifact", artifact), ("Watermark", new[] { watermark }), ("FilePath", "./watermark.svg"), ("PassThru", true)).Single().BaseObject;
+        Assert.Same(artifact, returned);
+        Assert.Contains("INTERNAL", File.ReadAllText(Path.Combine(fixture.Location, "watermark.svg")));
+        fixture.Invoke("Export-ImageVisualArtifact", ("Artifact", artifact), ("Watermark", new[] { watermark }), ("FilePath", "./watermark.png"), ("Dpi", 144D));
+        fixture.AssertImageOutput("watermark.png", 240, 160);
+        Assert.Equal(before, artifact.ToSvg());
+        Assert.Same(renderSource, artifact.RenderSource);
+        Assert.Equal("preserved", artifact.Metadata["caller"]);
+        Assert.Equal(regions, artifact.Regions);
+    }
+
+    [Theory]
+    [InlineData("svg", false)]
+    [InlineData("html", false)]
+    [InlineData("png", false)]
+    [InlineData("svg", true)]
+    [InlineData("html", true)]
+    [InlineData("png", true)]
+    public void Test_PowerShell_V2TopologyMotionRetainsRenderAndChartPassThru(string extension, bool watermarked) {
+        using var fixture = new PowerShellPathFixture();
+        var chart = TopologyChart.Create();
+        chart.Viewport.Width = 320;
+        chart.Viewport.Height = 200;
+        chart.Nodes.Add(new TopologyNode { Id = "api", Label = "API" });
+        chart.Nodes.Add(new TopologyNode { Id = "db", Label = "Database" });
+        chart.Edges.Add(new TopologyEdge { Id = "api-db", SourceNodeId = "api", TargetNodeId = "db" });
+        var motion = TopologyMotionOptions.RoutePulseForEdges("api-db").AtProgress(0.5);
+        string before = chart.ToSvg();
+        string outputName = "topology-motion." + extension;
+        var parameters = new List<(string, object)> { ("Chart", chart), ("Motion", motion), ("FilePath", "./" + outputName), ("Dpi", 144D), ("PassThru", true) };
+        if (watermarked) {
+            parameters.Add(("Watermark", new[] { VisualWatermark.FromText("INTERNAL") }));
+        }
+        var returned = fixture.Invoke("New-ImageTopology", parameters.ToArray()).Single().BaseObject;
+        Assert.Same(chart, returned);
+        Assert.Equal(before, chart.ToSvg());
+        if (extension == "png") {
+            using var image = PlaygroundImage.Load(Path.Combine(fixture.Location, outputName));
+            Assert.True(image.Width >= 320);
+            Assert.True(image.Height >= 200);
+            Assert.Contains("pHYs", Encoding.ASCII.GetString(File.ReadAllBytes(Path.Combine(fixture.Location, outputName))));
+            if (watermarked) {
+                fixture.Invoke("New-ImageTopology", ("Chart", chart), ("Motion", motion), ("FilePath", "./unmarked.png"), ("Dpi", 144D));
+                using var unmarked = PlaygroundImage.Load(Path.Combine(fixture.Location, "unmarked.png"));
+                Assert.Equal(image.Width, unmarked.Width);
+                Assert.Equal(image.Height, unmarked.Height);
+                Assert.False(image.Raster.GetPixels().SequenceEqual(unmarked.Raster.GetPixels()));
+            }
+        } else {
+            string markup = File.ReadAllText(Path.Combine(fixture.Location, outputName));
+            Assert.Contains("animateMotion", markup);
+            if (watermarked) Assert.Contains("INTERNAL", markup);
+        }
+    }
+
+    [Theory]
+    [InlineData(null, "alternate")]
+    [InlineData("default", "default")]
+    public void Test_PowerShell_InteractiveTopologyMotionUsesTheSelectedHostScenarioUnlessExplicitlyOverridden(string? explicitScenario, string expectedSource) {
+        using var fixture = new PowerShellPathFixture();
+        var chart = TopologyChart.Create().WithViewport(500, 260).WithLayout(TopologyLayoutMode.Manual)
+            .AddNode("a", "API", 20, 40, width: 100, height: 60)
+            .AddNode("b", "Worker", 300, 40, width: 100, height: 60)
+            .AddNode("c", "Data", 300, 160, width: 100, height: 60)
+            .AddEdge("first", "a", "b", routing: TopologyEdgeRouting.Straight)
+            .AddEdge("second", "a", "c", routing: TopologyEdgeRouting.Straight)
+            .AddScenario("default", "Default", scenario => scenario.AddEdgeStep("first"))
+            .AddScenario("alternate", "Alternate", scenario => scenario.AddEdgeStep("second"));
+        var motion = new TopologyMotionOptions { ScenarioId = explicitScenario };
+        var before = chart.ToSvg();
+        fixture.Invoke("New-ImageTopology", ("Chart", chart), ("Motion", motion), ("ActiveScenarioId", "alternate"),
+            ("InteractiveHtml", true), ("FilePath", "./selected-motion.html"));
+        var html = File.ReadAllText(Path.Combine(fixture.Location, "selected-motion.html"));
+        Assert.Contains("data-cfx-active-scenario=\"alternate\"", html);
+        Assert.Contains("data-cfx-motion-source=\"" + expectedSource + "\"", html);
+        Assert.Equal(before, chart.ToSvg());
+        Assert.Equal(explicitScenario, motion.ScenarioId);
+        Assert.Empty(motion.EdgeIds);
+    }
+
     private sealed class PowerShellPathFixture : IDisposable {
         private readonly string _originalDirectory = Environment.CurrentDirectory;
         private readonly string _root = Path.Combine(Path.GetTempPath(), "ImagePlayground-paths-" + Guid.NewGuid().ToString("N"));
@@ -246,16 +365,16 @@ public partial class ImagePlayground {
             Directory.CreateDirectory(Location);
             Directory.CreateDirectory(ProcessDirectory);
             Directory.CreateDirectory(Path.Combine(Location, "inputs"));
-            using (var source = new SixLabors.ImageSharp.Image<Rgba32>(64, 48)) {
+            using (var source = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(64, 48))) {
                 for (int y = 0; y < source.Height; y++) {
                     for (int x = 0; x < source.Width; x++) {
-                        source[x, y] = new Rgba32((byte)(x * 4), (byte)(y * 5), 128);
+                        source.Raster.SetPixel(x, y, new OfficeColor((byte)(x * 4), (byte)(y * 5), 128));
                     }
                 }
-                source.Metadata.ExifProfile = new ExifProfile();
-                source.Metadata.ExifProfile.SetValue(ExifTag.Software, "original-path-fixture");
+
+                source.Metadata.SetExifValue(ExifTag.Software, "original-path-fixture");
                 source.Save(Path.Combine(Location, "source.png"));
-                source[0, 0] = new Rgba32(255, 255, 255);
+                source.Raster.SetPixel(0, 0, OfficeColor.White);
                 source.Save(Path.Combine(Location, "other.png"));
             }
             File.Copy(Path.Combine(Location, "source.png"), Path.Combine(Location, "inputs", "source.png"));
@@ -295,7 +414,7 @@ public partial class ImagePlayground {
         }
 
         public void AssertImageOutput(string relativePath, int width, int height) {
-            using var output = SixLabors.ImageSharp.Image.Load(Path.Combine(Location, relativePath));
+            using var output = global::ImagePlayground.Image.Load(Path.Combine(Location, relativePath));
             Assert.Equal(width, output.Width);
             Assert.Equal(height, output.Height);
             Assert.False(File.Exists(Path.Combine(ProcessDirectory, relativePath)));

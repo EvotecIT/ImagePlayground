@@ -1,4 +1,7 @@
-using SixLabors.ImageSharp;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System.IO;
 using Xunit;
 

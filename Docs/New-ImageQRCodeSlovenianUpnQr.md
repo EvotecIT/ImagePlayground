@@ -11,7 +11,7 @@ Generates a Slovenian UPN QR payment code.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <DateTime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <Color>] [-BackgroundColor <Color>] [-PixelSize <int>] [<CommonParameters>]
+New-ImageQRCodeSlovenianUpnQr [-PayerName] <string> [-PayerAddress] <string> [-PayerPlace] <string> [-RecipientName] <string> [-RecipientAddress] <string> [-RecipientPlace] <string> [-RecipientIban] <string> [-Description] <string> [-Amount] <double> [-FilePath] <string> [-Deadline <DateTime>] [-RecipientSiModel <string>] [-RecipientSiReference <string>] [-Code <string>] [-Show] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,7 +55,7 @@ Accept wildcard characters: False
 Background color of the QR code.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -135,7 +135,7 @@ Accept wildcard characters: False
 Foreground color of QR modules.
 
 ```yaml
-Type: Color
+Type: OfficeColor
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

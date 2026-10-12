@@ -1,6 +1,8 @@
-﻿using System;
-//using ImageSharp.Processing.AutoCrop.Extensions;
-//using ImageSharp.Processing.AutoCrop.Models;
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
+using System;
 
 namespace ImagePlayground.Examples;
 internal partial class Example {

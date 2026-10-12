@@ -1,7 +1,11 @@
 Describe 'New-ImageVisualStory' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        }
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
@@ -25,8 +29,9 @@ Describe 'New-ImageVisualStory' {
             New-ImageVisualMotionCue -TargetId projects -Effect Rise -DelaySeconds 0.35 -DistancePixels 10
         } -FilePath $file -PassThru
 
-        $story | Should -BeOfType 'ChartForgeX.VisualBlocks.VisualGrid'
-        $story.Motion.Cues.Count | Should -Be 3
+        $story | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
+        $story.ToSvg() | Should -Match 'data-cfx-motion-target="title"'
+        $story.ToSvg() | Should -Match 'data-cfx-motion-target="subtitle"'
         Test-Path -Path $file | Should -BeTrue
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-motion="timeline"'
@@ -46,7 +51,7 @@ Describe 'New-ImageVisualStory' {
         $motion = [ChartForgeX.Motion.VisualMotionTimeline]::Create().Rise('metric')
         $story = $grid | New-ImageVisualStory -Motion $motion -FilePath $file -PassThru
 
-        $story | Should -BeOfType 'ChartForgeX.VisualBlocks.VisualGrid'
+        $story | Should -BeOfType 'ChartForgeX.Motion.VisualMotionPresentation'
         Test-Path -Path $file | Should -BeTrue
         $bytes = [System.IO.File]::ReadAllBytes($file)
         $bytes[0] | Should -Be 137
@@ -72,6 +77,23 @@ Describe 'New-ImageVisualStory' {
         } finally {
             Remove-Variable -Name ImagePlaygroundVisualStoryPathInvoked -Scope Global -ErrorAction SilentlyContinue
         }
+    }
+
+    It 'starts a scripted grid with the canonical theme while respecting an authored override' {
+        $defaultGrid = New-ImageVisualStory -StoryScript {
+            param($Story)
+            [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes))
+        } -FilePath (Join-Path -Path $TestDir -ChildPath 'story-canonical-theme.svg') -PassThru
+        $defaultGrid.Theme.UseGraphiteLayout | Should -BeTrue
+        $defaultGrid.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Themes.ChartTheme]::GraphiteLight()).Text.ToCss()
+
+        $customGrid = New-ImageVisualStory -StoryScript {
+            param($Story)
+            [void] $Story.WithTheme([ChartForgeX.Themes.ChartTheme]::Aurora())
+            [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes -Theme Aurora))
+        } -FilePath (Join-Path -Path $TestDir -ChildPath 'story-authored-theme.svg') -PassThru
+        $customGrid.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Themes.ChartTheme]::Aurora()).Text.ToCss()
+        $customGrid.Theme.UseGraphiteLayout | Should -BeFalse
     }
 
     It 'rejects non-file-system output paths before invoking the story script' {

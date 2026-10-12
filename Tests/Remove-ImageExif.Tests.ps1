@@ -12,7 +12,7 @@ Describe 'Remove-ImageExif' {
 
     }
 
-    It 'removes exif data' {
+    It 'removes the selected EXIF tag and preserves other tags' {
 
         $dest = Join-Path $TestDir 'exif-remove.jpg'
 
@@ -22,15 +22,18 @@ Describe 'Remove-ImageExif' {
 
         $img.Create($dest, 10, 10)
 
-        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Artist, 'Retained artist')
 
         $img.Save()
 
         $img.Dispose()
 
-        Remove-ImageExif -FilePath $dest -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Verbose
+        Remove-ImageExif -FilePath $dest -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::Software) -Verbose
 
-        (Get-ImageExif -FilePath $dest).Count | Should -Be 0
+        $remaining = Get-ImageExif -FilePath $dest -Translate
+        $remaining.Software | Should -BeNullOrEmpty
+        $remaining.Artist | Should -Be 'Retained artist'
 
     }
 
@@ -46,16 +49,17 @@ Describe 'Remove-ImageExif' {
 
         $img.Create($dest, 10, 10)
 
-        $img.SetExifValue([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software, 'ImagePlayground')
+        $img.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Software, 'ImagePlayground')
 
         $img.Save()
 
         $img.Dispose()
 
-        Remove-ImageExif -FilePath $dest -FilePathOutput $output -ExifTag ([SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag]::Software) -Verbose
+        Remove-ImageExif -FilePath $dest -FilePathOutput $output -ExifTag ([OfficeIMO.Drawing.OfficeExifTag]::Software) -Verbose
 
         Test-Path $output | Should -BeTrue
-        (Get-ImageExif -FilePath $output).Count | Should -Be 0
+        (Get-ImageExif -FilePath $output -Translate).Software | Should -BeNullOrEmpty
+        (Get-ImageExif -FilePath $dest -Translate).Software | Should -Be 'ImagePlayground'
 
     }
 

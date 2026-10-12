@@ -1,3 +1,7 @@
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using System;
 using System.IO;
 using Xunit;
@@ -14,6 +18,6 @@ public partial class ImagePlayground {
     [InlineData(5, 5)]
     public void Test_CreateGridImage_InvalidDimensions_Throws(int width, int height) {
         string dest = Path.Combine(_directoryWithTests, $"invalid_{width}_{height}.png");
-        Assert.Throws<ArgumentOutOfRangeException>(() => ImageHelper.Create(dest, width, height, SixLabors.ImageSharp.Color.White));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageHelper.Create(dest, width, height, OfficeColor.White));
     }
 }

@@ -36,7 +36,7 @@ $image.WatermarkImage(
     1,
     0.5,
     0,
-    [SixLabors.ImageSharp.Processing.FlipMode]::None,
+    [ImagePlayground.FlipMode]::None,
     50
 )
 

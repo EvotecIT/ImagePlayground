@@ -1,5 +1,4 @@
 using System.IO;
-using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
 /// <summary>
@@ -22,7 +21,7 @@ public partial class ImageHelper {
     /// <param name="shadowOffsetY">Shadow offset Y.</param>
     /// <param name="outlineColor">Optional outline color.</param>
     /// <param name="outlineWidth">Outline width.</param>
-    public static void AddText(string filePath, string outFilePath, float x, float y, string text, Color color, float fontSize = 16f, string fontFamilyName = "Arial", Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, Color? outlineColor = null, float outlineWidth = 0f) {
+    public static void AddText(string filePath, string outFilePath, float x, float y, string text, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", OfficeColor? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, OfficeColor? outlineColor = null, float outlineWidth = 0f) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
@@ -52,15 +51,8 @@ public partial class ImageHelper {
     /// <param name="outlineColor">Optional outline color.</param>
     /// <param name="outlineWidth">Outline width.</param>
     /// <param name="boxHeight">Optional height of the box. If not provided, it will be calculated based on the text.</param>
-    public static void AddTextBox(string filePath, string outFilePath, float x, float y, string text, float boxWidth, Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, Color? outlineColor = null, float outlineWidth = 0f, float? boxHeight = null) {
-        float height = boxHeight ?? 0f;
-        if (height <= 0f) {
-            string fullPath = Helpers.ResolvePath(filePath);
-            using var img = Image.Load(fullPath);
-            height = img.GetTextSize(text, fontSize, fontFamilyName).Height;
-        }
-
-        AddTextBox(filePath, outFilePath, x, y, text, boxWidth, height, color, fontSize, fontFamilyName, horizontalAlignment, verticalAlignment, shadowColor, shadowOffsetX, shadowOffsetY, outlineColor, outlineWidth);
+    public static void AddTextBox(string filePath, string outFilePath, float x, float y, string text, float boxWidth, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", OfficeTextAlignment horizontalAlignment = OfficeTextAlignment.Left, OfficeTextVerticalAlignment verticalAlignment = OfficeTextVerticalAlignment.Top, OfficeColor? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, OfficeColor? outlineColor = null, float outlineWidth = 0f, float? boxHeight = null) {
+        AddTextBox(filePath, outFilePath, x, y, text, boxWidth, boxHeight ?? 0f, color, fontSize, fontFamilyName, horizontalAlignment, verticalAlignment, shadowColor, shadowOffsetX, shadowOffsetY, outlineColor, outlineWidth);
     }
 
     /// <summary>
@@ -83,7 +75,7 @@ public partial class ImageHelper {
     /// <param name="shadowOffsetY">Shadow offset Y.</param>
     /// <param name="outlineColor">Optional outline color.</param>
     /// <param name="outlineWidth">Outline width.</param>
-    public static void AddTextBox(string filePath, string outFilePath, float x, float y, string text, float boxWidth, float boxHeight, Color color, float fontSize = 16f, string fontFamilyName = "Arial", SixLabors.Fonts.HorizontalAlignment horizontalAlignment = SixLabors.Fonts.HorizontalAlignment.Left, SixLabors.Fonts.VerticalAlignment verticalAlignment = SixLabors.Fonts.VerticalAlignment.Top, Color? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, Color? outlineColor = null, float outlineWidth = 0f) {
+    public static void AddTextBox(string filePath, string outFilePath, float x, float y, string text, float boxWidth, float boxHeight, OfficeColor color, float fontSize = 16f, string fontFamilyName = "Arial", OfficeTextAlignment horizontalAlignment = OfficeTextAlignment.Left, OfficeTextVerticalAlignment verticalAlignment = OfficeTextVerticalAlignment.Top, OfficeColor? shadowColor = null, float shadowOffsetX = 0f, float shadowOffsetY = 0f, OfficeColor? outlineColor = null, float outlineWidth = 0f) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);

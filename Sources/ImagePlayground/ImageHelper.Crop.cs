@@ -1,5 +1,4 @@
 using System.IO;
-using SixLabors.ImageSharp;
 
 namespace ImagePlayground;
 /// <summary>
@@ -46,7 +45,7 @@ public partial class ImageHelper {
     /// <param name="filePath">Source image path.</param>
     /// <param name="outFilePath">Destination image path.</param>
     /// <param name="points">Polygon points.</param>
-    public static void CropPolygon(string filePath, string outFilePath, params PointF[] points) {
+    public static void CropPolygon(string filePath, string outFilePath, params OfficePoint[] points) {
         string fullPath = Helpers.ResolvePath(filePath);
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);

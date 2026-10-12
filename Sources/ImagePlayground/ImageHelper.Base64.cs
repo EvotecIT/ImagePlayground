@@ -35,6 +35,6 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(outFullPath)!);
         var bytes = Convert.FromBase64String(base64);
-        File.WriteAllBytes(outFullPath, bytes);
+        OfficeImageFileWriter.WriteAllBytes(outFullPath, bytes);
     }
 }

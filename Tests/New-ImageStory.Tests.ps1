@@ -1,7 +1,11 @@
 Describe 'Generic visual stories' {
     BeforeAll {
-        $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
-        Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        if ($env:IMAGEPLAYGROUND_TEST_MODULE_PATH) {
+            Import-Module -Name $env:IMAGEPLAYGROUND_TEST_MODULE_PATH -Force
+        } else {
+            $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
+            Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
+        }
         $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
@@ -202,11 +206,31 @@ Describe 'Generic visual stories' {
             -Scenes $write, $complete -Outcomes $outcome -FilePath $file -PassThru
 
         $story | Should -BeOfType 'ChartForgeX.Stories.VisualStory'
+        $story.Theme.Background.ToCss() | Should -BeExactly ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark()).Background.ToCss()
+        $story.Theme.FontFamily | Should -BeExactly ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark()).FontFamily
         Test-Path -Path $file | Should -BeTrue
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-scene="complete"'
         $svg | Should -Match 'prefers-reduced-motion:reduce'
         $svg | Should -Match 'The ready result is visible'
+    }
+
+    It 'accepts the canonical light story and preserves caller theme changes on native export' {
+        $theme = [ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()
+        $panel = New-ImageStoryPanel -Id result -Text Ready
+        $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
+        $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
+        $story = New-ImageStory -Title 'Light story' -Theme $theme -Scenes $scene -Outcomes $outcome -FilePath (Join-Path -Path $TestDir -ChildPath 'story-light-theme.svg') -PassThru
+
+        $story.Theme.Background.ToCss() | Should -BeExactly $theme.Background.ToCss()
+        $story.Theme.Text.ToCss() | Should -BeExactly $theme.Text.ToCss()
+        $custom = $theme.Clone()
+        $custom.Accent = [ChartForgeX.Primitives.ChartColor]::FromHex('#9F1239')
+        [void] $story.WithTheme($custom)
+        $exported = $story | New-ImageStory -FilePath (Join-Path -Path $TestDir -ChildPath 'story-custom-theme.svg') -PassThru
+        [object]::ReferenceEquals($story, $exported) | Should -BeTrue
+        $exported.Theme.Accent.ToCss() | Should -BeExactly '#9F1239'
+        $theme.Accent.ToCss() | Should -BeExactly ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()).Accent.ToCss()
     }
 
     It 'rejects stories that promise an outcome absent from the completed scene' {

@@ -15,7 +15,7 @@ namespace ImagePlayground.PowerShell;
 [Cmdlet(VerbsCommon.New, "ImageConsoleStoryPalette")]
 [OutputType(typeof(TerminalTheme))]
 public sealed class NewImageConsoleStoryPaletteCmdlet : PSCmdlet {
-    /// <summary>Built-in palette used as the customization baseline.</summary>
+    /// <summary>Built-in palette used as the customization baseline. Light and Dark use the canonical ChartForgeX tokens; shell-specific presets remain available.</summary>
     [Parameter]
     [ValidateSet("Dark", "PowerShell", "WindowsPowerShell", "Ubuntu", "Campbell", "Classic", "Light")]
     public string Preset { get; set; } = "Dark";

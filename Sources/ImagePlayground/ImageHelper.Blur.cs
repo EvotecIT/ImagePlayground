@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 
 namespace ImagePlayground;
 /// <summary>
@@ -41,7 +39,7 @@ public partial class ImageHelper {
         string outFullPath = Helpers.ResolvePath(outFilePath);
         Directory.CreateDirectory(Path.GetDirectoryName(outFullPath)!);
         using var img = await Image.LoadAsync(fullPath, cancellationToken).ConfigureAwait(false);
-        img.GaussianBlur(amount);
+        img.GaussianBlur(amount, cancellationToken: cancellationToken);
         await img.SaveAsync(outFullPath, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

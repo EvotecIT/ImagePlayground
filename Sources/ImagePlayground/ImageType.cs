@@ -20,5 +20,7 @@ public enum ImageType
     /// <summary>TIFF image format.</summary>
     Tiff,
     /// <summary>WebP image format.</summary>
-    WebP
+    WebP,
+    /// <summary>Windows icon format containing one or more raster resolutions.</summary>
+    Icon
 }

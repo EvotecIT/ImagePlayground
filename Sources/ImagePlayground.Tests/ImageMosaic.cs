@@ -1,3 +1,7 @@
+using OfficeIMO.Drawing;
+using Color = OfficeIMO.Drawing.OfficeColor;
+using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
+using Rgba32 = OfficeIMO.Drawing.OfficeColor;
 using ImagePlayground;
 using System.IO;
 using Xunit;
@@ -20,7 +24,7 @@ public partial class ImagePlayground {
         if (File.Exists(dest)) File.Delete(dest);
         ImageHelper.Mosaic(files, dest, 2, 100, 100);
         Assert.True(File.Exists(dest));
-        using var img = SixLabors.ImageSharp.Image.Load(dest);
+        using var img = global::ImagePlayground.Image.Load(dest);
         Assert.Equal(200, img.Width);
         Assert.Equal(200, img.Height);
     }
