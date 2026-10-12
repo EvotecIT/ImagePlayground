@@ -17,6 +17,8 @@ namespace ImagePlayground.PowerShell;
 public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
     private const string SourceSet = "Source";
     private const string SourceTextSet = "SourceText";
+    private const string SourceTimelineSet = "SourceTimeline";
+    private const string ReplaySet = "Replay";
     private const string TerminalSet = "Terminal";
     private const string MediaPathSet = "MediaPath";
     private const string MediaBytesSet = "MediaBytes";
@@ -39,6 +41,29 @@ public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
     /// <summary>Exact source text with optional renderer-neutral syntax spans.</summary>
     [Parameter(Mandatory = true, ParameterSetName = SourceSet, ValueFromPipeline = true)]
     public StorySourceText? Source { get; set; }
+
+    /// <summary>Resolved source editing events on the scene clock.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = SourceTimelineSet, ValueFromPipeline = true)]
+    public StorySourceTimeline? SourceTimeline { get; set; }
+
+    /// <summary>Fixed source viewport settings, including filename and line numbers.</summary>
+    [Parameter(ParameterSetName = SourceSet)]
+    [Parameter(ParameterSetName = SourceTextSet)]
+    [Parameter(ParameterSetName = SourceTimelineSet)]
+    public VisualStorySourceOptions? SourceOptions { get; set; }
+
+    /// <summary>Resolved recorded observations. Rendering never executes their commands.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ReplaySet, ValueFromPipeline = true)]
+    public StoryReplay? Replay { get; set; }
+
+    /// <summary>Fixed-font wrapping and history settings for terminal or replay panels.</summary>
+    [Parameter(ParameterSetName = TerminalSet)]
+    [Parameter(ParameterSetName = ReplaySet)]
+    public VisualStoryTerminalOptions? TerminalOptions { get; set; }
+
+    /// <summary>Optional recorded-replay palette.</summary>
+    [Parameter(ParameterSetName = ReplaySet)]
+    public TerminalTheme? ReplayTheme { get; set; }
 
     /// <summary>Exact source text to tokenize or preserve.</summary>
     [Parameter(Mandatory = true, ParameterSetName = SourceTextSet)]
@@ -76,6 +101,7 @@ public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
 
     /// <summary>Accessible alternative for terminal or media content.</summary>
     [Parameter(ParameterSetName = TerminalSet, Mandatory = true)]
+    [Parameter(ParameterSetName = ReplaySet)]
     [Parameter(ParameterSetName = MediaPathSet, Mandatory = true)]
     [Parameter(ParameterSetName = MediaBytesSet, Mandatory = true)]
     [Parameter(ParameterSetName = MediaImageSet, Mandatory = true)]
@@ -97,13 +123,17 @@ public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
     private VisualStorySurface BuildSurface() {
         switch (ParameterSetName) {
             case SourceSet:
-                return new VisualStorySourceSurface(Source!, string.IsNullOrWhiteSpace(Title) ? null : Title);
+                return new VisualStorySourceSurface(Source!, string.IsNullOrWhiteSpace(Title) ? null : Title, SourceOptions);
+            case SourceTimelineSet:
+                return new VisualStorySourceSurface(SourceTimeline!, string.IsNullOrWhiteSpace(Title) ? null : Title, SourceOptions);
+            case ReplaySet:
+                return new VisualStoryReplaySurface(Replay!, AccessibleText, TerminalOptions, ReplayTheme);
             case SourceTextSet:
                 return new VisualStorySourceSurface(
                     Tokenize(SourceText),
-                    string.IsNullOrWhiteSpace(Title) ? null : Title);
+                    string.IsNullOrWhiteSpace(Title) ? null : Title, SourceOptions);
             case TerminalSet:
-                return new VisualStoryTerminalSurface(Terminal!, AccessibleText);
+                return new VisualStoryTerminalSurface(Terminal!, AccessibleText, TerminalOptions);
             case MediaPathSet:
                 return new VisualStoryMediaSurface(
                     File.ReadAllBytes(PowerShellPathResolver.ResolveFileSystemPath(this, MediaPath)),

@@ -6,7 +6,7 @@ Describe 'Generic visual stories' {
             $env:IMAGEPLAYGROUND_DEVELOPMENT = '1'
             Import-Module -Name "$PSScriptRoot/../ImagePlayground.psd1" -Force
         }
-        $TestDir = Join-Path -Path $PSScriptRoot -ChildPath 'Artifacts'
+        $TestDir = Join-Path -Path $TestDrive -ChildPath 'stories'
         if (-not (Test-Path -Path $TestDir)) {
             New-Item -Path $TestDir -ItemType Directory | Out-Null
         }

@@ -11,12 +11,12 @@ Creates a generic source-to-result visual story from resolved scenes and declare
 ## SYNTAX
 ### Parts (Default)
 ```powershell
-New-ImageStory -Title <string> -Scenes <ImageStorySceneSpec[]> -Outcomes <ImageStoryOutcomeSpec[]> -FilePath <string> [-Description <string>] [-Width <int>] [-Height <int>] [-Theme <VisualStoryTheme>] [-BundlePath <string>] [-BundleFormats <string[]>] [-CapturedAtUtc <DateTimeOffset>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-TransitionSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageStory -Title <string> -Scenes <ImageStorySceneSpec[]> -Outcomes <ImageStoryOutcomeSpec[]> -FilePath <string> [-Description <string>] [-Width <int>] [-Height <int>] [-Theme <VisualStoryTheme>] [-BundlePath <string>] [-BundleFormats <string[]>] [-CapturedAtUtc <DateTimeOffset>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-TransitionSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-PlayCount <int>] [-Player] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
 ```powershell
-New-ImageStory -Story <VisualStory> -FilePath <string> [-BundlePath <string>] [-BundleFormats <string[]>] [-CapturedAtUtc <DateTimeOffset>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-TransitionSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageStory -Story <VisualStory> -FilePath <string> [-BundlePath <string>] [-BundleFormats <string[]>] [-CapturedAtUtc <DateTimeOffset>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-TransitionSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-PlayCount <int>] [-Player] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +42,7 @@ Produces a portable animated story whose final scene contains the promised chart
 ## PARAMETERS
 
 ### -AnimationScale
-Raster density multiplier for GIF and APNG output.
+Pixel density multiplier for animated SVG, HTML, GIF and APNG output.
 
 ```yaml
 Type: Int32
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 ```
 
 ### -EndHoldSeconds
-Completed-scene hold time for GIF and APNG output.
+Completed-scene hold shared by all animated formats.
 
 ```yaml
 Type: Double
@@ -154,7 +154,7 @@ Accept wildcard characters: False
 ```
 
 ### -FramesPerSecond
-Frame rate for GIF and APNG output.
+Frame rate shared by animated SVG, HTML, GIF and APNG output.
 
 ```yaml
 Type: Int32
@@ -202,7 +202,7 @@ Accept wildcard characters: False
 ```
 
 ### -NoLoop
-Produce a single-play GIF or APNG.
+Produce one play in every animated format. Equivalent to PlayCount 1.
 
 ```yaml
 Type: SwitchParameter
@@ -235,6 +235,38 @@ Accept wildcard characters: False
 
 ### -PassThru
 Write the resolved native story to the pipeline.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Parts, Story
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PlayCount
+Total plays for all animated formats. Zero repeats indefinitely.
+
+```yaml
+Type: Int32
+Parameter Sets: Parts, Story
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Player
+Add browser playback controls to HTML output and HTML bundle artifacts.
 
 ```yaml
 Type: SwitchParameter
