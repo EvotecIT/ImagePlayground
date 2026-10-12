@@ -68,56 +68,26 @@ public partial class Image {
                 ((profiles & OfficeImageMetadataProfileKinds.Iptc) != 0 && metadata.IptcProfile != null)) {
                 throw new NotSupportedException("HEIF metadata import supports EXIF and XMP profiles.");
             }
-            string currentPath = fullPath;
-            var temporaryPaths = new List<string>();
-            try {
-                if ((profiles & OfficeImageMetadataProfileKinds.Exif) != 0) {
-                    bool hasExif = OfficeHeifMetadataReader.HasExifItem(currentPath);
-                    if (!hasExif && metadata.HasExifProfile) {
-                        throw new NotSupportedException("HEIF EXIF editing requires an existing writable metadata item.");
-                    }
-                    if (hasExif) {
-                        string temporary = output + "." + Guid.NewGuid().ToString("N") + ".tmp";
-                        temporaryPaths.Add(temporary);
-                        if (!OfficeHeifMetadataReader.TryWriteExifProfile(currentPath, temporary, metadata.HasExifProfile ? metadata : null)) {
-                            throw new NotSupportedException("The existing HEIF EXIF item cannot be rewritten.");
-                        }
-                        currentPath = temporary;
-                    }
+            byte[] source = Helpers.ReadEncodedFile(fullPath);
+            OfficeImageMetadataProfileKinds selected = OfficeImageMetadataProfileKinds.None;
+            if ((profiles & OfficeImageMetadataProfileKinds.Exif) != 0) {
+                bool hasExif = OfficeHeifMetadataReader.HasExifItem(source);
+                if (!hasExif && metadata.HasExifProfile) {
+                    throw new NotSupportedException("HEIF EXIF editing requires an existing writable metadata item.");
                 }
-                if ((profiles & OfficeImageMetadataProfileKinds.Xmp) != 0) {
-                    bool hasXmp = OfficeHeifMetadataReader.HasXmpItem(currentPath);
-                    byte[]? xmp = metadata.XmpProfile;
-                    if (!hasXmp && xmp != null) {
-                        throw new NotSupportedException("HEIF XMP editing requires an existing writable metadata item.");
-                    }
-                    if (hasXmp) {
-                        string? xmpText = null;
-                        if (xmp != null) {
-                            try {
-                                xmpText = new UTF8Encoding(false, true).GetString(xmp);
-                            } catch (DecoderFallbackException exception) {
-                                throw new NotSupportedException("HEIF XMP import requires valid UTF-8 metadata.", exception);
-                            }
-                        }
-                        string temporary = output + "." + Guid.NewGuid().ToString("N") + ".tmp";
-                        temporaryPaths.Add(temporary);
-                        if (!OfficeHeifMetadataReader.TryWriteXmp(currentPath, temporary, xmpText)) {
-                            throw new NotSupportedException("The existing HEIF XMP item cannot be rewritten.");
-                        }
-                        currentPath = temporary;
-                    }
-                }
-                if (!string.Equals(currentPath, output, StringComparison.Ordinal)) {
-                    OfficeImageFileWriter.WriteAllBytes(output, Helpers.ReadEncodedFile(currentPath));
-                }
-            } finally {
-                foreach (string temporary in temporaryPaths) {
-                    if (File.Exists(temporary)) {
-                        File.Delete(temporary);
-                    }
-                }
+                if (hasExif) { selected |= OfficeImageMetadataProfileKinds.Exif; }
             }
+            if ((profiles & OfficeImageMetadataProfileKinds.Xmp) != 0) {
+                bool hasXmp = OfficeHeifMetadataReader.HasXmpItem(source);
+                if (!hasXmp && metadata.XmpProfile != null) {
+                    throw new NotSupportedException("HEIF XMP editing requires an existing writable metadata item.");
+                }
+                if (hasXmp) { selected |= OfficeImageMetadataProfileKinds.Xmp; }
+            }
+            if (!OfficeHeifMetadataReader.TryWriteMetadata(source, metadata, selected, out byte[]? completed)) {
+                throw new NotSupportedException("The selected HEIF metadata items cannot be rewritten. Requested items must use supported writable layouts, and XMP import requires valid UTF-8 metadata.");
+            }
+            OfficeImageFileWriter.WriteAllBytes(output, completed!);
         } else {
             OfficeImageFileWriter.WriteAllBytes(output, OfficeImageMetadata.Apply(Helpers.ReadEncodedFile(fullPath), metadata));
         }

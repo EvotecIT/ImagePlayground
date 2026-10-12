@@ -12701,6 +12701,7 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TerminalWindowStyle</maml:name>
@@ -13044,6 +13045,7 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TerminalWindowStyle</maml:name>
@@ -13510,6 +13512,7 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TerminalWindowStyle</maml:name>
@@ -13913,6 +13916,7 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">WindowsTerminal</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Minimal</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Linux</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TerminalWindowStyle</maml:name>
@@ -36559,6 +36563,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
+            <maml:para>Requested width or maximum width when both bounds are supplied.</maml:para>
             <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
@@ -36661,6 +36666,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
+            <maml:para>Requested width or maximum width when both bounds are supplied.</maml:para>
             <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
@@ -36787,6 +36793,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
+          <maml:para>Requested width or maximum width when both bounds are supplied.</maml:para>
           <maml:para>The shared owner validates pixel and working-memory limits before allocation.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>

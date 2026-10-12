@@ -55,6 +55,10 @@ public sealed class SaveImageCmdlet : AsyncImageCmdlet {
         string? output = string.IsNullOrWhiteSpace(FilePath) ? null : PowerShellPathResolver.ResolveFileSystemPath(this, FilePath!);
         bool asStream = AsStream.IsPresent;
         bool open = Open.IsPresent;
+        if (!asStream && output == null && string.IsNullOrWhiteSpace(Image.FilePath)) {
+            ThrowTerminatingError(new ErrorRecord(new PSArgumentException("FilePath is required when the image has no associated file path."), "SaveImageMissingPath", ErrorCategory.InvalidArgument, Image));
+            return;
+        }
         ImageType format = asStream ? Format ?? Image.DefaultOutputFormat : Helpers.GetImageType(System.IO.Path.GetExtension(output ?? Image.FilePath));
         var options = EncodingOptions?.Clone() ?? new OfficeRasterEncodingOptions();
         var simple = Helpers.GetEncodingOptions(format, Quality, CompressionLevel);

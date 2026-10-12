@@ -24,9 +24,12 @@ public partial class BarCode {
     public static async Task<DetectedSymbol?> ReadAsync(string filePath, CancellationToken cancellationToken, ScanOptions? options) {
         cancellationToken.ThrowIfCancellationRequested();
         options?.CancellationToken.ThrowIfCancellationRequested();
-        var scan = await SymbolScanner.ScanFileAsync(Helpers.ResolvePath(filePath), CreateScanOptions(options, firstMatch: true), cancellationToken).ConfigureAwait(false);
+        var path = Helpers.ResolvePath(filePath);
+        var scanOptions = CreateScanOptions(options, firstMatch: true);
+        var scan = await SymbolScanner.ScanFileAsync(path, scanOptions, cancellationToken).ConfigureAwait(false);
         if (scan.CompletionReason == ScanCompletionReason.Cancelled) {
-            throw new OperationCanceledException(scan.Failure, cancellationToken);
+            var cancelledToken = cancellationToken.IsCancellationRequested ? cancellationToken : scanOptions.CancellationToken;
+            throw new OperationCanceledException(scan.Failure, cancelledToken);
         }
         if (scan.CompletionReason == ScanCompletionReason.DeadlineExceeded) {
             throw new TimeoutException(scan.Failure ?? "Barcode recognition exceeded its deadline.");

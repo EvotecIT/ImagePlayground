@@ -582,7 +582,7 @@ Visible terminal window chrome, independent of the color palette and prompt dial
 Type: TerminalWindowStyle
 Parameter Sets: Content, Step, Transcript
 Aliases: None
-Possible values: MacOS, WindowsTerminal, Minimal, None
+Possible values: MacOS, WindowsTerminal, Minimal, None, Linux
 
 Required: False
 Position: named

@@ -143,11 +143,7 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
             if (presentation == null) grid.Save(output);
             else if (Path.GetExtension(output).Equals(".svg", StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, presentation.ToSvg());
             else if (Path.GetExtension(output).Equals(".html", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(output).Equals(".htm", StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, presentation.ToHtmlPage());
-            else {
-                var pixels = presentation.ToRgbaImage();
-                using var image = Image.FromRaster(OfficeIMO.Drawing.OfficeRasterImage.FromRgba32(pixels.Width, pixels.Height, pixels.Pixels));
-                image.Save(output);
-            }
+            else grid.Save(output);
             if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         }
         if (output == null || PassThru.IsPresent) WriteObject(presentation == null ? (object)grid : presentation);

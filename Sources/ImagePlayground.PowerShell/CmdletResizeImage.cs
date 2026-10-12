@@ -41,7 +41,7 @@ public sealed class ResizeImageCmdlet : AsyncImageCmdlet {
     [Parameter(Position = 1, ParameterSetName = ObjectPercentage)]
     public string? OutputPath { get; set; }
 
-    /// <summary>Requested width or maximum width when both bounds are supplied.</summary>
+    /// <para>Requested width or maximum width when both bounds are supplied.</para>
     /// <para>The shared owner validates pixel and working-memory limits before allocation.</para>
     [Parameter(ParameterSetName = FileDimensions)]
     [Parameter(ParameterSetName = ObjectDimensions)]
