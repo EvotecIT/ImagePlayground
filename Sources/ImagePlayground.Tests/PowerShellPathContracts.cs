@@ -413,6 +413,18 @@ public partial class ImagePlayground {
             return result.ToArray();
         }
 
+        public PSObject[] InvokeScript(string script, params (string Name, object Value)[] variables) {
+            foreach (var variable in variables) {
+                _runspace.SessionStateProxy.SetVariable(variable.Name, variable.Value);
+            }
+            using var shell = PowerShellHost.Create();
+            shell.Runspace = _runspace;
+            var result = shell.AddScript(script).Invoke();
+            // PowerShell keeps HadErrors set for caught terminating errors; only unhandled errors belong in this stream.
+            Assert.Empty(shell.Streams.Error);
+            return result.ToArray();
+        }
+
         public void AssertImageOutput(string relativePath, int width, int height) {
             using var output = global::ImagePlayground.Image.Load(Path.Combine(Location, relativePath));
             Assert.Equal(width, output.Width);
