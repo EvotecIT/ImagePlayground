@@ -158,8 +158,9 @@ public sealed partial class NewImageStoryCmdlet : PSCmdlet {
             : GetBundleArtifacts(bundle, output);
         if (bundle != null) ValidateBundleDestinations(output, bundle, bundleArtifacts);
         var story = BuildStory();
-        if (NoLoop.IsPresent && MyInvocation.BoundParameters.ContainsKey(nameof(PlayCount)) && PlayCount != 1)
+        if (NoLoop.IsPresent && MyInvocation.BoundParameters.ContainsKey(nameof(PlayCount)) && PlayCount != 1) {
             throw new PSArgumentException("NoLoop requires PlayCount 1. Supply one playback setting.");
+        }
         var prepared = story.Prepare(new VisualStoryPlaybackOptions(
             TimeSpan.FromSeconds(EndHoldSeconds), TimeSpan.FromSeconds(TransitionSeconds), NoLoop.IsPresent ? 1 : PlayCount));
         var sampling = new VisualStoryFrameOptions(FramesPerSecond, AnimationScale, MaximumFrames);

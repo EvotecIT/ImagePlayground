@@ -142,7 +142,9 @@ internal static class FileSystemPathIdentity {
     }
 
     internal static bool AreSamePath(string left, string right) {
-        if (AreSameExistingFile(left, right)) return true;
+        if (AreSameExistingFile(left, right)) {
+            return true;
+        }
         var canonicalLeft = GetCanonicalPath(left);
         var canonicalRight = GetCanonicalPath(right);
         return string.Equals(canonicalLeft, canonicalRight, GetPathComparison(canonicalLeft));
