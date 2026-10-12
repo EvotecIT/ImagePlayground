@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ChartForgeX;
@@ -8,6 +9,7 @@ using ChartForgeX.Stories;
 using ChartForgeX.Raster;
 using ChartForgeX.Interactivity.Html;
 using ImagePlayground.PowerShell.Stories;
+using OfficeIMO.Drawing;
 
 namespace ImagePlayground.PowerShell;
 
@@ -236,12 +238,12 @@ public sealed partial class NewImageStoryCmdlet : PSCmdlet {
             chapters = prepared.Chapters.Select(chapter => new { id = chapter.Id, title = chapter.Title, startSeconds = chapter.Start.TotalSeconds, durationSeconds = chapter.Duration.TotalSeconds }),
             artifacts
         };
-        File.WriteAllText(
+        OfficeImageFileWriter.WriteAllBytes(
             Path.Combine(bundlePath, "story.json"),
-            JsonSerializer.Serialize(manifest, new JsonSerializerOptions {
+            Encoding.UTF8.GetBytes(JsonSerializer.Serialize(manifest, new JsonSerializerOptions {
                 WriteIndented = true,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            }));
+            })));
     }
 
     private BundleArtifact[] GetBundleArtifacts(string bundlePath, string resolvedOutputPath) {

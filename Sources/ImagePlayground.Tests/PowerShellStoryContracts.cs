@@ -78,10 +78,13 @@ public partial class ImagePlayground {
         var scene = fixture.Invoke("New-ImageStoryScene", ("Id", "complete"), ("Title", "Complete"),
             ("DurationSeconds", 1D), ("Panels", new[] { panel })).Single().BaseObject;
         var outcome = fixture.Invoke("New-ImageStoryOutcome", ("Id", "ready"), ("Label", "Ready"), ("PanelId", "result")).Single().BaseObject;
-        fixture.Invoke("New-ImageStory", ("Title", "Ready"), ("Scenes", new[] { scene }), ("Outcomes", new[] { outcome }),
+        Directory.CreateDirectory(Path.Combine(fixture.Location, "bundle"));
+        File.WriteAllText(Path.Combine(fixture.Location, "bundle", "story.json"), "Previous manifest");
+        fixture.Invoke("New-ImageStory", ("Title", "Ready — żółw"), ("Scenes", new[] { scene }), ("Outcomes", new[] { outcome }),
             ("FilePath", "./story.svg"), ("BundlePath", "./bundle"), ("BundleFormats", new[] { "Svg", "Html", "Transcript" }),
             ("Width", 480), ("Height", 320), ("EndHoldSeconds", 0.5D), ("TransitionSeconds", 0D), ("PlayCount", 2), ("Player", true));
         using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(fixture.Location, "bundle", "story.json")));
+        Assert.Equal("Ready — żółw", manifest.RootElement.GetProperty("title").GetString());
         var playback = manifest.RootElement.GetProperty("playback");
         Assert.Equal(1.5, playback.GetProperty("durationSeconds").GetDouble());
         Assert.Equal(2, playback.GetProperty("playCount").GetInt32());
