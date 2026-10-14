@@ -58,9 +58,16 @@ public partial class BarCode {
     /// <summary>Generates a PDF417 barcode.</summary>
     public static void GeneratePdf417(string content, string filePath) => Generate(SymbolFormat.Pdf417, content, filePath);
 
+    /// <summary>PNG output from CodeGlyphX is stored (uncompressed) unless a compression level is requested.</summary>
+    private static readonly OutputOptions CompressedOutput = new() { PngCompressionLevel = 9 };
+
     /// <summary>Generates a linear, matrix, stacked, or postal barcode using the owner's format catalogue.</summary>
     /// <remarks>QR formats use QrCode.Generate. MaxiCode needs specialized geometry; GS1 Composite needs separate payloads and is not supported by this single-value helper.</remarks>
-    public static void Generate(SymbolFormat format, string content, string filePath) {
+    public static void Generate(SymbolFormat format, string content, string filePath) => Generate(format, content, filePath, null);
+
+    /// <summary>Generates a barcode with explicit module size, quiet zone, height, colours, and human-readable text.</summary>
+    /// <remarks>Height and text apply to linear symbols only; matrix, stacked, and postal symbols ignore them.</remarks>
+    public static void Generate(SymbolFormat format, string content, string filePath, BarCodeStyle? style) {
         if (!SymbolCapabilities.TryGet(format, out var capability)) {
             throw new ArgumentOutOfRangeException(nameof(format), format, "Unsupported symbol format.");
         }
@@ -80,20 +87,24 @@ public partial class BarCode {
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
         if (capability.Family == SymbolFamily.Linear) {
-            Barcode.Save(format, content, fullPath);
+            Barcode.Save(format, content, fullPath, style?.ToBarcodeOptions(content) ?? new BarcodeOptions(), CompressedOutput);
         } else {
-            MatrixBarcode.Save(format, content, fullPath);
+            MatrixBarcode.Save(format, content, fullPath, style?.ToMatrixOptions() ?? new MatrixOptions(), CompressedOutput);
         }
     }
 
     /// <summary>Generates a barcode asynchronously.</summary>
     public static Task GenerateAsync(SymbolFormat format, string content, string filePath, CancellationToken cancellationToken = default)
-        => Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); Generate(format, content, filePath); }, cancellationToken);
+        => GenerateAsync(format, content, filePath, null, cancellationToken);
+
+    /// <summary>Generates a styled barcode asynchronously.</summary>
+    public static Task GenerateAsync(SymbolFormat format, string content, string filePath, BarCodeStyle? style, CancellationToken cancellationToken = default)
+        => Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); Generate(format, content, filePath, style); }, cancellationToken);
 
     private static void SaveBarcode(Barcode1D barcode, string filePath) {
         string fullPath = Helpers.ResolvePath(filePath);
         Helpers.CreateParentDirectory(fullPath);
-        OutputWriter.Write(fullPath, Barcode.Render(barcode, OutputFormatInfo.Resolve(fullPath, OutputFormat.Png)));
+        OutputWriter.Write(fullPath, Barcode.Render(barcode, OutputFormatInfo.Resolve(fullPath, OutputFormat.Png), new BarcodeOptions(), CompressedOutput));
     }
 
     private static bool IsQrFormat(SymbolFormat format) => format is SymbolFormat.QrCode or SymbolFormat.MicroQrCode or SymbolFormat.RmQrCode;

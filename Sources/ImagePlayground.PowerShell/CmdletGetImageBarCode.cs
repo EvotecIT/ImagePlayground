@@ -12,12 +12,15 @@ namespace ImagePlayground.PowerShell;
 ///   <code>Get-ImageBarCode -FilePath barcode.png</code>
 /// </example>
 /// <example>
-///   <summary>Scan selected formats and inspect completion details</summary>
+///   <summary>Scan only the formats you expect</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$options = [CodeGlyphX.ScanOptions]::new()
-/// $options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')
-/// $options.TimeoutMilliseconds = 5000
-/// $scan = Get-ImageBarCode -FilePath barcode.png -ScanOptions $options -Detailed
+///   <code>Get-ChildItem *.png | Get-ImageBarCode -Type Ean, Code128 -TimeoutSeconds 2 | Select-Object Type, Text</code>
+///   <para>Restricting the formats makes scans faster and avoids false positives from unrelated symbologies.</para>
+/// </example>
+/// <example>
+///   <summary>Inspect completion details</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$scan = Get-ImageBarCode -FilePath barcode.png -Type DataMatrix -Detailed
 /// $scan.CompletionReason
 /// $scan.Symbols</code>
 /// </example>
@@ -26,8 +29,19 @@ namespace ImagePlayground.PowerShell;
 public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     /// <summary>Path to the image.</summary>
     /// <para>The file must exist.</para>
-    [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 0)]
+    [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, Mandatory = true, Position = 0)]
+    [Alias("FullName", "Path")]
     public string FilePath { get; set; } = string.Empty;
+
+    /// <summary>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</summary>
+    /// <para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</para>
+    [Parameter]
+    public SymbolFormat[]? Type { get; set; }
+
+    /// <summary>Scan deadline in seconds. Defaults to five seconds.</summary>
+    [Parameter]
+    [ValidateRange(0.1D, 600D)]
+    public double TimeoutSeconds { get; set; } = 5D;
 
     /// <summary>Recognition formats, deadline, image limits, and accuracy options.</summary>
     /// <para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</para>
@@ -42,10 +56,26 @@ public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         var filePath = ResolveExistingFilePath(FilePath, "GetImageBarCodeFileNotFound", FilePath);
+        var options = ResolveScanOptions();
         if (Detailed.IsPresent) {
-            WriteObject(await BarCode.ScanAsync(filePath, ScanOptions, CancelToken).ConfigureAwait(false));
+            WriteObject(await BarCode.ScanAsync(filePath, options, CancelToken).ConfigureAwait(false));
         } else {
-            WriteObject(await BarCode.ReadAsync(filePath, CancelToken, ScanOptions).ConfigureAwait(false));
+            WriteObject(await BarCode.ReadAsync(filePath, CancelToken, options).ConfigureAwait(false));
         }
+    }
+
+    private ScanOptions? ResolveScanOptions() {
+        var bound = MyInvocation.BoundParameters;
+        if (!bound.ContainsKey(nameof(Type)) && !bound.ContainsKey(nameof(TimeoutSeconds))) {
+            return ScanOptions;
+        }
+        var options = BarCode.CopyScanOptions(ScanOptions);
+        if (Type != null && Type.Length > 0) {
+            options.Formats = Type;
+        }
+        if (bound.ContainsKey(nameof(TimeoutSeconds))) {
+            options.TimeoutMilliseconds = (int)System.Math.Round(TimeoutSeconds * 1000D);
+        }
+        return options;
     }
 }

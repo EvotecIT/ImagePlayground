@@ -1,6 +1,7 @@
 using System;
 using ImagePlayground;
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
 using System.Management.Automation;
 using System.Threading.Tasks;
 
@@ -22,6 +23,18 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Create branded QR code</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPath logo.png</code>
+/// </example>
+/// <example>
+///   <summary>Style modules and eyes, and size the image for print</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath styled.png -ModuleShape Rounded -EyeShape Circle -EyeColor '#4c1d95' -ForegroundColor '#1e1b4b' -Size 600 -ErrorCorrection H</code>
+///   <para>Rounded data modules, circular eyes in an accent colour, and an image at most 600 px wide. High error correction leaves room for styling and logos.</para>
+/// </example>
+/// <example>
+///   <summary>Generate one label per asset from the pipeline</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>'EVO-LAP-0142', 'EVO-LAP-0177' | ForEach-Object { New-ImageQRCode -Content "https://assets.example.com/$_" -FilePath "$_.png" -QuietZone 2 -Size 300 }</code>
+///   <para>PNG output is compressed; a typical URL code at 300 px is about 1 KB.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCode")]
 [Alias("New-QRCode")]
@@ -56,9 +69,44 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public OfficeIMO.Drawing.OfficeColor BackgroundColor { get; set; } = OfficeIMO.Drawing.OfficeColor.White;
 
-    /// <summary>Pixel size for each QR module.</summary>
+    /// <summary>Pixel size for each QR module. Ignored when -Size is supplied.</summary>
     [Parameter]
+    [ValidateRange(1, 1000)]
     public int PixelSize { get; set; } = 20;
+
+    /// <summary>Target image width and height in pixels, including the quiet zone.</summary>
+    /// <para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</para>
+    [Parameter]
+    [ValidateRange(21, 20000)]
+    public int Size { get; set; }
+
+    /// <summary>Quiet zone (blank border) in modules. Defaults to 4, the size scanners expect.</summary>
+    [Parameter]
+    [ValidateRange(0, 40)]
+    public int QuietZone { get; set; } = 4;
+
+    /// <summary>Error correction level: L (7%), M (15%), Q (25%, the default), or H (30%).</summary>
+    /// <para>Higher levels survive more damage, logos, and styling at the cost of a denser code.</para>
+    [Parameter]
+    public QrErrorCorrectionLevel ErrorCorrection { get; set; } = QrErrorCorrectionLevel.Q;
+
+    /// <summary>Shape of the data modules, for example Square, Rounded, Circle, Dot, or Diamond.</summary>
+    /// <para>Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.</para>
+    [Parameter]
+    public QrModuleShape ModuleShape { get; set; } = QrModuleShape.Square;
+
+    /// <summary>Shape of the three finder patterns (eyes), for example Square, Rounded, or Circle.</summary>
+    [Parameter]
+    public QrModuleShape EyeShape { get; set; } = QrModuleShape.Square;
+
+    /// <summary>Colour of the three finder patterns (eyes).</summary>
+    [Parameter]
+    public OfficeIMO.Drawing.OfficeColor EyeColor { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
+
+    /// <summary>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</summary>
+    [Parameter]
+    [ValidateRange(0.05D, 0.4D)]
+    public double LogoScale { get; set; }
 
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
@@ -71,11 +119,21 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
             ValidateLogoImage(logoPath);
         }
 
-        if (logoPath is null) {
-            await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        } else {
-            await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, logoPath, Transparent.IsPresent, QrErrorCorrectionLevel.Q, ForegroundColor, BackgroundColor, PixelSize, CancelToken).ConfigureAwait(false);
-        }
+        var bound = MyInvocation.BoundParameters;
+        var style = new QrImageStyle {
+            Transparent = Transparent.IsPresent,
+            ForegroundColor = ForegroundColor,
+            BackgroundColor = BackgroundColor,
+            PixelSize = PixelSize,
+            Size = bound.ContainsKey(nameof(Size)) ? Size : null,
+            QuietZone = bound.ContainsKey(nameof(QuietZone)) ? QuietZone : null,
+            ModuleShape = bound.ContainsKey(nameof(ModuleShape)) ? ModuleShape : null,
+            EyeShape = bound.ContainsKey(nameof(EyeShape)) ? EyeShape : null,
+            EyeColor = bound.ContainsKey(nameof(EyeColor)) ? EyeColor : null,
+            LogoScale = bound.ContainsKey(nameof(LogoScale)) ? LogoScale : null
+        };
+
+        await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, style, ErrorCorrection, logoPath, CancelToken).ConfigureAwait(false);
 
         ShowGeneratedQrCode(FilePath, Show);
     }
