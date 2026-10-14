@@ -28,16 +28,15 @@ The module uses CodeGlyphX 3.0.0. Barcode generation and recognition share its `
 Use `-Detailed` or `ImagePlayground.BarCode.Scan` when callers need multiple symbols, partial results, or completion details:
 
 ```powershell
-$options = [CodeGlyphX.ScanOptions]::new()
-$options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')
-$options.TimeoutMilliseconds = 5000
-$scan = Get-ImageBarCode -FilePath '.\codes.png' -ScanOptions $options -Detailed
+$scan = Get-ImageBarCode -FilePath '.\codes.png' -Type Ean, DataMatrix -TimeoutSeconds 5 -Detailed
 $scan.CompletionReason
 $scan.Symbols | Select-Object Format, Text
 ```
 
-Omitting `-ScanOptions` gives the adapter a five-second scan deadline. An explicit `ScanOptions` object retains CodeGlyphX defaults, including its 500 ms deadline, unless changed by the caller. The scan deadline starts after input path resolution and any URL download. The C# helpers skip path resolution when their argument or options token is already cancelled: `BarCode.Read` throws, while `BarCode.Scan` returns structured cancellation. Default barcode scans exclude QR formats, Pharmacode, and Patch Code; explicit formats can opt into the latter two. QR formats use `Get-ImageQRCode` or the CodeGlyphX scanner directly. Detailed results retain structured cancellation and deadline status, including any partial symbols. The adapter does not modify supplied options.
+`-Type` limits recognition to the formats you expect, which is faster and avoids false positives; `-TimeoutSeconds` sets the deadline. Without them the adapter scans the default formats with a five-second deadline. An explicit `-ScanOptions` object retains CodeGlyphX defaults, including its 500 ms deadline, unless changed by the caller or overridden by `-Type` and `-TimeoutSeconds`. CodeGlyphX 3.0.0 cannot read Postnet, Planet, MicroPDF417, or the stacked GS1 DataBar formats from images. The scan deadline starts after input path resolution and any URL download. The C# helpers skip path resolution when their argument or options token is already cancelled: `BarCode.Read` throws, while `BarCode.Scan` returns structured cancellation. Default barcode scans exclude QR formats, Pharmacode, and Patch Code; explicit formats can opt into the latter two. QR formats use `Get-ImageQRCode` or the CodeGlyphX scanner directly. Detailed results retain structured cancellation and deadline status, including any partial symbols. The adapter does not modify supplied options.
 
 DotCode, Han Xin, and stacked GS1 DataBar generation use the owner's matrix renderer. MaxiCode needs a renderer for its hexagonal geometry and is rejected. GS1 Composite needs separate linear and composite payloads and is rejected by the single-value barcode command; use CodeGlyphX's composite encoder for that workflow.
 
-Typed QR payment payloads retain the owner's recommended encoding. Slovenian UPN QR uses version 15, medium error correction, and ISO-8859-2. Explicit error correction selections on other QR helpers remain effective. `-LogoPath` embeds a validated logo in raster or SVG output through CodeGlyphX. The logo fits within one eighth of the image width, retaining its aspect ratio. OfficeIMO.Core normalizes the logo before the owner embeds it without a background plate. Invalid logos leave an existing destination intact.
+Typed QR payment payloads retain the owner's recommended encoding. Slovenian UPN QR uses version 15, medium error correction, and ISO-8859-2. Explicit error correction selections on other QR helpers remain effective. `-LogoPath` embeds a validated logo in raster or SVG output through CodeGlyphX. The logo fits within one eighth of the image width, retaining its aspect ratio, unless `-LogoScale` sets it as a fraction of the symbol width. OfficeIMO.Core normalizes the logo before the owner embeds it without a background plate. Invalid logos leave an existing destination intact.
+
+`New-ImageQRCode` exposes a small styling subset of CodeGlyphX: `-ErrorCorrection`, `-Size` (target pixels including the quiet zone), `-QuietZone`, `-ModuleShape`, `-EyeShape`, and `-EyeColor`. `New-ImageBarCode` exposes `-ModuleSize`, `-QuietZone`, `-Height`, `-ShowText`/`-Text`, and colours. QR and barcode PNG files are written with CodeGlyphX's maximum PNG compression.
