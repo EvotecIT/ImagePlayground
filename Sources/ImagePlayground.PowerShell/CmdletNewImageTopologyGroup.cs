@@ -30,21 +30,21 @@ public sealed class NewImageTopologyGroupCmdlet : PSCmdlet {
     [Parameter]
     public TopologyHealthStatus Status { get; set; } = TopologyHealthStatus.Unknown;
 
-    /// <para>Manual X coordinate. Automatic layouts can ignore this value.</para>
+    /// <para>Manual X coordinate. Supplying X or Y pins the group; omit both so automatic layouts (Grouped, DenseGrouped) place it.</para>
     [Parameter]
     public double X { get; set; }
 
-    /// <para>Manual Y coordinate. Automatic layouts can ignore this value.</para>
+    /// <para>Manual Y coordinate. Supplying X or Y pins the group; omit both so automatic layouts place it.</para>
     [Parameter]
     public double Y { get; set; }
 
-    /// <para>Group width in pixels.</para>
+    /// <para>Group width in pixels. When omitted, the layout sizes the group around its nodes.</para>
     [Parameter]
-    public double Width { get; set; } = 320;
+    public double Width { get; set; }
 
-    /// <para>Group height in pixels.</para>
+    /// <para>Group height in pixels. When omitted, the layout sizes the group around its nodes.</para>
     [Parameter]
-    public double Height { get; set; } = 220;
+    public double Height { get; set; }
 
     /// <para>Optional group longitude for geographic layouts.</para>
     [Parameter]
@@ -84,12 +84,21 @@ public sealed class NewImageTopologyGroupCmdlet : PSCmdlet {
             Id = Id,
             Label = Label,
             Status = Status,
-            X = X,
-            Y = Y,
-            Width = Width,
-            Height = Height,
             LayoutPolicy = LayoutPolicy
         };
+        // Assigning X or Y marks the group as manually positioned in ChartForgeX, so only bound values are applied.
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(X))) {
+            group.X = X;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Y))) {
+            group.Y = Y;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Width))) {
+            group.Width = Width;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Height))) {
+            group.Height = Height;
+        }
 
         if (!string.IsNullOrWhiteSpace(Subtitle)) {
             group.Subtitle = Subtitle;

@@ -248,4 +248,47 @@ Describe 'New-ImageTopology' {
         $apngBytes[0] | Should -Be 137
         [System.Text.Encoding]::ASCII.GetString($apngBytes) | Should -Match 'acTL'
     }
+
+    It 'lets automatic layouts place groups that have no explicit position' {
+        $file = Join-Path -Path $TestDir -ChildPath 'topology-dense-groups.svg'
+        $topology = New-ImageTopology -Layout DenseGrouped -Width 900 -Height 400 -FilePath $file -PassThru -TopologyDefinition {
+            New-ImageTopologyGroup -Id g1 -Label One
+            New-ImageTopologyGroup -Id g2 -Label Two
+            New-ImageTopologyGroup -Id g3 -Label Three
+            New-ImageTopologyNode -Id a -Label A -GroupId g1
+            New-ImageTopologyNode -Id b -Label B -GroupId g2
+            New-ImageTopologyNode -Id c -Label C -GroupId g3
+        }
+
+        $diagnostics = $topology | Get-ImageTopologyDiagnostics
+        $positions = @($diagnostics.Groups | ForEach-Object { '{0:N0},{1:N0}' -f $_.Bounds.X, $_.Bounds.Y } | Sort-Object -Unique)
+        $positions.Count | Should -Be 3
+    }
+
+    It 'keeps explicit group coordinates when supplied' {
+        $group = New-ImageTopologyGroup -Id pinned -Label Pinned -X 40 -Y 60 -Width 300 -Height 200
+        $auto = New-ImageTopologyGroup -Id auto -Label Auto
+
+        $group.X | Should -Be 40
+        $group.Width | Should -Be 300
+        $auto.Width | Should -Be 0
+    }
+
+    It 'orders Layered columns with -Layer' {
+        $file = Join-Path -Path $TestDir -ChildPath 'topology-layers.svg'
+        $topology = New-ImageTopology -Layout Layered -Direction LeftToRight -Width 900 -Height 400 -FilePath $file -PassThru -TopologyDefinition {
+            New-ImageTopologyNode -Id gateway -Label Gateway -Kind Service -Layer 0
+            New-ImageTopologyNode -Id orders -Label Orders -Kind Service -Layer 1
+            New-ImageTopologyNode -Id sql -Label SQL -Kind Database -Layer 2
+            New-ImageTopologyEdge -SourceNodeId gateway -TargetNodeId orders -Direction Forward
+            New-ImageTopologyEdge -SourceNodeId orders -TargetNodeId sql -Direction Forward
+        }
+
+        $topology.Nodes[2].Metadata['layer'] | Should -Be '2'
+        $nodes = @(($topology | Get-ImageTopologyDiagnostics).Nodes)
+        $x = @{}
+        foreach ($node in $nodes) { $x[$node.Id] = $node.Bounds.X }
+        $x['gateway'] | Should -BeLessThan $x['orders']
+        $x['orders'] | Should -BeLessThan $x['sql']
+    }
 }
