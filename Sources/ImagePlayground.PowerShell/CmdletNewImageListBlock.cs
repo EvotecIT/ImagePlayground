@@ -11,6 +11,12 @@ namespace ImagePlayground.PowerShell;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageListBlock -Title 'Release' -Item Build,Test,Publish -Checked $true,$true,$false</code>
 /// </example>
+/// <example>
+///   <summary>Size a status list for a dashboard column</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageListBlock -Title Checks -Item 'TLS expiry', Backups, 'Queue depth' -Value '41 days', OK, '1,204' -Status Positive, Positive, Warning -Width 300 -Height 270</code>
+///   <para>Width and Height size the block without calling .NET methods on the result.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageListBlock")]
 [OutputType(typeof(ChartList))]
 public sealed class NewImageListBlockCmdlet : PSCmdlet {
@@ -46,6 +52,16 @@ public sealed class NewImageListBlockCmdlet : PSCmdlet {
     [Parameter]
     public SwitchParameter Dense { get; set; }
 
+    /// <summary>Block width in pixels. The height keeps its default unless -Height is also supplied.</summary>
+    [Parameter]
+    [ValidateRange(1, VisualBlockSize.Maximum)]
+    public int Width { get; set; }
+
+    /// <summary>Block height in pixels. The width keeps its default unless -Width is also supplied.</summary>
+    [Parameter]
+    [ValidateRange(1, VisualBlockSize.Maximum)]
+    public int Height { get; set; }
+
     /// <summary>ChartForgeX theme.</summary>
     [Parameter]
     public ChartTheme Theme { get; set; } = ChartTheme.Default;
@@ -67,6 +83,7 @@ public sealed class NewImageListBlockCmdlet : PSCmdlet {
             else if (Status.Length > 0) list.AddStatusItem(Item[index], Status[index], value);
             else list.AddItem(Item[index], value);
         }
+        VisualBlockSize.Apply(this, list, Width, Height);
         WriteObject(list);
     }
 
