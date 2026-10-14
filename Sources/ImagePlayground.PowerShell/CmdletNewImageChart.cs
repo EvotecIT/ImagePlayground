@@ -30,6 +30,25 @@ namespace ImagePlayground.PowerShell;
 /// New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme Dark -ShowGrid -Show</code>
 ///   <para>Renders a themed line chart and overlays an annotation highlighting the peak value.</para>
 /// </example>
+/// <example>
+///   <summary>Title, category labels, and stacked bars from CSV data</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$builds = Import-Csv builds.csv   # Day, Passed, Failed
+/// New-ImageChart -Title 'Builds by result' -Subtitle 'Week 41' -XLabel $builds.Day -FilePath builds.png -Options (New-ImageChartOptions -BarLayout Stacked -ShowLegend) {
+///     New-ImageChartBar -Name Passed -Value $builds.Passed
+///     New-ImageChartBar -Name Failed -Value $builds.Failed
+/// }</code>
+///   <para>Titles, category labels, and the bar layout are parameters, so the chart never needs to be modified through .NET methods.</para>
+/// </example>
+/// <example>
+///   <summary>Bars and a target line on one chart, saved as WebP</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageChart -XLabel Mon, Tue, Wed, Thu, Fri -FilePath latency.webp {
+///     New-ImageChartBar -Name Requests -Value 410, 380, 455, 520, 470
+///     New-ImageChartLine -Name 'p95 (ms)' -Value 182, 175, 240, 310, 205 -Marker Circle -SecondaryAxis
+/// } -SecondaryYTitle 'p95 (ms)'</code>
+///   <para>Bar, line, area, scatter, and similar cartesian definitions can be mixed; markers and axes are set per series.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChart", DefaultParameterSetName = ScriptBlockSet)]
 [OutputType(typeof(Chart))]
 public sealed class NewImageChartCmdlet : ImageCmdlet {
@@ -66,14 +85,14 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter]
     public object[]? Annotation { get; set; }
 
-    /// <summary>Width of the chart.</summary>
+    /// <summary>Width of the chart in pixels.</summary>
     [Parameter]
-    [ValidateRange(1, 1000)]
+    [ValidateRange(1, 10000)]
     public int Width { get; set; } = 600;
 
-    /// <summary>Height of the chart.</summary>
+    /// <summary>Height of the chart in pixels.</summary>
     [Parameter]
-    [ValidateRange(1, 1000)]
+    [ValidateRange(1, 10000)]
     public int Height { get; set; } = 400;
 
     /// <summary>Chart heading. A supplied native chart keeps its heading unless this parameter is supplied.</summary>
@@ -94,8 +113,19 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
     [Parameter]
     public string? YTitle { get; set; }
 
+    /// <summary>Category labels along the X axis, one per value position (for example days or months).</summary>
+    /// <para>Values at positions 1, 2, 3... of each series are labelled with these entries in order.</para>
+    [Parameter]
+    [Alias("Category", "Categories", "XLabels")]
+    public string[]? XLabel { get; set; }
+
+    /// <summary>Title of the secondary (right) Y axis used by series created with -SecondaryAxis.</summary>
+    [Parameter]
+    [Alias("Y2Title")]
+    public string? SecondaryYTitle { get; set; }
+
     /// <summary>Output file path.</summary>
-    /// <para>The image format is inferred from the file extension.</para>
+    /// <para>The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.</para>
     [Parameter(Mandatory = true, ParameterSetName = ScriptBlockSet)]
     [Parameter(Mandatory = true, ParameterSetName = ChartScriptSet)]
     [Parameter(Mandatory = true, ParameterSetName = ChartSet)]
@@ -216,6 +246,12 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Subtitle))) {
             chart.WithSubtitle(Subtitle);
         }
+        if (XLabel != null && XLabel.Length > 0) {
+            chart.WithXLabels(XLabel);
+        }
+        if (SecondaryYTitle != null) {
+            chart.WithSecondaryYAxis(SecondaryYTitle);
+        }
         VisualWatermark[] watermarks = Watermark ?? System.Array.Empty<VisualWatermark>();
         var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
         string? directory = System.IO.Path.GetDirectoryName(output);
@@ -223,7 +259,12 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
             System.IO.Directory.CreateDirectory(directory!);
         }
 
-        if (watermarks.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi))) {
+        var outputExtension = System.IO.Path.GetExtension(output);
+        if (!VisualArtifactOutput.IsSupported(outputExtension)) {
+            throw new PSArgumentException("Chart output supports " + VisualArtifactOutput.SupportedExtensions + " file extensions.", nameof(FilePath));
+        }
+
+        if (watermarks.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi)) && VisualArtifactOutput.IsNative(outputExtension)) {
             Charts.Save(chart, output);
         } else {
             var render = new VisualArtifactRenderOptions();
@@ -240,16 +281,7 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
             if (watermarks.Length > 0) {
                 artifact = artifact.ToWatermarkedArtifact(render, watermarks);
             }
-            var extension = System.IO.Path.GetExtension(output);
-            if (extension.Equals(".svg", System.StringComparison.OrdinalIgnoreCase)) {
-                artifact.SaveSvg(output, render);
-            } else if (extension.Equals(".html", System.StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", System.StringComparison.OrdinalIgnoreCase)) {
-                artifact.SaveHtml(output, render);
-            } else if (extension.Equals(".png", System.StringComparison.OrdinalIgnoreCase)) {
-                artifact.SavePng(output, render);
-            } else {
-                throw new PSArgumentException("Watermarked chart output supports only .png, .svg, .html, or .htm file extensions.", nameof(FilePath));
-            }
+            VisualArtifactOutput.Save(artifact, output, render);
         }
 
         if (Show.IsPresent) {

@@ -53,15 +53,48 @@ public partial class ImagePlayground {
             new global::ImagePlayground.ChartLine("Without markers", new[] { 10d, 30d, 20d })
         });
 
-        Assert.Equal(0d, markerless.Options.Theme.MarkerRadius);
+        Assert.False(markerless.Series[0].Markers.Enabled);
         Assert.DoesNotContain("data-cfx-role=\"line-marker\"", markerless.ToSvg());
 
-        var mixed = new global::ImagePlayground.ChartDefinition[] {
+        var mixed = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
             new global::ImagePlayground.ChartLine("Without markers", new[] { 10d, 30d, 20d }, markerSize: 0),
-            new global::ImagePlayground.ChartLine("With markers", new[] { 20d, 15d, 25d }, markerSize: 6)
+            new global::ImagePlayground.ChartLine("With markers", new[] { 20d, 15d, 25d }, markerSize: 8, markerShape: global::ImagePlayground.ChartMarkerShape.Diamond)
+        });
+        Assert.False(mixed.Series[0].Markers.Enabled);
+        Assert.True(mixed.Series[1].Markers.Enabled);
+        Assert.Equal(ChartForgeX.Core.ChartMarkerShape.Diamond, mixed.Series[1].Markers.Shape);
+        Assert.Equal(4d, mixed.Series[1].Markers.Radius);
+    }
+
+    [Fact]
+    public void Test_CartesianDefinitionsCombineInDeclarationOrder() {
+        var bar = new global::ImagePlayground.ChartBar("Requests", new[] { 410d, 380d, 455d });
+        var line = new global::ImagePlayground.ChartLine("Error rate", new[] { 1.2d, 0.8d, 2.4d });
+        var chart = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] { bar, line });
+
+        Assert.Equal(new[] { ChartSeriesKind.Bar, ChartSeriesKind.Line }, chart.Series.Select(series => series.Kind));
+        Assert.Equal(new[] { "1", "2", "3" }, chart.Options.XAxisLabels.Select(label => label.Text));
+    }
+
+    [Fact]
+    public void Test_ExclusiveDefinitionsCannotBeCombined() {
+        var definitions = new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartPie("Web", 10),
+            new global::ImagePlayground.ChartBar("Requests", new[] { 1d, 2d })
         };
-        var exception = Assert.Throws<ArgumentException>(() => global::ImagePlayground.Charts.Build(mixed));
-        Assert.Contains("shared marker size", exception.Message);
+
+        var exception = Assert.Throws<ArgumentException>(() => global::ImagePlayground.Charts.Build(definitions));
+        Assert.Contains("cannot share one chart", exception.Message);
+    }
+
+    [Fact]
+    public void Test_BarLayoutOptionStacksBars() {
+        var chart = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartBar("Passed", new[] { 41d, 38d }),
+            new global::ImagePlayground.ChartBar("Failed", new[] { 3d, 6d })
+        }, options: new global::ImagePlayground.ChartRenderOptions { BarLayout = global::ImagePlayground.ChartBarLayout.Stacked });
+
+        Assert.Equal(ChartBarMode.Stacked, chart.Options.BarMode);
     }
 
     [Fact]

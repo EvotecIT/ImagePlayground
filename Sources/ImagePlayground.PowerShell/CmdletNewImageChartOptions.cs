@@ -9,6 +9,10 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Create options for a labeled chart with a right-side legend</summary>
 ///   <code>New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -Palette '#8B5CF6','#2DD4BF'</code>
 /// </example>
+/// <example>
+///   <summary>Stack bar series</summary>
+///   <code>New-ImageChart -Title 'Builds by result' -XLabel Mon, Tue, Wed -Options (New-ImageChartOptions -BarLayout Stacked -ShowLegend) -FilePath builds.png { New-ImageChartBar -Name Passed -Value 41, 38, 45; New-ImageChartBar -Name Failed -Value 3, 6, 2 }</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageChartOptions")]
 [OutputType(typeof(ChartRenderOptions))]
 public sealed class NewImageChartOptionsCmdlet : PSCmdlet {
@@ -52,6 +56,10 @@ public sealed class NewImageChartOptionsCmdlet : PSCmdlet {
     /// <summary>Show data labels.</summary>
     [Parameter]
     public SwitchParameter ShowDataLabels { get; set; }
+
+    /// <summary>How several bar series share one category: Grouped (side by side) or Stacked.</summary>
+    [Parameter]
+    public ChartBarLayout BarLayout { get; set; } = ChartBarLayout.Grouped;
 
     /// <summary>Preferred number of axis ticks.</summary>
     [Parameter]
@@ -114,6 +122,7 @@ public sealed class NewImageChartOptionsCmdlet : PSCmdlet {
         if (IsBound(nameof(NoPlotBackground))) options.ShowPlotBackground = !NoPlotBackground.IsPresent;
         if (IsBound(nameof(Transparent))) options.TransparentBackground = Transparent.IsPresent;
         if (IsBound(nameof(ShowDataLabels))) options.ShowDataLabels = ShowDataLabels.IsPresent;
+        if (IsBound(nameof(BarLayout))) options.BarLayout = BarLayout;
         if (IsBound(nameof(TickCount))) options.TickCount = TickCount;
         if (IsBound(nameof(HeatmapScale))) options.HeatmapScale = HeatmapScale;
         if (IsBound(nameof(NoHeatmapScale))) options.ShowHeatmapScale = !NoHeatmapScale.IsPresent;
