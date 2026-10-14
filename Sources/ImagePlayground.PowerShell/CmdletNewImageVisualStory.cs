@@ -66,7 +66,7 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = GridSet)]
     public ScriptBlock? MotionDefinition { get; set; }
 
-    /// <summary>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</summary>
+    /// <summary>Output file path. Supported extensions are SVG, HTML, HTM, and PNG; static grids without motion can also be written as JPEG, WebP, GIF, BMP, TIFF, or TGA.</summary>
     [Parameter(Mandatory = true)]
     public string FilePath { get; set; } = string.Empty;
 
@@ -120,9 +120,13 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
         } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
             if (presentation == null) grid!.SaveHtml(output);
             else File.WriteAllText(output, presentation.ToHtmlPage());
-        } else {
+        } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
             if (presentation == null) grid!.SavePng(output);
             else OfficeIMO.Drawing.OfficeImageFileWriter.WriteAllBytes(output, presentation.ToPng());
+        } else if (presentation == null) {
+            VisualArtifactOutput.Save(VisualGridArtifact.Create(grid!, null), output);
+        } else {
+            throw new PSArgumentException("Visual stories with motion support .svg, .html, .htm, or .png output; " + extension + " is available for static grids only.", nameof(FilePath));
         }
 
         if (Show.IsPresent) {
@@ -218,14 +222,11 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
     }
 
     private void ValidateExtension(string extension, string output) {
-        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
-            extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
+        if (VisualArtifactOutput.IsSupported(extension)) {
             return;
         }
 
-        var exception = new PSArgumentException("Visual story output supports only .svg, .html, .htm, or .png file extensions.");
+        var exception = new PSArgumentException("Visual story output supports " + VisualArtifactOutput.SupportedExtensions + " file extensions.");
         ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualStoryUnsupportedExtension", ErrorCategory.InvalidArgument, output));
     }
 }

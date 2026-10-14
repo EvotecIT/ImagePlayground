@@ -20,6 +20,12 @@ namespace ImagePlayground.PowerShell;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { New-ImageMetricCard -Label 'Requests' -Value 12840 -Status Positive; New-ImageListBlock -Title 'Checks' -Item API,Database -Status Positive,Warning } -FilePath dashboard.svg</code>
 /// </example>
+/// <example>
+///   <summary>Give every panel the same width and let rows size to their content</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$cards | New-ImageVisualGrid -Columns 3 -PanelWidth 300 -FilePath cards.png</code>
+///   <para>Without -PanelHeight, content is resized to the width rather than squeezed into a fixed box.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageVisualGrid", DefaultParameterSetName = DefinitionSet)]
 [OutputType(typeof(VisualGrid), typeof(VisualMotionPresentation))]
 public sealed class NewImageVisualGridCmdlet : PSCmdlet {
@@ -58,17 +64,18 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
     [ValidateRange(0, 1000)]
     public int Padding { get; set; } = 24;
 
-    /// <summary>Optional fixed panel width.</summary>
+    /// <summary>Panel width in pixels.</summary>
+    /// <para>With -PanelHeight, every panel gets that fixed size and content is fitted with -PanelFit. Alone, each chart and block is resized to the panel width (or the spanned width) keeping its aspect ratio, and each row takes the height of its tallest item. The supplied charts and blocks are resized in place.</para>
     [Parameter]
     [ValidateRange(1, 10000)]
     public int PanelWidth { get; set; }
 
-    /// <summary>Optional fixed panel height.</summary>
+    /// <summary>Panel height in pixels. Requires -PanelWidth.</summary>
     [Parameter]
     [ValidateRange(1, 10000)]
     public int PanelHeight { get; set; }
 
-    /// <summary>How child content fits fixed panels.</summary>
+    /// <summary>How child content fits fixed panels: Contain (default) scales uniformly; Stretch scales each axis independently and distorts content.</summary>
     [Parameter]
     public VisualPanelFit PanelFit { get; set; } = VisualPanelFit.Contain;
 
@@ -130,26 +137,50 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
             .WithTheme(ChartThemeResolver.Resolve(Theme));
         if (!string.IsNullOrWhiteSpace(Title)) grid.WithTitle(Title);
         if (!string.IsNullOrWhiteSpace(Subtitle)) grid.WithSubtitle(Subtitle);
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(PanelWidth)) != MyInvocation.BoundParameters.ContainsKey(nameof(PanelHeight))) {
-            var exception = new PSArgumentException("PanelWidth and PanelHeight must be supplied together.");
+        var hasPanelWidth = MyInvocation.BoundParameters.ContainsKey(nameof(PanelWidth));
+        var hasPanelHeight = MyInvocation.BoundParameters.ContainsKey(nameof(PanelHeight));
+        if (hasPanelHeight && !hasPanelWidth) {
+            var exception = new PSArgumentException("PanelHeight requires PanelWidth. Supply PanelWidth alone to resize content to a common width with natural row heights.");
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualGridIncompletePanelSize", ErrorCategory.InvalidArgument, null));
         }
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(PanelWidth))) grid.WithPanelSize(PanelWidth, PanelHeight);
+        if (hasPanelWidth && hasPanelHeight) {
+            grid.WithPanelSize(PanelWidth, PanelHeight);
+        } else if (hasPanelWidth) {
+            foreach (var item in _content) ResizeToPanelWidth(item, PanelWidth, Gap);
+            grid.WithAdaptiveRowHeights(true);
+        }
         foreach (var item in _content) AddToGrid(grid, item);
         var presentation = Motion == null ? null : VisualMotionPresentation.Create(grid, Motion);
         if (output != null) {
             var directory = Path.GetDirectoryName(output);
             if (!string.IsNullOrWhiteSpace(directory)) Directory.CreateDirectory(directory!);
-            if (presentation == null) grid.Save(output);
+            if (presentation == null) SaveGrid(grid, output);
             else if (Path.GetExtension(output).Equals(".svg", StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, presentation.ToSvg());
             else if (Path.GetExtension(output).Equals(".html", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(output).Equals(".htm", StringComparison.OrdinalIgnoreCase)) File.WriteAllText(output, presentation.ToHtmlPage());
-            else grid.Save(output);
+            else SaveGrid(grid, output);
             if (Show.IsPresent) ImagePlayground.Helpers.Open(output, true);
         }
         if (output == null || PassThru.IsPresent) WriteObject(presentation == null ? (object)grid : presentation);
     }
 
     private void ValidateExtension(string extension, string output) {
+        if (IsChartForgeXGridFormat(extension) || VisualArtifactOutput.IsSupported(extension)) {
+            return;
+        }
+        var exception = new PSArgumentException("Visual grid output supports " + VisualArtifactOutput.SupportedExtensions + " file extensions, and .ppm.");
+        ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualGridUnsupportedExtension", ErrorCategory.InvalidArgument, output));
+    }
+
+    private static void SaveGrid(VisualGrid grid, string output) {
+        var extension = Path.GetExtension(output);
+        if (IsChartForgeXGridFormat(extension)) {
+            grid.Save(output);
+        } else {
+            VisualArtifactOutput.Save(VisualGridArtifact.Create(grid, null), output);
+        }
+    }
+
+    private static bool IsChartForgeXGridFormat(string extension) {
         switch (extension.ToLowerInvariant()) {
             case ".svg":
             case ".html":
@@ -161,11 +192,9 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
             case ".ppm":
             case ".tif":
             case ".tiff":
-                return;
+                return true;
             default:
-                var exception = new PSArgumentException("Visual grid output supports .svg, .html, .htm, .png, .jpg, .jpeg, .bmp, .ppm, .tif, or .tiff file extensions.");
-                ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualGridUnsupportedExtension", ErrorCategory.InvalidArgument, output));
-                return;
+                return false;
         }
     }
 
@@ -178,6 +207,25 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
             ThrowTerminatingError(new ErrorRecord(exception, "NewImageVisualGridUnsupportedContent", ErrorCategory.InvalidArgument, value));
         }
     }
+
+    private static void ResizeToPanelWidth(object item, int panelWidth, int gap) {
+        var span = item is VisualGridItem placement ? placement.ColumnSpan : 1;
+        var width = panelWidth * span + gap * (span - 1);
+        var chart = item as Chart ?? (item as VisualGridItem)?.Chart;
+        if (chart != null) {
+            var size = chart.Options.Size;
+            chart.WithSize(width, ScaledHeight(size.Width, size.Height, width));
+            return;
+        }
+        var block = item as IVisualBlock ?? (item as VisualGridItem)?.Block;
+        if (block != null) {
+            var size = block.Options.Size;
+            block.Options.Size = new ChartSize(width, ScaledHeight(size.Width, size.Height, width));
+        }
+    }
+
+    private static int ScaledHeight(double width, double height, int targetWidth) =>
+        Math.Max(1, (int)Math.Round(height * targetWidth / Math.Max(1D, width)));
 
     private static void AddToGrid(VisualGrid grid, object item) {
         if (item is Chart chart) grid.Add(chart);

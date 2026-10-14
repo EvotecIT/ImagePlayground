@@ -134,4 +134,43 @@ Describe 'New-ImageVisualGrid' {
         } | Should -Throw
         $script:gridDefinitionInvoked | Should -BeFalse
     }
+
+    It 'resizes content to -PanelWidth when -PanelHeight is omitted' {
+        $file = Join-Path -Path $TestDir -ChildPath 'grid-panel-width.png'
+        $cards = 1..3 | ForEach-Object { New-ImageMetricCard -Label "Card $_" -Value $_ -Width 320 -Height 176 }
+
+        $cards | New-ImageVisualGrid -Columns 3 -PanelWidth 240 -Gap 12 -Padding 12 -FilePath $file
+
+        $cards[0].Options.Size.Width | Should -Be 240
+        $cards[0].Options.Size.Height | Should -Be 132
+        $image = Get-Image -FilePath $file
+        try {
+            $image.Width | Should -Be (3 * 240 + 2 * 12 + 2 * 12)
+        } finally {
+            $image.Dispose()
+        }
+    }
+
+    It 'still requires -PanelWidth with -PanelHeight' {
+        { New-ImageVisualGrid -PanelHeight 200 -Content (New-ImageMetricCard -Label A -Value 1) -ErrorAction Stop } | Should -Throw '*PanelHeight requires PanelWidth*'
+    }
+
+    It 'writes <Extension> output and converts to a visual artifact' -TestCases @(
+        @{ Extension = 'webp' }
+        @{ Extension = 'jpg' }
+    ) {
+        param($Extension)
+        $file = Join-Path -Path $TestDir -ChildPath "grid-encoded.$Extension"
+        $grid = New-ImageVisualGrid -Title 'Service health' -Columns 1 -Content (New-ImageListBlock -Title Checks -Item Backups -Status Positive) -FilePath $file -PassThru
+
+        Test-Path -Path $file | Should -BeTrue
+        $artifact = $grid | ConvertTo-ImageVisualArtifact -Id service-health
+        $artifact.Id | Should -Be 'service-health'
+        $artifact.Title | Should -Be 'Service health'
+        $artifact.NaturalSize.Width | Should -BeGreaterThan 0
+        $artifact.OfficeVisualSvg.Length | Should -BeGreaterThan 0
+        $png = Join-Path -Path $TestDir -ChildPath "grid-artifact-$Extension.png"
+        $artifact | Export-ImageVisualArtifact -FilePath $png
+        Test-Path -Path $png | Should -BeTrue
+    }
 }

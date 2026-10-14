@@ -8,7 +8,7 @@ using ChartForgeX.VisualArtifacts;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Exports a ChartForgeX visual artifact to static SVG, HTML, or PNG output.</summary>
+/// <summary>Exports a ChartForgeX visual artifact to static SVG, HTML, PNG, JPEG, WebP, GIF, BMP, TIFF, or TGA output.</summary>
 /// <para>Applies shared watermarks, PNG DPI metadata, topology layout presets, and optional layout diagnostics without changing the source artifact.</para>
 /// <example>
 ///   <summary>Export a watermarked 144 DPI PNG</summary>
@@ -26,7 +26,7 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public VisualArtifact? Artifact { get; set; }
 
-    /// <para>Destination .svg, .html, .htm, or .png path.</para>
+    /// <para>Destination path. The extension picks the format: .svg, .html, .htm, .png, .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, or .tga.</para>
     [Parameter(Mandatory = true, Position = 1)]
     public string FilePath { get; set; } = string.Empty;
 
@@ -92,17 +92,11 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
                 IncludeLayoutDiagnosticOverlay = IncludeTopologyDiagnostics.IsPresent
             };
         }
-        VisualArtifact rendered = watermarks.Length == 0 ? artifact.Clone() : artifact.ToWatermarkedArtifact(options, watermarks);
-        EnsureDirectory(output);
-        if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase)) {
-            rendered.SaveSvg(output, options);
-        } else if (extension.Equals(".html", StringComparison.OrdinalIgnoreCase) || extension.Equals(".htm", StringComparison.OrdinalIgnoreCase)) {
-            rendered.SaveHtml(output, options);
-        } else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)) {
-            rendered.SavePng(output, options);
-        } else {
-            throw new PSArgumentException("Visual artifact output supports only .svg, .html, .htm, or .png file extensions.", nameof(FilePath));
+        if (!VisualArtifactOutput.IsSupported(extension)) {
+            throw new PSArgumentException("Visual artifact output supports " + VisualArtifactOutput.SupportedExtensions + " file extensions.", nameof(FilePath));
         }
+        VisualArtifact rendered = watermarks.Length == 0 ? artifact.Clone() : artifact.ToWatermarkedArtifact(options, watermarks);
+        VisualArtifactOutput.Save(rendered, output, options);
 
         if (Show.IsPresent) {
             ImagePlayground.Helpers.Open(output, true);
@@ -113,10 +107,4 @@ public sealed class ExportImageVisualArtifactCmdlet : ImageCmdlet {
         }
     }
 
-    private static void EnsureDirectory(string output) {
-        string? directory = Path.GetDirectoryName(output);
-        if (!string.IsNullOrWhiteSpace(directory)) {
-            Directory.CreateDirectory(directory!);
-        }
-    }
 }
