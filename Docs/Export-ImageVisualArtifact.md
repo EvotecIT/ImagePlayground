@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Export-ImageVisualArtifact
 ## SYNOPSIS
-Exports a ChartForgeX visual artifact to static SVG, HTML, or PNG output.
+Exports a ChartForgeX visual artifact to static SVG, HTML, PNG, JPEG, WebP, GIF, BMP, TIFF, or TGA output.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -61,7 +61,7 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-Destination .svg, .html, .htm, or .png path.
+Destination path. The extension picks the format: .svg, .html, .htm, .png, .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, or .tga.
 
 ```yaml
 Type: String

@@ -11,11 +11,11 @@ Creates a barcode image.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageBarCode [-Type] <SymbolFormat> [-Value] <string> [-FilePath] <string> [<CommonParameters>]
+New-ImageBarCode [-Type] <SymbolFormat> [-Value] <string> [-FilePath] <string> [-ModuleSize <int>] [-QuietZone <int>] [-Height <int>] [-ShowText] [-Text <string>] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Creates a barcode image.
+The file extension picks the format (.png, .svg, .jpg, .webp and others). PNG output is compressed.
 
 ## EXAMPLES
 
@@ -25,7 +25,36 @@ New-ImageBarCode -Type EAN -Value 9012341234571 -FilePath barcode.png
 ```
 
 
+### EXAMPLE 2
+```powershell
+PS> New-ImageBarCode -Type Code128 -Value 'EVO-LAP-0142' -FilePath tag.png -ShowText -ModuleSize 3 -Height 30
+```
+
+-ShowText prints the encoded value under linear symbols; -Text prints custom text instead.
+
+### EXAMPLE 3
+```powershell
+PS> New-ImageBarCode -Type DataMatrix -Value 'LOT-2026-0042' -FilePath lot.png -ModuleSize 8 -ForegroundColor '#1e1b4b'
+```
+
+
 ## PARAMETERS
+
+### -BackgroundColor
+Background colour.
+
+```yaml
+Type: OfficeColor
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -FilePath
 Output path for the barcode image.
@@ -40,6 +69,102 @@ Required: True
 Position: 2
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -ForegroundColor
+Bar colour.
+
+```yaml
+Type: OfficeColor
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Height
+Bar height in modules. Linear symbols only.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ModuleSize
+Pixel width of one module: the narrowest bar for linear symbols, one cell for 2D symbols.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -QuietZone
+Quiet zone (blank border) in modules.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShowText
+Print the encoded value under the bars. Linear symbols only.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Text
+Custom human-readable text printed under the bars. Linear symbols only.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

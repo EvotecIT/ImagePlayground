@@ -11,7 +11,7 @@ Creates a topology node definition.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageTopologyNode [-Id] <string> [-Label] <string> [-Subtitle <string>] [-Kind <TopologyNodeKind>] [-Status <TopologyHealthStatus>] [-GroupId <string>] [-X <double>] [-Y <double>] [-Longitude <double>] [-Latitude <double>] [-Width <double>] [-Height <double>] [-Symbol <string>] [-IconId <string>] [-DisplayMode <TopologyNodeDisplayMode>] [-Badge <string>] [-Color <string>] [-BackgroundColor <string>] [-Href <string>] [-Tooltip <string>] [-Port <TopologyNodePort[]>] [-Detail <TopologyNodeDetail[]>] [<CommonParameters>]
+New-ImageTopologyNode [-Id] <string> [-Label] <string> [-Subtitle <string>] [-Kind <TopologyNodeKind>] [-Status <TopologyHealthStatus>] [-GroupId <string>] [-X <double>] [-Layer <int>] [-Y <double>] [-Longitude <double>] [-Latitude <double>] [-Width <double>] [-Height <double>] [-Symbol <string>] [-IconId <string>] [-DisplayMode <TopologyNodeDisplayMode>] [-Badge <string>] [-Color <string>] [-BackgroundColor <string>] [-Href <string>] [-Tooltip <string>] [-Port <TopologyNodePort[]>] [-Detail <TopologyNodeDetail[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -25,6 +25,19 @@ PS> New-ImageTopologyNode -Id api -Label 'API' -Kind Service -Status Healthy -Sy
 ```
 
 Creates a ChartForgeX topology node that can be rendered by New-ImageTopology.
+
+### EXAMPLE 2
+```powershell
+PS> New-ImageTopology -Layout Layered -Direction LeftToRight -FilePath tiers.png -TopologyDefinition {
+    New-ImageTopologyNode gateway Gateway -Kind Gateway -Layer 0
+    New-ImageTopologyNode orders Orders -Kind Service -Layer 1
+    New-ImageTopologyNode sql 'Orders DB' -Kind Database -Layer 2
+    New-ImageTopologyEdge gateway orders -Direction Forward
+    New-ImageTopologyEdge orders sql -Direction Forward
+}
+```
+
+-Layer pins each node to a column, so the diagram reads gateway, services, data from left to right.
 
 ## PARAMETERS
 
@@ -236,6 +249,24 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Layer
+Layer (column or row) for the Layered layout, starting at 0. Nodes in the same layer line up; edges usually flow from lower to higher layers.
+
+Without it, Layered groups nodes by their Kind.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Longitude
 Optional node longitude for geographic layouts.
 
@@ -349,7 +380,7 @@ Accept wildcard characters: False
 ```
 
 ### -X
-Manual X coordinate. Automatic layouts can ignore this value.
+Manual X coordinate. Used by the Manual layout; automatic layouts ignore it.
 
 ```yaml
 Type: Double

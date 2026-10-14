@@ -11,22 +11,22 @@ Creates an image chart from definitions.
 ## SYNTAX
 ### ScriptBlock (Default)
 ```powershell
-New-ImageChart [-ChartsDefinition] <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart [-ChartsDefinition] <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-XLabel <string[]>] [-SecondaryYTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### ChartScript
 ```powershell
-New-ImageChart -ChartScript <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart -ChartScript <scriptblock> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-XLabel <string[]>] [-SecondaryYTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Chart
 ```powershell
-New-ImageChart -Chart <Chart> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart -Chart <Chart> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-XLabel <string[]>] [-SecondaryYTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Definition
 ```powershell
-New-ImageChart -Definition <ChartDefinition[]> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
+New-ImageChart -Definition <ChartDefinition[]> -FilePath <string> [-AnnotationsDefinition <scriptblock>] [-Annotation <Object[]>] [-Width <int>] [-Height <int>] [-Title <string>] [-Subtitle <string>] [-XTitle <string>] [-YTitle <string>] [-XLabel <string[]>] [-SecondaryYTitle <string>] [-Show] [-ShowGrid] [-Theme <ChartTheme>] [-Background <ChartColor>] [-Options <ChartRenderOptions>] [-Watermark <VisualWatermark[]>] [-Dpi <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -56,6 +56,27 @@ New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme
 ```
 
 Renders a themed line chart and overlays an annotation highlighting the peak value.
+
+### EXAMPLE 3
+```powershell
+PS> $builds = Import-Csv builds.csv   # Day, Passed, Failed
+New-ImageChart -Title 'Builds by result' -Subtitle 'Week 41' -XLabel $builds.Day -FilePath builds.png -Options (New-ImageChartOptions -BarLayout Stacked -ShowLegend) {
+    New-ImageChartBar -Name Passed -Value $builds.Passed
+    New-ImageChartBar -Name Failed -Value $builds.Failed
+}
+```
+
+Titles, category labels, and the bar layout are parameters, so the chart never needs to be modified through .NET methods.
+
+### EXAMPLE 4
+```powershell
+PS> New-ImageChart -XLabel Mon, Tue, Wed, Thu, Fri -FilePath latency.webp {
+    New-ImageChartBar -Name Requests -Value 410, 380, 455, 520, 470
+    New-ImageChartLine -Name 'p95 (ms)' -Value 182, 175, 240, 310, 205 -Marker Circle -SecondaryAxis
+} -SecondaryYTitle 'p95 (ms)'
+```
+
+Bar, line, area, scatter, and similar cartesian definitions can be mixed; markers and axes are set per series.
 
 ## PARAMETERS
 
@@ -188,7 +209,7 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-The image format is inferred from the file extension.
+The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.
 
 ```yaml
 Type: String
@@ -204,7 +225,7 @@ Accept wildcard characters: False
 ```
 
 ### -Height
-Height of the chart.
+Height of the chart in pixels.
 
 ```yaml
 Type: Int32
@@ -242,6 +263,22 @@ Write the ChartForgeX chart to the pipeline after rendering.
 Type: SwitchParameter
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SecondaryYTitle
+Title of the secondary (right) Y axis used by series created with -SecondaryAxis.
+
+```yaml
+Type: String
+Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
+Aliases: Y2Title
 Possible values:
 
 Required: False
@@ -348,12 +385,28 @@ Accept wildcard characters: False
 ```
 
 ### -Width
-Width of the chart.
+Width of the chart in pixels.
 
 ```yaml
 Type: Int32
 Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -XLabel
+Values at positions 1, 2, 3... of each series are labelled with these entries in order.
+
+```yaml
+Type: String[]
+Parameter Sets: ScriptBlock, ChartScript, Chart, Definition
+Aliases: Category, Categories, XLabels
 Possible values:
 
 Required: False

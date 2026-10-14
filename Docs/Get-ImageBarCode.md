@@ -11,7 +11,7 @@ Reads barcode information from an image file.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-ImageBarCode [-FilePath] <string> [-ScanOptions <ScanOptions>] [-Detailed] [<CommonParameters>]
+Get-ImageBarCode [-FilePath] <string> [-Type <SymbolFormat[]>] [-TimeoutSeconds <double>] [-ScanOptions <ScanOptions>] [-Detailed] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,10 +27,14 @@ Get-ImageBarCode -FilePath barcode.png
 
 ### EXAMPLE 2
 ```powershell
-PS> $options = [CodeGlyphX.ScanOptions]::new()
-$options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')
-$options.TimeoutMilliseconds = 5000
-$scan = Get-ImageBarCode -FilePath barcode.png -ScanOptions $options -Detailed
+PS> Get-ChildItem *.png | Get-ImageBarCode -Type Ean, Code128 -TimeoutSeconds 2 | Select-Object Type, Text
+```
+
+Restricting the formats makes scans faster and avoids false positives from unrelated symbologies.
+
+### EXAMPLE 3
+```powershell
+PS> $scan = Get-ImageBarCode -FilePath barcode.png -Type DataMatrix -Detailed
 $scan.CompletionReason
 $scan.Symbols
 ```
@@ -60,13 +64,13 @@ The file must exist.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FullName, Path
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: True (ByValue, ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -78,6 +82,38 @@ Type: ScanOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TimeoutSeconds
+Scan deadline in seconds. Defaults to five seconds.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Type
+Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.
+
+```yaml
+Type: SymbolFormat[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: QrCode, MicroQrCode, Aztec, Code128, Gs1Code128, Code39, Code93, Ean, UpcA, UpcE, Itf14, Itf, Industrial2Of5, Matrix2Of5, Iata2Of5, PatchCode, Codabar, Msi, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, Gs1DataBarTruncated, Gs1DataBarOmnidirectional, Gs1DataBarStacked, Gs1DataBarExpanded, Gs1DataBarExpandedStacked, UspsIntelligentMail, KixCode, DataMatrix, Pdf417, MicroPdf417, RmQrCode, Gs1DataBarLimited, Gs1DataBarStackedOmnidirectional, MaxiCode, DotCode, HanXin, Gs1Composite
 
 Required: False
 Position: named

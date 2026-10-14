@@ -11,7 +11,7 @@ Creates a visual list block.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageListBlock [-Item] <string[]> [-Value <string[]>] [-Status <VisualStatus[]>] [-Checked <bool[]>] [-Title <string>] [-Subtitle <string>] [-Marker <VisualListMarker>] [-Dense] [-Theme <ChartTheme>] [<CommonParameters>]
+New-ImageListBlock [-Item] <string[]> [-Value <string[]>] [-Status <VisualStatus[]>] [-Checked <bool[]>] [-Title <string>] [-Subtitle <string>] [-Marker <VisualListMarker>] [-Dense] [-Width <int>] [-Height <int>] [-Theme <ChartTheme>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,6 +24,13 @@ Creates a visual list block.
 PS> New-ImageListBlock -Title 'Release' -Item Build,Test,Publish -Checked $true,$true,$false
 ```
 
+
+### EXAMPLE 2
+```powershell
+PS> New-ImageListBlock -Title Checks -Item 'TLS expiry', Backups, 'Queue depth' -Value '41 days', OK, '1,204' -Status Positive, Positive, Warning -Width 300 -Height 270
+```
+
+Width and Height size the block without calling .NET methods on the result.
 
 ## PARAMETERS
 
@@ -48,6 +55,22 @@ Use compact row spacing.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Height
+Block height in pixels. The width keeps its default unless -Width is also supplied.
+
+```yaml
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -160,6 +183,22 @@ Optional right-aligned values matching the item count.
 
 ```yaml
 Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Width
+Block width in pixels. The height keeps its default unless -Height is also supplied.
+
+```yaml
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

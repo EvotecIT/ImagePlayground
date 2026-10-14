@@ -1948,7 +1948,7 @@ try {&#xD;
       <command:verb>ConvertTo</command:verb>
       <command:noun>ImageVisualArtifact</command:noun>
       <maml:description>
-        <maml:para>Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.</maml:para>
+        <maml:para>Converts a ChartForgeX chart, chart grid, visual grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
@@ -2181,6 +2181,17 @@ try {&#xD;
         <dev:code>$artifact = $topology | ConvertTo-ImageVisualArtifact -Id service-map -AccessibleDescription 'Gateway to database service path.'</dev:code>
         <dev:remarks>
           <maml:para>Creates a reusable artifact that can be exported by ImagePlayground or placed by PSWriteOffice.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Turn a dashboard grid into an artifact</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$grid = New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { New-ImageMetricCard -Label Requests -Value 12840 }&#xD;
+            $grid | ConvertTo-ImageVisualArtifact -Id service-health | Export-ImageVisualArtifact -FilePath service-health.webp</dev:code>
+        <dev:remarks>
+          <maml:para>Visual grids from New-ImageVisualGrid convert directly; the artifact renders the grid natively.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -2572,7 +2583,7 @@ try {&#xD;
       <command:verb>Export</command:verb>
       <command:noun>ImageVisualArtifact</command:noun>
       <maml:description>
-        <maml:para>Exports a ChartForgeX visual artifact to static SVG, HTML, or PNG output.</maml:para>
+        <maml:para>Exports a ChartForgeX visual artifact to static SVG, HTML, PNG, JPEG, WebP, GIF, BMP, TIFF, or TGA output.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
@@ -2608,7 +2619,7 @@ try {&#xD;
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Destination .svg, .html, .htm, or .png path.</maml:para>
+            <maml:para>Destination path. The extension picks the format: .svg, .html, .htm, .png, .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, or .tga.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -2714,7 +2725,7 @@ try {&#xD;
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>Destination .svg, .html, .htm, or .png path.</maml:para>
+          <maml:para>Destination path. The extension picks the format: .svg, .html, .htm, .png, .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, or .tga.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -2931,7 +2942,7 @@ try {&#xD;
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue, ByPropertyName)" position="0" aliases="FullName,Path">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>The file must exist.</maml:para>
@@ -2955,6 +2966,78 @@ try {&#xD;
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TimeoutSeconds</maml:name>
+          <maml:description>
+            <maml:para>Scan deadline in seconds. Defaults to five seconds.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Type</maml:name>
+          <maml:description>
+            <maml:para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SymbolFormat[]</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">QrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MicroQrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Aztec</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code128</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1Code128</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code39</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code93</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UpcA</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UpcE</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Itf14</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Itf</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Industrial2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Matrix2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Iata2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PatchCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Codabar</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Msi</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code11</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Plessey</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Telepen</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Pharmacode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PharmacodeTwoTrack</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code32</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Postnet</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Planet</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RoyalMail4State</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">AustraliaPost</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">JapanPost</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarTruncated</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarOmnidirectional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarStacked</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarExpanded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarExpandedStacked</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">UspsIntelligentMail</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">KixCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DataMatrix</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Pdf417</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MicroPdf417</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RmQrCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarLimited</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1DataBarStackedOmnidirectional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MaxiCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>SymbolFormat[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -2970,7 +3053,7 @@ try {&#xD;
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue, ByPropertyName)" position="0" aliases="FullName,Path">
         <maml:name>FilePath</maml:name>
         <maml:description>
           <maml:para>The file must exist.</maml:para>
@@ -2990,6 +3073,78 @@ try {&#xD;
         <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
         <dev:type>
           <maml:name>ScanOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TimeoutSeconds</maml:name>
+        <maml:description>
+          <maml:para>Scan deadline in seconds. Defaults to five seconds.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Type</maml:name>
+        <maml:description>
+          <maml:para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SymbolFormat[]</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">QrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MicroQrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Aztec</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code128</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1Code128</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code39</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code93</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UpcA</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UpcE</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Itf14</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Itf</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Industrial2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Matrix2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Iata2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PatchCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Codabar</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Msi</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code11</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Plessey</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Telepen</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Pharmacode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PharmacodeTwoTrack</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code32</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Postnet</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Planet</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RoyalMail4State</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">AustraliaPost</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">JapanPost</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarTruncated</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarOmnidirectional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarStacked</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarExpanded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarExpandedStacked</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">UspsIntelligentMail</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">KixCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DataMatrix</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Pdf417</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MicroPdf417</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RmQrCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarLimited</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1DataBarStackedOmnidirectional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MaxiCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>SymbolFormat[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -3028,14 +3183,21 @@ try {&#xD;
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>Scan selected formats and inspect completion details</maml:title>
+        <maml:title>Scan only the formats you expect</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$options = [CodeGlyphX.ScanOptions]::new()&#xD;
-            $options.Formats = [CodeGlyphX.SymbolFormat[]]@('Ean', 'DataMatrix')&#xD;
-            $options.TimeoutMilliseconds = 5000&#xD;
-            $scan = Get-ImageBarCode -FilePath barcode.png -ScanOptions $options -Detailed&#xD;
+        <dev:code>Get-ChildItem *.png | Get-ImageBarCode -Type Ean, Code128 -TimeoutSeconds 2 | Select-Object Type, Text</dev:code>
+        <dev:remarks>
+          <maml:para>Restricting the formats makes scans faster and avoids false positives from unrelated symbologies.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Inspect completion details</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$scan = Get-ImageBarCode -FilePath barcode.png -Type DataMatrix -Detailed&#xD;
             $scan.CompletionReason&#xD;
             $scan.Symbols</dev:code>
         <dev:remarks>
@@ -4248,17 +4410,101 @@ try {&#xD;
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a barcode image.</maml:para>
+      <maml:para>The file extension picks the format (.png, .svg, .jpg, .webp and others). PNG output is compressed.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-ImageBarCode</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>BackgroundColor</maml:name>
+          <maml:description>
+            <maml:para>Background colour.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeColor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="2" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
             <maml:para>Output path for the barcode image.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ForegroundColor</maml:name>
+          <maml:description>
+            <maml:para>Bar colour.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeColor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Height</maml:name>
+          <maml:description>
+            <maml:para>Bar height in modules. Linear symbols only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ModuleSize</maml:name>
+          <maml:description>
+            <maml:para>Pixel width of one module: the narrowest bar for linear symbols, one cell for 2D symbols.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>QuietZone</maml:name>
+          <maml:description>
+            <maml:para>Quiet zone (blank border) in modules.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ShowText</maml:name>
+          <maml:description>
+            <maml:para>Print the encoded value under the bars. Linear symbols only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Text</maml:name>
+          <maml:description>
+            <maml:para>Custom human-readable text printed under the bars. Linear symbols only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
@@ -4340,12 +4586,96 @@ try {&#xD;
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>BackgroundColor</maml:name>
+        <maml:description>
+          <maml:para>Background colour.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeColor</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="2" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
           <maml:para>Output path for the barcode image.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ForegroundColor</maml:name>
+        <maml:description>
+          <maml:para>Bar colour.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeColor</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Height</maml:name>
+        <maml:description>
+          <maml:para>Bar height in modules. Linear symbols only.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ModuleSize</maml:name>
+        <maml:description>
+          <maml:para>Pixel width of one module: the narrowest bar for linear symbols, one cell for 2D symbols.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>QuietZone</maml:name>
+        <maml:description>
+          <maml:para>Quiet zone (blank border) in modules.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ShowText</maml:name>
+        <maml:description>
+          <maml:para>Print the encoded value under the bars. Linear symbols only.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Text</maml:name>
+        <maml:description>
+          <maml:para>Custom human-readable text printed under the bars. Linear symbols only.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
@@ -4442,6 +4772,26 @@ try {&#xD;
       <command:example>
         <maml:title>Create barcode</maml:title>
         <dev:code>New-ImageBarCode -Type EAN -Value 9012341234571 -FilePath barcode.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Asset tag with the value printed underneath</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageBarCode -Type Code128 -Value 'EVO-LAP-0142' -FilePath tag.png -ShowText -ModuleSize 3 -Height 30</dev:code>
+        <dev:remarks>
+          <maml:para>-ShowText prints the encoded value under linear symbols; -Text prints custom text instead.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Brand colours for a 2D code</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageBarCode -Type DataMatrix -Value 'LOT-2026-0042' -FilePath lot.png -ModuleSize 8 -ForegroundColor '#1e1b4b'</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -6005,7 +6355,7 @@ try {&#xD;
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>The image format is inferred from the file extension.</maml:para>
+            <maml:para>The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -6017,7 +6367,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>Height of the chart.</maml:para>
+            <maml:para>Height of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -6046,6 +6396,18 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Y2Title">
+          <maml:name>SecondaryYTitle</maml:name>
+          <maml:description>
+            <maml:para>Title of the secondary (right) Y axis used by series created with -SecondaryAxis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6141,11 +6503,23 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>Width of the chart.</maml:para>
+            <maml:para>Width of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Category,Categories,XLabels">
+          <maml:name>XLabel</maml:name>
+          <maml:description>
+            <maml:para>Values at positions 1, 2, 3... of each series are labelled with these entries in order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6240,7 +6614,7 @@ try {&#xD;
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>The image format is inferred from the file extension.</maml:para>
+            <maml:para>The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -6252,7 +6626,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>Height of the chart.</maml:para>
+            <maml:para>Height of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -6281,6 +6655,18 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Y2Title">
+          <maml:name>SecondaryYTitle</maml:name>
+          <maml:description>
+            <maml:para>Title of the secondary (right) Y axis used by series created with -SecondaryAxis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6376,11 +6762,23 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>Width of the chart.</maml:para>
+            <maml:para>Width of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Category,Categories,XLabels">
+          <maml:name>XLabel</maml:name>
+          <maml:description>
+            <maml:para>Values at positions 1, 2, 3... of each series are labelled with these entries in order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6475,7 +6873,7 @@ try {&#xD;
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>The image format is inferred from the file extension.</maml:para>
+            <maml:para>The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -6487,7 +6885,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>Height of the chart.</maml:para>
+            <maml:para>Height of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -6516,6 +6914,18 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Y2Title">
+          <maml:name>SecondaryYTitle</maml:name>
+          <maml:description>
+            <maml:para>Title of the secondary (right) Y axis used by series created with -SecondaryAxis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6611,11 +7021,23 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>Width of the chart.</maml:para>
+            <maml:para>Width of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Category,Categories,XLabels">
+          <maml:name>XLabel</maml:name>
+          <maml:description>
+            <maml:para>Values at positions 1, 2, 3... of each series are labelled with these entries in order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6710,7 +7132,7 @@ try {&#xD;
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>The image format is inferred from the file extension.</maml:para>
+            <maml:para>The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -6722,7 +7144,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>Height of the chart.</maml:para>
+            <maml:para>Height of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -6751,6 +7173,18 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Y2Title">
+          <maml:name>SecondaryYTitle</maml:name>
+          <maml:description>
+            <maml:para>Title of the secondary (right) Y axis used by series created with -SecondaryAxis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6846,11 +7280,23 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>Width of the chart.</maml:para>
+            <maml:para>Width of the chart in pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Category,Categories,XLabels">
+          <maml:name>XLabel</maml:name>
+          <maml:description>
+            <maml:para>Values at positions 1, 2, 3... of each series are labelled with these entries in order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -6981,7 +7427,7 @@ try {&#xD;
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>The image format is inferred from the file extension.</maml:para>
+          <maml:para>The extension picks the format: .png, .svg, .html, or .htm use the ChartForgeX renderers; .jpg, .jpeg, .webp, .gif, .bmp, .tif, .tiff, and .tga encode the same pixels through ImagePlayground. Relative paths resolve against the current PowerShell location.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -6993,7 +7439,7 @@ try {&#xD;
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Height</maml:name>
         <maml:description>
-          <maml:para>Height of the chart.</maml:para>
+          <maml:para>Height of the chart in pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -7022,6 +7468,18 @@ try {&#xD;
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Y2Title">
+        <maml:name>SecondaryYTitle</maml:name>
+        <maml:description>
+          <maml:para>Title of the secondary (right) Y axis used by series created with -SecondaryAxis.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -7117,11 +7575,23 @@ try {&#xD;
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
-          <maml:para>Width of the chart.</maml:para>
+          <maml:para>Width of the chart in pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
           <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Category,Categories,XLabels">
+        <maml:name>XLabel</maml:name>
+        <maml:description>
+          <maml:para>Values at positions 1, 2, 3... of each series are labelled with these entries in order.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -7206,6 +7676,33 @@ try {&#xD;
             New-ImageChart -Definition $defs -Annotation $ann -FilePath cpu-usage.png -Theme Dark -ShowGrid -Show</dev:code>
         <dev:remarks>
           <maml:para>Renders a themed line chart and overlays an annotation highlighting the peak value.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Title, category labels, and stacked bars from CSV data</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$builds = Import-Csv builds.csv   # Day, Passed, Failed&#xD;
+            New-ImageChart -Title 'Builds by result' -Subtitle 'Week 41' -XLabel $builds.Day -FilePath builds.png -Options (New-ImageChartOptions -BarLayout Stacked -ShowLegend) {&#xD;
+                New-ImageChartBar -Name Passed -Value $builds.Passed&#xD;
+                New-ImageChartBar -Name Failed -Value $builds.Failed&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>Titles, category labels, and the bar layout are parameters, so the chart never needs to be modified through .NET methods.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Bars and a target line on one chart, saved as WebP</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageChart -XLabel Mon, Tue, Wed, Thu, Fri -FilePath latency.webp {&#xD;
+                New-ImageChartBar -Name Requests -Value 410, 380, 455, 520, 470&#xD;
+                New-ImageChartLine -Name 'p95 (ms)' -Value 182, 175, 240, 310, 205 -Marker Circle -SecondaryAxis&#xD;
+            } -SecondaryYTitle 'p95 (ms)'</dev:code>
+        <dev:remarks>
+          <maml:para>Bar, line, area, scatter, and similar cartesian definitions can be mixed; markers and axes are set per series.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -7392,6 +7889,18 @@ try {&#xD;
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SecondaryAxis</maml:name>
+          <maml:description>
+            <maml:para>Plot the area against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>Value</maml:name>
           <maml:description>
@@ -7431,6 +7940,18 @@ try {&#xD;
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SecondaryAxis</maml:name>
+        <maml:description>
+          <maml:para>Plot the area against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>Value</maml:name>
         <maml:description>
@@ -7451,7 +7972,16 @@ try {&#xD;
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.ChartArea</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Area chart definition.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -7461,6 +7991,13 @@ try {&#xD;
       <command:example>
         <maml:title>Create area data</maml:title>
         <dev:code>New-ImageChartArea -Name 'Sales' -Value 10,20 -Color Green</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Area behind bars on a secondary axis</maml:title>
+        <dev:code>New-ImageChart -XLabel Q1, Q2, Q3 -SecondaryYTitle Margin -FilePath area.png { New-ImageChartBar -Name Revenue -Value 12, 18, 25; New-ImageChartArea -Name Margin -Value 21, 24, 28 -SecondaryAxis }</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -7507,6 +8044,18 @@ try {&#xD;
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SecondaryAxis</maml:name>
+          <maml:description>
+            <maml:para>Plot the bars against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>Value</maml:name>
           <maml:description>
@@ -7546,6 +8095,18 @@ try {&#xD;
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SecondaryAxis</maml:name>
+        <maml:description>
+          <maml:para>Plot the bars against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>Value</maml:name>
         <maml:description>
@@ -7566,7 +8127,16 @@ try {&#xD;
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.ChartBar</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Bar chart definition.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -7581,6 +8151,19 @@ try {&#xD;
         <dev:code>New-ImageChartBar -Name 'Revenue' -Value 12,18,25 -Color Blue</dev:code>
         <dev:remarks>
           <maml:para>Creates a single bar-series definition that can be passed into New-ImageChart.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Bars and a target line on one chart</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageChart -Title 'Builds' -XLabel Mon, Tue, Wed -FilePath builds.png {&#xD;
+                New-ImageChartBar -Name Passed -Value 41, 38, 45&#xD;
+                New-ImageChartLine -Name Target -Value 40, 40, 40 -Color '#c78404'&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>Bar and line definitions can be mixed in one chart.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -9149,7 +9732,8 @@ try {&#xD;
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Use this cmdlet inside New-ImageChart to define a line-series dataset.</maml:para>
+      <maml:para>Use this cmdlet inside New-ImageChart to define a line-series dataset. Lines can share a chart with bar, area, scatter, and other line definitions.</maml:para>
+      <maml:para>Markers are configured per series, so one line can show markers while another does not.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -9169,15 +9753,33 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Marker</maml:name>
           <maml:description>
-            <maml:para>None suppresses line markers; Circle enables ChartForgeX's shared line-marker style.</maml:para>
+            <maml:para>None (the default) draws no markers. Circle, Square, Diamond, Triangle, Plus, Cross, and Star draw markers on this series only.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ChartMarkerShape</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Triangle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Cross</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>ChartMarkerShape</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MarkerSize</maml:name>
+          <maml:description>
+            <maml:para>Marker diameter in pixels. Supplying it without -Marker draws circles.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -9190,6 +9792,18 @@ try {&#xD;
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SecondaryAxis</maml:name>
+          <maml:description>
+            <maml:para>Plot the line against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -9236,15 +9850,33 @@ try {&#xD;
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Marker</maml:name>
         <maml:description>
-          <maml:para>None suppresses line markers; Circle enables ChartForgeX's shared line-marker style.</maml:para>
+          <maml:para>None (the default) draws no markers. Circle, Square, Diamond, Triangle, Plus, Cross, and Star draw markers on this series only.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ChartMarkerShape</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Triangle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Cross</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>ChartMarkerShape</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MarkerSize</maml:name>
+        <maml:description>
+          <maml:para>Marker diameter in pixels. Supplying it without -Marker draws circles.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -9257,6 +9889,18 @@ try {&#xD;
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SecondaryAxis</maml:name>
+        <maml:description>
+          <maml:para>Plot the line against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -9293,7 +9937,16 @@ try {&#xD;
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>ImagePlayground.ChartLine</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Line chart definition.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -9308,6 +9961,19 @@ try {&#xD;
         <dev:code>New-ImageChartLine -Name 'Sales' -Value 10,20,18,24 -Color Green -Smooth</dev:code>
         <dev:remarks>
           <maml:para>Creates a smoothed line-series definition ready to be rendered by New-ImageChart.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Mark one series and plot it on the secondary axis</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageChart -XLabel Mon, Tue, Wed, Thu -SecondaryYTitle 'Error rate (%)' -FilePath combo.png {&#xD;
+                New-ImageChartBar -Name Requests -Value 410, 380, 455, 520&#xD;
+                New-ImageChartLine -Name 'Error rate' -Value 1.2, 0.8, 2.4, 1.1 -Marker Diamond -MarkerSize 8 -SecondaryAxis&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>Combines bars and a marked line; the line uses the right-hand axis.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -9443,6 +10109,22 @@ try {&#xD;
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-ImageChartOptions</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>BarLayout</maml:name>
+          <maml:description>
+            <maml:para>How several bar series share one category: Grouped (side by side) or Stacked.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ChartBarLayout</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Grouped</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Stacked</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>ChartBarLayout</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DonutCenterLabel</maml:name>
           <maml:description>
@@ -9735,6 +10417,22 @@ try {&#xD;
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>BarLayout</maml:name>
+        <maml:description>
+          <maml:para>How several bar series share one category: Grouped (side by side) or Stacked.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ChartBarLayout</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Grouped</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Stacked</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>ChartBarLayout</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>DonutCenterLabel</maml:name>
         <maml:description>
@@ -10051,6 +10749,13 @@ try {&#xD;
       <command:example>
         <maml:title>Create options for a labeled chart with a right-side legend</maml:title>
         <dev:code>New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -Palette '#8B5CF6','#2DD4BF'</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Stack bar series</maml:title>
+        <dev:code>New-ImageChart -Title 'Builds by result' -XLabel Mon, Tue, Wed -Options (New-ImageChartOptions -BarLayout Stacked -ShowLegend) -FilePath builds.png { New-ImageChartBar -Name Passed -Value 41, 38, 45; New-ImageChartBar -Name Failed -Value 3, 6, 2 }</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -16240,6 +16945,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Height</maml:name>
+          <maml:description>
+            <maml:para>Block height in pixels. The width keeps its default unless -Width is also supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Item</maml:name>
           <maml:description>
@@ -16355,6 +17072,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Width</maml:name>
+          <maml:description>
+            <maml:para>Block width in pixels. The height keeps its default unless -Height is also supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -16378,6 +17107,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Height</maml:name>
+        <maml:description>
+          <maml:para>Block height in pixels. The width keeps its default unless -Width is also supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -16497,6 +17238,18 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Width</maml:name>
+        <maml:description>
+          <maml:para>Block width in pixels. The height keeps its default unless -Height is also supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -16526,6 +17279,16 @@ polygonal areas.</maml:para>
         <dev:code>New-ImageListBlock -Title 'Release' -Item Build,Test,Publish -Checked $true,$true,$false</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Size a status list for a dashboard column</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageListBlock -Title Checks -Item 'TLS expiry', Backups, 'Queue depth' -Value '41 days', OK, '1,204' -Status Positive, Positive, Warning -Width 300 -Height 270</dev:code>
+        <dev:remarks>
+          <maml:para>Width and Height size the block without calling .NET methods on the result.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -18392,6 +19155,63 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ErrorCorrection</maml:name>
+          <maml:description>
+            <maml:para>Higher levels survive more damage, logos, and styling at the cost of a denser code.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">QrErrorCorrectionLevel</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">L</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">M</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Q</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">H</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>QrErrorCorrectionLevel</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>EyeColor</maml:name>
+          <maml:description>
+            <maml:para>Colour of the three finder patterns (eyes).</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeColor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>EyeShape</maml:name>
+          <maml:description>
+            <maml:para>Shape of the three finder patterns (eyes), for example Square, Rounded, or Circle.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Rounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ConnectedRounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ConnectedSquircle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SoftDiamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Squircle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Leaf</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>QrModuleShape</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
@@ -18429,9 +19249,60 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>LogoScale</maml:name>
+          <maml:description>
+            <maml:para>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ModuleShape</maml:name>
+          <maml:description>
+            <maml:para>Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Rounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ConnectedRounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ConnectedSquircle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SoftDiamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Squircle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Leaf</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>QrModuleShape</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PixelSize</maml:name>
           <maml:description>
-            <maml:para>Pixel size for each QR module.</maml:para>
+            <maml:para>Pixel size for each QR module. Ignored when -Size is supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>QuietZone</maml:name>
+          <maml:description>
+            <maml:para>Quiet zone (blank border) in modules. Defaults to 4, the size scanners expect.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -18448,6 +19319,18 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Size</maml:name>
+          <maml:description>
+            <maml:para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -18491,6 +19374,63 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ErrorCorrection</maml:name>
+        <maml:description>
+          <maml:para>Higher levels survive more damage, logos, and styling at the cost of a denser code.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">QrErrorCorrectionLevel</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">L</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">M</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Q</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">H</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>QrErrorCorrectionLevel</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>EyeColor</maml:name>
+        <maml:description>
+          <maml:para>Colour of the three finder patterns (eyes).</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeColor</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>EyeShape</maml:name>
+        <maml:description>
+          <maml:para>Shape of the three finder patterns (eyes), for example Square, Rounded, or Circle.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Rounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ConnectedRounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ConnectedSquircle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SoftDiamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Squircle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Leaf</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>QrModuleShape</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
@@ -18528,9 +19468,60 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>LogoScale</maml:name>
+        <maml:description>
+          <maml:para>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ModuleShape</maml:name>
+        <maml:description>
+          <maml:para>Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Rounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ConnectedRounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ConnectedSquircle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SoftDiamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Squircle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Leaf</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>QrModuleShape</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PixelSize</maml:name>
         <maml:description>
-          <maml:para>Pixel size for each QR module.</maml:para>
+          <maml:para>Pixel size for each QR module. Ignored when -Size is supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>QuietZone</maml:name>
+        <maml:description>
+          <maml:para>Quiet zone (blank border) in modules. Defaults to 4, the size scanners expect.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -18547,6 +19538,18 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Size</maml:name>
+        <maml:description>
+          <maml:para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -18606,6 +19609,26 @@ polygonal areas.</maml:para>
         <dev:code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath qr-logo.png -LogoPath logo.png</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Style modules and eyes, and size the image for print</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageQRCode -Content 'https://evotec.xyz' -FilePath styled.png -ModuleShape Rounded -EyeShape Circle -EyeColor '#4c1d95' -ForegroundColor '#1e1b4b' -Size 600 -ErrorCorrection H</dev:code>
+        <dev:remarks>
+          <maml:para>Rounded data modules, circular eyes in an accent colour, and an image at most 600 px wide. High error correction leaves room for styling and logos.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Generate one label per asset from the pipeline</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>'EVO-LAP-0142', 'EVO-LAP-0177' | ForEach-Object { New-ImageQRCode -Content "https://assets.example.com/$_" -FilePath "$_.png" -QuietZone 2 -Size 300 }</dev:code>
+        <dev:remarks>
+          <maml:para>PNG output is compressed; a typical URL code at 300 px is about 1 KB.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -28099,23 +29122,24 @@ polygonal areas.</maml:para>
       <command:verb>New</command:verb>
       <command:noun>ImageTableBlock</command:noun>
       <maml:description>
-        <maml:para>Creates a visual table block.</maml:para>
+        <maml:para>Creates a visual table block from PowerShell objects.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Rows can be arrays, hashtables, or PowerShell objects whose property names match the requested columns.</maml:para>
+      <maml:para>Pipe objects in and choose columns with -Property, the same way as Select-Object or Format-Table. Property accepts property names and calculated property hashtables with Name (or Label), Expression, FormatString, Alignment, and Width keys.</maml:para>
+      <maml:para>Rows can be PowerShell objects, hashtables, or arrays of values in column order. Without -Property, the columns come from the first row.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-ImageTableBlock</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="None">
-          <maml:name>Column</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Alignment">
+          <maml:name>Align</maml:name>
           <maml:description>
-            <maml:para>Column headers.</maml:para>
+            <maml:para>Column alignment keyed by property or displayed header. Values are Left, Center, or Right.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">IDictionary</command:parameterValue>
           <dev:type>
-            <maml:name>String[]</maml:name>
+            <maml:name>IDictionary</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -28128,6 +29152,42 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Header</maml:name>
+          <maml:description>
+            <maml:para>Displayed column names. Defaults to the property names.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Height</maml:name>
+          <maml:description>
+            <maml:para>Block height in pixels. The width keeps its default unless -Width is also supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="Row,Rows">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Rows can be objects, hashtables, or arrays of values in column order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PSObject[]</command:parameterValue>
+          <dev:type>
+            <maml:name>PSObject[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -28156,22 +29216,23 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="None">
-          <maml:name>Row</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="Column,Columns">
+          <maml:name>Property</maml:name>
           <maml:description>
-            <maml:para>Rows represented as arrays, dictionaries, or PowerShell objects.</maml:para>
+            <maml:para>Calculated properties accept Name (or Label), Expression (a property name or a script block using $_), FormatString, Alignment (Left, Center, Right), and Width.</maml:para>
+            <maml:para>When omitted, the columns are the properties of the first row.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Object[]</command:parameterValue>
           <dev:type>
             <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="StatusProperty">
           <maml:name>StatusColumn</maml:name>
           <maml:description>
-            <maml:para>Column that contains semantic status values.</maml:para>
+            <maml:para>Column, by property or displayed header, that contains semantic status values such as Healthy, Warning, or Failed.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -28232,17 +29293,29 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Width</maml:name>
+          <maml:description>
+            <maml:para>Block width in pixels. The height keeps its default unless -Height is also supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="None">
-        <maml:name>Column</maml:name>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Alignment">
+        <maml:name>Align</maml:name>
         <maml:description>
-          <maml:para>Column headers.</maml:para>
+          <maml:para>Column alignment keyed by property or displayed header. Values are Left, Center, or Right.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">IDictionary</command:parameterValue>
         <dev:type>
-          <maml:name>String[]</maml:name>
+          <maml:name>IDictionary</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -28255,6 +29328,42 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Header</maml:name>
+        <maml:description>
+          <maml:para>Displayed column names. Defaults to the property names.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Height</maml:name>
+        <maml:description>
+          <maml:para>Block height in pixels. The width keeps its default unless -Width is also supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="Row,Rows">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Rows can be objects, hashtables, or arrays of values in column order.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSObject[]</command:parameterValue>
+        <dev:type>
+          <maml:name>PSObject[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -28283,22 +29392,23 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="None">
-        <maml:name>Row</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="Column,Columns">
+        <maml:name>Property</maml:name>
         <maml:description>
-          <maml:para>Rows represented as arrays, dictionaries, or PowerShell objects.</maml:para>
+          <maml:para>Calculated properties accept Name (or Label), Expression (a property name or a script block using $_), FormatString, Alignment (Left, Center, Right), and Width.</maml:para>
+          <maml:para>When omitted, the columns are the properties of the first row.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Object[]</command:parameterValue>
         <dev:type>
           <maml:name>Object[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="StatusProperty">
         <maml:name>StatusColumn</maml:name>
         <maml:description>
-          <maml:para>Column that contains semantic status values.</maml:para>
+          <maml:para>Column, by property or displayed header, that contains semantic status values such as Healthy, Warning, or Failed.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -28359,11 +29469,23 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Width</maml:name>
+        <maml:description>
+          <maml:para>Block width in pixels. The height keeps its default unless -Height is also supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>None</maml:name>
+          <maml:name>System.Management.Automation.PSObject[]</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -28381,13 +29503,35 @@ polygonal areas.</maml:para>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Create a service status table</maml:title>
+        <maml:title>Build a table from pipeline objects</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageTableBlock -Title 'Services' -Column Name,Status -Row @{Name='API';Status='Healthy'},@{Name='Database';Status='Warning'} -Dense</dev:code>
+        <dev:code>Get-Service | Select-Object -First 5 | New-ImageTableBlock -Property Name, Status -StatusColumn Status -Title Services</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Creates one table block with a Name and a Status column. Missing properties produce empty cells.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Format and align columns with calculated properties</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$services | New-ImageTableBlock -Title Services -StatusColumn Status -Width 616 -Height 270 -Property Name, Status,&#xD;
+                @{ Name = 'Requests'; Expression = { [int] $_.Requests }; FormatString = 'N0'; Alignment = 'Right' },&#xD;
+                @{ Name = 'P95'; Expression = { "$($_.P95) ms" }; Alignment = 'Right' }</dev:code>
+        <dev:remarks>
+          <maml:para>Formats the request count with thousands separators, appends a unit to latency, and sizes the block for a dashboard grid.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Supply rows explicitly</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageTableBlock -Title Services -Column Name, Status -Row @{ Name = 'API'; Status = 'Healthy' }, @{ Name = 'Database'; Status = 'Warning' } -Dense</dev:code>
+        <dev:remarks>
+          <maml:para>-Column and -Row remain available as aliases of -Property and -InputObject.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -28639,10 +29783,22 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Height</maml:name>
+          <maml:description>
+            <maml:para>Block height in pixels. The width keeps its default unless -Width is also supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Item</maml:name>
           <maml:description>
-            <maml:para>Timeline items supplied directly.</maml:para>
+            <maml:para>Timeline items supplied directly or through the pipeline.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ActivityTimelineItem[]</command:parameterValue>
           <dev:type>
@@ -28715,6 +29871,18 @@ polygonal areas.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Width</maml:name>
+          <maml:description>
+            <maml:para>Block width in pixels. The height keeps its default unless -Height is also supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -28730,10 +29898,22 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Height</maml:name>
+        <maml:description>
+          <maml:para>Block height in pixels. The width keeps its default unless -Width is also supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Item</maml:name>
         <maml:description>
-          <maml:para>Timeline items supplied directly.</maml:para>
+          <maml:para>Timeline items supplied directly or through the pipeline.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ActivityTimelineItem[]</command:parameterValue>
         <dev:type>
@@ -28806,11 +29986,23 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Width</maml:name>
+        <maml:description>
+          <maml:para>Block width in pixels. The height keeps its default unless -Height is also supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>None</maml:name>
+          <maml:name>ChartForgeX.VisualBlocks.ActivityTimelineItem[]</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -28835,6 +30027,16 @@ polygonal areas.</maml:para>
         <dev:code>New-ImageTimelineBlock -Title 'Release activity' -ItemDefinition { New-ImageTimelineItem -Kind Event -Title 'Build completed' -Status Positive; New-ImageTimelineItem -Kind ChecklistItem -Title 'Smoke tests' -Completed }</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Pipe timeline items and size the block</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$deployments | ForEach-Object { New-ImageTimelineItem -Kind Event -Title $_.Name -Timestamp $_.Time -Status Positive } | New-ImageTimelineBlock -Title Deployments -Width 420 -Height 300</dev:code>
+        <dev:remarks>
+          <maml:para>Items can arrive through the pipeline; Width and Height size the block for a grid panel.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -31772,7 +32974,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
-            <maml:para>Group height in pixels.</maml:para>
+            <maml:para>Group height in pixels. When omitted, the layout sizes the group around its nodes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -31931,7 +33133,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
-            <maml:para>Group width in pixels.</maml:para>
+            <maml:para>Group width in pixels. When omitted, the layout sizes the group around its nodes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -31943,7 +33145,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>X</maml:name>
           <maml:description>
-            <maml:para>Manual X coordinate. Automatic layouts can ignore this value.</maml:para>
+            <maml:para>Manual X coordinate. Supplying X or Y pins the group; omit both so automatic layouts (Grouped, DenseGrouped) place it.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -31955,7 +33157,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Y</maml:name>
           <maml:description>
-            <maml:para>Manual Y coordinate. Automatic layouts can ignore this value.</maml:para>
+            <maml:para>Manual Y coordinate. Supplying X or Y pins the group; omit both so automatic layouts place it.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -31982,7 +33184,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Height</maml:name>
         <maml:description>
-          <maml:para>Group height in pixels.</maml:para>
+          <maml:para>Group height in pixels. When omitted, the layout sizes the group around its nodes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -32141,7 +33343,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
-          <maml:para>Group width in pixels.</maml:para>
+          <maml:para>Group width in pixels. When omitted, the layout sizes the group around its nodes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -32153,7 +33355,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>X</maml:name>
         <maml:description>
-          <maml:para>Manual X coordinate. Automatic layouts can ignore this value.</maml:para>
+          <maml:para>Manual X coordinate. Supplying X or Y pins the group; omit both so automatic layouts (Grouped, DenseGrouped) place it.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -32165,7 +33367,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Y</maml:name>
         <maml:description>
-          <maml:para>Manual Y coordinate. Automatic layouts can ignore this value.</maml:para>
+          <maml:para>Manual Y coordinate. Supplying X or Y pins the group; omit both so automatic layouts place it.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -32705,6 +33907,19 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Layer</maml:name>
+          <maml:description>
+            <maml:para>Layer (column or row) for the Layered layout, starting at 0. Nodes in the same layer line up; edges usually flow from lower to higher layers.</maml:para>
+            <maml:para>Without it, Layered groups nodes by their Kind.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Longitude</maml:name>
           <maml:description>
             <maml:para>Optional node longitude for geographic layouts.</maml:para>
@@ -32798,7 +34013,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>X</maml:name>
           <maml:description>
-            <maml:para>Manual X coordinate. Automatic layouts can ignore this value.</maml:para>
+            <maml:para>Manual X coordinate. Used by the Manual layout; automatic layouts ignore it.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -33012,6 +34227,19 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Layer</maml:name>
+        <maml:description>
+          <maml:para>Layer (column or row) for the Layered layout, starting at 0. Nodes in the same layer line up; edges usually flow from lower to higher layers.</maml:para>
+          <maml:para>Without it, Layered groups nodes by their Kind.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Longitude</maml:name>
         <maml:description>
           <maml:para>Optional node longitude for geographic layouts.</maml:para>
@@ -33105,7 +34333,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>X</maml:name>
         <maml:description>
-          <maml:para>Manual X coordinate. Automatic layouts can ignore this value.</maml:para>
+          <maml:para>Manual X coordinate. Used by the Manual layout; automatic layouts ignore it.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -33155,6 +34383,22 @@ polygonal areas.</maml:para>
         <dev:code>New-ImageTopologyNode -Id api -Label 'API' -Kind Service -Status Healthy -Symbol API</dev:code>
         <dev:remarks>
           <maml:para>Creates a ChartForgeX topology node that can be rendered by New-ImageTopology.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Place tiers in columns with the Layered layout</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageTopology -Layout Layered -Direction LeftToRight -FilePath tiers.png -TopologyDefinition {&#xD;
+                New-ImageTopologyNode gateway Gateway -Kind Gateway -Layer 0&#xD;
+                New-ImageTopologyNode orders Orders -Kind Service -Layer 1&#xD;
+                New-ImageTopologyNode sql 'Orders DB' -Kind Database -Layer 2&#xD;
+                New-ImageTopologyEdge gateway orders -Direction Forward&#xD;
+                New-ImageTopologyEdge orders sql -Direction Forward&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>-Layer pins each node to a column, so the diagram reads gateway, services, data from left to right.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -34098,7 +35342,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PanelFit</maml:name>
           <maml:description>
-            <maml:para>How child content fits fixed panels.</maml:para>
+            <maml:para>How child content fits fixed panels: Contain (default) scales uniformly; Stretch scales each axis independently and distorts content.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">VisualPanelFit</command:parameterValue>
           <command:parameterValueGroup>
@@ -34114,7 +35358,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PanelHeight</maml:name>
           <maml:description>
-            <maml:para>Optional fixed panel height.</maml:para>
+            <maml:para>Panel height in pixels. Requires -PanelWidth.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -34126,7 +35370,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PanelWidth</maml:name>
           <maml:description>
-            <maml:para>Optional fixed panel width.</maml:para>
+            <maml:para>With -PanelHeight, every panel gets that fixed size and content is fitted with -PanelFit. Alone, each chart and block is resized to the panel width (or the spanned width) keeping its aspect ratio, and each row takes the height of its tallest item. The supplied charts and blocks are resized in place.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -34313,7 +35557,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PanelFit</maml:name>
           <maml:description>
-            <maml:para>How child content fits fixed panels.</maml:para>
+            <maml:para>How child content fits fixed panels: Contain (default) scales uniformly; Stretch scales each axis independently and distorts content.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">VisualPanelFit</command:parameterValue>
           <command:parameterValueGroup>
@@ -34329,7 +35573,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PanelHeight</maml:name>
           <maml:description>
-            <maml:para>Optional fixed panel height.</maml:para>
+            <maml:para>Panel height in pixels. Requires -PanelWidth.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -34341,7 +35585,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PanelWidth</maml:name>
           <maml:description>
-            <maml:para>Optional fixed panel width.</maml:para>
+            <maml:para>With -PanelHeight, every panel gets that fixed size and content is fitted with -PanelFit. Alone, each chart and block is resized to the panel width (or the spanned width) keeping its aspect ratio, and each row takes the height of its tallest item. The supplied charts and blocks are resized in place.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -34540,7 +35784,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PanelFit</maml:name>
         <maml:description>
-          <maml:para>How child content fits fixed panels.</maml:para>
+          <maml:para>How child content fits fixed panels: Contain (default) scales uniformly; Stretch scales each axis independently and distorts content.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">VisualPanelFit</command:parameterValue>
         <command:parameterValueGroup>
@@ -34556,7 +35800,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PanelHeight</maml:name>
         <maml:description>
-          <maml:para>Optional fixed panel height.</maml:para>
+          <maml:para>Panel height in pixels. Requires -PanelWidth.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -34568,7 +35812,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PanelWidth</maml:name>
         <maml:description>
-          <maml:para>Optional fixed panel width.</maml:para>
+          <maml:para>With -PanelHeight, every panel gets that fixed size and content is fitted with -PanelFit. Alone, each chart and block is resized to the panel width (or the spanned width) keeping its aspect ratio, and each row takes the height of its tallest item. The supplied charts and blocks are resized in place.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -34687,6 +35931,16 @@ polygonal areas.</maml:para>
         <dev:code>New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { New-ImageMetricCard -Label 'Requests' -Value 12840 -Status Positive; New-ImageListBlock -Title 'Checks' -Item API,Database -Status Positive,Warning } -FilePath dashboard.svg</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Give every panel the same width and let rows size to their content</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$cards | New-ImageVisualGrid -Columns 3 -PanelWidth 300 -FilePath cards.png</dev:code>
+        <dev:remarks>
+          <maml:para>Without -PanelHeight, content is resized to the width rather than squeezed into a fixed box.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -35142,7 +36396,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</maml:para>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG; static grids without motion can also be written as JPEG, WebP, GIF, BMP, TIFF, or TGA.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35217,7 +36471,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</maml:para>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG; static grids without motion can also be written as JPEG, WebP, GIF, BMP, TIFF, or TGA.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35292,7 +36546,7 @@ polygonal areas.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FilePath</maml:name>
           <maml:description>
-            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</maml:para>
+            <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG; static grids without motion can also be written as JPEG, WebP, GIF, BMP, TIFF, or TGA.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35343,7 +36597,7 @@ polygonal areas.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FilePath</maml:name>
         <maml:description>
-          <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG.</maml:para>
+          <maml:para>Output file path. Supported extensions are SVG, HTML, HTM, and PNG; static grids without motion can also be written as JPEG, WebP, GIF, BMP, TIFF, or TGA.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>

@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # ConvertTo-ImageVisualArtifact
 ## SYNOPSIS
-Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.
+Converts a ChartForgeX chart, chart grid, visual grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -25,6 +25,14 @@ PS> $artifact = $topology | ConvertTo-ImageVisualArtifact -Id service-map -Acces
 ```
 
 Creates a reusable artifact that can be exported by ImagePlayground or placed by PSWriteOffice.
+
+### EXAMPLE 2
+```powershell
+PS> $grid = New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { New-ImageMetricCard -Label Requests -Value 12840 }
+$grid | ConvertTo-ImageVisualArtifact -Id service-health | Export-ImageVisualArtifact -FilePath service-health.webp
+```
+
+Visual grids from New-ImageVisualGrid convert directly; the artifact renders the grid natively.
 
 ## PARAMETERS
 

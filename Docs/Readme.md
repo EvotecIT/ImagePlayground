@@ -39,7 +39,7 @@ Converts an image file into a Base64 encoded string.
 Converts exact source text into renderer-neutral syntax spans for visual stories.
 
 ### [ConvertTo-ImageVisualArtifact](ConvertTo-ImageVisualArtifact.md)
-Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.
+Converts a ChartForgeX chart, chart grid, visual grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.
 
 ### [Export-ImageConsoleStory](Export-ImageConsoleStory.md)
 Exports an authored ImagePlayground console story to SVG, HTML, PNG, GIF, or APNG.
@@ -48,7 +48,7 @@ Exports an authored ImagePlayground console story to SVG, HTML, PNG, GIF, or APN
 Exports metadata from an image.
 
 ### [Export-ImageVisualArtifact](Export-ImageVisualArtifact.md)
-Exports a ChartForgeX visual artifact to static SVG, HTML, or PNG output.
+Exports a ChartForgeX visual artifact to static SVG, HTML, PNG, JPEG, WebP, GIF, BMP, TIFF, or TGA output.
 
 ### [Get-Image](Get-Image.md)
 Loads an image from disk.
@@ -319,7 +319,7 @@ Converts ordered capture records into a resolved replay without executing comman
 Groups resolved panels into one timed visual-story scene.
 
 ### [New-ImageTableBlock](New-ImageTableBlock.md)
-Creates a visual table block.
+Creates a visual table block from PowerShell objects.
 
 ### [New-ImageThumbnail](New-ImageThumbnail.md)
 Creates thumbnails for all images in a directory.

@@ -59,7 +59,7 @@ Reuses the typed presentation captured by the grid command without changing its 
 ## PARAMETERS
 
 ### -FilePath
-Output file path. Supported extensions are SVG, HTML, HTM, and PNG.
+Output file path. Supported extensions are SVG, HTML, HTM, and PNG; static grids without motion can also be written as JPEG, WebP, GIF, BMP, TIFF, or TGA.
 
 ```yaml
 Type: String

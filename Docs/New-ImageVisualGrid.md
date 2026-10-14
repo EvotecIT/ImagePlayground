@@ -34,6 +34,13 @@ PS> New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { 
 ```
 
 
+### EXAMPLE 2
+```powershell
+PS> $cards | New-ImageVisualGrid -Columns 3 -PanelWidth 300 -FilePath cards.png
+```
+
+Without -PanelHeight, content is resized to the width rather than squeezed into a fixed box.
+
 ## PARAMETERS
 
 ### -AdaptiveRowHeights
@@ -181,7 +188,7 @@ Accept wildcard characters: False
 ```
 
 ### -PanelFit
-How child content fits fixed panels.
+How child content fits fixed panels: Contain (default) scales uniformly; Stretch scales each axis independently and distorts content.
 
 ```yaml
 Type: VisualPanelFit
@@ -197,7 +204,7 @@ Accept wildcard characters: False
 ```
 
 ### -PanelHeight
-Optional fixed panel height.
+Panel height in pixels. Requires -PanelWidth.
 
 ```yaml
 Type: Int32
@@ -213,7 +220,7 @@ Accept wildcard characters: False
 ```
 
 ### -PanelWidth
-Optional fixed panel width.
+With -PanelHeight, every panel gets that fixed size and content is fitted with -PanelFit. Alone, each chart and block is resized to the panel width (or the spanned width) keeping its aspect ratio, and each row takes the height of its tallest item. The supplied charts and blocks are resized in place.
 
 ```yaml
 Type: Int32

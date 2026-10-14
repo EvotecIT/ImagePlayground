@@ -11,7 +11,7 @@ Creates renderer options for New-ImageChart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartOptions [-Palette <ChartColor[]>] [-ShowLegend] [-NoLegend] [-ShowPointLegend] [-LegendPosition <ChartLegendPosition>] [-NoAxes] [-NoCard] [-NoPlotBackground] [-Transparent] [-ShowDataLabels] [-TickCount <int>] [-HeatmapScale <ChartHeatmapColorScale>] [-NoHeatmapScale] [-PieLabelContent <ChartPieLabelContent>] [-DonutInnerRadiusRatio <double>] [-DonutCenterValue <string>] [-DonutCenterLabel <string>] [-ProgressMaximum <double>] [-NoProgressHandles] [-PictorialSymbol <ChartPictorialSymbol>] [-PictorialColumns <int>] [-WordCloudMaximumTerms <int>] [<CommonParameters>]
+New-ImageChartOptions [-Palette <ChartColor[]>] [-ShowLegend] [-NoLegend] [-ShowPointLegend] [-LegendPosition <ChartLegendPosition>] [-NoAxes] [-NoCard] [-NoPlotBackground] [-Transparent] [-ShowDataLabels] [-BarLayout <ChartBarLayout>] [-TickCount <int>] [-HeatmapScale <ChartHeatmapColorScale>] [-NoHeatmapScale] [-PieLabelContent <ChartPieLabelContent>] [-DonutInnerRadiusRatio <double>] [-DonutCenterValue <string>] [-DonutCenterLabel <string>] [-ProgressMaximum <double>] [-NoProgressHandles] [-PictorialSymbol <ChartPictorialSymbol>] [-PictorialColumns <int>] [-WordCloudMaximumTerms <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -25,7 +25,29 @@ New-ImageChartOptions -ShowLegend -LegendPosition Right -ShowDataLabels -Palette
 ```
 
 
+### EXAMPLE 2
+```powershell
+New-ImageChart -Title 'Builds by result' -XLabel Mon, Tue, Wed -Options (New-ImageChartOptions -BarLayout Stacked -ShowLegend) -FilePath builds.png { New-ImageChartBar -Name Passed -Value 41, 38, 45; New-ImageChartBar -Name Failed -Value 3, 6, 2 }
+```
+
+
 ## PARAMETERS
+
+### -BarLayout
+How several bar series share one category: Grouped (side by side) or Stacked.
+
+```yaml
+Type: ChartBarLayout
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Grouped, Stacked
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -DonutCenterLabel
 Donut center label text.
