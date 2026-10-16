@@ -53,7 +53,7 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
     [Parameter]
     public string GroupId { get; set; } = string.Empty;
 
-    /// <para>Manual X coordinate. Used by the Manual layout; automatic layouts ignore it.</para>
+    /// <para>Assigns the node's X coordinate. Supplying it marks the node as manually positioned, including when a topology layout is selected.</para>
     [Parameter]
     public double X { get; set; }
 

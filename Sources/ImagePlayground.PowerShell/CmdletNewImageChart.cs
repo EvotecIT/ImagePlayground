@@ -254,14 +254,14 @@ public sealed class NewImageChartCmdlet : ImageCmdlet {
         }
         VisualWatermark[] watermarks = Watermark ?? System.Array.Empty<VisualWatermark>();
         var output = PowerShellPathResolver.ResolveFileSystemPath(this, FilePath);
-        string? directory = System.IO.Path.GetDirectoryName(output);
-        if (!string.IsNullOrWhiteSpace(directory)) {
-            System.IO.Directory.CreateDirectory(directory!);
-        }
-
         var outputExtension = System.IO.Path.GetExtension(output);
         if (!VisualArtifactOutput.IsSupported(outputExtension)) {
             throw new PSArgumentException("Chart output supports " + VisualArtifactOutput.SupportedExtensions + " file extensions.", nameof(FilePath));
+        }
+
+        string? directory = System.IO.Path.GetDirectoryName(output);
+        if (!string.IsNullOrWhiteSpace(directory)) {
+            System.IO.Directory.CreateDirectory(directory!);
         }
 
         if (watermarks.Length == 0 && !MyInvocation.BoundParameters.ContainsKey(nameof(Dpi)) && VisualArtifactOutput.IsNative(outputExtension)) {
