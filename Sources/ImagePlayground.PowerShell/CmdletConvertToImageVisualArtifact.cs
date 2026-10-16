@@ -10,13 +10,20 @@ using ChartForgeX.VisualBlocks;
 
 namespace ImagePlayground.PowerShell;
 
-/// <summary>Converts a ChartForgeX chart, grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.</summary>
+/// <summary>Converts a ChartForgeX chart, chart grid, visual grid, canvas, story, diagram, table, sequence, flow, or visual block into a reusable visual artifact.</summary>
 /// <para>The artifact is the portable handoff contract for static export, OfficeIMO document placement, and native editable Visio projection.</para>
 /// <example>
 ///   <summary>Create an artifact from a topology</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$artifact = $topology | ConvertTo-ImageVisualArtifact -Id service-map -AccessibleDescription 'Gateway to database service path.'</code>
 ///   <para>Creates a reusable artifact that can be exported by ImagePlayground or placed by PSWriteOffice.</para>
+/// </example>
+/// <example>
+///   <summary>Turn a dashboard grid into an artifact</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$grid = New-ImageVisualGrid -Title 'Service health' -Columns 2 -ContentDefinition { New-ImageMetricCard -Label Requests -Value 12840 }
+/// $grid | ConvertTo-ImageVisualArtifact -Id service-health | Export-ImageVisualArtifact -FilePath service-health.webp</code>
+///   <para>Visual grids from New-ImageVisualGrid convert directly; the artifact renders the grid natively.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "ImageVisualArtifact")]
 [OutputType(typeof(VisualArtifact))]
@@ -60,6 +67,7 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
             VisualArtifact existing => existing,
             Chart chart => chart.ToVisualArtifact(OptionalId()),
             ChartGrid grid => grid.ToVisualArtifact(OptionalId()),
+            VisualGrid visualGrid => VisualGridArtifact.Create(visualGrid, OptionalId()),
             VisualCanvas canvas => canvas.ToVisualArtifact(OptionalId()),
             VisualStory story => story.ToVisualArtifact(OptionalId()),
             TopologyChart topology => topology.ToVisualArtifact(),
@@ -67,7 +75,7 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
             SequenceArtifact sequence => sequence.ToVisualArtifact(),
             TableArtifact table => table.ToVisualArtifact(),
             IVisualBlock block => block.ToVisualArtifact(OptionalId()),
-            _ => throw new PSArgumentException("InputObject must be a ChartForgeX chart, grid, canvas, story, topology, flow, sequence, table, visual block, or VisualArtifact.", nameof(InputObject))
+            _ => throw new PSArgumentException("InputObject must be a ChartForgeX chart, chart grid, visual grid, canvas, story, topology, flow, sequence, table, visual block, or VisualArtifact.", nameof(InputObject))
         };
 
         if (!string.IsNullOrWhiteSpace(Id)) {

@@ -57,50 +57,23 @@ internal static class Charts {
         if (list.Count == 0) throw new ArgumentException("No chart definitions provided", nameof(definitions));
         if (list.Any(definition => definition is null)) throw new ArgumentException("Chart definitions cannot contain null entries.", nameof(definitions));
 
-        var type = list[0].GetType();
-        if (list.Any(d => d.GetType() != type)) {
-            throw new ArgumentException("Mixed chart definition types provided. All chart definitions must have the same concrete definition type.", nameof(definitions));
-        }
-
+        var types = list.Select(d => d.GetType()).Distinct().ToList();
         var chart = Create(width, height, xTitle, yTitle, showGrid, theme, background, options);
+        var type = types[0];
 
-        if (type == typeof(ChartBar)) {
-            foreach (var bar in list.Cast<ChartBar>()) chart.AddBar(bar.Name, BuildIndexedPoints(bar.Value), bar.Color);
+        if (types.All(CombinableTypes.Contains)) {
+            foreach (var definition in list) {
+                AddCombinableSeries(chart, definition);
+            }
+            ApplyDefaultCategoryLabels(chart, list);
+        } else if (types.Count > 1) {
+            throw new ArgumentException(DescribeIncompatibleMix(types), nameof(definitions));
         } else if (type == typeof(ChartHorizontalBar)) {
             foreach (var bar in list.Cast<ChartHorizontalBar>()) chart.AddHorizontalBar(bar.Name, BuildIndexedPoints(bar.Value), bar.Color);
-        } else if (type == typeof(ChartLine)) {
-            ApplySharedLineMarkerSize(chart, list.Cast<ChartLine>());
-            foreach (var line in list.Cast<ChartLine>()) {
-                var points = BuildIndexedPoints(line.Value);
-                if (line.Smooth) chart.AddSmoothLine(line.Name, points, line.Color);
-                else chart.AddLine(line.Name, points, line.Color);
-            }
-        } else if (type == typeof(ChartStepLine)) {
-            foreach (var line in list.Cast<ChartStepLine>()) chart.AddStepLine(line.Name, BuildIndexedPoints(line.Value), line.Color);
-        } else if (type == typeof(ChartArea)) {
-            foreach (var area in list.Cast<ChartArea>()) chart.AddArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
-        } else if (type == typeof(ChartStepArea)) {
-            foreach (var area in list.Cast<ChartStepArea>()) chart.AddStepArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
-        } else if (type == typeof(ChartStackedArea)) {
-            foreach (var area in list.Cast<ChartStackedArea>()) {
-                if (area.Smooth) chart.AddSmoothStackedArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
-                else chart.AddStackedArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
-            }
-        } else if (type == typeof(ChartScatter)) {
-            foreach (var scatter in list.Cast<ChartScatter>()) chart.AddScatter(scatter.Name, BuildXYPoints(scatter.X, scatter.Y), scatter.Color);
-        } else if (type == typeof(ChartBubbleSeries)) {
-            foreach (var bubble in list.Cast<ChartBubbleSeries>()) chart.AddBubble(bubble.Name, BuildBubbles(bubble.X, bubble.Y, bubble.Size), bubble.Color);
-        } else if (type == typeof(ChartLollipop)) {
-            foreach (var lollipop in list.Cast<ChartLollipop>()) chart.AddLollipop(lollipop.Name, BuildIndexedPoints(lollipop.Value), lollipop.Color);
         } else if (type == typeof(ChartRangeBar)) {
             foreach (var range in list.Cast<ChartRangeBar>()) chart.AddRangeBar(range.Name, BuildIntervals(range.X, range.Start, range.End), range.Color);
-        } else if (type == typeof(ChartRangeBandSeries)) {
-            foreach (var range in list.Cast<ChartRangeBandSeries>()) {
-                var ranges = BuildRanges(range.X, range.Lower, range.Upper);
-                if (range.Area) chart.AddRangeArea(range.Name, ranges, range.Color, range.Smooth);
-                else chart.AddRangeBand(range.Name, ranges, range.Color);
-            }
         } else if (type == typeof(ChartBoxPlotSeries)) {
+
             foreach (var box in list.Cast<ChartBoxPlotSeries>()) chart.AddBoxPlot(box.Name, BuildBoxPlots(box), box.Color);
         } else if (type == typeof(ChartPolar)) {
             foreach (var polar in list.Cast<ChartPolar>()) chart.AddPolar(polar.Name, BuildXYPoints(polar.Angle, polar.Radius), polar.Color);
@@ -249,6 +222,7 @@ internal static class Charts {
         if (options.ShowAxisLines.HasValue) chart.WithAxisLines(options.ShowAxisLines.Value);
         if (options.ShowGrid.HasValue) chart.WithGrid(options.ShowGrid.Value);
         if (options.ShowDataLabels.HasValue) chart.WithDataLabels(options.ShowDataLabels.Value);
+        if (options.BarLayout.HasValue) chart.WithBarMode(options.BarLayout.Value == ChartBarLayout.Stacked ? ChartBarMode.Stacked : ChartBarMode.Grouped);
         if (options.TickCount.HasValue) chart.WithTickCount(options.TickCount.Value);
         if (options.XAxisMinimum.HasValue && options.XAxisMaximum.HasValue) chart.WithXAxisBounds(options.XAxisMinimum.Value, options.XAxisMaximum.Value);
         if (options.YAxisMinimum.HasValue && options.YAxisMaximum.HasValue) chart.WithYAxisBounds(options.YAxisMinimum.Value, options.YAxisMaximum.Value);
@@ -562,24 +536,143 @@ internal static class Charts {
         chartTheme.PlotBackground = WithAlpha(color, color.A);
     }
 
-    private static void ApplySharedLineMarkerSize(CfxChart chart, IEnumerable<ChartLine> lines) {
-        double? markerRadius = null;
-        foreach (var line in lines) {
-            if (line.MarkerSize.HasValue && line.MarkerSize.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(line), line.MarkerSize.Value, "Marker size must be zero or greater.");
-            }
+    /// <summary>Definition kinds that add one cartesian series each and can share a chart with each other.</summary>
+    private static readonly HashSet<Type> CombinableTypes = new() {
+        typeof(ChartBar),
+        typeof(ChartLine),
+        typeof(ChartStepLine),
+        typeof(ChartArea),
+        typeof(ChartStepArea),
+        typeof(ChartStackedArea),
+        typeof(ChartScatter),
+        typeof(ChartBubbleSeries),
+        typeof(ChartLollipop),
+        typeof(ChartRangeBandSeries)
+    };
 
-            var candidate = Math.Max(0, (line.MarkerSize ?? 0) / 2d);
-            if (markerRadius.HasValue && Math.Abs(markerRadius.Value - candidate) > 0.000001) {
-                throw new ArgumentException("ImagePlayground line definitions require a shared marker size for all line series because ChartForgeX marker radius is chart-wide.", nameof(lines));
-            }
-
-            markerRadius = candidate;
+    private static void AddCombinableSeries(CfxChart chart, ChartDefinition definition) {
+        switch (definition) {
+            case ChartBar bar:
+                chart.AddBar(bar.Name, BuildIndexedPoints(bar.Value), bar.Color);
+                break;
+            case ChartLine line:
+                var points = BuildIndexedPoints(line.Value);
+                if (line.Smooth) chart.AddSmoothLine(line.Name, points, line.Color);
+                else chart.AddLine(line.Name, points, line.Color);
+                ApplyLineMarkers(chart.Series[chart.Series.Count - 1], line);
+                break;
+            case ChartStepLine stepLine:
+                chart.AddStepLine(stepLine.Name, BuildIndexedPoints(stepLine.Value), stepLine.Color);
+                break;
+            case ChartArea area:
+                chart.AddArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
+                break;
+            case ChartStepArea stepArea:
+                chart.AddStepArea(stepArea.Name, BuildIndexedPoints(stepArea.Value), stepArea.Color);
+                break;
+            case ChartStackedArea stacked:
+                if (stacked.Smooth) chart.AddSmoothStackedArea(stacked.Name, BuildIndexedPoints(stacked.Value), stacked.Color);
+                else chart.AddStackedArea(stacked.Name, BuildIndexedPoints(stacked.Value), stacked.Color);
+                break;
+            case ChartScatter scatter:
+                chart.AddScatter(scatter.Name, BuildXYPoints(scatter.X, scatter.Y), scatter.Color);
+                break;
+            case ChartBubbleSeries bubble:
+                chart.AddBubble(bubble.Name, BuildBubbles(bubble.X, bubble.Y, bubble.Size), bubble.Color);
+                break;
+            case ChartLollipop lollipop:
+                chart.AddLollipop(lollipop.Name, BuildIndexedPoints(lollipop.Value), lollipop.Color);
+                break;
+            case ChartRangeBandSeries range:
+                var ranges = BuildRanges(range.X, range.Lower, range.Upper);
+                if (range.Area) chart.AddRangeArea(range.Name, ranges, range.Color, range.Smooth);
+                else chart.AddRangeBand(range.Name, ranges, range.Color);
+                break;
+            default:
+                throw new ArgumentException("Unsupported chart definition type '" + definition.GetType().FullName + "'.", nameof(definition));
         }
 
-        if (markerRadius.HasValue) {
-            chart.Options.Theme.MarkerRadius = markerRadius.Value;
+        if (definition.SecondaryAxis) {
+            chart.Series[chart.Series.Count - 1].YAxis = ChartAxisSide.Secondary;
         }
+    }
+
+    /// <summary>Index-based series are placed at x = 1..n; without labels the axis would show fractional ticks such as 0.5 and 1.5.</summary>
+    private static void ApplyDefaultCategoryLabels(CfxChart chart, IList<ChartDefinition> definitions) {
+        if (chart.Options.XAxisLabels.Count > 0) {
+            return;
+        }
+
+        var count = 0;
+        foreach (var definition in definitions) {
+            IList<double>? values = definition switch {
+                ChartBar bar => bar.Value,
+                ChartLine line => line.Value,
+                ChartStepLine stepLine => stepLine.Value,
+                ChartArea area => area.Value,
+                ChartStepArea stepArea => stepArea.Value,
+                ChartStackedArea stacked => stacked.Value,
+                ChartLollipop lollipop => lollipop.Value,
+                _ => null
+            };
+            if (values is null) {
+                return;
+            }
+            count = Math.Max(count, values.Count);
+        }
+
+        if (count > 0) {
+            chart.WithXLabels(Enumerable.Range(1, count).Select(index => index.ToString(CultureInfo.InvariantCulture)).ToArray());
+        }
+    }
+
+    private static void ApplyLineMarkers(ChartSeries series, ChartLine line) {
+        if (line.MarkerSize.HasValue && line.MarkerSize.Value < 0) {
+            throw new ArgumentOutOfRangeException(nameof(line), line.MarkerSize.Value, "Marker size must be zero or greater.");
+        }
+
+        var size = line.MarkerSize ?? 0f;
+        if (size <= 0 || line.MarkerShape == ChartMarkerShape.None) {
+            series.ConfigureMarkers(markers => markers.Enabled = false);
+            return;
+        }
+
+        series.ConfigureMarkers(markers => {
+            markers.Enabled = true;
+            markers.Shape = ResolveMarkerShape(line.MarkerShape);
+            markers.Radius = size / 2d;
+        });
+    }
+
+    private static ChartForgeX.Core.ChartMarkerShape ResolveMarkerShape(ChartMarkerShape shape) {
+        switch (shape) {
+            case ChartMarkerShape.Square:
+                return ChartForgeX.Core.ChartMarkerShape.Square;
+            case ChartMarkerShape.Diamond:
+                return ChartForgeX.Core.ChartMarkerShape.Diamond;
+            case ChartMarkerShape.Triangle:
+                return ChartForgeX.Core.ChartMarkerShape.Triangle;
+            case ChartMarkerShape.Plus:
+                return ChartForgeX.Core.ChartMarkerShape.Plus;
+            case ChartMarkerShape.Cross:
+                return ChartForgeX.Core.ChartMarkerShape.Cross;
+            case ChartMarkerShape.Star:
+                return ChartForgeX.Core.ChartMarkerShape.Star;
+            default:
+                return ChartForgeX.Core.ChartMarkerShape.Circle;
+        }
+    }
+
+    private static string DescribeIncompatibleMix(IEnumerable<Type> types) {
+        var names = string.Join(", ", types.Select(DefinitionLabel));
+        return "These chart definitions cannot share one chart: " + names + ". Bar, line, step line, area, step area, stacked area, scatter, bubble, lollipop, and range band definitions can be combined; other chart kinds need their own New-ImageChart call.";
+    }
+
+    private static string DefinitionLabel(Type type) {
+        var name = type.Name;
+        if (name.StartsWith("Chart", StringComparison.Ordinal)) name = name.Substring(5);
+        if (name.EndsWith("Series", StringComparison.Ordinal)) name = name.Substring(0, name.Length - 6);
+        return name;
     }
 
     private static double RequirePercent(double value, string name) {

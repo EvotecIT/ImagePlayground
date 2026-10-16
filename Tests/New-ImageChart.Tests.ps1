@@ -199,25 +199,34 @@ Describe 'New-ImageChart' {
         $withoutMarkers = New-ImageChartLine -Name 'Plain' -Value 1, 3, 2
         $withMarkers = New-ImageChartLine -Name 'Marked' -Value 2, 4, 3 -Marker Circle
 
+        $sizedOnly = New-ImageChartLine -Name 'Sized' -Value 2, 4, 3 -MarkerSize 9
+        $diamond = New-ImageChartLine -Name 'Diamond' -Value 2, 4, 3 -Marker Diamond -MarkerSize 10
+
         $withoutMarkers.MarkerSize | Should -Be 0
+        $withoutMarkers.MarkerShape | Should -Be 'None'
         $withMarkers.MarkerSize | Should -Be 6
-        [enum]::GetNames([ImagePlayground.ChartMarkerShape]) | Should -Be @('None', 'Circle')
+        $sizedOnly.MarkerShape | Should -Be 'Circle'
+        $sizedOnly.MarkerSize | Should -Be 9
+        $diamond.MarkerShape | Should -Be 'Diamond'
+        [enum]::GetNames([ImagePlayground.ChartMarkerShape]) | Should -Be @('None', 'Circle', 'Square', 'Diamond', 'Triangle', 'Plus', 'Cross', 'Star')
     }
 
-    It 'rejects mixed line marker policies before rendering' {
+    It 'configures markers per line series so marked and plain lines can share a chart' {
         $file = Join-Path -Path $TestDir -ChildPath 'chart_mixed_line_markers.png'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
         }
 
-        {
-            New-ImageChart -ChartsDefinition {
-                New-ImageChartLine -Name 'Plain' -Value 1, 3, 2
-                New-ImageChartLine -Name 'Marked' -Value 2, 4, 3 -Marker Circle
-            } -FilePath $file -ErrorAction Stop
-        } | Should -Throw '*shared marker size*'
+        $chart = New-ImageChart -ChartsDefinition {
+            New-ImageChartLine -Name 'Plain' -Value 1, 3, 2
+            New-ImageChartLine -Name 'Marked' -Value 2, 4, 3 -Marker Square -MarkerSize 10
+        } -FilePath $file -PassThru
 
-        Test-Path -Path $file | Should -BeFalse
+        Test-Path -Path $file | Should -BeTrue
+        $chart.Series[0].Markers.Enabled | Should -BeFalse
+        $chart.Series[1].Markers.Enabled | Should -BeTrue
+        $chart.Series[1].Markers.Shape.ToString() | Should -Be 'Square'
+        $chart.Series[1].Markers.Radius | Should -Be 5
     }
 
     It 'preserves the requested histogram bin boundaries and observation counts' {
@@ -417,27 +426,98 @@ Describe 'New-ImageChart' {
         $second.Dispose()
     }
 
-    It 'rejects mixed definition kinds before creating output through <InputKind> input' -TestCases @(
+    It 'combines bar and line definitions in definition order through <InputKind> input' -TestCases @(
         @{ InputKind = 'Array' }
         @{ InputKind = 'Pipeline' }
     ) {
         param($InputKind)
 
-        $file = Join-Path -Path $TestDir -ChildPath ('chart-mixed-rejected-{0}.svg' -f $InputKind)
+        $file = Join-Path -Path $TestDir -ChildPath ('chart-mixed-{0}.svg' -f $InputKind)
         Remove-Item -Path $file -ErrorAction SilentlyContinue
         $definitions = @(
             New-ImageChartBar -Name Requests -Value 10, 20
             New-ImageChartLine -Name Latency -Value 4, 8
         )
 
+        $chart = if ($InputKind -eq 'Array') {
+            New-ImageChart -Definition $definitions -FilePath $file -PassThru
+        } else {
+            $definitions | New-ImageChart -FilePath $file -PassThru
+        }
+        Test-Path -Path $file | Should -BeTrue
+        @($chart.Series | ForEach-Object { $_.Kind.ToString() }) | Should -Be @('Bar', 'Line')
+        @($chart.Series | ForEach-Object { $_.Name }) | Should -Be @('Requests', 'Latency')
+    }
+
+    It 'rejects chart kinds that cannot share one chart before creating output' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart-mixed-rejected.svg'
+        Remove-Item -Path $file -ErrorAction SilentlyContinue
+
         {
-            if ($InputKind -eq 'Array') {
-                New-ImageChart -Definition $definitions -FilePath $file -ErrorAction Stop
-            } else {
-                $definitions | New-ImageChart -FilePath $file -ErrorAction Stop
-            }
-        } | Should -Throw '*same concrete definition type*'
+            New-ImageChart -ChartsDefinition {
+                New-ImageChartPie -Name Web -Value 10
+                New-ImageChartBar -Name Requests -Value 10, 20
+            } -FilePath $file -ErrorAction Stop
+        } | Should -Throw '*cannot share one chart*'
         Test-Path -Path $file | Should -BeFalse
+    }
+
+    It 'plots series flagged with -SecondaryAxis against the secondary axis' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart-secondary-axis.svg'
+        $chart = New-ImageChart -XLabel Mon, Tue, Wed -SecondaryYTitle 'Error rate (%)' -FilePath $file -PassThru {
+            New-ImageChartBar -Name Requests -Value 410, 380, 455
+            New-ImageChartLine -Name 'Error rate' -Value 1.2, 0.8, 2.4 -SecondaryAxis -Marker Circle
+            New-ImageChartArea -Name Baseline -Value 1, 1, 1 -SecondaryAxis
+        }
+
+        $chart.Series[0].YAxis.ToString() | Should -Be 'Primary'
+        $chart.Series[1].YAxis.ToString() | Should -Be 'Secondary'
+        $chart.Series[2].YAxis.ToString() | Should -Be 'Secondary'
+        Get-Content -Path $file -Raw | Should -Match 'Error rate \(%\)'
+    }
+
+    It 'applies titles, category labels, and stacked bars through parameters' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart-stacked-labels.svg'
+        $chart = New-ImageChart -Title 'Builds by result' -Subtitle 'Week 41' -XLabel Mon, Tue, Wed -FilePath $file -PassThru -Options (New-ImageChartOptions -BarLayout Stacked) {
+            New-ImageChartBar -Name Passed -Value 41, 38, 45
+            New-ImageChartBar -Name Failed -Value 3, 6, 2
+        }
+
+        $chart.Title | Should -Be 'Builds by result'
+        $chart.Subtitle | Should -Be 'Week 41'
+        @($chart.Options.XAxisLabels | ForEach-Object { $_.Text }) | Should -Be @('Mon', 'Tue', 'Wed')
+        $chart.Options.BarMode.ToString() | Should -Be 'Stacked'
+        $svg = Get-Content -Path $file -Raw
+        $svg | Should -Match 'Builds by result'
+        $svg | Should -Match 'Tue'
+    }
+
+    It 'labels index-based categories with whole numbers when no labels are supplied' {
+        $file = Join-Path -Path $TestDir -ChildPath 'chart-default-labels.svg'
+        $chart = New-ImageChart -FilePath $file -PassThru { New-ImageChartBar -Name A -Value 3, 5, 2 }
+
+        @($chart.Options.XAxisLabels | ForEach-Object { $_.Text }) | Should -Be @('1', '2', '3')
+    }
+
+    It 'writes <Extension> output through the ImagePlayground encoder' -TestCases @(
+        @{ Extension = 'webp' }
+        @{ Extension = 'jpg' }
+        @{ Extension = 'gif' }
+    ) {
+        param($Extension)
+        $file = Join-Path -Path $TestDir -ChildPath "chart-encoded.$Extension"
+        Remove-Item -Path $file -ErrorAction SilentlyContinue
+
+        New-ImageChart -FilePath $file -Width 1200 -Height 300 { New-ImageChartBar -Name A -Value 3, 5, 2 }
+
+        Test-Path -Path $file | Should -BeTrue
+        $image = Get-Image -FilePath $file
+        try {
+            $image.Width | Should -Be 1200
+            $image.Height | Should -Be 300
+        } finally {
+            $image.Dispose()
+        }
     }
 
     It 'creates parent directory when saving a chart' {

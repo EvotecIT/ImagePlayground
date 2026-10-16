@@ -11,6 +11,18 @@ namespace ImagePlayground.PowerShell;
 ///   <code>New-ImageTopologyNode -Id api -Label 'API' -Kind Service -Status Healthy -Symbol API</code>
 ///   <para>Creates a ChartForgeX topology node that can be rendered by New-ImageTopology.</para>
 /// </example>
+/// <example>
+///   <summary>Place tiers in columns with the Layered layout</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageTopology -Layout Layered -Direction LeftToRight -FilePath tiers.png -TopologyDefinition {
+///     New-ImageTopologyNode gateway Gateway -Kind Gateway -Layer 0
+///     New-ImageTopologyNode orders Orders -Kind Service -Layer 1
+///     New-ImageTopologyNode sql 'Orders DB' -Kind Database -Layer 2
+///     New-ImageTopologyEdge gateway orders -Direction Forward
+///     New-ImageTopologyEdge orders sql -Direction Forward
+/// }</code>
+///   <para>-Layer pins each node to a column, so the diagram reads gateway, services, data from left to right.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageTopologyNode")]
 [OutputType(typeof(TopologyNode))]
 public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
@@ -41,9 +53,15 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
     [Parameter]
     public string GroupId { get; set; } = string.Empty;
 
-    /// <para>Manual X coordinate. Automatic layouts can ignore this value.</para>
+    /// <para>Assigns the node's X coordinate. Supplying it marks the node as manually positioned, including when a topology layout is selected.</para>
     [Parameter]
     public double X { get; set; }
+
+    /// <para>Layer (column or row) for the Layered layout, starting at 0. Nodes in the same layer line up; edges usually flow from lower to higher layers.</para>
+    /// <para>Without it, Layered groups nodes by their Kind.</para>
+    [Parameter]
+    [ValidateRange(0, 1000)]
+    public int Layer { get; set; }
 
     /// <para>Manual Y coordinate. Automatic layouts can ignore this value.</para>
     [Parameter]
@@ -118,11 +136,19 @@ public sealed class NewImageTopologyNodeCmdlet : PSCmdlet {
             Label = Label,
             Kind = Kind,
             Status = Status,
-            X = X,
-            Y = Y,
             Width = Width,
             Height = Height
         };
+        // Assigning X or Y marks the node as manually positioned in ChartForgeX, so only bound values are applied.
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(X))) {
+            node.X = X;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Y))) {
+            node.Y = Y;
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Layer))) {
+            node.Metadata["layer"] = Layer.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
 
         if (!string.IsNullOrWhiteSpace(Subtitle)) {
             node.Subtitle = Subtitle;

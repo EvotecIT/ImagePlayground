@@ -11,7 +11,7 @@ Creates an activity timeline block.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageTimelineBlock [-Item <ActivityTimelineItem[]>] [-ItemDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Compact] [-Theme <ChartTheme>] [<CommonParameters>]
+New-ImageTimelineBlock [-Item <ActivityTimelineItem[]>] [-ItemDefinition <scriptblock>] [-Title <string>] [-Subtitle <string>] [-Compact] [-Width <int>] [-Height <int>] [-Theme <ChartTheme>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,6 +24,13 @@ Creates an activity timeline block.
 PS> New-ImageTimelineBlock -Title 'Release activity' -ItemDefinition { New-ImageTimelineItem -Kind Event -Title 'Build completed' -Status Positive; New-ImageTimelineItem -Kind ChecklistItem -Title 'Smoke tests' -Completed }
 ```
 
+
+### EXAMPLE 2
+```powershell
+PS> $deployments | ForEach-Object { New-ImageTimelineItem -Kind Event -Title $_.Name -Timestamp $_.Time -Status Positive } | New-ImageTimelineBlock -Title Deployments -Width 420 -Height 300
+```
+
+Items can arrive through the pipeline; Width and Height size the block for a grid panel.
 
 ## PARAMETERS
 
@@ -43,8 +50,24 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Height
+Block height in pixels. The width keeps its default unless -Width is also supplied.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Item
-Timeline items supplied directly.
+Timeline items supplied directly or through the pipeline.
 
 ```yaml
 Type: ActivityTimelineItem[]
@@ -55,7 +78,7 @@ Possible values:
 Required: False
 Position: named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -123,12 +146,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Width
+Block width in pixels. The height keeps its default unless -Height is also supplied.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `None`
+- `ChartForgeX.VisualBlocks.ActivityTimelineItem[]`
 
 ## OUTPUTS
 

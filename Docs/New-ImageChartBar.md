@@ -11,7 +11,7 @@ Creates bar chart data item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <ChartColor>] [<CommonParameters>]
+New-ImageChartBar [-Name] <string> [-Value] <double[]> [-Color <ChartColor>] [-SecondaryAxis] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -25,6 +25,16 @@ PS> New-ImageChartBar -Name 'Revenue' -Value 12,18,25 -Color Blue
 ```
 
 Creates a single bar-series definition that can be passed into New-ImageChart.
+
+### EXAMPLE 2
+```powershell
+PS> New-ImageChart -Title 'Builds' -XLabel Mon, Tue, Wed -FilePath builds.png {
+    New-ImageChartBar -Name Passed -Value 41, 38, 45
+    New-ImageChartLine -Name Target -Value 40, 40, 40 -Color '#c78404'
+}
+```
+
+Bar and line definitions can be mixed in one chart.
 
 ## PARAMETERS
 
@@ -60,6 +70,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -SecondaryAxis
+Plot the bars against the secondary (right) Y axis. Use New-ImageChart -SecondaryYTitle to name that axis.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Value
 Values for the bar.
 
@@ -85,7 +111,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `None`
+- `ImagePlayground.ChartBar`: Bar chart definition.
 
 ## RELATED LINKS
 

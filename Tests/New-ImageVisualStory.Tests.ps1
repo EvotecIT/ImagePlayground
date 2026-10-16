@@ -61,7 +61,7 @@ Describe 'New-ImageVisualStory' {
     }
 
     It 'rejects unsupported output extensions before invoking the story script' {
-        $file = Join-Path -Path $TestDir -ChildPath 'visual-story.gif'
+        $file = Join-Path -Path $TestDir -ChildPath 'visual-story.invalid'
         $global:ImagePlaygroundVisualStoryPathInvoked = $false
 
         try {
@@ -77,6 +77,27 @@ Describe 'New-ImageVisualStory' {
         } finally {
             Remove-Variable -Name ImagePlaygroundVisualStoryPathInvoked -Scope Global -ErrorAction SilentlyContinue
         }
+    }
+
+    It 'writes a static grid as <Extension> and refuses it for motion' -TestCases @(
+        @{ Extension = 'webp' }
+        @{ Extension = 'gif' }
+    ) {
+        param($Extension)
+        $file = Join-Path -Path $TestDir -ChildPath "visual-story-static.$Extension"
+        $grid = New-ImageVisualGrid -Columns 1 -ContentDefinition {
+            New-ImageVisualGridItem -TargetId ready -Block (New-ImageMetricCard -Label Ready -Value Yes)
+        }
+
+        $grid | New-ImageVisualStory -FilePath $file
+        Test-Path -Path $file | Should -BeTrue
+
+        $motion = Join-Path -Path $TestDir -ChildPath "visual-story-motion.$Extension"
+        {
+            $grid | New-ImageVisualStory -FilePath $motion -MotionDefinition {
+                New-ImageVisualMotionCue -TargetId ready -Effect Reveal
+            } -ErrorAction Stop
+        } | Should -Throw '*static grids only*'
     }
 
     It 'starts a scripted grid with the canonical theme while respecting an authored override' {

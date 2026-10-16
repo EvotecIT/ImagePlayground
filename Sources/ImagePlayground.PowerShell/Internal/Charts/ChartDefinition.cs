@@ -5,6 +5,9 @@ public abstract class ChartDefinition {
     /// <summary>Chart name.</summary>
     public string Name { get; }
 
+    /// <summary>Plot the series against the secondary (right) Y axis. Honored by bar, line, and area series.</summary>
+    public bool SecondaryAxis { get; internal set; }
+
     /// <summary>Initializes a chart definition.</summary>
     /// <param name="name">Chart name.</param>
     protected ChartDefinition(string name) {

@@ -45,7 +45,7 @@ Accept wildcard characters: False
 ```
 
 ### -Height
-Group height in pixels.
+Group height in pixels. When omitted, the layout sizes the group around its nodes.
 
 ```yaml
 Type: Double
@@ -237,7 +237,7 @@ Accept wildcard characters: False
 ```
 
 ### -Width
-Group width in pixels.
+Group width in pixels. When omitted, the layout sizes the group around its nodes.
 
 ```yaml
 Type: Double
@@ -253,7 +253,7 @@ Accept wildcard characters: False
 ```
 
 ### -X
-Manual X coordinate. Automatic layouts can ignore this value.
+Manual X coordinate. Supplying X or Y pins the group; omit both so automatic layouts (Grouped, DenseGrouped) place it.
 
 ```yaml
 Type: Double
@@ -269,7 +269,7 @@ Accept wildcard characters: False
 ```
 
 ### -Y
-Manual Y coordinate. Automatic layouts can ignore this value.
+Manual Y coordinate. Supplying X or Y pins the group; omit both so automatic layouts place it.
 
 ```yaml
 Type: Double

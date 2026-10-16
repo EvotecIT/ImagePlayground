@@ -58,6 +58,12 @@ public partial class BarCode {
         return SymbolScanner.ScanFileAsync(path, scanOptions, cancellationToken);
     }
 
+    /// <summary>Copies caller options (or the ImagePlayground defaults) so per-call overrides never modify the caller's object.</summary>
+    internal static ScanOptions CopyScanOptions(ScanOptions? options) {
+        var source = options ?? new ScanOptions { TimeoutMilliseconds = 5000, MaxSymbols = 32 };
+        return Copy(source, source.Formats);
+    }
+
     private static ScanOptions CreateScanOptions(ScanOptions? options, bool firstMatch) {
         var source = options ?? new ScanOptions { TimeoutMilliseconds = 5000, MaxSymbols = firstMatch ? 1 : 32 };
         var formats = source.Formats;
@@ -67,6 +73,10 @@ public partial class BarCode {
             throw new ArgumentException("Barcode scan formats must exclude QR formats. Use QrCode.Read or SymbolScanner for QR recognition.", nameof(options));
         }
 
+        return Copy(source, formats);
+    }
+
+    private static ScanOptions Copy(ScanOptions source, SymbolFormat[]? formats) {
         // SymbolScanner owns the deep snapshot and validation of recognition options.
         return new ScanOptions {
             Formats = formats,

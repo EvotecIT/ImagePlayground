@@ -44,6 +44,9 @@ public sealed class ChartRenderOptions {
     /// <summary>Whether to render grid lines.</summary>
     public bool? ShowGrid { get; set; }
 
+    /// <summary>How several bar series share one category.</summary>
+    public ChartBarLayout? BarLayout { get; set; }
+
     /// <summary>Whether to render data labels for supported charts.</summary>
     public bool? ShowDataLabels { get; set; }
 

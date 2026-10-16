@@ -28,10 +28,13 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
         <!-- Host public cmdlets inside the coverage test process; the product retains PowerShellStandard.Library. -->
         <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.20" PrivateAssets="all" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" PrivateAssets="all" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.5" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
         <Compile Remove="PowerShellPathContracts.cs" />
+        <Compile Remove="TableColumnSelectorTests.cs" />
     </ItemGroup>
 
     <ItemGroup>
