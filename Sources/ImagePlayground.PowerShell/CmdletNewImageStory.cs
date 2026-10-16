@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ChartForgeX;
 using ChartForgeX.Stories;
+using ChartForgeX.Themes;
 using ChartForgeX.Raster;
 using ChartForgeX.Interactivity.Html;
 using ImagePlayground.PowerShell.Stories;
@@ -66,9 +67,17 @@ public sealed partial class NewImageStoryCmdlet : PSCmdlet {
     [ValidateRange(320, 2160)]
     public int Height { get; set; } = 675;
 
-    /// <summary>Optional visual-story theme. Authored stories use the canonical dark theme by default; supply VisualStoryTheme.GraphiteLight() for its light counterpart or a custom theme.</summary>
+    /// <summary>Optional shared immutable theme. Authored stories use Graphite with dark appearance by default.</summary>
     [Parameter(ParameterSetName = PartsSet)]
-    public VisualStoryTheme? Theme { get; set; }
+    public VisualTheme? Theme { get; set; }
+
+    /// <summary>Light or dark appearance for an authored story.</summary>
+    [Parameter(ParameterSetName = PartsSet)]
+    public VisualThemeMode ThemeMode { get; set; } = VisualThemeMode.Dark;
+
+    /// <summary>Optional story-specific window, desktop gradient, and syntax treatments.</summary>
+    [Parameter(ParameterSetName = PartsSet)]
+    public VisualStoryStyleOptions? Style { get; set; }
 
     /// <summary>Output path. Supports SVG, HTML, PNG, GIF, APNG, and TXT.</summary>
     [Parameter(Mandatory = true)]
@@ -183,7 +192,8 @@ public sealed partial class NewImageStoryCmdlet : PSCmdlet {
             if (_stories.Count != 1) throw new PSArgumentException("New-ImageStory accepts exactly one ChartForgeX VisualStory per output path.");
             return _stories[0];
         }
-        var story = VisualStory.Create(Title).WithSize(Width, Height).WithTheme(Theme ?? VisualStoryTheme.GraphiteDark());
+        var story = VisualStory.Create(Title).WithSize(Width, Height).WithTheme(Theme ?? VisualTheme.Graphite(), ThemeMode);
+        if (Style != null) story.WithStyle(Style);
         if (Description.Length > 0) story.WithDescription(Description);
         foreach (var sceneSpec in Scenes) {
             var scene = story.Scene(sceneSpec.Id, sceneSpec.Title, sceneSpec.DurationSeconds, sceneSpec.Layout);

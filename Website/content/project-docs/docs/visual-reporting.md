@@ -34,6 +34,6 @@ Visual canvases combine text, charts, images, shapes, and reusable blocks into f
 
 Visual stories turn a sequence of charts, console scenes, and annotations into a single authored narrative. Use SVG or HTML for crisp scalable delivery, PNG for a fixed still, and GIF/APNG when a portable animation is the right output.
 
-New generic stories use `VisualStoryTheme.GraphiteDark()`; pass `VisualStoryTheme.GraphiteLight()` or a custom theme when needed. Terminal `Light` and `Dark` use the matching canonical palette, while explicitly selected shell profiles preserve their familiar palettes. Exporting native stories preserves their existing theme and timeline.
+New generic stories use `VisualStoryThemes.Premium()` by default. Pass a `VisualTheme` such as `VisualTheme.Graphite()` and select `VisualThemeMode.Light` or `VisualThemeMode.Dark` when you need a specific presentation. Terminal `Light` and `Dark` use the matching canonical palette, while explicitly selected shell profiles preserve their familiar palettes. Exporting native stories preserves their existing theme and timeline.
 
 See the [curated examples](/projects/imageplayground/examples/) for complete scripts and the [ChartForgeX project hub](/projects/chartforgex/) for the underlying .NET model.

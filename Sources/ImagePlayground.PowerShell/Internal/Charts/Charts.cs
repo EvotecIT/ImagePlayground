@@ -9,7 +9,7 @@ using ChartForgeX.Primitives;
 using CfxChart = ChartForgeX.Core.Chart;
 using CfxPictorialItem = ChartForgeX.Core.ChartPictorialItem;
 using CfxProgressItem = ChartForgeX.Core.ChartProgressItem;
-using CfxTheme = ChartForgeX.Themes.ChartTheme;
+using ChartForgeX.Themes;
 using CfxBubble = ChartForgeX.Core.ChartBubble;
 using CfxBoxPlot = ChartForgeX.Core.ChartBoxPlot;
 using CfxInterval = ChartForgeX.Core.ChartInterval;
@@ -20,7 +20,7 @@ using CfxWordCloudItem = ChartForgeX.Core.ChartWordCloudItem;
 namespace ImagePlayground;
 
 /// <summary>Chart generation helpers.</summary>
-internal static class Charts {
+internal static partial class Charts {
     /// <summary>Create a ChartForgeX chart with ImagePlayground render settings applied.</summary>
     public static CfxChart Create(
         int width = 600,
@@ -33,7 +33,7 @@ internal static class Charts {
         ChartRenderOptions? options = null) {
         var chart = CfxChart.Create()
             .WithSize(width, height)
-            .WithTheme(CreateTheme(theme))
+            .WithTheme(ChartThemeResolver.Resolve(theme), ChartThemeResolver.ResolveMode(theme))
             .WithGrid(showGrid);
 
         ApplySettings(chart, xTitle, yTitle, background, options);
@@ -62,8 +62,8 @@ internal static class Charts {
         var type = types[0];
 
         if (types.All(CombinableTypes.Contains)) {
-            foreach (var definition in list) {
-                AddCombinableSeries(chart, definition);
+            for (var index = 0; index < list.Count; index++) {
+                AddCombinableSeries(chart, list[index], new ChartSeriesId("series-" + (index + 1).ToString(CultureInfo.InvariantCulture)));
             }
             ApplyDefaultCategoryLabels(chart, list);
         } else if (types.Count > 1) {
@@ -89,7 +89,7 @@ internal static class Charts {
             ApplyPointColors(chart, list.Cast<ChartDonut>().Select(donut => donut.Color).ToArray());
         } else if (type == typeof(ChartRadial)) {
             chart.WithXLabels(list.Select(d => d.Name).ToArray());
-            chart.AddRadialBar("Values", list.Cast<ChartRadial>().Select((radial, index) => new ChartPoint(index + 1, RequirePercent(radial.Value, radial.Name))));
+            chart.AddProgressRing("Values", list.Cast<ChartRadial>().Select((radial, index) => new ChartPoint(index + 1, RequirePercent(radial.Value, radial.Name))));
             ApplyPointColors(chart, list.Cast<ChartRadial>().Select(radial => radial.Color).ToArray());
         } else if (type == typeof(ChartSlope)) {
             AddSlopeDefinitions(chart, list.Cast<ChartSlope>());
@@ -168,11 +168,11 @@ internal static class Charts {
     public static void ApplySettings(CfxChart chart, string? xTitle = null, string? yTitle = null, ChartColor? background = null, ChartRenderOptions? options = null, bool? showGrid = null, ChartTheme? theme = null) {
         if (chart is null) throw new ArgumentNullException(nameof(chart));
 
-        if (theme.HasValue) chart.WithTheme(CreateTheme(theme.Value));
+        if (theme.HasValue) chart.WithTheme(ChartThemeResolver.Resolve(theme.Value), ChartThemeResolver.ResolveMode(theme.Value));
         if (showGrid.HasValue) chart.WithGrid(showGrid.Value);
 
         if (background.HasValue) {
-            ApplyBackground(chart.Options.Theme, background.Value);
+            ApplyBackground(chart, background.Value);
             chart.WithTransparentBackground(false);
         }
 
@@ -199,7 +199,7 @@ internal static class Charts {
         SaveChart(chart, filePath);
     }
 
-    private static CfxTheme CreateTheme(ChartTheme theme) => ChartThemeResolver.Resolve(theme);
+
 
     private static void ApplyRenderOptions(CfxChart chart, ChartRenderOptions? options) {
         if (options == null) {
@@ -227,7 +227,7 @@ internal static class Charts {
         if (options.XAxisMinimum.HasValue && options.XAxisMaximum.HasValue) chart.WithXAxisBounds(options.XAxisMinimum.Value, options.XAxisMaximum.Value);
         if (options.YAxisMinimum.HasValue && options.YAxisMaximum.HasValue) chart.WithYAxisBounds(options.YAxisMinimum.Value, options.YAxisMaximum.Value);
         if (options.HeatmapScale.HasValue) chart.WithHeatmapScale(ResolveHeatmapScale(options.HeatmapScale.Value));
-        if (options.ShowHeatmapScale.HasValue) chart.WithHeatmapScaleLegend(options.ShowHeatmapScale.Value);
+        if (options.ShowHeatmapScale.HasValue) chart.ConfigureHeatmapColorDimension(dimension => dimension.ShowLegend = options.ShowHeatmapScale.Value);
         if (options.ShowHeatmapColumnLabels.HasValue) chart.WithHeatmapColumnLabels(options.ShowHeatmapColumnLabels.Value);
         if (options.ShowDonutCenterLabel.HasValue) chart.WithDonutCenterLabel(options.ShowDonutCenterLabel.Value);
         if (options.DonutInnerRadiusRatio.HasValue) chart.WithDonutInnerRadiusRatio(options.DonutInnerRadiusRatio.Value);
@@ -530,149 +530,13 @@ internal static class Charts {
         chart.Save(filePath);
     }
 
-    private static void ApplyBackground(CfxTheme chartTheme, ChartColor color) {
-        chartTheme.Background = color;
-        chartTheme.CardBackground = color;
-        chartTheme.PlotBackground = WithAlpha(color, color.A);
-    }
-
-    /// <summary>Definition kinds that add one cartesian series each and can share a chart with each other.</summary>
-    private static readonly HashSet<Type> CombinableTypes = new() {
-        typeof(ChartBar),
-        typeof(ChartLine),
-        typeof(ChartStepLine),
-        typeof(ChartArea),
-        typeof(ChartStepArea),
-        typeof(ChartStackedArea),
-        typeof(ChartScatter),
-        typeof(ChartBubbleSeries),
-        typeof(ChartLollipop),
-        typeof(ChartRangeBandSeries)
-    };
-
-    private static void AddCombinableSeries(CfxChart chart, ChartDefinition definition) {
-        switch (definition) {
-            case ChartBar bar:
-                chart.AddBar(bar.Name, BuildIndexedPoints(bar.Value), bar.Color);
-                break;
-            case ChartLine line:
-                var points = BuildIndexedPoints(line.Value);
-                if (line.Smooth) chart.AddSmoothLine(line.Name, points, line.Color);
-                else chart.AddLine(line.Name, points, line.Color);
-                ApplyLineMarkers(chart.Series[chart.Series.Count - 1], line);
-                break;
-            case ChartStepLine stepLine:
-                chart.AddStepLine(stepLine.Name, BuildIndexedPoints(stepLine.Value), stepLine.Color);
-                break;
-            case ChartArea area:
-                chart.AddArea(area.Name, BuildIndexedPoints(area.Value), area.Color);
-                break;
-            case ChartStepArea stepArea:
-                chart.AddStepArea(stepArea.Name, BuildIndexedPoints(stepArea.Value), stepArea.Color);
-                break;
-            case ChartStackedArea stacked:
-                if (stacked.Smooth) chart.AddSmoothStackedArea(stacked.Name, BuildIndexedPoints(stacked.Value), stacked.Color);
-                else chart.AddStackedArea(stacked.Name, BuildIndexedPoints(stacked.Value), stacked.Color);
-                break;
-            case ChartScatter scatter:
-                chart.AddScatter(scatter.Name, BuildXYPoints(scatter.X, scatter.Y), scatter.Color);
-                break;
-            case ChartBubbleSeries bubble:
-                chart.AddBubble(bubble.Name, BuildBubbles(bubble.X, bubble.Y, bubble.Size), bubble.Color);
-                break;
-            case ChartLollipop lollipop:
-                chart.AddLollipop(lollipop.Name, BuildIndexedPoints(lollipop.Value), lollipop.Color);
-                break;
-            case ChartRangeBandSeries range:
-                var ranges = BuildRanges(range.X, range.Lower, range.Upper);
-                if (range.Area) chart.AddRangeArea(range.Name, ranges, range.Color, range.Smooth);
-                else chart.AddRangeBand(range.Name, ranges, range.Color);
-                break;
-            default:
-                throw new ArgumentException("Unsupported chart definition type '" + definition.GetType().FullName + "'.", nameof(definition));
-        }
-
-        if (definition.SecondaryAxis) {
-            chart.Series[chart.Series.Count - 1].YAxis = ChartAxisSide.Secondary;
-        }
-    }
-
-    /// <summary>Index-based series are placed at x = 1..n; without labels the axis would show fractional ticks such as 0.5 and 1.5.</summary>
-    private static void ApplyDefaultCategoryLabels(CfxChart chart, IList<ChartDefinition> definitions) {
-        if (chart.Options.XAxisLabels.Count > 0) {
-            return;
-        }
-
-        var count = 0;
-        foreach (var definition in definitions) {
-            IList<double>? values = definition switch {
-                ChartBar bar => bar.Value,
-                ChartLine line => line.Value,
-                ChartStepLine stepLine => stepLine.Value,
-                ChartArea area => area.Value,
-                ChartStepArea stepArea => stepArea.Value,
-                ChartStackedArea stacked => stacked.Value,
-                ChartLollipop lollipop => lollipop.Value,
-                _ => null
-            };
-            if (values is null) {
-                return;
-            }
-            count = Math.Max(count, values.Count);
-        }
-
-        if (count > 0) {
-            chart.WithXLabels(Enumerable.Range(1, count).Select(index => index.ToString(CultureInfo.InvariantCulture)).ToArray());
-        }
-    }
-
-    private static void ApplyLineMarkers(ChartSeries series, ChartLine line) {
-        if (line.MarkerSize.HasValue && line.MarkerSize.Value < 0) {
-            throw new ArgumentOutOfRangeException(nameof(line), line.MarkerSize.Value, "Marker size must be zero or greater.");
-        }
-
-        var size = line.MarkerSize ?? 0f;
-        if (size <= 0 || line.MarkerShape == ChartMarkerShape.None) {
-            series.ConfigureMarkers(markers => markers.Enabled = false);
-            return;
-        }
-
-        series.ConfigureMarkers(markers => {
-            markers.Enabled = true;
-            markers.Shape = ResolveMarkerShape(line.MarkerShape);
-            markers.Radius = size / 2d;
+    private static void ApplyBackground(CfxChart chart, ChartColor color) {
+        chart.ConfigureTheme(builder => {
+            var colors = builder.Colors(chart.Options.ThemeMode);
+            colors.Background = color;
+            colors.ElevatedSurface = color;
+            colors.Surface = color;
         });
-    }
-
-    private static ChartForgeX.Core.ChartMarkerShape ResolveMarkerShape(ChartMarkerShape shape) {
-        switch (shape) {
-            case ChartMarkerShape.Square:
-                return ChartForgeX.Core.ChartMarkerShape.Square;
-            case ChartMarkerShape.Diamond:
-                return ChartForgeX.Core.ChartMarkerShape.Diamond;
-            case ChartMarkerShape.Triangle:
-                return ChartForgeX.Core.ChartMarkerShape.Triangle;
-            case ChartMarkerShape.Plus:
-                return ChartForgeX.Core.ChartMarkerShape.Plus;
-            case ChartMarkerShape.Cross:
-                return ChartForgeX.Core.ChartMarkerShape.Cross;
-            case ChartMarkerShape.Star:
-                return ChartForgeX.Core.ChartMarkerShape.Star;
-            default:
-                return ChartForgeX.Core.ChartMarkerShape.Circle;
-        }
-    }
-
-    private static string DescribeIncompatibleMix(IEnumerable<Type> types) {
-        var names = string.Join(", ", types.Select(DefinitionLabel));
-        return "These chart definitions cannot share one chart: " + names + ". Bar, line, step line, area, step area, stacked area, scatter, bubble, lollipop, and range band definitions can be combined; other chart kinds need their own New-ImageChart call.";
-    }
-
-    private static string DefinitionLabel(Type type) {
-        var name = type.Name;
-        if (name.StartsWith("Chart", StringComparison.Ordinal)) name = name.Substring(5);
-        if (name.EndsWith("Series", StringComparison.Ordinal)) name = name.Substring(0, name.Length - 6);
-        return name;
     }
 
     private static double RequirePercent(double value, string name) {
@@ -682,8 +546,6 @@ internal static class Charts {
 
         return value;
     }
-
-    private static ChartColor WithAlpha(ChartColor color, byte alpha) => ChartColor.FromRgba(color.R, color.G, color.B, alpha);
 
     private readonly struct HistogramDefinition {
         public HistogramDefinition(ChartHistogram definition, double[] values) {

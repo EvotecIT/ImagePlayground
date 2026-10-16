@@ -1,38 +1,28 @@
-using CfxTheme = ChartForgeX.Themes.ChartTheme;
+using ChartForgeX.Themes;
 
 namespace ImagePlayground;
 
-/// <summary>Maps the PowerShell-friendly theme selection to the shared ChartForgeX theme owner.</summary>
+/// <summary>Maps the PowerShell-friendly preset selection to the shared paired theme.</summary>
 internal static class ChartThemeResolver {
-    /// <summary>Creates a fresh ChartForgeX theme for the requested public ImagePlayground theme.</summary>
-    public static CfxTheme Resolve(ChartTheme theme) {
-        switch (theme) {
-            case ChartTheme.Dark:
-                return CfxTheme.GraphiteDark();
-            case ChartTheme.Colorblind:
-                return CfxTheme.Colorblind();
-            case ChartTheme.Aurora:
-                return CfxTheme.Aurora();
-            case ChartTheme.Editorial:
-                return CfxTheme.Editorial();
-            case ChartTheme.Candy:
-                return CfxTheme.Candy();
-            case ChartTheme.PeopleInfographic:
-                return CfxTheme.PeopleInfographic();
-            case ChartTheme.Terminal:
-                return CfxTheme.Terminal();
-            case ChartTheme.TransparentOverlayDark:
-                return CfxTheme.TransparentOverlayDark();
-            case ChartTheme.Minimal:
-                return CfxTheme.Minimal();
-            case ChartTheme.DashboardLight:
-                return CfxTheme.DashboardLight();
-            case ChartTheme.SaasDashboardLight:
-                return CfxTheme.SaasDashboardLight();
-            case ChartTheme.RestaurantDashboardLight:
-                return CfxTheme.RestaurantDashboardLight();
-            default:
-                return CfxTheme.GraphiteLight();
-        }
-    }
+    /// <summary>Resolves the immutable shared theme for a public preset.</summary>
+    public static VisualTheme Resolve(ChartTheme theme) => theme switch {
+        ChartTheme.Colorblind => VisualTheme.Colorblind(),
+        ChartTheme.Aurora => VisualTheme.Aurora(),
+        ChartTheme.Editorial => VisualTheme.Editorial(),
+        ChartTheme.Candy => VisualTheme.Candy(),
+        ChartTheme.PeopleInfographic => VisualTheme.PeopleInfographic(),
+        ChartTheme.Terminal => VisualTheme.Terminal(),
+        ChartTheme.TransparentOverlayDark => VisualTheme.TransparentOverlay(),
+        ChartTheme.Minimal => VisualTheme.Minimal(),
+        ChartTheme.DashboardLight => VisualTheme.Dashboard(),
+        ChartTheme.SaasDashboardLight => VisualTheme.SaasDashboard(),
+        ChartTheme.RestaurantDashboardLight => VisualTheme.RestaurantDashboard(),
+        _ => VisualTheme.Graphite()
+    };
+
+    /// <summary>Resolves the authored mode without inferring it from the palette.</summary>
+    public static VisualThemeMode ResolveMode(ChartTheme theme) => theme switch {
+        ChartTheme.Dark or ChartTheme.Aurora or ChartTheme.Terminal or ChartTheme.TransparentOverlayDark => VisualThemeMode.Dark,
+        _ => VisualThemeMode.Light
+    };
 }

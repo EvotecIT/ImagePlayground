@@ -206,8 +206,9 @@ Describe 'Generic visual stories' {
             -Scenes $write, $complete -Outcomes $outcome -FilePath $file -PassThru
 
         $story | Should -BeOfType 'ChartForgeX.Stories.VisualStory'
-        $story.Theme.Background.ToCss() | Should -BeExactly ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark()).Background.ToCss()
-        $story.Theme.FontFamily | Should -BeExactly ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark()).FontFamily
+        $story.ThemeMode.ToString() | Should -BeExactly 'Dark'
+        $story.Theme.Resolve($story.ThemeMode).Background.ToCss() | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Resolve('Dark').Background.ToCss()
+        $story.Theme.Typography.Family | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Typography.Family
         Test-Path -Path $file | Should -BeTrue
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-scene="complete"'
@@ -216,21 +217,24 @@ Describe 'Generic visual stories' {
     }
 
     It 'accepts the canonical light story and preserves caller theme changes on native export' {
-        $theme = [ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()
+        $theme = [ChartForgeX.Themes.VisualTheme]::Graphite()
         $panel = New-ImageStoryPanel -Id result -Text Ready
         $scene = New-ImageStoryScene -Id complete -Title Complete -Panels $panel
         $outcome = New-ImageStoryOutcome -Id ready -Label 'Ready is visible.' -PanelId result
-        $story = New-ImageStory -Title 'Light story' -Theme $theme -Scenes $scene -Outcomes $outcome -FilePath (Join-Path -Path $TestDir -ChildPath 'story-light-theme.svg') -PassThru
+        $story = New-ImageStory -Title 'Light story' -Theme $theme -ThemeMode Light -Scenes $scene -Outcomes $outcome -FilePath (Join-Path -Path $TestDir -ChildPath 'story-light-theme.svg') -PassThru
 
-        $story.Theme.Background.ToCss() | Should -BeExactly $theme.Background.ToCss()
-        $story.Theme.Text.ToCss() | Should -BeExactly $theme.Text.ToCss()
-        $custom = $theme.Clone()
-        $custom.Accent = [ChartForgeX.Primitives.ChartColor]::FromHex('#9F1239')
+        $story.ThemeMode.ToString() | Should -BeExactly 'Light'
+        $story.Theme.Resolve($story.ThemeMode).Background.ToCss() | Should -BeExactly $theme.Resolve('Light').Background.ToCss()
+        $story.Theme.Resolve($story.ThemeMode).Foreground.ToCss() | Should -BeExactly $theme.Resolve('Light').Foreground.ToCss()
+        $custom = $theme.Configure({
+            param($builder)
+            $builder.Light.Accent = [ChartForgeX.Primitives.ChartColor]::FromHex('#9F1239')
+        })
         [void] $story.WithTheme($custom)
         $exported = $story | New-ImageStory -FilePath (Join-Path -Path $TestDir -ChildPath 'story-custom-theme.svg') -PassThru
         [object]::ReferenceEquals($story, $exported) | Should -BeTrue
-        $exported.Theme.Accent.ToCss() | Should -BeExactly '#9F1239'
-        $theme.Accent.ToCss() | Should -BeExactly ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()).Accent.ToCss()
+        $exported.Theme.Resolve($exported.ThemeMode).Accent.ToCss() | Should -BeExactly '#9F1239'
+        $theme.Resolve('Light').Accent.ToCss() | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Resolve('Light').Accent.ToCss()
     }
 
     It 'rejects stories that promise an outcome absent from the completed scene' {

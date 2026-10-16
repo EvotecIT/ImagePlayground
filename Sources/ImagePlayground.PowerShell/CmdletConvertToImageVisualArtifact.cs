@@ -3,7 +3,9 @@ using System.Management.Automation;
 using System.Text;
 using ChartForgeX.Composition;
 using ChartForgeX.Core;
+using ChartForgeX.Rendering;
 using ChartForgeX.Stories;
+using ChartForgeX.Terminal;
 using ChartForgeX.Topology;
 using ChartForgeX.VisualArtifacts;
 using ChartForgeX.VisualBlocks;
@@ -67,15 +69,18 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
             VisualArtifact existing => existing,
             Chart chart => chart.ToVisualArtifact(OptionalId()),
             ChartGrid grid => grid.ToVisualArtifact(OptionalId()),
-            VisualGrid visualGrid => VisualGridArtifact.Create(visualGrid, OptionalId()),
+            VisualGrid visualGrid => visualGrid.ToVisualArtifact(OptionalId()),
             VisualCanvas canvas => canvas.ToVisualArtifact(OptionalId()),
             VisualStory story => story.ToVisualArtifact(OptionalId()),
+            TerminalStory terminal => terminal.ToVisualArtifact(OptionalId()),
             TopologyChart topology => topology.ToVisualArtifact(),
             FlowArtifact flow => flow.ToVisualArtifact(),
             SequenceArtifact sequence => sequence.ToVisualArtifact(),
             TableArtifact table => table.ToVisualArtifact(),
             IVisualBlock block => block.ToVisualArtifact(OptionalId()),
-            _ => throw new PSArgumentException("InputObject must be a ChartForgeX chart, chart grid, visual grid, canvas, story, topology, flow, sequence, table, visual block, or VisualArtifact.", nameof(InputObject))
+            PreparedVisual prepared => prepared.ToArtifact(OptionalId()),
+            IStaticVisualSource source => CreateStaticArtifact(source),
+            _ => throw new PSArgumentException("InputObject must be a ChartForgeX static visual source, prepared visual, chart, grid, canvas, story, topology, flow, sequence, table, visual block, or VisualArtifact.", nameof(InputObject))
         };
 
         if (!string.IsNullOrWhiteSpace(Id)) {
@@ -133,5 +138,12 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
     }
 
     private string? OptionalId() => string.IsNullOrWhiteSpace(Id) ? null : Id.Trim();
+
+    private VisualArtifact CreateStaticArtifact(IStaticVisualSource source) {
+        var artifact = VisualArtifact.Create(OptionalId() ?? "static-visual", VisualArtifactKind.Unknown, source);
+        artifact.ExportFormats = VisualArtifactExportFormat.Svg | VisualArtifactExportFormat.Png |
+            VisualArtifactExportFormat.Html | VisualArtifactExportFormat.Office;
+        return artifact;
+    }
 
 }

@@ -14,6 +14,16 @@ Add-ImageWatermark -FilePath '.\photo.jpg' -OutputPath '.\marked.jpg' -Watermark
 
 Cmdlets expose one execution mode. Where the core has a cancellable asynchronous file API, the cmdlet uses it internally; callers do not select an implementation with `-Async`.
 
+## ChartForgeX 3 migration
+
+Native charts, grids, canvases, topology and stories share `ChartForgeX.Themes.VisualTheme`. A theme contains independent light and dark colors; choose its appearance with `VisualThemeMode` and create custom snapshots with `theme.Configure(...)`. Chart and factual-block `-Theme Light`/`Dark` shortcuts remain available.
+
+`New-ImageConsoleStory -Palette`, `New-ImageConsoleStoryTab -Palette`, `New-ImageStory -Theme` and replay-panel `-ReplayTheme` accept this shared theme. Use `-ThemeMode Light` or `-ReplayThemeMode Light` to select a light presentation. An already-authored native object keeps its theme unless the command explicitly receives an override.
+
+Terminal cursor and window controls belong to `TerminalStyleOptions`, supplied through `-Style`; replace `New-ImageConsoleStoryPalette -Cursor` with that style's `Cursor` property. Generic-story layout controls similarly belong to `VisualStoryStyleOptions`.
+
+`New-ImageChartRadial` continues to render 0–100 progress rings. Native callers use `Chart.AddProgressRing` for that behavior; `AddRadialBar` now renders signed numeric radial bars. The shared [ChartForgeX migration guide](https://github.com/EvotecIT/ChartForgeX/blob/main/docs/v2/migration.md) covers renamed configuration callbacks, typed observations and stable series handles.
+
 ## CodeGlyphX 3 migration
 
 The module uses CodeGlyphX 3.0.0. Barcode generation and recognition share its `SymbolFormat` catalogue. PowerShell enum names remain case-insensitive; C# callers replace `BarcodeType` with `SymbolFormat`, including capitalization changes such as `EAN` → `Ean`, `PDF417` → `Pdf417`, and `UPCA` → `UpcA`. These format names also change beyond capitalization:

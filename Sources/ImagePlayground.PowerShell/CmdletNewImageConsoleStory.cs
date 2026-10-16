@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using ChartForgeX;
 using ChartForgeX.Terminal;
+using ChartForgeX.Themes;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -134,7 +135,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = StepSet)]
     public string WorkingDirectory { get; set; } = @"C:\";
 
-    /// <summary>Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.</summary>
+    /// <summary>Built-in terminal palette and default appearance. Light and Dark use the shared Graphite theme; named shell palettes default to dark.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
@@ -145,7 +146,19 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
     [Parameter(ParameterSetName = TranscriptSet)]
     [Parameter(ParameterSetName = ContentSet)]
     [Parameter(ParameterSetName = StepSet)]
-    public TerminalTheme? Palette { get; set; }
+    public VisualTheme? Palette { get; set; }
+
+    /// <summary>Explicit light or dark appearance. When omitted, Theme selects the appearance.</summary>
+    [Parameter(ParameterSetName = TranscriptSet)]
+    [Parameter(ParameterSetName = ContentSet)]
+    [Parameter(ParameterSetName = StepSet)]
+    public VisualThemeMode? ThemeMode { get; set; }
+
+    /// <summary>Optional terminal cursor and title-bar overrides, independent of the shared palette.</summary>
+    [Parameter(ParameterSetName = TranscriptSet)]
+    [Parameter(ParameterSetName = ContentSet)]
+    [Parameter(ParameterSetName = StepSet)]
+    public TerminalStyleOptions? Style { get; set; }
 
     /// <summary>Visible terminal window chrome, independent of the color palette and prompt dialect.</summary>
     [Parameter(ParameterSetName = TranscriptSet)]
@@ -302,7 +315,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
 
     private TerminalStory BuildStory() {
         if (ParameterSetName == StoryScriptSet) {
-            var story = TerminalStory.Create().WithTheme(TerminalTheme.GraphiteDark());
+            var story = TerminalStory.Create().WithTheme(VisualTheme.Graphite(), VisualThemeMode.Dark);
             foreach (var result in StoryScript!.Invoke(story)) {
                 var value = result is PSObject psObject ? psObject.BaseObject : result;
                 if (value is TerminalStory returnedStory) {
@@ -374,7 +387,7 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
             .WithTitle(Title)
             .WithDialect(Dialect, CustomPrompt)
             .WithWorkingDirectory(WorkingDirectory)
-            .WithTheme(Palette ?? ResolveTheme())
+            .WithTheme(Palette ?? ConsoleStoryPaletteResolver.Resolve(Theme), ThemeMode ?? ConsoleStoryPaletteResolver.ResolveMode(Theme))
             .WithWindowStyle(WindowStyle)
             .WithWidth(Width)
             .WithTypography(FontSize, LineHeight)
@@ -385,15 +398,12 @@ public sealed class NewImageConsoleStoryCmdlet : PSCmdlet {
         var initialDelay = MyInvocation.BoundParameters.ContainsKey(nameof(InitialDelaySeconds)) ? InitialDelaySeconds : story.InitialDelaySeconds;
         var charactersPerSecond = MyInvocation.BoundParameters.ContainsKey(nameof(TypingSpeed)) ? TypingSpeed : story.CharactersPerSecond;
         var lineDelay = MyInvocation.BoundParameters.ContainsKey(nameof(LineDelaySeconds)) ? LineDelaySeconds : story.LineDelaySeconds;
+        if (Style != null) story.WithStyle(Style);
         story.WithTiming(initialDelay, charactersPerSecond, lineDelay);
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TabHoldSeconds))) {
             story.WithTabHold(TabHoldSeconds);
         }
         return story;
-    }
-
-    private TerminalTheme ResolveTheme() {
-        return ConsoleStoryPaletteResolver.Resolve(Theme);
     }
 
     private void AddContentResult(object? result) {

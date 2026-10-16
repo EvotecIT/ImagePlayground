@@ -4,6 +4,8 @@ param(
 
     [bool] $SignModule = $true,
 
+    [bool] $SkipInstall = $false,
+
     [string] $PowerShellGalleryApiKeyPath = 'C:\Support\Important\PowerShellGalleryAPI.txt',
 
     [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
@@ -11,7 +13,7 @@ param(
 
 Import-Module PSPublishModule -MinimumVersion 3.0.93 -Force -ErrorAction Stop
 
-Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
+Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode -SkipInstall:$SkipInstall {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -132,6 +134,9 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Composition.VisualCanvasTextLayer'
             'ChartForgeX.Core.Chart'
             'ChartForgeX.Core.ChartCalendarHeatmapItem'
+            'ChartForgeX.Core.ChartSeries'
+            'ChartForgeX.Core.ChartSeriesId'
+            'ChartForgeX.Core.ChartObservationId'
             'ChartForgeX.Motion.VisualMotionCue'
             'ChartForgeX.Motion.VisualMotionPresentation'
             'ChartForgeX.Motion.VisualMotionTimeline'
@@ -143,11 +148,13 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Stories.VisualStorySourceOptions'
             'ChartForgeX.Stories.VisualStoryTerminalOptions'
             'ChartForgeX.Stories.VisualStory'
-            'ChartForgeX.Stories.VisualStoryTheme'
             'ChartForgeX.Terminal.TerminalStory'
             'ChartForgeX.Terminal.TerminalTable'
-            'ChartForgeX.Terminal.TerminalTheme'
-            'ChartForgeX.Themes.ChartTheme'
+            'ChartForgeX.Terminal.TerminalThemes'
+            'ChartForgeX.Terminal.TerminalStyleOptions'
+            'ChartForgeX.Themes.VisualTheme'
+            'ChartForgeX.Themes.VisualThemeBuilder'
+            'ChartForgeX.Themes.VisualTypography'
             'ChartForgeX.Themes.VisualDesignTokens'
             'ChartForgeX.Topology.TopologyChart'
             'ChartForgeX.Topology.TopologyEdge'
@@ -160,7 +167,6 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode {
             'ChartForgeX.Topology.TopologyNodeDetail'
             'ChartForgeX.Topology.TopologyNodePort'
             'ChartForgeX.Topology.TopologyTeamMember'
-            'ChartForgeX.Topology.TopologyTheme'
             'ChartForgeX.VisualArtifacts.VisualArtifact'
             'ChartForgeX.VisualArtifacts.VisualArtifactRenderOptions'
             'ChartForgeX.VisualArtifacts.VisualWatermark'
