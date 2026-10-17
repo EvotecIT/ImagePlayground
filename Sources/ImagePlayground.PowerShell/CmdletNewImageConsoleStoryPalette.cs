@@ -14,7 +14,8 @@ namespace ImagePlayground.PowerShell;
 /// </example>
 /// <example>
 ///   <summary>Keep cursor styling separate from the palette</summary>
-///   <code>$style = [ChartForgeX.Terminal.TerminalStyleOptions]::new()
+///   <code>$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Accent '#FF6A2B'
+/// $style = [ChartForgeX.Terminal.TerminalStyleOptions]::new()
 /// $style.Cursor = [ChartForgeX.Primitives.ChartColor]::FromHex('#FF6A2B')
 /// New-ImageConsoleStory -Palette $palette -Style $style -Content { New-ImageConsoleStoryOutput -Text Ready }</code>
 /// </example>

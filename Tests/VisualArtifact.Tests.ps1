@@ -85,7 +85,11 @@ Describe 'ChartForgeX visual artifacts' {
 
         [object]::ReferenceEquals($returned, $artifact) | Should -BeTrue
         $ordered = Get-Content -LiteralPath $orderedPath -Raw
-        $ordered.IndexOf('FIRST', [StringComparison]::Ordinal) | Should -BeLessThan ($ordered.IndexOf('SECOND', [StringComparison]::Ordinal))
+        $firstPosition = $ordered.IndexOf('FIRST', [StringComparison]::Ordinal)
+        $secondPosition = $ordered.IndexOf('SECOND', [StringComparison]::Ordinal)
+        $firstPosition | Should -BeGreaterThan -1
+        $secondPosition | Should -BeGreaterThan -1
+        $firstPosition | Should -BeLessThan $secondPosition
         (Get-Content -LiteralPath $secondPath -Raw) | Should -Not -Match 'FIRST'
     }
 

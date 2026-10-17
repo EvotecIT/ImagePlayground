@@ -28,6 +28,7 @@ Returns a paired immutable VisualTheme that can be supplied through Palette. Sel
 
 ### EXAMPLE 2
 ```powershell
+$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Accent '#FF6A2B'
 $style = [ChartForgeX.Terminal.TerminalStyleOptions]::new()
 $style.Cursor = [ChartForgeX.Primitives.ChartColor]::FromHex('#FF6A2B')
 New-ImageConsoleStory -Palette $palette -Style $style -Content { New-ImageConsoleStoryOutput -Text Ready }
