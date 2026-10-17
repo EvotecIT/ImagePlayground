@@ -105,16 +105,16 @@ Describe 'New-ImageVisualStory' {
             param($Story)
             [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes))
         } -FilePath (Join-Path -Path $TestDir -ChildPath 'story-canonical-theme.svg') -PassThru
-        $defaultGrid.Theme.UseGraphiteLayout | Should -BeTrue
-        $defaultGrid.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Themes.ChartTheme]::GraphiteLight()).Text.ToCss()
+        $defaultGrid.ThemeMode.ToString() | Should -BeExactly 'Light'
+        $defaultGrid.Theme.Resolve($defaultGrid.ThemeMode).Foreground.ToCss() | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Resolve('Light').Foreground.ToCss()
 
         $customGrid = New-ImageVisualStory -StoryScript {
             param($Story)
-            [void] $Story.WithTheme([ChartForgeX.Themes.ChartTheme]::Aurora())
-            [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes -Theme Aurora))
+            [void] $Story.WithTheme([ChartForgeX.Themes.VisualTheme]::Graphite(), [ChartForgeX.Themes.VisualThemeMode]::Dark)
+            [void] $Story.Add((New-ImageMetricCard -Label Ready -Value Yes -Theme Dark))
         } -FilePath (Join-Path -Path $TestDir -ChildPath 'story-authored-theme.svg') -PassThru
-        $customGrid.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Themes.ChartTheme]::Aurora()).Text.ToCss()
-        $customGrid.Theme.UseGraphiteLayout | Should -BeFalse
+        $customGrid.ThemeMode.ToString() | Should -BeExactly 'Dark'
+        $customGrid.Theme.Resolve($customGrid.ThemeMode).Foreground.ToCss() | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Resolve('Dark').Foreground.ToCss()
     }
 
     It 'rejects non-file-system output paths before invoking the story script' {

@@ -11,7 +11,7 @@ Creates a generic source-to-result visual story from resolved scenes and declare
 ## SYNTAX
 ### Parts (Default)
 ```powershell
-New-ImageStory -Title <string> -Scenes <ImageStorySceneSpec[]> -Outcomes <ImageStoryOutcomeSpec[]> -FilePath <string> [-Description <string>] [-Width <int>] [-Height <int>] [-Theme <VisualStoryTheme>] [-BundlePath <string>] [-BundleFormats <string[]>] [-CapturedAtUtc <DateTimeOffset>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-TransitionSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-PlayCount <int>] [-Player] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageStory -Title <string> -Scenes <ImageStorySceneSpec[]> -Outcomes <ImageStoryOutcomeSpec[]> -FilePath <string> [-Description <string>] [-Width <int>] [-Height <int>] [-Theme <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <VisualStoryStyleOptions>] [-BundlePath <string>] [-BundleFormats <string[]>] [-CapturedAtUtc <DateTimeOffset>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-TransitionSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-PlayCount <int>] [-Player] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
@@ -329,14 +329,46 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -Theme
-Optional visual-story theme. Authored stories use the canonical dark theme by default; supply VisualStoryTheme.GraphiteLight() for its light counterpart or a custom theme.
+### -Style
+Optional story-specific window, desktop gradient, and syntax treatments.
 
 ```yaml
-Type: VisualStoryTheme
+Type: VisualStoryStyleOptions
 Parameter Sets: Parts
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Theme
+Optional shared immutable theme. Authored stories use Graphite with dark appearance by default.
+
+```yaml
+Type: VisualTheme
+Parameter Sets: Parts
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ThemeMode
+Light or dark appearance for an authored story.
+
+```yaml
+Type: VisualThemeMode
+Parameter Sets: Parts
+Aliases: None
+Possible values: Light, Dark
 
 Required: False
 Position: named

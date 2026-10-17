@@ -164,18 +164,22 @@ if ($OutputText.Length -eq 0) {
 
 $light = $ColorMode -eq 'Light'
 $theme = switch ($Appearance) {
-    'MacOS' { [ChartForgeX.Stories.VisualStoryTheme]::MacOS($light) }
-    'Windows' { [ChartForgeX.Stories.VisualStoryTheme]::Windows($light) }
-    'Linux' { [ChartForgeX.Stories.VisualStoryTheme]::Linux($light) }
-    'Graphite' {
-        if ($light) { [ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight() }
-        else { [ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark() }
-    }
+    'MacOS' { [ChartForgeX.Stories.VisualStoryThemes]::MacOS() }
+    'Windows' { [ChartForgeX.Stories.VisualStoryThemes]::Windows() }
+    'Linux' { [ChartForgeX.Stories.VisualStoryThemes]::Linux() }
+    'Graphite' { [ChartForgeX.Themes.VisualTheme]::Graphite() }
+}
+$style = switch ($Appearance) {
+    'MacOS' { [ChartForgeX.Stories.VisualStoryStyleOptions]::MacOS($light) }
+    'Windows' { [ChartForgeX.Stories.VisualStoryStyleOptions]::Windows($light) }
+    'Linux' { [ChartForgeX.Stories.VisualStoryStyleOptions]::Linux($light) }
+    'Graphite' { [ChartForgeX.Stories.VisualStoryStyleOptions]::new() }
 }
 foreach ($format in $layouts) {
     $story = [ChartForgeX.Stories.VisualStory]::Create($Title).
         WithFormat([ChartForgeX.Stories.VisualStoryFormat] $format, $ShortSide).
-        WithTheme($theme).
+        WithTheme($theme, [ChartForgeX.Themes.VisualThemeMode] $ColorMode).
+        WithStyle($style).
         WithDescription('PowerShell source writing followed by captured output with authored replay timing.')
     foreach ($scene in $scenes) {
         $nativeScene = $story.Scene($scene.Id, $scene.Title, $scene.DurationSeconds, $scene.Layout)

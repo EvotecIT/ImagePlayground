@@ -74,7 +74,7 @@ public sealed class NewImageListBlockCmdlet : PSCmdlet {
         var list = ChartList.Create()
             .WithMarker(Marker)
             .WithDenseMode(Dense.IsPresent)
-            .WithTheme(ChartThemeResolver.Resolve(Theme));
+            .WithTheme(ChartThemeResolver.Resolve(Theme), ChartThemeResolver.ResolveMode(Theme));
         if (!string.IsNullOrWhiteSpace(Title)) list.WithTitle(Title);
         if (!string.IsNullOrWhiteSpace(Subtitle)) list.WithSubtitle(Subtitle);
         for (var index = 0; index < Item.Length; index++) {

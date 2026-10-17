@@ -109,9 +109,9 @@ public sealed class NewImageCanvasCmdlet : PSCmdlet {
         ValidateCanvasInput();
         var canvas = _canvases.Count == 1 ? _canvases[0] : CreateCanvas();
         if (_canvases.Count == 0 || MyInvocation.BoundParameters.ContainsKey(nameof(Theme))) {
-            canvas.WithDesignTokens(Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
-                ? VisualDesignTokens.GraphiteDark()
-                : VisualDesignTokens.GraphiteLight());
+            canvas.WithTheme(VisualTheme.Graphite(), Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
+                ? VisualThemeMode.Dark
+                : VisualThemeMode.Light);
         }
         ApplyBackground(canvas);
         if (LayerDefinition != null) {

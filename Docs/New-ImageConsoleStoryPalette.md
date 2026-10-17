@@ -11,7 +11,7 @@ Creates a reusable terminal color palette for ImagePlayground console stories an
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageConsoleStoryPalette [-Preset <string>] [-PageBackground <string>] [-Background <string>] [-HeaderBackground <string>] [-Border <string>] [-Text <string>] [-Muted <string>] [-Accent <string>] [-Success <string>] [-Warning <string>] [-Error <string>] [-Cursor <string>] [-FontFamily <string>] [<CommonParameters>]
+New-ImageConsoleStoryPalette [-Preset <string>] [-PageBackground <string>] [-Background <string>] [-HeaderBackground <string>] [-Border <string>] [-Text <string>] [-Muted <string>] [-Accent <string>] [-Success <string>] [-Warning <string>] [-Error <string>] [-FontFamily <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,7 +24,16 @@ Start from a built-in palette and override only the colors that belong to the de
 PS> $palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'
 ```
 
-Returns a ChartForgeX TerminalTheme that can be supplied through the Palette parameter.
+Returns a paired immutable VisualTheme that can be supplied through Palette. Select its appearance with ThemeMode on the story or tab.
+
+### EXAMPLE 2
+```powershell
+$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Accent '#FF6A2B'
+$style = [ChartForgeX.Terminal.TerminalStyleOptions]::new()
+$style.Cursor = [ChartForgeX.Primitives.ChartColor]::FromHex('#FF6A2B')
+New-ImageConsoleStory -Palette $palette -Style $style -Content { New-ImageConsoleStoryOutput -Text Ready }
+```
+
 
 ## PARAMETERS
 
@@ -62,22 +71,6 @@ Accept wildcard characters: False
 
 ### -Border
 Frame and divider color in hexadecimal notation.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Cursor
-Cursor color in hexadecimal notation.
 
 ```yaml
 Type: String
@@ -245,7 +238,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `ChartForgeX.Terminal.TerminalTheme`
+- `ChartForgeX.Themes.VisualTheme`
 
 ## RELATED LINKS
 

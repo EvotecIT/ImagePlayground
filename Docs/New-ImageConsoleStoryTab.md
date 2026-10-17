@@ -11,17 +11,17 @@ Creates a persistent tab in an ImagePlayground console story.
 ## SYNTAX
 ### Open (Default)
 ```powershell
-New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] [-Profile <string>] [-WorkingDirectory <string>] [-Palette <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <TerminalStyleOptions>] [-TransitionSeconds <double>] [<CommonParameters>]
 ```
 
 ### Initial
 ```powershell
-New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] -Active [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] -Active [-Profile <string>] [-WorkingDirectory <string>] [-Palette <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <TerminalStyleOptions>] [-TransitionSeconds <double>] [<CommonParameters>]
 ```
 
 ### Background
 ```powershell
-New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] -Background [-Profile <string>] [-WorkingDirectory <string>] [-Palette <TerminalTheme>] [-TransitionSeconds <double>] [<CommonParameters>]
+New-ImageConsoleStoryTab [-Id] <string> [[-Title] <string>] -Background [-Profile <string>] [-WorkingDirectory <string>] [-Palette <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <TerminalStyleOptions>] [-TransitionSeconds <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -105,7 +105,7 @@ Accept wildcard characters: False
 Optional custom palette, normally created by New-ImageConsoleStoryPalette.
 
 ```yaml
-Type: TerminalTheme
+Type: VisualTheme
 Parameter Sets: Open, Initial, Background
 Aliases: None
 Possible values:
@@ -125,6 +125,38 @@ Type: String
 Parameter Sets: Open, Initial, Background
 Aliases: None
 Possible values: PowerShell, WindowsPowerShell, Ubuntu, Bash, CommandPrompt
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Style
+Optional cursor and title-bar overrides for this tab.
+
+```yaml
+Type: TerminalStyleOptions
+Parameter Sets: Open, Initial, Background
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ThemeMode
+Light or dark appearance for this tab, independent of its shell profile.
+
+```yaml
+Type: VisualThemeMode
+Parameter Sets: Open, Initial, Background
+Aliases: None
+Possible values: Light, Dark
 
 Required: False
 Position: named

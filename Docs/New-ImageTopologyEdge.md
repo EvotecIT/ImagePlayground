@@ -355,7 +355,7 @@ Optional source endpoint marker.
 Type: TopologyMarkerKind
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: None, Arrow, Circle, Diamond, OpenTriangle, OpenDiamond, ExactlyOne, ZeroOrOne, OneOrMany, ZeroOrMany
+Possible values: None, Arrow, Circle, Diamond, OpenTriangle, OpenDiamond, ExactlyOne, ZeroOrOne, OneOrMany, ZeroOrMany, Cross
 
 Required: False
 Position: named
@@ -467,7 +467,7 @@ Optional target endpoint marker.
 Type: TopologyMarkerKind
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: None, Arrow, Circle, Diamond, OpenTriangle, OpenDiamond, ExactlyOne, ZeroOrOne, OneOrMany, ZeroOrMany
+Possible values: None, Arrow, Circle, Diamond, OpenTriangle, OpenDiamond, ExactlyOne, ZeroOrOne, OneOrMany, ZeroOrMany, Cross
 
 Required: False
 Position: named

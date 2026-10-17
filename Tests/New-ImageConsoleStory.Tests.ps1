@@ -26,7 +26,8 @@ Describe 'New-ImageConsoleStory' {
         } -FilePath $file -PassThru
 
         $story | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
-        $story.Theme.Background.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalTheme]::GraphiteDark()).Background.ToCss()
+        $story.ThemeMode.ToString() | Should -BeExactly 'Dark'
+        $story.Theme.Resolve($story.ThemeMode).ElevatedSurface.ToCss() | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Resolve('Dark').ElevatedSurface.ToCss()
         Test-Path -Path $file | Should -BeTrue
         $svg = [System.IO.File]::ReadAllText($file)
         $svg | Should -Match 'data-cfx-terminal="PowerShell"'
@@ -47,7 +48,7 @@ Describe 'New-ImageConsoleStory' {
         $story.Steps.Count | Should -Be 4
         $story.Steps[0].Text | Should -Be '.\Invoke-EnvironmentAudit.ps1'
         $story.Steps[1].Text | Should -Be 'Checking domain...'
-        $story.Theme.Text.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalTheme]::GraphiteDark()).Text.ToCss()
+        $story.Theme.Resolve($story.ThemeMode).Foreground.ToCss() | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Resolve('Dark').Foreground.ToCss()
         [System.IO.File]::ReadAllText($file) | Should -Match 'PASS  Kerberos'
     }
 
@@ -66,13 +67,15 @@ Describe 'New-ImageConsoleStory' {
             Remove-Item -Path $file
         }
 
-        $customTheme = [ChartForgeX.Terminal.TerminalTheme]::PowerShell()
-        $customTheme.Accent = [ChartForgeX.Primitives.ChartColor]::FromHex('#ABCDEF')
+        $customTheme = [ChartForgeX.Terminal.TerminalThemes]::PowerShell().Configure({
+            param($builder)
+            $builder.Dark.Accent = [ChartForgeX.Primitives.ChartColor]::FromHex('#ABCDEF')
+        })
         $story = [ChartForgeX.Terminal.TerminalStory]::Create().WithTheme($customTheme).Command('Get-Date').Output('Ready')
         $result = $story | Export-ImageConsoleStory -Path $file -PassThru
 
         $result | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
-        $result.Theme.Accent.ToCss() | Should -BeExactly '#ABCDEF'
+        $result.Theme.Resolve($result.ThemeMode).Accent.ToCss() | Should -BeExactly '#ABCDEF'
         $bytes = [System.IO.File]::ReadAllBytes($file)
         $bytes[0] | Should -Be 137
         $bytes[1] | Should -Be 80
@@ -85,23 +88,20 @@ Describe 'New-ImageConsoleStory' {
         @{ Theme = 'Dark' }
     ) {
         param($Theme)
-        $expected = if ($Theme -eq 'Dark') {
-            [ChartForgeX.Terminal.TerminalTheme]::GraphiteDark()
-        } else {
-            [ChartForgeX.Terminal.TerminalTheme]::GraphiteLight()
-        }
+        $expected = [ChartForgeX.Themes.VisualTheme]::Graphite().Resolve($Theme)
         $story = New-ImageConsoleStory -Theme $Theme -Content {
             New-ImageConsoleStoryCommand -Text 'Get-Date'
             New-ImageConsoleStoryOutput -Text Ready -Style Success
         }
-        $story.Theme.Background.ToCss() | Should -BeExactly $expected.Background.ToCss()
-        $story.Theme.FontFamily | Should -BeExactly $expected.FontFamily
+        $story.ThemeMode.ToString() | Should -BeExactly $Theme
+        $story.Theme.Resolve($story.ThemeMode).ElevatedSurface.ToCss() | Should -BeExactly $expected.ElevatedSurface.ToCss()
+        $story.Theme.Typography.MonospaceFamily | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Typography.MonospaceFamily
         $palette = New-ImageConsoleStoryPalette -Preset $Theme -Accent '#9F1239'
         $customStory = New-ImageConsoleStory -Theme $Theme -Palette $palette -Content {
             New-ImageConsoleStoryOutput -Text Ready
         }
-        $customStory.Theme.Accent.ToCss() | Should -BeExactly '#9F1239'
-        $customStory.Theme.Background.ToCss() | Should -BeExactly $expected.Background.ToCss()
+        $customStory.Theme.Resolve($customStory.ThemeMode).Accent.ToCss() | Should -BeExactly '#9F1239'
+        $customStory.Theme.Resolve($customStory.ThemeMode).ElevatedSurface.ToCss() | Should -BeExactly $expected.ElevatedSurface.ToCss()
     }
 
     It 'rejects multiple pipeline stories before writing a fixed output path' {

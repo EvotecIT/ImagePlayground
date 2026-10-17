@@ -13266,9 +13266,9 @@ try {&#xD;
           <maml:description>
             <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -13327,6 +13327,18 @@ try {&#xD;
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional terminal cursor and title-bar overrides, independent of the shared palette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TabHoldSeconds</maml:name>
           <maml:description>
             <maml:para>Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.</maml:para>
@@ -13341,7 +13353,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.</maml:para>
+            <maml:para>Built-in terminal palette and default appearance. Light and Dark use the shared Graphite theme; named shell palettes default to dark.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <command:parameterValueGroup>
@@ -13355,6 +13367,22 @@ try {&#xD;
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Explicit light or dark appearance. When omitted, Theme selects the appearance.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -13598,9 +13626,9 @@ try {&#xD;
           <maml:description>
             <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -13671,6 +13699,18 @@ try {&#xD;
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional terminal cursor and title-bar overrides, independent of the shared palette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TabHoldSeconds</maml:name>
           <maml:description>
             <maml:para>Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.</maml:para>
@@ -13685,7 +13725,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.</maml:para>
+            <maml:para>Built-in terminal palette and default appearance. Light and Dark use the shared Graphite theme; named shell palettes default to dark.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <command:parameterValueGroup>
@@ -13699,6 +13739,22 @@ try {&#xD;
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Explicit light or dark appearance. When omitted, Theme selects the appearance.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -14077,9 +14133,9 @@ try {&#xD;
           <maml:description>
             <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -14138,6 +14194,18 @@ try {&#xD;
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional terminal cursor and title-bar overrides, independent of the shared palette.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TabHoldSeconds</maml:name>
           <maml:description>
             <maml:para>Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.</maml:para>
@@ -14152,7 +14220,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.</maml:para>
+            <maml:para>Built-in terminal palette and default appearance. Light and Dark use the shared Graphite theme; named shell palettes default to dark.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <command:parameterValueGroup>
@@ -14166,6 +14234,22 @@ try {&#xD;
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Explicit light or dark appearance. When omitted, Theme selects the appearance.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -14445,9 +14529,9 @@ try {&#xD;
         <maml:description>
           <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
         <dev:type>
-          <maml:name>TerminalTheme</maml:name>
+          <maml:name>VisualTheme</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -14542,6 +14626,18 @@ try {&#xD;
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Style</maml:name>
+        <maml:description>
+          <maml:para>Optional terminal cursor and title-bar overrides, independent of the shared palette.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalStyleOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TabHoldSeconds</maml:name>
         <maml:description>
           <maml:para>Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.</maml:para>
@@ -14556,7 +14652,7 @@ try {&#xD;
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Theme</maml:name>
         <maml:description>
-          <maml:para>Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.</maml:para>
+          <maml:para>Built-in terminal palette and default appearance. Light and Dark use the shared Graphite theme; named shell palettes default to dark.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <command:parameterValueGroup>
@@ -14570,6 +14666,22 @@ try {&#xD;
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ThemeMode</maml:name>
+        <maml:description>
+          <maml:para>Explicit light or dark appearance. When omitted, Theme selects the appearance.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>VisualThemeMode</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -15089,18 +15201,6 @@ try {&#xD;
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Cursor</maml:name>
-          <maml:description>
-            <maml:para>Cursor color in hexadecimal notation.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Error</maml:name>
           <maml:description>
             <maml:para>Error text color in hexadecimal notation.</maml:para>
@@ -15257,18 +15357,6 @@ try {&#xD;
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Cursor</maml:name>
-        <maml:description>
-          <maml:para>Cursor color in hexadecimal notation.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Error</maml:name>
         <maml:description>
           <maml:para>Error text color in hexadecimal notation.</maml:para>
@@ -15396,7 +15484,7 @@ try {&#xD;
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>ChartForgeX.Terminal.TerminalTheme</maml:name>
+          <maml:name>ChartForgeX.Themes.VisualTheme</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -15413,7 +15501,17 @@ try {&#xD;
         </maml:introduction>
         <dev:code>$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'</dev:code>
         <dev:remarks>
-          <maml:para>Returns a ChartForgeX TerminalTheme that can be supplied through the Palette parameter.</maml:para>
+          <maml:para>Returns a paired immutable VisualTheme that can be supplied through Palette. Select its appearance with ThemeMode on the story or tab.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Keep cursor styling separate from the palette</maml:title>
+        <dev:code>$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Accent '#FF6A2B'&#xD;
+            $style = [ChartForgeX.Terminal.TerminalStyleOptions]::new()&#xD;
+            $style.Cursor = [ChartForgeX.Primitives.ChartColor]::FromHex('#FF6A2B')&#xD;
+            New-ImageConsoleStory -Palette $palette -Style $style -Content { New-ImageConsoleStoryOutput -Text Ready }</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -15530,9 +15628,9 @@ try {&#xD;
           <maml:description>
             <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15552,6 +15650,34 @@ try {&#xD;
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional cursor and title-bar overrides for this tab.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Light or dark appearance for this tab, independent of its shell profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15624,9 +15750,9 @@ try {&#xD;
           <maml:description>
             <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15646,6 +15772,34 @@ try {&#xD;
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional cursor and title-bar overrides for this tab.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Light or dark appearance for this tab, independent of its shell profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15718,9 +15872,9 @@ try {&#xD;
           <maml:description>
             <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15740,6 +15894,34 @@ try {&#xD;
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional cursor and title-bar overrides for this tab.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Light or dark appearance for this tab, independent of its shell profile.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -15824,9 +16006,9 @@ try {&#xD;
         <maml:description>
           <maml:para>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
         <dev:type>
-          <maml:name>TerminalTheme</maml:name>
+          <maml:name>VisualTheme</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -15846,6 +16028,34 @@ try {&#xD;
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Style</maml:name>
+        <maml:description>
+          <maml:para>Optional cursor and title-bar overrides for this tab.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalStyleOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ThemeMode</maml:name>
+        <maml:description>
+          <maml:para>Light or dark appearance for this tab, independent of its shell profile.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>VisualThemeMode</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -27082,13 +27292,41 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Optional story-specific window, desktop gradient, and syntax treatments.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualStoryStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisualStoryStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Theme</maml:name>
           <maml:description>
-            <maml:para>Optional visual-story theme. Authored stories use the canonical dark theme by default; supply VisualStoryTheme.GraphiteLight() for its light counterpart or a custom theme.</maml:para>
+            <maml:para>Optional shared immutable theme. Authored stories use Graphite with dark appearance by default.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">VisualStoryTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>VisualStoryTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Light or dark appearance for an authored story.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -27548,13 +27786,41 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Style</maml:name>
+        <maml:description>
+          <maml:para>Optional story-specific window, desktop gradient, and syntax treatments.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualStoryStyleOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>VisualStoryStyleOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Theme</maml:name>
         <maml:description>
-          <maml:para>Optional visual-story theme. Authored stories use the canonical dark theme by default; supply VisualStoryTheme.GraphiteLight() for its light counterpart or a custom theme.</maml:para>
+          <maml:para>Optional shared immutable theme. Authored stories use Graphite with dark appearance by default.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">VisualStoryTheme</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
         <dev:type>
-          <maml:name>VisualStoryTheme</maml:name>
+          <maml:name>VisualTheme</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ThemeMode</maml:name>
+        <maml:description>
+          <maml:para>Light or dark appearance for an authored story.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>VisualThemeMode</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -28026,13 +28292,41 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ReplayStyle</maml:name>
+          <maml:description>
+            <maml:para>Optional cursor and title-bar overrides for a recorded-replay panel.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>TerminalStyleOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ReplayTheme</maml:name>
           <maml:description>
             <maml:para>Optional recorded-replay palette.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
           <dev:type>
-            <maml:name>TerminalTheme</maml:name>
+            <maml:name>VisualTheme</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ReplayThemeMode</maml:name>
+          <maml:description>
+            <maml:para>Light or dark appearance for a recorded-replay panel.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>VisualThemeMode</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -28536,13 +28830,41 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ReplayStyle</maml:name>
+        <maml:description>
+          <maml:para>Optional cursor and title-bar overrides for a recorded-replay panel.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">TerminalStyleOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>TerminalStyleOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ReplayTheme</maml:name>
         <maml:description>
           <maml:para>Optional recorded-replay palette.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">TerminalTheme</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">VisualTheme</command:parameterValue>
         <dev:type>
-          <maml:name>TerminalTheme</maml:name>
+          <maml:name>VisualTheme</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ReplayThemeMode</maml:name>
+        <maml:description>
+          <maml:para>Light or dark appearance for a recorded-replay panel.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisualThemeMode</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Light</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dark</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>VisualThemeMode</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -32245,6 +32567,7 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Cross</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyMarkerKind</maml:name>
@@ -32355,6 +32678,7 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Cross</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>TopologyMarkerKind</maml:name>
@@ -32726,6 +33050,7 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Cross</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyMarkerKind</maml:name>
@@ -32836,6 +33161,7 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">ZeroOrOne</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">OneOrMany</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">ZeroOrMany</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Cross</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>TopologyMarkerKind</maml:name>

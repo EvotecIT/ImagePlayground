@@ -1,4 +1,4 @@
-Import-Module "$PSScriptRoot\..\ImagePlayground.psd1" -Force
+Import-Module ImagePlayground
 
 $nodes = @(
     New-ImageTopologyNode -Id client -Label Client -Kind Person -Status Healthy

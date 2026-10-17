@@ -89,7 +89,7 @@ public sealed class NewImageMetricCardCmdlet : PSCmdlet {
         var card = MetricCard.Create()
             .WithMetric(Label, Value, string.IsNullOrWhiteSpace(Format) ? null : Format, string.IsNullOrWhiteSpace(Unit) ? null : Unit)
             .WithSize(Width, Height)
-            .WithTheme(ChartThemeResolver.Resolve(Theme))
+            .WithTheme(ChartThemeResolver.Resolve(Theme), ChartThemeResolver.ResolveMode(Theme))
             .WithStatus(Status)
             .WithIcon(Icon)
             .WithCard(!NoCard.IsPresent)

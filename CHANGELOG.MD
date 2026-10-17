@@ -20,6 +20,7 @@
 
 ### Breaking changes
 
+- Unified native chart, canvas, topology and story themes on ChartForgeX 3 `VisualTheme` and `VisualThemeMode`. Console `-Palette`, story `-Theme` and replay `-ReplayTheme` accept the paired immutable theme. Terminal cursor and window controls move to `-Style`; `New-ImageConsoleStoryPalette -Cursor` is replaced by `TerminalStyleOptions.Cursor`.
 - Migrated barcode APIs to CodeGlyphX 3.0.0 `SymbolFormat` and `DetectedSymbol`; `Get-ImageBarCode -Detailed` and `BarCode.Scan` expose the owner's `ScanResult` for partial results and completion details.
 - Removed the PowerShell `-Async` parameter. Affected cmdlets now always use their cancellable asynchronous core implementation.
 - Removed the unused `ImagePlayground.BarcodeResult` type; CodeGlyphX owns barcode result contracts for .NET callers.
@@ -45,6 +46,8 @@
 
 ### Fixed
 
+- Kept `New-ImageChartRadial` as percentage progress rings when using the unified chart API, and retained series identity when configuring chart combinations.
+- Removed the consumer-specific grid artifact size parser; visual grids use the native ChartForgeX.Visuals artifact producer.
 - `New-ImageTableBlock -Row` accepts `PSCustomObject` rows instead of failing with "Row value count must match table column count".
 - `-Layout DenseGrouped` places every group instead of stacking unpositioned groups at the origin.
 
