@@ -14,7 +14,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
+        <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -28,8 +28,8 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
         <!-- Host public cmdlets inside the coverage test process; the product retains PowerShellStandard.Library. -->
         <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.20" PrivateAssets="all" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" PrivateAssets="all" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.5" PrivateAssets="all" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" PrivateAssets="all" />
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
