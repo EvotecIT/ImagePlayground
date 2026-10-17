@@ -34339,7 +34339,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>X</maml:name>
           <maml:description>
-            <maml:para>Manual X coordinate. Used by the Manual layout; automatic layouts ignore it.</maml:para>
+            <maml:para>Assigns the node's X coordinate. Supplying it marks the node as manually positioned, including when a topology layout is selected.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -34659,7 +34659,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>X</maml:name>
         <maml:description>
-          <maml:para>Manual X coordinate. Used by the Manual layout; automatic layouts ignore it.</maml:para>
+          <maml:para>Assigns the node's X coordinate. Supplying it marks the node as manually positioned, including when a topology layout is selected.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>

@@ -380,7 +380,7 @@ Accept wildcard characters: False
 ```
 
 ### -X
-Sets the node's X coordinate. Supplying it marks the node as manually positioned, including when a topology layout is selected.
+Assigns the node's X coordinate. Supplying it marks the node as manually positioned, including when a topology layout is selected.
 
 ```yaml
 Type: Double
