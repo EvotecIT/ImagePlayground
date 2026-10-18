@@ -14,7 +14,7 @@ The default and `Light` selections use the canonical ChartForgeX light design. `
 
 `New-ImageChart -Definition` accepts `ImagePlayground.ChartDefinition[]`, including ordinary arrays of results from the chart data commands. Native `ChartForgeX.Core.Chart` objects use `-Chart` or pipeline input. PowerShell selects the input path from the model type and rejects unrelated objects during parameter binding.
 
-One definition export combines series of the same chart kind. Mixing kinds in that input reports an error before creating output. For a supported combination of native series, build a `ChartForgeX.Core.Chart` and export it through `-Chart` or the pipeline.
+One `-Definition` input can combine Cartesian bar, line, area, scatter, bubble, lollipop, and range-band series, including step and stacked variants. The series keep their declaration order. Incompatible kinds, such as pie with bar, report an error before creating output. Native `ChartForgeX.Core.Chart` objects can also be exported through `-Chart` or the pipeline.
 
 Apply the same theme to the grid and its child blocks when composing a report. HTML grids reflow to one column on narrow screens. Fixed SVG and PNG exports retain their design dimensions, so author a one-column compact grid instead of reducing a wide image. The [service-health example](https://github.com/EvotecIT/ImagePlayground/blob/main/Examples/VisualGrid.ServiceHealth.ps1) shows both forms using full-size blocks.
 
