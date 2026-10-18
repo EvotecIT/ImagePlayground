@@ -3,6 +3,7 @@ using System.Management.Automation;
 using ChartForgeX.Raster;
 using ChartForgeX.Stories;
 using ChartForgeX.Terminal;
+using ChartForgeX.Themes;
 using ImagePlayground.PowerShell.Stories;
 
 namespace ImagePlayground.PowerShell;
@@ -63,7 +64,15 @@ public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
 
     /// <summary>Optional recorded-replay palette.</summary>
     [Parameter(ParameterSetName = ReplaySet)]
-    public TerminalTheme? ReplayTheme { get; set; }
+    public VisualTheme? ReplayTheme { get; set; }
+
+    /// <summary>Light or dark appearance for a recorded-replay panel.</summary>
+    [Parameter(ParameterSetName = ReplaySet)]
+    public VisualThemeMode ReplayThemeMode { get; set; } = VisualThemeMode.Dark;
+
+    /// <summary>Optional cursor and title-bar overrides for a recorded-replay panel.</summary>
+    [Parameter(ParameterSetName = ReplaySet)]
+    public TerminalStyleOptions? ReplayStyle { get; set; }
 
     /// <summary>Exact source text to tokenize or preserve.</summary>
     [Parameter(Mandatory = true, ParameterSetName = SourceTextSet)]
@@ -127,7 +136,7 @@ public sealed class NewImageStoryPanelCmdlet : PSCmdlet {
             case SourceTimelineSet:
                 return new VisualStorySourceSurface(SourceTimeline!, string.IsNullOrWhiteSpace(Title) ? null : Title, SourceOptions);
             case ReplaySet:
-                return new VisualStoryReplaySurface(Replay!, AccessibleText, TerminalOptions, ReplayTheme);
+                return new VisualStoryReplaySurface(Replay!, AccessibleText, TerminalOptions, ReplayTheme, ReplayThemeMode, ReplayStyle);
             case SourceTextSet:
                 return new VisualStorySourceSurface(
                     Tokenize(SourceText),

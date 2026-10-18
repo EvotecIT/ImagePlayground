@@ -62,9 +62,10 @@ Describe 'New-ImageTopology' {
             New-ImageTopologyNode -Id api -Label API -Kind Service -Status Healthy
         } -Theme $Theme -FilePath (Join-Path -Path $TestDir -ChildPath ("topology-theme-{0}.svg" -f $Theme)) -PassThru
 
-        $topology.Theme.Foreground | Should -BeExactly $tokens.Foreground.ToCss()
-        $topology.Theme.Healthy | Should -BeExactly $tokens.Positive.ToCss()
-        $topology.Theme.FontFamily | Should -BeExactly $tokens.FontFamily
+        $topology.ThemeMode.ToString() | Should -BeExactly $Theme
+        $topology.Theme.Resolve($topology.ThemeMode).Foreground.ToCss() | Should -BeExactly $tokens.Foreground.ToCss()
+        $topology.Theme.Resolve($topology.ThemeMode).Positive.ToCss() | Should -BeExactly $tokens.Positive.ToCss()
+        $topology.Theme.Typography.Family | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Typography.Family
     }
 
     It 'accepts a direct topology chart without a Definition argument and preserves chart layout and custom theme' {
@@ -79,8 +80,10 @@ Describe 'New-ImageTopology' {
         $chart.Viewport.Width = 640
         $chart.Viewport.Height = 360
         $chart.Viewport.Padding = 12
-        $chart.Theme = [ChartForgeX.Topology.TopologyTheme]::Light()
-        $chart.Theme.Foreground = '#334455'
+        $chart.Theme = [ChartForgeX.Themes.VisualTheme]::Graphite().Configure({
+            param($builder)
+            $builder.Light.Foreground = [ChartForgeX.Primitives.ChartColor]::FromHex('#334455')
+        })
 
         $node = [ChartForgeX.Topology.TopologyNode]::new()
         $node.Id = 'api'
@@ -94,7 +97,7 @@ Describe 'New-ImageTopology' {
         $topology.Viewport.Width | Should -Be 640
         $topology.Viewport.Height | Should -Be 360
         $topology.Viewport.Padding | Should -Be 12
-        $topology.Theme.Foreground | Should -BeExactly '#334455'
+        $topology.Theme.Resolve($topology.ThemeMode).Foreground.ToCss() | Should -BeExactly '#334455'
         Test-Path -Path $file | Should -BeTrue
     }
 
@@ -204,29 +207,44 @@ Describe 'New-ImageTopology' {
         Test-Path -LiteralPath $file | Should -BeTrue
     }
 
-    It 'renders scenario controls and script-free route motion' {
+    It 'retains active route preference while giving scenario controls an undimmed motion presentation' {
         $file = Join-Path -Path $TestDir -ChildPath 'topology-scenario.html'
         if (Test-Path -Path $file) {
             Remove-Item -Path $file
         }
 
-        $edge = New-ImageTopologyEdge -Id 'api-db' -SourceNodeId 'api' -TargetNodeId 'db' -Direction Forward
+        $edge = New-ImageTopologyEdge -Id 'api-db' -SourceNodeId 'api' -TargetNodeId 'db' -Label Queries -Direction Forward
+        $cacheEdge = New-ImageTopologyEdge -Id api-cache -SourceNodeId api -TargetNodeId cache -Label Lookups -Direction Forward
+        $cacheScenario = New-ImageTopologyScenario -Id cache-flow -Label 'Cache flow' -StepDefinition {
+            New-ImageTopologyScenarioStep -Id api-cache -Kind Edge
+        } -Spotlight
         $scenario = New-ImageTopologyScenario -Id request -Label 'Request flow' -StepDefinition {
             New-ImageTopologyScenarioStep -Id api -Kind Node -Label 'API receives request'
             New-ImageTopologyScenarioStep -Id api-db -Kind Edge -Label 'Database call'
         } -AutoPlay -Spotlight
-        $motion = New-ImageTopologyMotion -ScenarioId request -DurationSeconds 1 -FramesPerSecond 2 -MaximumRasterFrames 4 -NoLoop
+        $motion = New-ImageTopologyMotion -DurationSeconds 1 -FramesPerSecond 2 -MaximumRasterFrames 4 -NoLoop
 
         New-ImageTopology -Node @(
             New-ImageTopologyNode -Id api -Label API
             New-ImageTopologyNode -Id db -Label Database
-        ) -Edge $edge -Scenario $scenario -Motion $motion -ActiveScenarioId request -InteractiveHtml -ScenarioUrlState -FilePath $file
+            New-ImageTopologyNode -Id cache -Label Cache
+        ) -Edge $edge, $cacheEdge -Scenario $cacheScenario, $scenario -Motion $motion -ActiveScenarioId request -InteractiveHtml -ScenarioUrlState -FilePath $file
 
         Test-Path -Path $file | Should -BeTrue
         $html = Get-Content -Path $file -Raw
         $html | Should -Match 'data-cfx-topology-scenario="request"'
         $html | Should -Match 'data-cfx-active-scenario="request"'
         $html | Should -Match 'animateMotion'
+        $html | Should -Match 'data-cfx-motion-kind="route-pulse"'
+        $html | Should -Match 'data-cfx-motion-source="request"'
+        $embeddedSvg = [xml] (@([regex]::Matches($html, '(?s)<svg\b.*?</svg>') | Where-Object { $_.Value -match 'data-cfx-role="topology"' })[0].Value)
+        $topologyRoot = $embeddedSvg.SelectSingleNode("//*[@data-cfx-role='topology']")
+        $topologyRoot.GetAttribute('data-cfx-active-scenario') | Should -BeNullOrEmpty
+        $cacheNode = $embeddedSvg.SelectSingleNode("//*[@data-cfx-role='topology-node' and @data-node-id='cache']")
+        $cacheNode | Should -Not -BeNullOrEmpty
+        $cacheNode.GetAttribute('class') | Should -Not -Match '--dimmed'
+        $motion.ScenarioId | Should -BeNullOrEmpty
+        $motion.EdgeIds.Count | Should -Be 0
     }
 
     It 'exports animated topology GIF and APNG files' {
@@ -247,6 +265,49 @@ Describe 'New-ImageTopology' {
         $apngBytes = [System.IO.File]::ReadAllBytes($apng)
         $apngBytes[0] | Should -Be 137
         [System.Text.Encoding]::ASCII.GetString($apngBytes) | Should -Match 'acTL'
+        $controlOffset = [System.Text.Encoding]::ASCII.GetString($apngBytes).IndexOf('acTL', [StringComparison]::Ordinal)
+        $frameCount = $apngBytes[$controlOffset + 4] * 16777216 + $apngBytes[$controlOffset + 5] * 65536 + $apngBytes[$controlOffset + 6] * 256 + $apngBytes[$controlOffset + 7]
+        $frameCount | Should -Be 1
+        $motion.DurationSeconds | Should -Be 0.5
+        $motion.FramesPerSecond | Should -Be 2
+    }
+
+    It 'preserves explicit topology motion and watermark decoration in script-free SVG and HTML exports' {
+        $nodes = @(New-ImageTopologyNode -Id api -Label API; New-ImageTopologyNode -Id db -Label Database)
+        $edge = New-ImageTopologyEdge -Id api-db -SourceNodeId api -TargetNodeId db
+        $motion = New-ImageTopologyMotion -EdgeId api-db -DurationSeconds 1 -FramesPerSecond 2 -MaximumRasterFrames 4 -NoLoop
+        $watermark = New-ImageVisualWatermark -Text INTERNAL -Anchor Center
+
+        foreach ($extension in 'svg', 'html') {
+            $file = Join-Path $TestDir "explicit-topology-motion.$extension"
+            New-ImageTopology -Node $nodes -Edge $edge -Motion $motion -Watermark $watermark -Width 320 -Height 200 -NoTitle -FilePath $file
+            $content = Get-Content -LiteralPath $file -Raw
+            $content | Should -Match 'animateMotion'
+            $content | Should -Match 'data-cfx-motion-kind="route-pulse"'
+            $content | Should -Match 'INTERNAL'
+            $content | Should -Not -Match '<script'
+        }
+    }
+
+    It 'renders the selected topology motion progress sample in a fixed PNG with DPI metadata' {
+        $nodes = @(New-ImageTopologyNode -Id api -Label API; New-ImageTopologyNode -Id db -Label Database)
+        $edge = New-ImageTopologyEdge -Id api-db -SourceNodeId api -TargetNodeId db
+        $motion = New-ImageTopologyMotion -EdgeId api-db -Progress 0.5 -MarkerColor '#FF0000'
+        $file = Join-Path $TestDir 'topology-motion-sample.png'
+
+        $chart = New-ImageTopology -Node $nodes -Edge $edge -Motion $motion -Width 320 -Height 200 -NoTitle -FitContentToViewport -Dpi 144 -FilePath $file -PassThru
+        $options = [ChartForgeX.Topology.TopologyRenderOptions]::new()
+        $options.IncludeTitle = $false
+        $options.FitContentToViewport = $true
+        $expected = [ChartForgeX.Topology.TopologyMotionExtensions]::WithMotion($chart, $motion, $options).ToRgbaImage()
+        $encoded = [IO.File]::ReadAllBytes($file)
+        $actual = [ChartForgeX.Raster.RasterImageDecoder]::Decode($encoded)
+
+        $actual.Width | Should -Be 320
+        $actual.Height | Should -Be 200
+        [Convert]::ToBase64String($actual.Pixels) | Should -Be ([Convert]::ToBase64String($expected.Pixels))
+        [Text.Encoding]::ASCII.GetString($encoded) | Should -Match 'pHYs'
+        $motion.Progress | Should -Be 0.5
     }
 
     It 'lets automatic layouts place groups that have no explicit position' {

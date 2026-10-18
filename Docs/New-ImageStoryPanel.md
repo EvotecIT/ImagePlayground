@@ -26,7 +26,7 @@ New-ImageStoryPanel -Id <string> -SourceText <string> [-Title <string>] [-Weight
 
 ### Replay
 ```powershell
-New-ImageStoryPanel -Id <string> -Replay <StoryReplay> [-Title <string>] [-Weight <double>] [-TerminalOptions <VisualStoryTerminalOptions>] [-ReplayTheme <TerminalTheme>] [-AccessibleText <string>] [<CommonParameters>]
+New-ImageStoryPanel -Id <string> -Replay <StoryReplay> [-Title <string>] [-Weight <double>] [-TerminalOptions <VisualStoryTerminalOptions>] [-ReplayTheme <VisualTheme>] [-ReplayThemeMode <VisualThemeMode>] [-ReplayStyle <TerminalStyleOptions>] [-AccessibleText <string>] [<CommonParameters>]
 ```
 
 ### Terminal
@@ -211,14 +211,46 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -ReplayStyle
+Optional cursor and title-bar overrides for a recorded-replay panel.
+
+```yaml
+Type: TerminalStyleOptions
+Parameter Sets: Replay
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ReplayTheme
 Optional recorded-replay palette.
 
 ```yaml
-Type: TerminalTheme
+Type: VisualTheme
 Parameter Sets: Replay
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ReplayThemeMode
+Light or dark appearance for a recorded-replay panel.
+
+```yaml
+Type: VisualThemeMode
+Parameter Sets: Replay
+Aliases: None
+Possible values: Light, Dark
 
 Required: False
 Position: named

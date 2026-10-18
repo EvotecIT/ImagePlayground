@@ -60,6 +60,65 @@ Describe 'ChartForgeX visual artifacts' {
         $artifact | Export-ImageVisualArtifact -FilePath $afterPath
         [System.IO.File]::ReadAllText($afterPath) | Should -BeExactly $sourceSvg
         [object]::ReferenceEquals($artifact.RenderSource, $sourceRender) | Should -BeTrue
+
+        $imageMark = New-ImageVisualWatermark -ImagePath $pngPath -Anchor BottomRight -Opacity 0.4 -Scale 0.1 -RotationDegrees 12 -Repeat
+        $imageSvgPath = Join-Path $TestDir 'visual-artifact-image-watermark.svg'
+        $imagePngPath = Join-Path $TestDir 'visual-artifact-image-watermark.png'
+        $artifact | Export-ImageVisualArtifact -FilePath $imageSvgPath -Watermark $imageMark
+        $artifact | Export-ImageVisualArtifact -FilePath $imagePngPath -Watermark $imageMark
+        (Get-Content -LiteralPath $imageSvgPath -Raw) | Should -Match 'data:image/png;base64'
+        [IO.File]::ReadAllBytes($imagePngPath).Length | Should -BeGreaterThan 64
+        [object]::ReferenceEquals($artifact.RenderSource, $sourceRender) | Should -BeTrue
+    }
+
+    It 'preserves declaration order and keeps repeated exports independent' {
+        $chart = [ChartForgeX.Core.Chart]::Create().WithSize(320, 180).WithTitle('Reuse')
+        [void] $chart.AddBar('API', [ChartForgeX.Primitives.ChartPoint[]] @([ChartForgeX.Primitives.ChartPoint]::new(1, 12)))
+        $artifact = $chart | ConvertTo-ImageVisualArtifact -Id reusable-export
+        $first = New-ImageVisualWatermark -Text FIRST -Anchor TopLeft
+        $second = New-ImageVisualWatermark -Text SECOND -Anchor BottomRight
+        $orderedPath = Join-Path $TestDir 'ordered-watermarks.svg'
+        $secondPath = Join-Path $TestDir 'independent-watermark.svg'
+
+        $returned = $artifact | Export-ImageVisualArtifact -FilePath $orderedPath -Watermark $first, $second -PassThru
+        $artifact | Export-ImageVisualArtifact -FilePath $secondPath -Watermark $second
+
+        [object]::ReferenceEquals($returned, $artifact) | Should -BeTrue
+        $ordered = Get-Content -LiteralPath $orderedPath -Raw
+        $firstPosition = $ordered.IndexOf('FIRST', [StringComparison]::Ordinal)
+        $secondPosition = $ordered.IndexOf('SECOND', [StringComparison]::Ordinal)
+        $firstPosition | Should -BeGreaterThan -1
+        $secondPosition | Should -BeGreaterThan -1
+        $firstPosition | Should -BeLessThan $secondPosition
+        (Get-Content -LiteralPath $secondPath -Raw) | Should -Not -Match 'FIRST'
+    }
+
+    It 'accepts a prepared chart through the common static artifact contract' {
+        $chart = [ChartForgeX.Core.Chart]::Create().WithSize(320, 180).WithTitle('Prepared request count')
+        [void] $chart.AddBar('API', [ChartForgeX.Primitives.ChartPoint[]] @([ChartForgeX.Primitives.ChartPoint]::new(1, 12)))
+        $layout = [ChartForgeX.Rendering.VisualLayoutOptions]::new([ChartForgeX.Rendering.VisualSize]::new(320, 180))
+        $prepared = $chart.Prepare([ChartForgeX.Rendering.VisualRenderContext]::new($layout))
+
+        $artifact = $prepared | ConvertTo-ImageVisualArtifact -Id prepared-chart
+
+        $artifact.Model | Should -BeOfType 'ChartForgeX.Rendering.PreparedVisual'
+        $artifact.NaturalSize.Width | Should -Be $prepared.Size.Width
+        [Text.Encoding]::UTF8.GetString($artifact.OfficeVisualSvg) | Should -Match 'Prepared request count'
+        $artifact.OfficeVisualKind | Should -Be 'Unknown'
+    }
+
+    It 'uses the shared grid artifact producer with native dimensions and accessibility' {
+        $grid = New-ImageVisualGrid -Title 'Service status' -Content (New-ImageMetricCard -Label Ready -Value Yes)
+
+        $artifact = $grid | ConvertTo-ImageVisualArtifact -Id static-grid
+
+        $artifact.Model | Should -BeOfType 'ChartForgeX.VisualBlocks.VisualGrid'
+        $artifact.OfficeVisualKind | Should -Be 'ChartGrid'
+        $artifact.NaturalSize.Width | Should -BeGreaterThan 0
+        $artifact.NaturalSize.Height | Should -BeGreaterThan 0
+        $artifact.Accessibility.Name | Should -Be 'Service status'
+        [Text.Encoding]::UTF8.GetString($artifact.OfficeVisualSvg) | Should -Match 'Ready'
+        $artifact.SupportsExport([ChartForgeX.VisualArtifacts.VisualArtifactExportFormat]::Office) | Should -BeTrue
     }
 
     It 'normalizes null-only bindings and rejects mixed null watermark entries across visual cmdlets' {

@@ -1,6 +1,7 @@
 using System;
 using System.Management.Automation;
 using ChartForgeX.Terminal;
+using ChartForgeX.Themes;
 
 namespace ImagePlayground.PowerShell;
 
@@ -59,7 +60,15 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
 
     /// <summary>Optional custom palette, normally created by New-ImageConsoleStoryPalette.</summary>
     [Parameter]
-    public TerminalTheme? Palette { get; set; }
+    public VisualTheme? Palette { get; set; }
+
+    /// <summary>Light or dark appearance for this tab, independent of its shell profile.</summary>
+    [Parameter]
+    public VisualThemeMode ThemeMode { get; set; } = VisualThemeMode.Dark;
+
+    /// <summary>Optional cursor and title-bar overrides for this tab.</summary>
+    [Parameter]
+    public TerminalStyleOptions? Style { get; set; }
 
     /// <summary>Duration of the visual switch from the previously active tab.</summary>
     [Parameter]
@@ -116,6 +125,8 @@ public sealed class NewImageConsoleStoryTabCmdlet : PSCmdlet {
             string.IsNullOrWhiteSpace(WorkingDirectory) ? defaultDirectory : WorkingDirectory!,
             Palette ?? ConsoleStoryPaletteResolver.Resolve(defaultPalette),
             icon,
-            isInitialTab: isInitialTab));
+            isInitialTab: isInitialTab,
+            tabThemeMode: ThemeMode,
+            tabStyle: Style));
     }
 }

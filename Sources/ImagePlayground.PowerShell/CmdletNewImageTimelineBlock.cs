@@ -83,7 +83,7 @@ public sealed class NewImageTimelineBlockCmdlet : PSCmdlet {
         }
         var block = ActivityTimelineBlock.Create()
             .WithEventSurfaces(!Compact.IsPresent)
-            .WithTheme(ChartThemeResolver.Resolve(Theme));
+            .WithTheme(ChartThemeResolver.Resolve(Theme), ChartThemeResolver.ResolveMode(Theme));
         if (!string.IsNullOrWhiteSpace(Title)) block.WithTitle(Title);
         if (!string.IsNullOrWhiteSpace(Subtitle)) block.WithSubtitle(Subtitle);
         foreach (var item in items) AddItem(block, item);

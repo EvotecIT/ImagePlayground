@@ -37,7 +37,7 @@ Describe 'Image console story step cmdlets' {
 
         $story | Should -BeOfType 'ChartForgeX.Terminal.TerminalStory'
         $story.Title | Should -Be 'pwsh - C:\OpenSource'
-        $story.Theme.Background.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalTheme]::PowerShell()).Background.ToCss()
+        $story.Theme.Resolve($story.ThemeMode).ElevatedSurface.ToCss() | Should -BeExactly ([ChartForgeX.Terminal.TerminalThemes]::PowerShell()).Resolve('Dark').ElevatedSurface.ToCss()
         $story.WindowStyle.ToString() | Should -Be 'WindowsTerminal'
         $story.Steps.Count | Should -Be 4
         $story.Steps[0].Kind.ToString() | Should -Be 'Command'
@@ -98,7 +98,7 @@ Describe 'Image console story step cmdlets' {
         $story.TabHoldSeconds | Should -Be 2
         $story.Tabs[1].Title | Should -Be 'Windows PowerShell'
         $story.Tabs[2].Dialect.ToString() | Should -Be 'Bash'
-        $story.Tabs[2].Theme.Background.ToCss() | Should -Be '#24071B'
+        $story.Tabs[2].Theme.Resolve($story.Tabs[2].ThemeMode).ElevatedSurface.ToCss() | Should -Be '#24071B'
         $story.Steps.Where({ $_.Kind.ToString() -eq 'OpenTab' }).Count | Should -Be 2
         $story.Steps.Where({ $_.Kind.ToString() -eq 'DeclareTab' }).Count | Should -Be 0
         $story.Steps.Where({ $_.Kind.ToString() -eq 'SelectTab' }).Count | Should -Be 1

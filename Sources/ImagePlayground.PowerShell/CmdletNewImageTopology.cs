@@ -358,10 +358,15 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
             chart.Viewport.Padding = Padding;
         }
         if (!chartWasProvided || IsParameterBound(nameof(Theme))) {
-            chart.Theme = CreateTheme();
-        } else if (Transparent.IsPresent) {
-            chart.Theme ??= TopologyTheme.Light();
-            chart.Theme.Background = "#FFFFFF00";
+            chart.WithTheme(VisualTheme.Graphite(), Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
+                ? VisualThemeMode.Dark
+                : VisualThemeMode.Light);
+        }
+        if (Transparent.IsPresent) {
+            chart.Theme = chart.Theme.Configure(builder => {
+                var colors = builder.Colors(chart.ThemeMode);
+                colors.Background = colors.Background.WithOpacity(0);
+            });
         }
 
         foreach (var group in _groups) {
@@ -458,19 +463,6 @@ public sealed class NewImageTopologyCmdlet : ImageCmdlet {
         Svg,
         Html,
         Png
-    }
-
-    private TopologyTheme CreateTheme() {
-        var tokens = Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
-            ? VisualDesignTokens.GraphiteDark()
-            : VisualDesignTokens.GraphiteLight();
-        var theme = tokens.ApplyTo(new TopologyTheme());
-
-        if (Transparent.IsPresent) {
-            theme.Background = tokens.Background.WithOpacity(0).ToCss();
-        }
-
-        return theme;
     }
 
     private bool IsParameterBound(string parameterName) => MyInvocation.BoundParameters.ContainsKey(parameterName);

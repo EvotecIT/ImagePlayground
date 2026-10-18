@@ -127,7 +127,7 @@ public sealed class NewImageTableBlockCmdlet : PSCmdlet {
             .WithDenseMode(Dense.IsPresent)
             .WithHeader(!NoHeader.IsPresent)
             .WithRowStriping(!NoRowStriping.IsPresent)
-            .WithTheme(ChartThemeResolver.Resolve(Theme));
+            .WithTheme(ChartThemeResolver.Resolve(Theme), ChartThemeResolver.ResolveMode(Theme));
         foreach (var column in columns) {
             table.AddColumn(column.Header, column.Alignment, column.Width, column.Format);
         }

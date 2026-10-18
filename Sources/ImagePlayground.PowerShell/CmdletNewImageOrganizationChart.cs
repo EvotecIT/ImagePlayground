@@ -1,4 +1,5 @@
 using ChartForgeX.Topology;
+using ChartForgeX.Themes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -124,8 +125,14 @@ public sealed class NewImageOrganizationChartCmdlet : PSCmdlet {
         chart.Subtitle = string.IsNullOrWhiteSpace(Subtitle) ? null : Subtitle;
         chart.Viewport.Width = Width;
         chart.Viewport.Height = Height;
-        chart.Theme = Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase) ? TopologyTheme.Dark() : TopologyTheme.Light();
-        if (Transparent.IsPresent) chart.Theme.Background = "#FFFFFF00";
+        chart.WithTheme(VisualTheme.Graphite(), Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
+            ? VisualThemeMode.Dark : VisualThemeMode.Light);
+        if (Transparent.IsPresent) {
+            chart.Theme = chart.Theme.Configure(builder => {
+                var colors = builder.Colors(chart.ThemeMode);
+                colors.Background = colors.Background.WithOpacity(0);
+            });
+        }
 
         var teamOptions = new TopologyTeamOptions {
             IncludeTeamNode = !NoTeamNode.IsPresent,

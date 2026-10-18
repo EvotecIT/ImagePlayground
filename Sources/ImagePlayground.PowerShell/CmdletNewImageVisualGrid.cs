@@ -3,6 +3,7 @@ using ChartForgeX.Core;
 using ChartForgeX.Motion;
 using ChartForgeX.Primitives;
 using ChartForgeX.VisualBlocks;
+using ChartForgeX.VisualArtifacts;
 using ImagePlayground;
 using System;
 using System.Collections.Generic;
@@ -134,7 +135,7 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
             .WithPanelFit(PanelFit)
             .WithAdaptiveRowHeights(AdaptiveRowHeights.IsPresent)
             .WithFrame(Frame.IsPresent)
-            .WithTheme(ChartThemeResolver.Resolve(Theme));
+            .WithTheme(ChartThemeResolver.Resolve(Theme), ChartThemeResolver.ResolveMode(Theme));
         if (!string.IsNullOrWhiteSpace(Title)) grid.WithTitle(Title);
         if (!string.IsNullOrWhiteSpace(Subtitle)) grid.WithSubtitle(Subtitle);
         var hasPanelWidth = MyInvocation.BoundParameters.ContainsKey(nameof(PanelWidth));
@@ -176,7 +177,7 @@ public sealed class NewImageVisualGridCmdlet : PSCmdlet {
         if (IsChartForgeXGridFormat(extension)) {
             grid.Save(output);
         } else {
-            VisualArtifactOutput.Save(VisualGridArtifact.Create(grid, null), output);
+            VisualArtifactOutput.Save(grid.ToVisualArtifact(), output);
         }
     }
 

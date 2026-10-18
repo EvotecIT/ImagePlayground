@@ -5,6 +5,7 @@ using System.Management.Automation;
 using ChartForgeX;
 using ChartForgeX.Motion;
 using ChartForgeX.VisualBlocks;
+using ChartForgeX.VisualArtifacts;
 using ImagePlayground;
 
 namespace ImagePlayground.PowerShell;
@@ -124,7 +125,7 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
             if (presentation == null) grid!.SavePng(output);
             else OfficeIMO.Drawing.OfficeImageFileWriter.WriteAllBytes(output, presentation.ToPng());
         } else if (presentation == null) {
-            VisualArtifactOutput.Save(VisualGridArtifact.Create(grid!, null), output);
+            VisualArtifactOutput.Save(grid!.ToVisualArtifact(), output);
         } else {
             throw new PSArgumentException("Visual stories with motion support .svg, .html, .htm, or .png output; " + extension + " is available for static grids only.", nameof(FilePath));
         }
@@ -162,7 +163,7 @@ public sealed class NewImageVisualStoryCmdlet : PSCmdlet {
 
     private VisualGrid BuildGrid() {
         if (StoryScript != null) {
-            var grid = VisualGrid.Create().WithTheme(ChartThemeResolver.Resolve(ChartTheme.Default));
+            var grid = VisualGrid.Create().WithTheme(ChartThemeResolver.Resolve(ChartTheme.Default), ChartThemeResolver.ResolveMode(ChartTheme.Default));
             foreach (var result in StoryScript.Invoke(grid)) {
                 var value = result is PSObject psObject ? psObject.BaseObject : result;
                 if (value is VisualGrid returnedGrid) {

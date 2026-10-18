@@ -1,6 +1,6 @@
 using System.Management.Automation;
 using ChartForgeX.Primitives;
-using ChartForgeX.Terminal;
+using ChartForgeX.Themes;
 
 namespace ImagePlayground.PowerShell;
 
@@ -10,10 +10,17 @@ namespace ImagePlayground.PowerShell;
 ///   <summary>Create a branded Ubuntu-derived palette</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Background '#24071B' -Accent '#FF6A2B'</code>
-///   <para>Returns a ChartForgeX TerminalTheme that can be supplied through the Palette parameter.</para>
+///   <para>Returns a paired immutable VisualTheme that can be supplied through Palette. Select its appearance with ThemeMode on the story or tab.</para>
+/// </example>
+/// <example>
+///   <summary>Keep cursor styling separate from the palette</summary>
+///   <code>$palette = New-ImageConsoleStoryPalette -Preset Ubuntu -Accent '#FF6A2B'
+/// $style = [ChartForgeX.Terminal.TerminalStyleOptions]::new()
+/// $style.Cursor = [ChartForgeX.Primitives.ChartColor]::FromHex('#FF6A2B')
+/// New-ImageConsoleStory -Palette $palette -Style $style -Content { New-ImageConsoleStoryOutput -Text Ready }</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageConsoleStoryPalette")]
-[OutputType(typeof(TerminalTheme))]
+[OutputType(typeof(VisualTheme))]
 public sealed class NewImageConsoleStoryPaletteCmdlet : PSCmdlet {
     /// <summary>Built-in palette used as the customization baseline. Light and Dark use the canonical ChartForgeX tokens; shell-specific presets remain available.</summary>
     [Parameter]
@@ -60,54 +67,45 @@ public sealed class NewImageConsoleStoryPaletteCmdlet : PSCmdlet {
     [Parameter]
     public string? Error { get; set; }
 
-    /// <summary>Cursor color in hexadecimal notation.</summary>
-    [Parameter]
-    public string? Cursor { get; set; }
-
     /// <summary>CSS font-family stack shared by every tab in the story.</summary>
     [Parameter]
     public string? FontFamily { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var palette = ConsoleStoryPaletteResolver.Resolve(Preset);
-        if (!string.IsNullOrWhiteSpace(PageBackground)) {
-            palette.PageBackground = Parse(PageBackground!);
-        }
-        if (!string.IsNullOrWhiteSpace(Background)) {
-            palette.Background = Parse(Background!);
-        }
-        if (!string.IsNullOrWhiteSpace(HeaderBackground)) {
-            palette.HeaderBackground = Parse(HeaderBackground!);
-        }
-        if (!string.IsNullOrWhiteSpace(Border)) {
-            palette.Border = Parse(Border!);
-        }
-        if (!string.IsNullOrWhiteSpace(Text)) {
-            palette.Text = Parse(Text!);
-        }
-        if (!string.IsNullOrWhiteSpace(Muted)) {
-            palette.Muted = Parse(Muted!);
-        }
-        if (!string.IsNullOrWhiteSpace(Accent)) {
-            palette.Accent = Parse(Accent!);
-        }
+        var palette = ConsoleStoryPaletteResolver.Resolve(Preset).Configure(builder => {
+            ApplyOverrides(builder.Light);
+            ApplyOverrides(builder.Dark);
+            if (!string.IsNullOrWhiteSpace(FontFamily)) {
+                var fonts = builder.Typography;
+                builder.Typography = new VisualTypography(fonts.Family, fonts.TitleSize, fonts.SubtitleSize,
+                    fonts.AxisSize, fonts.LegendSize, fonts.DataLabelSize, fonts.ScalarValueSize,
+                    fonts.CenterValueSize, fonts.AxisTitleSize, FontFamily!);
+            }
+        });
+        WriteObject(palette);
+    }
+
+    private void ApplyOverrides(VisualDesignTokens colors) {
+        if (!string.IsNullOrWhiteSpace(PageBackground)) colors.Background = Parse(PageBackground!);
+        if (!string.IsNullOrWhiteSpace(Background)) colors.ElevatedSurface = Parse(Background!);
+        if (!string.IsNullOrWhiteSpace(HeaderBackground)) colors.Surface = Parse(HeaderBackground!);
+        if (!string.IsNullOrWhiteSpace(Border)) colors.Border = Parse(Border!);
+        if (!string.IsNullOrWhiteSpace(Text)) colors.Foreground = Parse(Text!);
+        if (!string.IsNullOrWhiteSpace(Muted)) colors.MutedForeground = Parse(Muted!);
+        if (!string.IsNullOrWhiteSpace(Accent)) colors.Accent = Parse(Accent!);
         if (!string.IsNullOrWhiteSpace(Success)) {
-            palette.Success = Parse(Success!);
+            var color = Parse(Success!);
+            colors.Status.Pass = new VisualTokenColor(color, color);
         }
         if (!string.IsNullOrWhiteSpace(Warning)) {
-            palette.Warning = Parse(Warning!);
+            var color = Parse(Warning!);
+            colors.Status.Medium = new VisualTokenColor(color, color);
         }
         if (!string.IsNullOrWhiteSpace(Error)) {
-            palette.Error = Parse(Error!);
+            var color = Parse(Error!);
+            colors.Status.Critical = new VisualTokenColor(color, color);
         }
-        if (!string.IsNullOrWhiteSpace(Cursor)) {
-            palette.Cursor = Parse(Cursor!);
-        }
-        if (!string.IsNullOrWhiteSpace(FontFamily)) {
-            palette.FontFamily = FontFamily!;
-        }
-        WriteObject(palette);
     }
 
     private static ChartColor Parse(string value) => ChartColor.FromHex(value);

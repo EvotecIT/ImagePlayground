@@ -62,20 +62,21 @@ Describe 'New-ImageCanvas' {
         } -FilePath $file -PassThru
 
         $canvas.Width | Should -Be 368
-        $canvas.Theme.TileValueColor.ToCss() | Should -BeExactly $tokens.Foreground.ToCss()
-        $canvas.Theme.FontFamily | Should -BeExactly $tokens.FontFamily
+        $canvas.ThemeMode.ToString() | Should -BeExactly $Theme
+        $canvas.Theme.Resolve($canvas.ThemeMode).Foreground.ToCss() | Should -BeExactly $tokens.Foreground.ToCss()
+        $canvas.Theme.Typography.Family | Should -BeExactly ([ChartForgeX.Themes.VisualTheme]::Graphite()).Typography.Family
         $canvas.BackgroundTop.ToCss() | Should -BeExactly ([ChartForgeX.Primitives.ChartColor]::FromHex('#334455')).ToCss()
     }
 
     It 'preserves a supplied canvas theme when no theme override is requested' {
         $canvas = [ChartForgeX.Composition.VisualCanvas]::Create(368, 240)
         $customColor = [ChartForgeX.Primitives.ChartColor]::FromHex('#ABCDEF')
-        $canvas.Theme.TileValueColor = $customColor
+        $canvas.Theme = $canvas.Theme.Configure({ param($builder) $builder.Dark.Foreground = $customColor })
         [void] $canvas.WithBackground([ChartForgeX.Primitives.ChartColor]::FromHex('#123456'))
         $exported = $canvas | New-ImageCanvas -FilePath (Join-Path -Path $TestDir -ChildPath 'custom-canvas.svg') -PassThru
 
         [object]::ReferenceEquals($canvas, $exported) | Should -BeTrue
-        $exported.Theme.TileValueColor.ToCss() | Should -BeExactly $customColor.ToCss()
+        $exported.Theme.Resolve($exported.ThemeMode).Foreground.ToCss() | Should -BeExactly $customColor.ToCss()
         $exported.BackgroundTop.ToCss() | Should -BeExactly ([ChartForgeX.Primitives.ChartColor]::FromHex('#123456')).ToCss()
     }
 

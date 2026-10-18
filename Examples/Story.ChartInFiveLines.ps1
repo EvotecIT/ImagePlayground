@@ -4,13 +4,9 @@ param(
     [string] $Theme = 'Light'
 )
 
-Import-Module "$PSScriptRoot\..\ImagePlayground.psd1" -Force
+Import-Module ImagePlayground
 
-$storyTheme = if ($Theme -eq 'Dark') {
-    [ChartForgeX.Stories.VisualStoryTheme]::GraphiteDark()
-} else {
-    [ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()
-}
+$storyTheme = [ChartForgeX.Themes.VisualTheme]::Graphite()
 $suffix = $Theme.ToLowerInvariant()
 $wideSourceText = @'
 $options = New-ImageChartOptions -TickCount 4
@@ -70,9 +66,9 @@ foreach ($compact in $false, $true) {
     $outcome = New-ImageStoryOutcome -Id chart -Label 'Weekly builds visible' -PanelId chart
 
     foreach ($extension in 'svg', 'html', 'png') {
-        New-ImageStory -Title $storyTitle -Description 'PowerShell source and rendered chart.' -Theme $storyTheme -Width $storyWidth -Height $storyHeight -Scenes $write, $complete -Outcomes $outcome -FilePath (Join-Path -Path $OutputDirectory -ChildPath "chart-in-five-lines-$suffix$sizeSuffix.$extension")
+        New-ImageStory -Title $storyTitle -Description 'PowerShell source and rendered chart.' -Theme $storyTheme -ThemeMode $Theme -Width $storyWidth -Height $storyHeight -Scenes $write, $complete -Outcomes $outcome -FilePath (Join-Path -Path $OutputDirectory -ChildPath "chart-in-five-lines-$suffix$sizeSuffix.$extension")
     }
     if (-not $compact) {
-        New-ImageStory -Title $storyTitle -Description 'PowerShell source and rendered chart.' -Theme $storyTheme -Width $storyWidth -Height $storyHeight -Scenes $write, $complete -Outcomes $outcome -FilePath (Join-Path -Path $OutputDirectory -ChildPath "chart-in-five-lines-$suffix.gif") -BundlePath (Join-Path -Path $OutputDirectory -ChildPath "chart-story-$suffix-bundle")
+        New-ImageStory -Title $storyTitle -Description 'PowerShell source and rendered chart.' -Theme $storyTheme -ThemeMode $Theme -Width $storyWidth -Height $storyHeight -Scenes $write, $complete -Outcomes $outcome -FilePath (Join-Path -Path $OutputDirectory -ChildPath "chart-in-five-lines-$suffix.gif") -BundlePath (Join-Path -Path $OutputDirectory -ChildPath "chart-story-$suffix-bundle")
     }
 }

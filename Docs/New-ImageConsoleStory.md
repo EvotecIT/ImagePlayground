@@ -16,12 +16,12 @@ New-ImageConsoleStory [-StoryScript] <scriptblock> [-FilePath <string>] [-Frames
 
 ### Content
 ```powershell
-New-ImageConsoleStory -Content <scriptblock> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Content <scriptblock> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <TerminalStyleOptions>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Step
 ```powershell
-New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -Step <ImageConsoleStoryStep[]> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <TerminalStyleOptions>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ### Story
@@ -31,7 +31,7 @@ New-ImageConsoleStory -Story <TerminalStory> [-FilePath <string>] [-FramesPerSec
 
 ### Transcript
 ```powershell
-New-ImageConsoleStory -InputObject <string> -CommandText <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <TerminalTheme>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
+New-ImageConsoleStory -InputObject <string> -CommandText <string> [-Dialect <TerminalDialect>] [-CustomPrompt <string>] [-Title <string>] [-WorkingDirectory <string>] [-Theme <string>] [-Palette <VisualTheme>] [-ThemeMode <VisualThemeMode>] [-Style <TerminalStyleOptions>] [-WindowStyle <TerminalWindowStyle>] [-Width <int>] [-FontSize <double>] [-LineHeight <double>] [-InitialDelaySeconds <double>] [-TypingSpeed <double>] [-LineDelaySeconds <double>] [-Speed <TerminalStoryPlaybackSpeed>] [-TabHoldSeconds <double>] [-NoFinalPrompt] [-PngOutputScale <int>] [-FilePath <string>] [-FramesPerSecond <int>] [-EndHoldSeconds <double>] [-AnimationScale <int>] [-MaximumFrames <int>] [-NoLoop] [-Show] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -371,7 +371,7 @@ Accept wildcard characters: False
 Optional custom palette, normally created by New-ImageConsoleStoryPalette.
 
 ```yaml
-Type: TerminalTheme
+Type: VisualTheme
 Parameter Sets: Content, Step, Transcript
 Aliases: None
 Possible values:
@@ -495,6 +495,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Style
+Optional terminal cursor and title-bar overrides, independent of the shared palette.
+
+```yaml
+Type: TerminalStyleOptions
+Parameter Sets: Content, Step, Transcript
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -TabHoldSeconds
 Optional minimum reading time after content appears and before the active tab changes. When omitted, Speed selects the hold: Slow 2 seconds, Normal 0.9 seconds, or Fast 0.35 seconds.
 
@@ -512,13 +528,29 @@ Accept wildcard characters: False
 ```
 
 ### -Theme
-Built-in terminal color palette. Light and Dark use canonical ChartForgeX tokens; named shell palettes retain their own appearance.
+Built-in terminal palette and default appearance. Light and Dark use the shared Graphite theme; named shell palettes default to dark.
 
 ```yaml
 Type: String
 Parameter Sets: Content, Step, Transcript
 Aliases: None
 Possible values: Dark, PowerShell, WindowsPowerShell, Ubuntu, Campbell, Classic, Light
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ThemeMode
+Explicit light or dark appearance. When omitted, Theme selects the appearance.
+
+```yaml
+Type: VisualThemeMode
+Parameter Sets: Content, Step, Transcript
+Aliases: None
+Possible values: Light, Dark
 
 Required: False
 Position: named

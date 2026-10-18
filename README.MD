@@ -121,7 +121,7 @@ dotnet add package ChartForgeX
 dotnet add package CodeGlyphX
 ```
 
-The ImagePlayground .NET package uses OfficeIMO.Core for raster processing, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding. These ChartForgeX packages use version 2.0.0 together. The PowerShell module also exposes ChartForgeX charts and stories and CodeGlyphX QR codes and barcodes.
+The ImagePlayground .NET package uses OfficeIMO.Core for raster processing, ChartForgeX.Visuals for composition, and ChartForgeX.Stories for GIF/APNG encoding. Its ChartForgeX dependencies use the same 3.0.0 version. The PowerShell module also exposes ChartForgeX charts and stories and CodeGlyphX QR codes and barcodes.
 
 ## Quick start
 
@@ -530,7 +530,7 @@ $story | Export-ImageConsoleStory -Path '.\audit.svg'
 
 Generic stories combine resolved source, terminal output, text, images, and SVG into timed scenes. Declared outcomes must be visible in the completed scene, so a story that promises a chart cannot finish with only “Saved chart.png.”
 
-New source-to-result stories use the canonical dark surfaces and syntax roles. Supply `-Theme ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight())` for a light story. Terminal `Light` and `Dark` palettes use the same design roles; named PowerShell, Ubuntu, Campbell and other shell palettes remain distinct. Custom themes and already-authored native stories retain their selected styling on export.
+New source-to-result stories use the canonical dark surfaces and syntax roles. Supply `-ThemeMode Light` for a light story. Charts, canvases, grids, diagrams and stories share the paired immutable `ChartForgeX.Themes.VisualTheme`; a separate `VisualThemeMode` chooses its light or dark colors. Terminal `Light` and `Dark` selections use the same design roles; named PowerShell, Ubuntu, Campbell and other shell palettes remain distinct. Custom themes and already-authored native stories retain their selected styling on export.
 
 ```powershell
 $chartPath = '.\weekly-builds.png'
@@ -570,7 +570,7 @@ $outcome = New-ImageStoryOutcome `
 
 New-ImageStory `
     -Title 'Weekly builds recipe' `
-    -Theme ([ChartForgeX.Stories.VisualStoryTheme]::GraphiteLight()) `
+    -ThemeMode Light `
     -Scenes $writeScene, $resultScene `
     -Outcomes $outcome `
     -FilePath '.\chart-story.gif'

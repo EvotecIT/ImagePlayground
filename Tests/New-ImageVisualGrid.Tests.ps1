@@ -62,11 +62,13 @@ Describe 'New-ImageVisualGrid' {
             }
         )
         $grid = New-ImageVisualGrid -Content $blocks -Theme $Theme -Columns 1
+        $mode = [ChartForgeX.Themes.VisualThemeMode] $Theme
         foreach ($block in $blocks) {
-            $block.Options.Theme.UseGraphiteLayout | Should -BeTrue
-            $block.Options.Theme.Text.ToCss() | Should -BeExactly $grid.Theme.Text.ToCss()
-            $block.Options.Theme.FontFamily | Should -BeExactly $grid.Theme.FontFamily
-            $block.Options.Theme.Positive.ToCss() | Should -BeExactly $grid.Theme.Positive.ToCss()
+            $block.Options.ThemeMode | Should -Be $mode
+            $grid.ThemeMode | Should -Be $mode
+            $block.Options.Theme.Resolve($mode).Foreground.ToCss() | Should -BeExactly $grid.Theme.Resolve($mode).Foreground.ToCss()
+            $block.Options.Theme.Typography.Family | Should -BeExactly $grid.Theme.Typography.Family
+            $block.Options.Theme.Resolve($mode).Positive.ToCss() | Should -BeExactly $grid.Theme.Resolve($mode).Positive.ToCss()
         }
     }
 

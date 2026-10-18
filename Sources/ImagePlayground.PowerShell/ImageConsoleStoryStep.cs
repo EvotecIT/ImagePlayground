@@ -1,5 +1,6 @@
 using System;
 using ChartForgeX.Terminal;
+using ChartForgeX.Themes;
 
 namespace ImagePlayground.PowerShell;
 
@@ -16,10 +17,12 @@ public sealed class ImageConsoleStoryStep {
         string tabTitle = "",
         TerminalDialect tabDialect = TerminalDialect.PowerShell,
         string tabWorkingDirectory = "",
-        TerminalTheme? tabTheme = null,
+        VisualTheme? tabTheme = null,
         TerminalTabIcon tabIcon = TerminalTabIcon.Terminal,
         string tabCustomPrompt = "",
-        bool isInitialTab = false) {
+        bool isInitialTab = false,
+        VisualThemeMode tabThemeMode = VisualThemeMode.Dark,
+        TerminalStyleOptions? tabStyle = null) {
         Kind = kind;
         Text = text;
         Tone = tone;
@@ -30,6 +33,8 @@ public sealed class ImageConsoleStoryStep {
         TabDialect = tabDialect;
         TabWorkingDirectory = tabWorkingDirectory;
         TabTheme = tabTheme;
+        TabThemeMode = tabThemeMode;
+        _tabStyle = tabStyle?.Clone();
         TabIcon = tabIcon;
         TabCustomPrompt = tabCustomPrompt;
         IsInitialTab = isInitialTab;
@@ -63,7 +68,14 @@ public sealed class ImageConsoleStoryStep {
     public string TabWorkingDirectory { get; }
 
     /// <summary>Gets the independent palette carried by an open-tab step.</summary>
-    public TerminalTheme? TabTheme { get; }
+    public VisualTheme? TabTheme { get; }
+
+    /// <summary>Gets the explicit appearance carried by a tab step.</summary>
+    public VisualThemeMode TabThemeMode { get; }
+
+    private readonly TerminalStyleOptions? _tabStyle;
+    /// <summary>Gets an independent copy of the cursor and title-bar options carried by a tab step.</summary>
+    public TerminalStyleOptions? TabStyle => _tabStyle?.Clone();
 
     /// <summary>Gets the semantic icon carried by an open-tab step.</summary>
     public TerminalTabIcon TabIcon { get; }
@@ -103,7 +115,8 @@ public sealed class ImageConsoleStoryStep {
                     TabWorkingDirectory,
                     TabTheme ?? throw new InvalidOperationException("Console story tab steps require a palette."),
                     TabIcon,
-                    string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt);
+                    string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt,
+                    TabThemeMode, TabStyle);
                 break;
             case TerminalStoryStepKind.OpenTab:
                 var theme = TabTheme ?? throw new InvalidOperationException("Console story tab steps require a palette.");
@@ -115,7 +128,8 @@ public sealed class ImageConsoleStoryStep {
                         TabWorkingDirectory,
                         theme,
                         TabIcon,
-                        string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt);
+                        string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt,
+                        TabThemeMode, TabStyle);
                 } else {
                     story.OpenTab(
                         TabId,
@@ -125,7 +139,7 @@ public sealed class ImageConsoleStoryStep {
                         theme,
                         TabIcon,
                         string.IsNullOrEmpty(TabCustomPrompt) ? null : TabCustomPrompt,
-                        DurationSeconds);
+                        DurationSeconds, TabThemeMode, TabStyle);
                 }
                 break;
             case TerminalStoryStepKind.SelectTab:

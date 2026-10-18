@@ -14,19 +14,20 @@ public partial class ImagePlayground {
     [InlineData(global::ImagePlayground.ChartTheme.Light, false)]
     [InlineData(global::ImagePlayground.ChartTheme.Dark, true)]
     public void Test_ChartDefaultsUseCanonicalThemeWithoutReplacingExplicitPalette(global::ImagePlayground.ChartTheme theme, bool dark) {
-        var expected = dark ? ChartForgeX.Themes.ChartTheme.GraphiteDark() : ChartForgeX.Themes.ChartTheme.GraphiteLight();
+        var expected = ChartForgeX.Themes.VisualTheme.Graphite();
+        var mode = dark ? ChartForgeX.Themes.VisualThemeMode.Dark : ChartForgeX.Themes.VisualThemeMode.Light;
         var chart = global::ImagePlayground.Charts.Create(theme: theme);
 
-        Assert.True(chart.Options.Theme.UseGraphiteLayout);
-        Assert.Equal(expected.FontFamily, chart.Options.Theme.FontFamily);
-        Assert.Equal(expected.Text, chart.Options.Theme.Text);
-        Assert.Equal(expected.TitleFontSize, chart.Options.Theme.TitleFontSize);
-        Assert.Equal(expected.Palette, chart.Options.Theme.Palette);
+        Assert.Equal(mode, chart.Options.ThemeMode);
+        Assert.Equal(expected.Typography.Family, chart.Options.Theme.Typography.Family);
+        Assert.Equal(expected.Resolve(mode).Foreground, chart.Options.Theme.Resolve(mode).Foreground);
+        Assert.Equal(expected.Typography.TitleSize, chart.Options.Theme.Typography.TitleSize);
+        Assert.Equal(expected.Resolve(mode).Palette, chart.Options.Theme.Resolve(mode).Palette);
 
         var explicitColors = new[] { ChartForgeX.Primitives.ChartColor.FromHex("#B91C1C"), ChartForgeX.Primitives.ChartColor.FromHex("#047857") };
         var customized = global::ImagePlayground.Charts.Create(theme: theme, options: new global::ImagePlayground.ChartRenderOptions { Palette = explicitColors });
-        Assert.Equal(explicitColors, customized.Options.Theme.Palette);
-        Assert.True(customized.Options.Theme.UseGraphiteLayout);
+        Assert.Equal(explicitColors, customized.Options.Theme.Resolve(mode).Palette);
+        Assert.Equal(expected.Resolve(mode).Palette, chart.Options.Theme.Resolve(mode).Palette);
     }
 
     [Fact]
@@ -74,6 +75,36 @@ public partial class ImagePlayground {
 
         Assert.Equal(new[] { ChartSeriesKind.Bar, ChartSeriesKind.Line }, chart.Series.Select(series => series.Kind));
         Assert.Equal(new[] { "1", "2", "3" }, chart.Options.XAxisLabels.Select(label => label.Text));
+        Assert.Equal(new[] { "series-1", "series-2" }, chart.Series.Select(series => series.Id.Value));
+        var retained = chart.Series[1];
+        retained.WithName("Errors");
+        Assert.Same(retained, chart.Series[1]);
+        Assert.Equal("series-2", retained.Id.Value);
+        Assert.Equal("Errors", retained.Name);
+    }
+
+    [Fact]
+    public void Test_RadialDefinitionsRetainPercentProgressRings() {
+        var chart = global::ImagePlayground.Charts.Build(new global::ImagePlayground.ChartDefinition[] {
+            new global::ImagePlayground.ChartRadial("CPU", 25),
+            new global::ImagePlayground.ChartRadial("Memory", 75)
+        });
+
+        Assert.Equal(ChartSeriesKind.ProgressRing, chart.Series[0].Kind);
+        Assert.Equal(new[] { 25d, 75d }, chart.Series[0].Points.Select(point => point.Y));
+        Assert.Contains("progress-ring", chart.ToSvg());
+    }
+
+    [Fact]
+    public void Test_ExplicitBackgroundDoesNotMutateSharedTheme() {
+        var background = ChartForgeX.Primitives.ChartColor.FromHex("#334455");
+        var original = ChartForgeX.Themes.VisualTheme.Graphite();
+        var chart = global::ImagePlayground.Charts.Create(theme: global::ImagePlayground.ChartTheme.Dark, background: background);
+
+        Assert.Equal(background, chart.Options.Theme.Resolve(chart.Options.ThemeMode).Background);
+        Assert.Equal(original.Resolve(ChartForgeX.Themes.VisualThemeMode.Light).Background,
+            chart.Options.Theme.Resolve(ChartForgeX.Themes.VisualThemeMode.Light).Background);
+        Assert.NotEqual(background, original.Resolve(ChartForgeX.Themes.VisualThemeMode.Dark).Background);
     }
 
     [Fact]
