@@ -3031,6 +3031,25 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TelepenNumeric</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Coop2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Datalogic2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bc412</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">FacingIdentificationMark</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Daft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Flattermarken</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChannelCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code16K</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code49</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CodablockF</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PosiCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Mailmark4State</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">D3Aqr</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">AztecRune</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CodeOne</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ultracode</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>SymbolFormat[]</maml:name>
@@ -3142,6 +3161,25 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TelepenNumeric</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Coop2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Datalogic2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bc412</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">FacingIdentificationMark</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Daft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Flattermarken</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChannelCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code16K</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code49</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CodablockF</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PosiCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Mailmark4State</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">D3Aqr</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">AztecRune</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CodeOne</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ultracode</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>SymbolFormat[]</maml:name>
@@ -4564,6 +4602,25 @@ try {&#xD;
             <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ean5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TelepenNumeric</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Coop2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Datalogic2Of5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bc412</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">FacingIdentificationMark</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Daft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Flattermarken</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChannelCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code16K</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Code49</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CodablockF</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PosiCode</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Mailmark4State</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">D3Aqr</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">AztecRune</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CodeOne</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ultracode</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>SymbolFormat</maml:name>
@@ -4735,6 +4792,25 @@ try {&#xD;
           <command:parameterValue required="false" variableLength="false">DotCode</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">HanXin</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Gs1Composite</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ean5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TelepenNumeric</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Coop2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Datalogic2Of5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bc412</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">FacingIdentificationMark</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Daft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Flattermarken</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChannelCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code16K</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Code49</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CodablockF</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PosiCode</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Mailmark4State</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">D3Aqr</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">AztecRune</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CodeOne</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ultracode</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>SymbolFormat</maml:name>
@@ -19337,6 +19413,7 @@ polygonal areas.</maml:para>
     </command:details>
     <maml:description>
       <maml:para>Use this cmdlet when the QR payload is already available as a raw string.</maml:para>
+      <maml:para>Styled artwork and budgeted logos must pass the native CodeGlyphX guardrails. The limited decoder used by Windows PowerShell 5.1 can reject artwork accepted by PowerShell 7. Rendering then throws rather than writing unverified output; simplify the design or validate it with a modern runtime.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -19349,6 +19426,18 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">OfficeColor</command:parameterValue>
           <dev:type>
             <maml:name>OfficeColor</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Caption</maml:name>
+          <maml:description>
+            <maml:para>Caption below the code. A frame uses SCAN ME when no caption is supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19379,6 +19468,42 @@ polygonal areas.</maml:para>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>QrErrorCorrectionLevel</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>EyeBall</maml:name>
+          <maml:description>
+            <maml:para>Shape of the finder centres, independently of -EyeShape.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Rounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ConnectedRounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ConnectedSquircle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SoftDiamond</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Squircle</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Leaf</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Liquid</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Classy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ExtraRounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BarsVertical</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BarsHorizontal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CutCorner</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>QrModuleShape</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19415,6 +19540,15 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Liquid</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Classy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ExtraRounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BarsVertical</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BarsHorizontal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CutCorner</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>QrModuleShape</maml:name>
@@ -19447,9 +19581,42 @@ polygonal areas.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Frame</maml:name>
+          <maml:description>
+            <maml:para>Frame template outside the complete QR quiet zone.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">QrCanvasTemplate</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ScanMePill</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SpeechBubble</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TicketStub</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PhoneOutline</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RoundedCardHeader</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CornerViewfinder</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>QrCanvasTemplate</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Gradient</maml:name>
+          <maml:description>
+            <maml:para>Two foreground colours, from left to right, for example '#9c3411', '#8c2059'.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeColor[]</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeColor[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Logo">
           <maml:name>LogoPath</maml:name>
           <maml:description>
-            <maml:para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</maml:para>
+            <maml:para>CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -19473,7 +19640,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ModuleShape</maml:name>
           <maml:description>
-            <maml:para>Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.</maml:para>
+            <maml:para>Finder and timing patterns stay readable. SVG supports the coordinated shapes through vector coverage contours.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
           <command:parameterValueGroup>
@@ -19490,6 +19657,15 @@ polygonal areas.</maml:para>
             <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Liquid</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Classy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ExtraRounded</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BarsVertical</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BarsHorizontal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">CutCorner</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>QrModuleShape</maml:name>
@@ -19505,6 +19681,32 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Preset</maml:name>
+          <maml:description>
+            <maml:para>Coordinated QR appearance, such as Ink, Sunset, Ocean or Brand.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">QrHeroPreset</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Ink</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotMatrix</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Sunset</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ocean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MonoClassy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Brand</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Neon</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PaperCutout</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RetroPixel</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MinimalLine</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Botanical</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Berry</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>QrHeroPreset</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19572,6 +19774,18 @@ polygonal areas.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Caption</maml:name>
+        <maml:description>
+          <maml:para>Caption below the code. A frame uses SCAN ME when no caption is supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Content</maml:name>
         <maml:description>
@@ -19598,6 +19812,42 @@ polygonal areas.</maml:para>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>QrErrorCorrectionLevel</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>EyeBall</maml:name>
+        <maml:description>
+          <maml:para>Shape of the finder centres, independently of -EyeShape.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Square</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Circle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Rounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ConnectedRounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ConnectedSquircle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SoftDiamond</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Squircle</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Leaf</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Liquid</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Classy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExtraRounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BarsVertical</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BarsHorizontal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CutCorner</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>QrModuleShape</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -19634,6 +19884,15 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Liquid</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Classy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExtraRounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BarsVertical</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BarsHorizontal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CutCorner</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>QrModuleShape</maml:name>
@@ -19666,9 +19925,42 @@ polygonal areas.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Frame</maml:name>
+        <maml:description>
+          <maml:para>Frame template outside the complete QR quiet zone.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">QrCanvasTemplate</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ScanMePill</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SpeechBubble</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TicketStub</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PhoneOutline</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RoundedCardHeader</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CornerViewfinder</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>QrCanvasTemplate</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Gradient</maml:name>
+        <maml:description>
+          <maml:para>Two foreground colours, from left to right, for example '#9c3411', '#8c2059'.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeColor[]</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeColor[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Logo">
         <maml:name>LogoPath</maml:name>
         <maml:description>
-          <maml:para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</maml:para>
+          <maml:para>CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -19692,7 +19984,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ModuleShape</maml:name>
         <maml:description>
-          <maml:para>Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.</maml:para>
+          <maml:para>Finder and timing patterns stay readable. SVG supports the coordinated shapes through vector coverage contours.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">QrModuleShape</command:parameterValue>
         <command:parameterValueGroup>
@@ -19709,6 +20001,15 @@ polygonal areas.</maml:para>
           <command:parameterValue required="false" variableLength="false">Blob</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Dot</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">DotGrid</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Liquid</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Classy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExtraRounded</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BarsVertical</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BarsHorizontal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Plus</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Star</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">CutCorner</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>QrModuleShape</maml:name>
@@ -19724,6 +20025,32 @@ polygonal areas.</maml:para>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
           <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Preset</maml:name>
+        <maml:description>
+          <maml:para>Coordinated QR appearance, such as Ink, Sunset, Ocean or Brand.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">QrHeroPreset</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Ink</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotMatrix</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Sunset</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ocean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MonoClassy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Brand</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Neon</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PaperCutout</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RetroPixel</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MinimalLine</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Botanical</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Berry</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>QrHeroPreset</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -19839,6 +20166,36 @@ polygonal areas.</maml:para>
         <dev:code>'EVO-LAP-0142', 'EVO-LAP-0177' | ForEach-Object { New-ImageQRCode -Content "https://assets.example.com/$_" -FilePath "$_.png" -QuietZone 2 -Size 300 }</dev:code>
         <dev:remarks>
           <maml:para>PNG output is compressed; a typical URL code at 300 px is about 1 KB.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Use a coordinated look with a caption</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageQRCode -Content 'https://example.com/menu' -FilePath menu.png -Preset Sunset -Frame ScanMePill -Caption 'VIEW THE MENU' -ErrorCorrection H</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Export styled SVG with separate finder shapes</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageQRCode -Content 'https://example.com' -FilePath styled.svg -Preset Ink -EyeShape Rounded -EyeBall Circle -ErrorCorrection H</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Apply two colours and a budgeted logo</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-ImageQRCode -Content 'https://example.com' -FilePath brand.png -Preset Brand -Gradient '#431b1b', '#8c2059' -Logo logo.png -LogoScale 0.3 -ErrorCorrection H</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

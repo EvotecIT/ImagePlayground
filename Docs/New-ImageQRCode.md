@@ -11,11 +11,13 @@ Generates a QR code image from plain text content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-LogoPath <string>] [-Transparent] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [-Size <int>] [-QuietZone <int>] [-ErrorCorrection <QrErrorCorrectionLevel>] [-ModuleShape <QrModuleShape>] [-EyeShape <QrModuleShape>] [-EyeColor <OfficeColor>] [-LogoScale <double>] [<CommonParameters>]
+New-ImageQRCode [-Content] <string> [-FilePath] <string> [-Show] [-LogoPath <string>] [-Preset <QrHeroPreset>] [-EyeBall <QrModuleShape>] [-Gradient <OfficeColor[]>] [-Frame <QrCanvasTemplate>] [-Caption <string>] [-Transparent] [-ForegroundColor <OfficeColor>] [-BackgroundColor <OfficeColor>] [-PixelSize <int>] [-Size <int>] [-QuietZone <int>] [-ErrorCorrection <QrErrorCorrectionLevel>] [-ModuleShape <QrModuleShape>] [-EyeShape <QrModuleShape>] [-EyeColor <OfficeColor>] [-LogoScale <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 Use this cmdlet when the QR payload is already available as a raw string.
+
+Styled artwork and budgeted logos must pass the native CodeGlyphX guardrails. The limited decoder used by Windows PowerShell 5.1 can reject artwork accepted by PowerShell 7. Rendering then throws rather than writing unverified output; simplify the design or validate it with a modern runtime.
 
 ## EXAMPLES
 
@@ -51,6 +53,24 @@ PS> 'EVO-LAP-0142', 'EVO-LAP-0177' | ForEach-Object { New-ImageQRCode -Content "
 
 PNG output is compressed; a typical URL code at 300 px is about 1 KB.
 
+### EXAMPLE 6
+```powershell
+PS> New-ImageQRCode -Content 'https://example.com/menu' -FilePath menu.png -Preset Sunset -Frame ScanMePill -Caption 'VIEW THE MENU' -ErrorCorrection H
+```
+
+
+### EXAMPLE 7
+```powershell
+PS> New-ImageQRCode -Content 'https://example.com' -FilePath styled.svg -Preset Ink -EyeShape Rounded -EyeBall Circle -ErrorCorrection H
+```
+
+
+### EXAMPLE 8
+```powershell
+PS> New-ImageQRCode -Content 'https://example.com' -FilePath brand.png -Preset Brand -Gradient '#431b1b', '#8c2059' -Logo logo.png -LogoScale 0.3 -ErrorCorrection H
+```
+
+
 ## PARAMETERS
 
 ### -BackgroundColor
@@ -58,6 +78,22 @@ Background color of the QR code.
 
 ```yaml
 Type: OfficeColor
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Caption
+Caption below the code. A frame uses SCAN ME when no caption is supplied.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -101,6 +137,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -EyeBall
+Shape of the finder centres, independently of -EyeShape.
+
+```yaml
+Type: QrModuleShape
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Square, Circle, Rounded, ConnectedRounded, ConnectedSquircle, Diamond, SoftDiamond, Squircle, Leaf, Wave, Blob, Dot, DotGrid, Liquid, Classy, ExtraRounded, BarsVertical, BarsHorizontal, Plus, Star, Heart, CutCorner
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -EyeColor
 Colour of the three finder patterns (eyes).
 
@@ -124,7 +176,7 @@ Shape of the three finder patterns (eyes), for example Square, Rounded, or Circl
 Type: QrModuleShape
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Square, Circle, Rounded, ConnectedRounded, ConnectedSquircle, Diamond, SoftDiamond, Squircle, Leaf, Wave, Blob, Dot, DotGrid
+Possible values: Square, Circle, Rounded, ConnectedRounded, ConnectedSquircle, Diamond, SoftDiamond, Squircle, Leaf, Wave, Blob, Dot, DotGrid, Liquid, Classy, ExtraRounded, BarsVertical, BarsHorizontal, Plus, Star, Heart, CutCorner
 
 Required: False
 Position: named
@@ -165,13 +217,45 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Frame
+Frame template outside the complete QR quiet zone.
+
+```yaml
+Type: QrCanvasTemplate
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: None, ScanMePill, SpeechBubble, TicketStub, PhoneOutline, RoundedCardHeader, CornerViewfinder
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Gradient
+Two foreground colours, from left to right, for example '#9c3411', '#8c2059'.
+
+```yaml
+Type: OfficeColor[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -LogoPath
-The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.
+CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Logo
 Possible values:
 
 Required: False
@@ -198,13 +282,13 @@ Accept wildcard characters: False
 ```
 
 ### -ModuleShape
-Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.
+Finder and timing patterns stay readable. SVG supports the coordinated shapes through vector coverage contours.
 
 ```yaml
 Type: QrModuleShape
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Square, Circle, Rounded, ConnectedRounded, ConnectedSquircle, Diamond, SoftDiamond, Squircle, Leaf, Wave, Blob, Dot, DotGrid
+Possible values: Square, Circle, Rounded, ConnectedRounded, ConnectedSquircle, Diamond, SoftDiamond, Squircle, Leaf, Wave, Blob, Dot, DotGrid, Liquid, Classy, ExtraRounded, BarsVertical, BarsHorizontal, Plus, Star, Heart, CutCorner
 
 Required: False
 Position: named
@@ -221,6 +305,22 @@ Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Preset
+Coordinated QR appearance, such as Ink, Sunset, Ocean or Brand.
+
+```yaml
+Type: QrHeroPreset
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Ink, DotMatrix, Sunset, Ocean, MonoClassy, Brand, Neon, PaperCutout, RetroPixel, MinimalLine, Botanical, Berry
 
 Required: False
 Position: named
