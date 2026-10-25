@@ -250,7 +250,7 @@ Accept wildcard characters: False
 ```
 
 ### -LogoPath
-CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.
+CodeGlyphX sizes the padded logo against each affected correction block. By default, the correction-block budget determines the largest safe placement; -LogoScale adds a caller-selected size limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.
 
 ```yaml
 Type: String
@@ -266,7 +266,7 @@ Accept wildcard characters: False
 ```
 
 ### -LogoScale
-Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.
+Logo width as a fraction of the symbol width (0.05 to 0.4). Omit this option to use the correction-block budget. Use -ErrorCorrection H for larger logos.
 
 ```yaml
 Type: Double

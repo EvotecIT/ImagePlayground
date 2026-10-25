@@ -69,7 +69,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     public SwitchParameter Show { get; set; }
 
     /// <summary>Optional logo placed near the centre while preserving functional patterns.</summary>
-    /// <para>CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</para>
+    /// <para>CodeGlyphX sizes the padded logo against each affected correction block. By default, the correction-block budget determines the largest safe placement; -LogoScale adds a caller-selected size limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</para>
     [Parameter]
     [Alias("Logo")]
     public string? LogoPath { get; set; }
@@ -141,7 +141,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public OfficeIMO.Drawing.OfficeColor EyeColor { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
 
-    /// <summary>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</summary>
+    /// <summary>Logo width as a fraction of the symbol width (0.05 to 0.4). Omit this option to use the correction-block budget. Use -ErrorCorrection H for larger logos.</summary>
     [Parameter]
     [ValidateRange(0.05D, 0.4D)]
     public double LogoScale { get; set; }

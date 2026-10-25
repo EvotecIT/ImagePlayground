@@ -51,10 +51,10 @@ public partial class QrCode {
             const int paddingModules = 1;
             int maximumLogoModules = logoScale.HasValue
                 ? (int)Math.Floor(symbol.Size * logoScale.Value)
-                : (symbol.Size + 2 * options.QuietZone) / 8;
+                : 0;
             var composition = QrArt.RenderLogo(symbol, options.LogoPng, new CodeGlyphX.Rendering.Art.QrLogoRenderOptions {
                 Appearance = options,
-                MaximumSideModules = maximumLogoModules + 2 * paddingModules,
+                MaximumSideModules = logoScale.HasValue ? maximumLogoModules + 2 * paddingModules : 0,
                 PaddingModules = paddingModules
             });
             options = composition.GetRenderOptions();

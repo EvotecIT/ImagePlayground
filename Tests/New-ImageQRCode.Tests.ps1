@@ -273,4 +273,29 @@ Describe 'New-ImageQRCode' {
         }
     }
 
+    It 'uses the block budget for the default logo and respects an explicit smaller cap' {
+        $logo = Join-Path $TestDir 'budget-badge.png'
+        New-ImageCanvas -Width 80 -Height 80 -Theme Light -Backdrop Plain -BackgroundTop '#431b1b' -BackgroundBottom '#431b1b' -PngOutputScale 1 -LayerDefinition {
+            New-ImageCanvasText -X 26 -Y 2 -Width 50 -Text 'E' -FontSize 56 -Color White -Emphasized
+        } -FilePath $logo
+        $defaultFile = Join-Path $TestDir 'logo-budget-default.svg'
+        $limitedFile = Join-Path $TestDir 'logo-budget-limited.svg'
+        $payload = 'https://example.com/brand/budget'
+        New-ImageQRCode -Content $payload -FilePath $defaultFile -Logo $logo -ErrorCorrection H
+        New-ImageQRCode -Content $payload -FilePath $limitedFile -Logo $logo -LogoScale 0.1 -ErrorCorrection H
+        $measureLogo = {
+            param($Path)
+            [xml] $svg = Get-Content -LiteralPath $Path -Raw
+            $paths = @($svg.SelectNodes("//*[local-name()='path' and @fill='#431B1B']"))
+            $paths.Count | Should -BeGreaterThan 0
+            $rectangles = @($paths | ForEach-Object { [regex]::Matches($_.GetAttribute('d'), 'M(\d+) (\d+)h(\d+)v(\d+)h-\d+z') })
+            $left = ($rectangles | ForEach-Object { [int] $_.Groups[1].Value } | Measure-Object -Minimum).Minimum
+            $right = ($rectangles | ForEach-Object { [int] $_.Groups[1].Value + [int] $_.Groups[3].Value } | Measure-Object -Maximum).Maximum
+            $right - $left
+        }
+        (& $measureLogo $defaultFile) | Should -BeGreaterThan (& $measureLogo $limitedFile)
+        $png = Join-Path $TestDir 'logo-budget-default.png'
+        New-ImageQRCode -Content $payload -FilePath $png -Logo $logo -ErrorCorrection H
+        (Get-ImageQRCode -FilePath $png).Text | Should -Be $payload
+    }
 }

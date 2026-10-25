@@ -49,7 +49,7 @@ public sealed class QrImageStyle {
     /// <summary>Colour of the finder patterns (eyes).</summary>
     public OfficeColor? EyeColor { get; set; }
 
-    /// <summary>Logo width as a fraction of the symbol width (excluding the quiet zone). Defaults to one eighth of the image.</summary>
+    /// <summary>Logo width as a fraction of the symbol width (excluding the quiet zone). Null uses the correction-block budget without an additional size cap.</summary>
     public double? LogoScale { get; set; }
 
     internal QrRenderOptions ToRenderOptions() {

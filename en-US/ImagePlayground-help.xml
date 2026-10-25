@@ -19616,7 +19616,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Logo">
           <maml:name>LogoPath</maml:name>
           <maml:description>
-            <maml:para>CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</maml:para>
+            <maml:para>CodeGlyphX sizes the padded logo against each affected correction block. By default, the correction-block budget determines the largest safe placement; -LogoScale adds a caller-selected size limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -19628,7 +19628,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LogoScale</maml:name>
           <maml:description>
-            <maml:para>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</maml:para>
+            <maml:para>Logo width as a fraction of the symbol width (0.05 to 0.4). Omit this option to use the correction-block budget. Use -ErrorCorrection H for larger logos.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -19960,7 +19960,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Logo">
         <maml:name>LogoPath</maml:name>
         <maml:description>
-          <maml:para>CodeGlyphX sizes the padded logo against each affected correction block. The default size limit is one eighth of the image width; -LogoScale changes the limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</maml:para>
+          <maml:para>CodeGlyphX sizes the padded logo against each affected correction block. By default, the correction-block budget determines the largest safe placement; -LogoScale adds a caller-selected size limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -19972,7 +19972,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LogoScale</maml:name>
         <maml:description>
-          <maml:para>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</maml:para>
+          <maml:para>Logo width as a fraction of the symbol width (0.05 to 0.4). Omit this option to use the correction-block budget. Use -ErrorCorrection H for larger logos.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>

@@ -38,11 +38,11 @@ $logo = Join-Path $OutputDirectory 'logo.png'
 New-ImageCanvas -Width 80 -Height 80 -Theme Light -Backdrop Plain `
     -BackgroundTop '#431b1b' -BackgroundBottom '#431b1b' -PngOutputScale 1 `
     -LayerDefinition {
-        New-ImageCanvasText -X 16 -Y 8 -Width 60 -Text 'E' -FontSize 56 -Color White -Emphasized
+        New-ImageCanvasText -X 26 -Y 2 -Width 50 -Text 'E' -FontSize 56 -Color White -Emphasized
     } -FilePath $logo
 
 New-ImageQRCode -Content $url -FilePath (Join-Path $OutputDirectory 'brand.png') `
-    -Preset Brand -Gradient '#431b1b', '#8c2059' -Logo $logo -LogoScale 0.3 `
+    -Preset Brand -Gradient '#431b1b', '#8c2059' -Logo $logo `
     -PixelSize 16 -ErrorCorrection H
 
 # Inspect the generated payloads before distributing the final assets.
