@@ -67,7 +67,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Swiss QR code' {
         $file = Join-Path $TestDir 'swiss.png'
         if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
@@ -76,7 +76,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Swiss QR code with combined creditor address' {
         $file = Join-Path $TestDir 'swiss_combined.png'
         if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine1 'Main Street 1' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine1 'Main Street 1' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
@@ -84,7 +84,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Swiss QR code with empty combined creditor address line 1' {
         $file = Join-Path $TestDir 'swiss_combined_empty_line1.png'
         if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorAddressType CombinedAddress -CreditorName 'Evotec GmbH' -CreditorAddressLine2 '8000 Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
@@ -92,7 +92,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     It 'creates Swiss QR code with structured creditor postal address only' {
         $file = Join-Path $TestDir 'swiss_postal_address.png'
         if (Test-Path $file) { Remove-Item $file }
-        New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
+        New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath $file
         Test-Path $file | Should -BeTrue
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedPattern '^SPC'
     }
@@ -181,9 +181,9 @@ Describe 'New-ImageQRCode specialized cmdlets' {
         }
     }
 
-    It 'requires Swiss QR reference text for QRR and SCOR' {
+    It 'requires Swiss QR reference text for SCOR' {
         {
-            New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType SCOR -FilePath (Join-Path $TestDir 'swiss_missing_scor_reference.png')
+            New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType SCOR -FilePath (Join-Path $TestDir 'swiss_missing_scor_reference.png')
         } | Should -Throw '*Reference is required*'
     }
 
@@ -235,7 +235,7 @@ Describe 'New-ImageQRCode specialized cmdlets' {
     }
 
     It 'throws on invalid pixel size for Swiss' {
-        { New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath (Join-Path $TestDir 'swiss_invalid.png') -PixelSize 0 } | Should -Throw
+        { New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath (Join-Path $TestDir 'swiss_invalid.png') -PixelSize 0 } | Should -Throw
     }
 
     It 'throws on invalid pixel size for Slovenian UPN' {

@@ -34,7 +34,6 @@ public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</summary>
-    /// <para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</para>
     [Parameter]
     public SymbolFormat[]? Type { get; set; }
 

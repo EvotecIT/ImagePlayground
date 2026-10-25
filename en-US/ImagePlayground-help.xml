@@ -2981,7 +2981,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Type</maml:name>
           <maml:description>
-            <maml:para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</maml:para>
+            <maml:para>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SymbolFormat[]</command:parameterValue>
           <command:parameterValueGroup>
@@ -3111,7 +3111,7 @@ try {&#xD;
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Type</maml:name>
         <maml:description>
-          <maml:para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</maml:para>
+          <maml:para>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SymbolFormat[]</command:parameterValue>
         <command:parameterValueGroup>
@@ -26513,7 +26513,7 @@ polygonal areas.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath swiss.png</dev:code>
+        <dev:code>New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath swiss.png</dev:code>
         <dev:remarks>
           <maml:para>Renders a Swiss QR payment code from the payment fields supplied to the cmdlet.</maml:para>
         </dev:remarks>
@@ -26523,7 +26523,7 @@ polygonal areas.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 249.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show</dev:code>
+        <dev:code>New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 249.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show</dev:code>
         <dev:remarks>
           <maml:para>Creates a styled Swiss QR payment image and opens it immediately after generation.</maml:para>
         </dev:remarks>

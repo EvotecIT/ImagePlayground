@@ -113,7 +113,7 @@ public partial class ImagePlayground {
     }
 
     private static SwissQrCodePayload CreateSwissPayload() {
-        var iban = new SwissQrCodePayload.Iban("CH4431999123000889012", SwissQrIbanType.Iban);
+        var iban = new SwissQrCodePayload.Iban("CH9300762011623852957", SwissQrIbanType.Iban);
         var creditor = SwissQrCodePayload.Contact.CreateStructured("Evotec GmbH", "Main Street", "1", "8000", "Zurich", "CH");
         var reference = new SwissQrCodePayload.Reference(SwissQrReferenceType.NON);
         return new SwissQrCodePayload(iban, SwissQrCurrency.CHF, creditor, reference);

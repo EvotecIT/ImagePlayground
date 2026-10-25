@@ -107,7 +107,7 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.
+Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.
 
 ```yaml
 Type: SymbolFormat[]
