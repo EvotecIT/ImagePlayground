@@ -26,7 +26,7 @@ Terminal cursor and window controls belong to `TerminalStyleOptions`, supplied t
 
 ## CodeGlyphX 3 migration
 
-The module uses CodeGlyphX 3.0.0. Barcode generation and recognition share its `SymbolFormat` catalogue. PowerShell enum names remain case-insensitive; C# callers replace `BarcodeType` with `SymbolFormat`, including capitalization changes such as `EAN` → `Ean`, `PDF417` → `Pdf417`, and `UPCA` → `UpcA`. These format names also change beyond capitalization:
+The module uses CodeGlyphX 3.1.0. Barcode generation and recognition share its `SymbolFormat` catalogue. PowerShell enum names remain case-insensitive; C# callers replace `BarcodeType` with `SymbolFormat`, including capitalization changes such as `EAN` → `Ean`, `PDF417` → `Pdf417`, and `UPCA` → `UpcA`. These format names also change beyond capitalization:
 
 - `GS1_128` → `Gs1Code128`
 - `GS1DataBarOmni` → `Gs1DataBarOmnidirectional`
