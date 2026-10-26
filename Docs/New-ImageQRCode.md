@@ -362,7 +362,7 @@ Accept wildcard characters: False
 ```
 
 ### -Size
-The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.
+The QR panel includes its quiet zone and uses the largest whole number of module pixels that fits, so the panel can be a few pixels smaller than requested. Frames, captions, padding, and shadows add pixels outside the panel.
 
 ```yaml
 Type: Int32

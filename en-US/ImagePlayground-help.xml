@@ -2957,7 +2957,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ScanOptions</maml:name>
           <maml:description>
-            <maml:para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
+            <maml:para>When omitted, scans allow five seconds and use CodeGlyphX default scan formats, excluding QR formats. Other formats marked for explicit selection in the library catalogue require Type. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
           <dev:type>
@@ -2981,7 +2981,7 @@ try {&#xD;
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Type</maml:name>
           <maml:description>
-            <maml:para>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</maml:para>
+            <maml:para>Formats to look for. Defaults to CodeGlyphX default scan formats, excluding QR Code, Micro QR, and rectangular Micro QR. Other formats marked for explicit selection in the library catalogue require this parameter.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SymbolFormat[]</command:parameterValue>
           <command:parameterValueGroup>
@@ -3087,7 +3087,7 @@ try {&#xD;
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ScanOptions</maml:name>
         <maml:description>
-          <maml:para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
+          <maml:para>When omitted, scans allow five seconds and use CodeGlyphX default scan formats, excluding QR formats. Other formats marked for explicit selection in the library catalogue require Type. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ScanOptions</command:parameterValue>
         <dev:type>
@@ -3111,7 +3111,7 @@ try {&#xD;
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Type</maml:name>
         <maml:description>
-          <maml:para>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</maml:para>
+          <maml:para>Formats to look for. Defaults to CodeGlyphX default scan formats, excluding QR Code, Micro QR, and rectangular Micro QR. Other formats marked for explicit selection in the library catalogue require this parameter.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SymbolFormat[]</command:parameterValue>
         <command:parameterValueGroup>
@@ -19738,7 +19738,7 @@ polygonal areas.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Size</maml:name>
           <maml:description>
-            <maml:para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</maml:para>
+            <maml:para>The QR panel includes its quiet zone and uses the largest whole number of module pixels that fits, so the panel can be a few pixels smaller than requested. Frames, captions, padding, and shadows add pixels outside the panel.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -20082,7 +20082,7 @@ polygonal areas.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Size</maml:name>
         <maml:description>
-          <maml:para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</maml:para>
+          <maml:para>The QR panel includes its quiet zone and uses the largest whole number of module pixels that fits, so the panel can be a few pixels smaller than requested. Frames, captions, padding, and shadows add pixels outside the panel.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>

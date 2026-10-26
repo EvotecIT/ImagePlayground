@@ -112,8 +112,8 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [ValidateRange(1, 1000)]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Target image width and height in pixels, including the quiet zone.</summary>
-    /// <para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</para>
+    /// <summary>Target width and height in pixels for the QR panel, including its quiet zone. Frames, captions, padding, and shadows add pixels outside this target.</summary>
+    /// <para>The QR panel includes its quiet zone and uses the largest whole number of module pixels that fits, so the panel can be a few pixels smaller than requested. Frames, captions, padding, and shadows add pixels outside the panel.</para>
     [Parameter]
     [ValidateRange(21, 20000)]
     public int Size { get; set; }
