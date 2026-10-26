@@ -37,10 +37,10 @@ public partial class QrCode {
         return fullPath;
     }
 
-    /// <summary>PNG output from CodeGlyphX is stored (uncompressed) unless a compression level is requested.</summary>
+    /// <summary>Use explicit PNG compression for QR image exports.</summary>
     private static readonly OutputOptions CompressedOutput = new() { PngCompressionLevel = 9 };
 
-    private static CodeGlyphX.QrCode EncodeQr(QrPayloadData payload, QrRenderOptions options, QrErrorCorrectionLevel? errorCorrectionLevel, double? logoScale = null) {
+    private static CodeGlyphX.QrCode EncodeQr(QrPayloadData payload, ref QrRenderOptions options, QrErrorCorrectionLevel? errorCorrectionLevel, double? logoScale = null) {
         // Resolve payload recommendations in the owner before applying the caller's ECC override.
         var builder = QR.Create(payload);
         if (errorCorrectionLevel.HasValue) {
@@ -48,40 +48,29 @@ public partial class QrCode {
         }
         var symbol = builder.Encode();
         if (options.LogoPng is not null) {
-            // Preserve the one-eighth-of-canvas logo bound while the owner uses symbol-relative scale.
-            int moduleSize = options.TargetSizePx > 0
-                ? Math.Max(1, options.TargetSizePx / (symbol.Size + 2 * options.QuietZone))
-                : options.ModuleSize;
-            int symbolPixels = symbol.Size * moduleSize;
-            int canvasPixels = (symbol.Size + 2 * options.QuietZone) * moduleSize;
-            int logoPixels = logoScale.HasValue
-                ? Math.Max(1, (int)Math.Round(symbolPixels * logoScale.Value))
-                : Math.Max(1, canvasPixels / 8);
-            // Normalize with the same resampler as the image API; the owner then composites at 1:1.
-            using var logo = Image.Load(options.LogoPng);
-            double scale = Math.Min(logoPixels / (double)logo.Width, logoPixels / (double)logo.Height);
-            var normalized = OfficeRasterResampler.Resize(logo.Raster,
-                Math.Max(1, (int)Math.Round(logo.Width * scale)),
-                Math.Max(1, (int)Math.Round(logo.Height * scale)),
-                OfficeRasterResamplingMode.Bicubic);
-            options.LogoPng = OfficeRasterImageEncoder.Encode(normalized, OfficeImageExportFormat.Png);
-            options.LogoScale = logoPixels / (double)symbolPixels;
-            options.LogoPaddingPx = 0;
-            options.LogoCornerRadiusPx = 0;
-            options.LogoDrawBackground = false;
+            const int paddingModules = 1;
+            int maximumLogoModules = logoScale.HasValue
+                ? (int)Math.Floor(symbol.Size * logoScale.Value)
+                : 0;
+            var composition = QrArt.RenderLogo(symbol, options.LogoPng, new CodeGlyphX.Rendering.Art.QrLogoRenderOptions {
+                Appearance = options,
+                MaximumSideModules = logoScale.HasValue ? maximumLogoModules + 2 * paddingModules : 0,
+                PaddingModules = paddingModules
+            });
+            options = composition.GetRenderOptions();
         }
         return symbol;
     }
 
     private static void RenderToFile(QrPayloadData payload, string filePath, QrRenderOptions options, QrErrorCorrectionLevel? errorCorrectionLevel = null, double? logoScale = null) {
-        var output = EncodeQr(payload, options, errorCorrectionLevel, logoScale);
+        var output = EncodeQr(payload, ref options, errorCorrectionLevel, logoScale);
         output.Save(ResolveValidatedOutputPath(filePath), options, CompressedOutput);
     }
 
     private static async Task RenderToFileAsync(QrPayloadData payload, string filePath, QrRenderOptions options, CancellationToken cancellationToken, QrErrorCorrectionLevel? errorCorrectionLevel = null, double? logoScale = null) {
         cancellationToken.ThrowIfCancellationRequested();
         string fullPath = ResolveValidatedOutputPath(filePath);
-        var output = EncodeQr(payload, options, errorCorrectionLevel, logoScale).Render(OutputFormatInfo.Resolve(fullPath, OutputFormat.Png), options, CompressedOutput);
+        var output = EncodeQr(payload, ref options, errorCorrectionLevel, logoScale).Render(OutputFormatInfo.Resolve(fullPath, OutputFormat.Png), options, CompressedOutput);
         cancellationToken.ThrowIfCancellationRequested();
         await RenderIO.WriteBinaryAsync(fullPath, output.ToArray(), cancellationToken).ConfigureAwait(false);
     }

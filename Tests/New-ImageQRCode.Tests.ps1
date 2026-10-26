@@ -69,13 +69,14 @@ Describe 'New-ImageQRCode' {
         Assert-ImagePlaygroundQrMessage -FilePath $file -ExpectedMessage 'https://evotec.xyz/logo'
     }
 
-    It 'embeds the logo in SVG output' {
+    It 'preserves visible logo colours in vector SVG output' {
         $file = Join-Path $TestDir 'qr_logo.svg'
         $logo = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
         New-ImageQRCode -Content 'https://evotec.xyz/logo' -FilePath $file -LogoPath $logo
         [xml] $svg = Get-Content -LiteralPath $file -Raw
-        $svg.SelectNodes("//*[local-name()='image']").Count | Should -BeGreaterThan 0
-        Get-Content -LiteralPath $file -Raw | Should -Match 'data:image/png;base64,'
+        $svg.SelectNodes("//*[local-name()='image']").Count | Should -Be 0
+        $colours = @($svg.SelectNodes("//*[local-name()='path']") | ForEach-Object { $_.GetAttribute('fill') } | Sort-Object -Unique)
+        $colours.Count | Should -BeGreaterThan 2
     }
 
     It 'throws before writing output when logo file is missing' {
@@ -114,7 +115,7 @@ Describe 'New-ImageQRCode' {
 
     }
 
-    It 'creates QR code in an owner-supported vector format' {
+    It 'creates QR code in a supported vector format' {
         $file = Join-Path $TestDir 'qr.svg'
 
         if (Test-Path -Path $file) { Remove-Item -Path $file }
@@ -193,12 +194,108 @@ Describe 'New-ImageQRCode' {
         }
     }
 
-    It 'applies -LogoScale to the centered logo' {
+    It 'renders a coordinated preset with a caption outside the quiet zone' {
+        $file = Join-Path $TestDir 'qr-preset-caption.png'
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Preset Sunset -Frame ScanMePill -Caption 'EXPLORE' -ErrorCorrection H
+        (Get-ImageQRCode -FilePath $file).Text | Should -Be 'https://evotec.xyz'
+        $image = Get-Image -FilePath $file
+        try {
+            $image.Height | Should -BeGreaterThan $image.Width
+        } finally {
+            $image.Dispose()
+        }
+    }
+
+    It 'exports a framed preset as SVG with vector coverage' {
+        $file = Join-Path $TestDir 'qr-preset-frame.svg'
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Preset Ink -EyeShape Rounded -EyeBall Circle -Frame CornerViewfinder -Caption 'SCAN ME' -ErrorCorrection H
+        [xml] $svg = Get-Content -LiteralPath $file -Raw
+        $svg.DocumentElement.LocalName | Should -Be 'svg'
+        $svg.DocumentElement.GetAttribute('viewBox') | Should -Not -BeNullOrEmpty
+        $svg.GetElementsByTagName('path').Count | Should -BeGreaterThan 0
+        $svg.GetElementsByTagName('image').Count | Should -Be 0
+    }
+
+    It 'supports two gradient colours and a separate eye ball' {
+        $file = Join-Path $TestDir 'qr-gradient-ball.png'
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Preset Ink -EyeBall Circle -Gradient '#431b1b', '#8c2059' -ErrorCorrection H
+        (Get-ImageQRCode -FilePath $file).Text | Should -Be 'https://evotec.xyz'
+        { New-ImageQRCode -Content 'x' -FilePath $file -Gradient '#431b1b' } | Should -Throw
+    }
+
+    It 'applies -LogoScale to the budgeted logo through the Logo alias' {
         $file = Join-Path $TestDir 'qr-logo-scale.png'
         $logo = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
-        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -LogoPath $logo -LogoScale 0.2 -ErrorCorrection H
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Logo $logo -LogoScale 0.2 -ErrorCorrection H
 
         (Get-ImageQRCode -FilePath $file).Text | Should -Be 'https://evotec.xyz'
     }
 
+    It 'keeps a logo inside Size after restoring the protected quiet zone' {
+        $file = Join-Path $TestDir 'qr-logo-size-protected.png'
+        $logo = Join-Path $PSScriptRoot '../Sources/ImagePlayground.Tests/Images/LogoEvotec.png'
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Preset Ink -Logo $logo -LogoScale 0.2 -Size 300 -QuietZone 0 -ErrorCorrection H
+        $image = Get-Image -FilePath $file
+        try {
+            $image.Width | Should -BeLessOrEqual 300
+            $image.Height | Should -BeLessOrEqual 300
+        } finally {
+            $image.Dispose()
+        }
+        (Get-ImageQRCode -FilePath $file).Text | Should -Be 'https://evotec.xyz'
+        $before = [Convert]::ToBase64String([IO.File]::ReadAllBytes($file))
+        { New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Preset Ink -Logo $logo -LogoScale 0.2 -Size 21 -QuietZone 0 -ErrorCorrection H } | Should -Throw
+        [Convert]::ToBase64String([IO.File]::ReadAllBytes($file)) | Should -Be $before
+    }
+
+    It 'lets explicit foreground replace a preset gradient and explicit Gradient override it again' {
+        $file = Join-Path $TestDir 'qr-colour-override.svg'
+        $settings = @{ Preset = 'Sunset'; ForegroundColor = '#14213d'; ModuleShape = 'Square'; EyeShape = 'Square'; EyeBall = 'Square'; ErrorCorrection = 'H' }
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file @settings
+        [xml] $svg = Get-Content -LiteralPath $file -Raw
+        $colours = @($svg.SelectNodes("//*[local-name()='path']") | ForEach-Object { $_.GetAttribute('fill') } | Sort-Object -Unique)
+        ($colours -contains '#14213D') | Should -BeTrue
+        $colours.Count | Should -Be 2
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file @settings -Gradient '#431b1b', '#8c2059'
+        [xml] $svg = Get-Content -LiteralPath $file -Raw
+        $colours = @($svg.SelectNodes("//*[local-name()='path']") | ForEach-Object { $_.GetAttribute('fill') } | Sort-Object -Unique)
+        $colours.Count | Should -BeGreaterThan 2
+    }
+
+    It 'keeps Frame None free of an implicit caption' {
+        $file = Join-Path $TestDir 'qr-no-frame.png'
+        New-ImageQRCode -Content 'https://evotec.xyz' -FilePath $file -Preset Ink -Frame None -ErrorCorrection H
+        $image = Get-Image -FilePath $file
+        try {
+            $image.Height | Should -Be $image.Width
+        } finally {
+            $image.Dispose()
+        }
+    }
+
+    It 'uses the block budget for the default logo and respects an explicit smaller cap' {
+        $logo = Join-Path $TestDir 'budget-badge.png'
+        New-ImageCanvas -Width 80 -Height 80 -Theme Light -Backdrop Plain -BackgroundTop '#431b1b' -BackgroundBottom '#431b1b' -PngOutputScale 1 -LayerDefinition {
+            New-ImageCanvasText -X 26 -Y 2 -Width 50 -Text 'E' -FontSize 56 -Color White -Emphasized
+        } -FilePath $logo
+        $defaultFile = Join-Path $TestDir 'logo-budget-default.svg'
+        $limitedFile = Join-Path $TestDir 'logo-budget-limited.svg'
+        $payload = 'https://example.com/brand/budget'
+        New-ImageQRCode -Content $payload -FilePath $defaultFile -Logo $logo -ErrorCorrection H
+        New-ImageQRCode -Content $payload -FilePath $limitedFile -Logo $logo -LogoScale 0.1 -ErrorCorrection H
+        $measureLogo = {
+            param($Path)
+            [xml] $svg = Get-Content -LiteralPath $Path -Raw
+            $paths = @($svg.SelectNodes("//*[local-name()='path' and @fill='#431B1B']"))
+            $paths.Count | Should -BeGreaterThan 0
+            $rectangles = @($paths | ForEach-Object { [regex]::Matches($_.GetAttribute('d'), 'M(\d+) (\d+)h(\d+)v(\d+)h-\d+z') })
+            $left = ($rectangles | ForEach-Object { [int] $_.Groups[1].Value } | Measure-Object -Minimum).Minimum
+            $right = ($rectangles | ForEach-Object { [int] $_.Groups[1].Value + [int] $_.Groups[3].Value } | Measure-Object -Maximum).Maximum
+            $right - $left
+        }
+        (& $measureLogo $defaultFile) | Should -BeGreaterThan (& $measureLogo $limitedFile)
+        $png = Join-Path $TestDir 'logo-budget-default.png'
+        New-ImageQRCode -Content $payload -FilePath $png -Logo $logo -ErrorCorrection H
+        (Get-ImageQRCode -FilePath $png).Text | Should -Be $payload
+    }
 }

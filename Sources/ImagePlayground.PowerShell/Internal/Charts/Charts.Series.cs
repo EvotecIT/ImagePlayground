@@ -64,7 +64,7 @@ internal static partial class Charts {
         }
 
         if (definition.SecondaryAxis) {
-            series.UseSecondaryYAxis();
+            series.UseSecondaryValueAxis();
         }
         chart.AddSeries(series);
     }

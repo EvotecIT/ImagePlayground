@@ -9,6 +9,7 @@ namespace ImagePlayground.PowerShell;
 
 /// <summary>Generates a QR code image from plain text content.</summary>
 /// <para>Use this cmdlet when the QR payload is already available as a raw string.</para>
+/// <para>Styled artwork and budgeted logos must pass the native CodeGlyphX guardrails. The limited decoder used by Windows PowerShell 5.1 can reject artwork accepted by PowerShell 7. Rendering then throws rather than writing unverified output; simplify the design or validate it with a modern runtime.</para>
 /// <example>
 ///   <summary>Create QR code</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -36,6 +37,21 @@ namespace ImagePlayground.PowerShell;
 ///   <code>'EVO-LAP-0142', 'EVO-LAP-0177' | ForEach-Object { New-ImageQRCode -Content "https://assets.example.com/$_" -FilePath "$_.png" -QuietZone 2 -Size 300 }</code>
 ///   <para>PNG output is compressed; a typical URL code at 300 px is about 1 KB.</para>
 /// </example>
+/// <example>
+///   <summary>Use a coordinated look with a caption</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCode -Content 'https://example.com/menu' -FilePath menu.png -Preset Sunset -Frame ScanMePill -Caption 'VIEW THE MENU' -ErrorCorrection H</code>
+/// </example>
+/// <example>
+///   <summary>Export styled SVG with separate finder shapes</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCode -Content 'https://example.com' -FilePath styled.svg -Preset Ink -EyeShape Rounded -EyeBall Circle -ErrorCorrection H</code>
+/// </example>
+/// <example>
+///   <summary>Apply two colours and a budgeted logo</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-ImageQRCode -Content 'https://example.com' -FilePath brand.png -Preset Brand -Gradient '#431b1b', '#8c2059' -Logo logo.png -LogoScale 0.3 -ErrorCorrection H</code>
+/// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCode")]
 [Alias("New-QRCode")]
 public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
@@ -52,10 +68,32 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public SwitchParameter Show { get; set; }
 
-    /// <summary>Optional logo image to place at the center of the QR code.</summary>
-    /// <para>The logo fits within one eighth of the image width, retaining its aspect ratio. It is normalized before CodeGlyphX embeds it in raster or SVG output, without a background plate. Invalid logos leave an existing destination intact.</para>
+    /// <summary>Optional logo placed near the centre while preserving functional patterns.</summary>
+    /// <para>CodeGlyphX sizes the padded logo against each affected correction block. By default, the correction-block budget determines the largest safe placement; -LogoScale adds a caller-selected size limit. Unreadable or invisible artwork fails before replacing the output. Raster and SVG formats use the same placement.</para>
     [Parameter]
+    [Alias("Logo")]
     public string? LogoPath { get; set; }
+
+    /// <summary>Coordinated QR appearance, such as Ink, Sunset, Ocean or Brand.</summary>
+    [Parameter]
+    public QrHeroPreset Preset { get; set; }
+
+    /// <summary>Shape of the finder centres, independently of -EyeShape.</summary>
+    [Parameter]
+    public QrModuleShape EyeBall { get; set; }
+
+    /// <summary>Two foreground colours, from left to right, for example '#9c3411', '#8c2059'.</summary>
+    [Parameter]
+    [ValidateCount(2, 2)]
+    public OfficeIMO.Drawing.OfficeColor[]? Gradient { get; set; }
+
+    /// <summary>Frame template outside the complete QR quiet zone.</summary>
+    [Parameter]
+    public QrCanvasTemplate Frame { get; set; }
+
+    /// <summary>Caption below the code. A frame uses SCAN ME when no caption is supplied.</summary>
+    [Parameter]
+    public string? Caption { get; set; }
 
     /// <summary>Create the QR code with a transparent background.</summary>
     [Parameter]
@@ -74,8 +112,8 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [ValidateRange(1, 1000)]
     public int PixelSize { get; set; } = 20;
 
-    /// <summary>Target image width and height in pixels, including the quiet zone.</summary>
-    /// <para>The module size is the largest whole number of pixels that fits, so the image can be a few pixels smaller than requested.</para>
+    /// <summary>Target width and height in pixels for the QR panel, including its quiet zone. Frames, captions, padding, and shadows add pixels outside this target.</summary>
+    /// <para>The QR panel includes its quiet zone and uses the largest whole number of module pixels that fits, so the panel can be a few pixels smaller than requested. Frames, captions, padding, and shadows add pixels outside the panel.</para>
     [Parameter]
     [ValidateRange(21, 20000)]
     public int Size { get; set; }
@@ -91,7 +129,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     public QrErrorCorrectionLevel ErrorCorrection { get; set; } = QrErrorCorrectionLevel.Q;
 
     /// <summary>Shape of the data modules, for example Square, Rounded, Circle, Dot, or Diamond.</summary>
-    /// <para>Finder and timing patterns stay readable. ConnectedRounded and ConnectedSquircle are raster-only and cannot be written to .svg or .html.</para>
+    /// <para>Finder and timing patterns stay readable. SVG supports the coordinated shapes through vector coverage contours.</para>
     [Parameter]
     public QrModuleShape ModuleShape { get; set; } = QrModuleShape.Square;
 
@@ -103,7 +141,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     [Parameter]
     public OfficeIMO.Drawing.OfficeColor EyeColor { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
 
-    /// <summary>Logo width as a fraction of the symbol width (0.05 to 0.4). Defaults to one eighth of the image. Use -ErrorCorrection H for larger logos.</summary>
+    /// <summary>Logo width as a fraction of the symbol width (0.05 to 0.4). Omit this option to use the correction-block budget. Use -ErrorCorrection H for larger logos.</summary>
     [Parameter]
     [ValidateRange(0.05D, 0.4D)]
     public double LogoScale { get; set; }
@@ -122,15 +160,20 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
         var bound = MyInvocation.BoundParameters;
         var style = new QrImageStyle {
             Transparent = Transparent.IsPresent,
-            ForegroundColor = ForegroundColor,
-            BackgroundColor = BackgroundColor,
+            ForegroundColor = bound.ContainsKey(nameof(ForegroundColor)) ? ForegroundColor : null,
+            BackgroundColor = bound.ContainsKey(nameof(BackgroundColor)) ? BackgroundColor : null,
             PixelSize = PixelSize,
             Size = bound.ContainsKey(nameof(Size)) ? Size : null,
             QuietZone = bound.ContainsKey(nameof(QuietZone)) ? QuietZone : null,
             ModuleShape = bound.ContainsKey(nameof(ModuleShape)) ? ModuleShape : null,
             EyeShape = bound.ContainsKey(nameof(EyeShape)) ? EyeShape : null,
             EyeColor = bound.ContainsKey(nameof(EyeColor)) ? EyeColor : null,
-            LogoScale = bound.ContainsKey(nameof(LogoScale)) ? LogoScale : null
+            LogoScale = bound.ContainsKey(nameof(LogoScale)) ? LogoScale : null,
+            Preset = bound.ContainsKey(nameof(Preset)) ? Preset : null,
+            EyeBall = bound.ContainsKey(nameof(EyeBall)) ? EyeBall : null,
+            Gradient = Gradient,
+            Frame = bound.ContainsKey(nameof(Frame)) ? Frame : null,
+            Caption = Caption
         };
 
         await ImagePlayground.QrCode.GenerateAsync(Content, FilePath, style, ErrorCorrection, logoPath, CancelToken).ConfigureAwait(false);

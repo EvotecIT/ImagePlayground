@@ -1,6 +1,6 @@
 ---
-title: "Create a QR code with a logo"
-description: "Use ImagePlayground to generate a QR code and add a watermark image."
+title: "Style a QR code with a logo and caption"
+description: "Create coordinated PNG and SVG QR artwork, draw a local logo and verify the payload with ImagePlayground."
 layout: docs
 meta.project_base_slug: "imageplayground"
 meta.project_name: "ImagePlayground"
@@ -9,46 +9,61 @@ meta.project_hub_path: "/projects/imageplayground/"
 meta.project_link_examples: "/projects/imageplayground/examples/"
 ---
 
-This pattern is useful when a generated QR code needs to carry brand context in a report, handout, or static page.
+Create a menu code with a caption, export a styled SVG, and add a logo whose size respects the QR correction budget. This example draws its own logo, so it needs no downloaded artwork or sample directory.
 
-It comes from the source example at `Examples/Images.QRCodeWithImage.ps1`.
-
-## When to use this pattern
-
-- You need a QR code as a generated image file.
-- You want to add a logo or watermark after generation.
-- The output should be produced from a repeatable PowerShell script.
+Install ImagePlayground, then save the script below as `QRCode-Art.ps1` and run it. It writes into `qr-art` beneath the current directory; use `-OutputDirectory` to choose another folder.
 
 ## Example
 
 ```powershell
-Import-Module ImagePlayground
-
-$qrPath = "$PSScriptRoot\Samples\QRCode.png"
-$outputPath = "$PSScriptRoot\Output\QRCodeWithImage.jpg"
-
-New-ImageQRCode -Content 'https://example.com/helpdesk' -FilePath $qrPath -Verbose
-
-$image = Get-Image -FilePath $qrPath
-$image.WatermarkImage(
-    "$PSScriptRoot\Samples\LogoEvotec.png",
-    [ImagePlayground.WatermarkPlacement]::TopLeft,
-    1,
-    0.5,
-    0,
-    [ImagePlayground.FlipMode]::None,
-    50
+#Requires -Modules ImagePlayground
+param(
+    [string] $OutputDirectory = (Join-Path (Get-Location) 'qr-art')
 )
 
-Save-Image -Image $image -Open -FilePath $outputPath
+New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
+$url = 'https://example.com/menu'
+
+# Choose a coordinated look and keep the caption outside the QR quiet zone.
+New-ImageQRCode -Content $url -FilePath (Join-Path $OutputDirectory 'menu.png') `
+    -Preset Sunset -Frame ScanMePill -Caption 'VIEW THE MENU' -PixelSize 16 -ErrorCorrection H
+
+# The extension selects SVG. EyeShape and EyeBall can be set independently.
+New-ImageQRCode -Content $url -FilePath (Join-Path $OutputDirectory 'vector.svg') `
+    -Preset Ink -EyeShape Rounded -EyeBall Circle -Frame CornerViewfinder `
+    -Caption 'SCAN TO EXPLORE' -PixelSize 16 -ErrorCorrection H
+
+# Draw the example logo locally; no external image is required.
+$logo = Join-Path $OutputDirectory 'logo.png'
+New-ImageCanvas -Width 80 -Height 80 -Theme Light -Backdrop Plain `
+    -BackgroundTop '#431b1b' -BackgroundBottom '#431b1b' -PngOutputScale 1 `
+    -LayerDefinition {
+        New-ImageCanvasText -X 26 -Y 2 -Width 50 -Text 'E' -FontSize 56 -Color White -Emphasized
+    } -FilePath $logo
+
+New-ImageQRCode -Content $url -FilePath (Join-Path $OutputDirectory 'brand.png') `
+    -Preset Brand -Gradient '#431b1b', '#8c2059' -Logo $logo `
+    -PixelSize 16 -ErrorCorrection H
+
+# Inspect the generated payloads before distributing the final assets.
+Get-ChildItem -LiteralPath $OutputDirectory -Filter '*.png' |
+    Where-Object { $_.Name -ne 'logo.png' } |
+    ForEach-Object {
+        [pscustomobject] @{
+            File = $_.Name
+            Text = (Get-ImageQRCode -FilePath $_.FullName).Text
+        }
+    }
 ```
 
-## What this demonstrates
+## Choosing a look
 
-- generating a QR code image
-- loading the image for additional processing
-- saving a watermarked output file
+`-Preset` supplies the body, finder shapes and colours together. An explicit `-ForegroundColor` replaces the preset gradient; an explicit two-colour `-Gradient` takes precedence over that solid colour. `-EyeShape` controls the finder ring, and `-EyeBall` controls its centre. The output extension selects PNG or SVG.
+
+Captions and frames sit outside the complete quiet zone. `-Size` bounds the QR panel; a caption or frame can make the complete canvas larger. `-Logo` is an alias for `-LogoPath`. Logo placement preserves functional patterns and throws when the requested minimum cannot fit or the rendered pixels fail validation.
+
+Native validation checks the generated artwork. Inspect and scan the final exported asset on the intended device before distributing it, especially after resizing or printing. Windows PowerShell 5.1 uses a more limited managed decoder and can reject artwork that PowerShell 7 accepts.
 
 ## Source
 
-- [Images.QRCodeWithImage.ps1](https://github.com/EvotecIT/ImagePlayground/blob/master/Examples/Images.QRCodeWithImage.ps1)
+- [QRCode-Art.ps1](https://github.com/EvotecIT/ImagePlayground/blob/master/Examples/QRCode-Art.ps1)

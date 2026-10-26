@@ -33,8 +33,7 @@ public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     [Alias("FullName", "Path")]
     public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>Formats to look for. Defaults to every image-scannable format except QR, Pharmacode, and Patch Code.</summary>
-    /// <para>Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.</para>
+    /// <summary>Barcode formats to look for. Defaults to CodeGlyphX default scan formats, excluding QR formats. Select other catalogue formats through Type or ScanOptions.Formats. QrCode, MicroQrCode, and RmQrCode are rejected; use Get-ImageQRCode, QrCode.Read, or SymbolScanner for QR recognition.</summary>
     [Parameter]
     public SymbolFormat[]? Type { get; set; }
 
@@ -44,7 +43,7 @@ public sealed class GetImageBarCodeCmdlet : AsyncImageCmdlet {
     public double TimeoutSeconds { get; set; } = 5D;
 
     /// <summary>Recognition formats, deadline, image limits, and accuracy options.</summary>
-    /// <para>When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</para>
+    /// <para>When omitted, scans allow five seconds and use CodeGlyphX default scan formats, excluding QR formats. Other catalogue formats can be selected through Type or ScanOptions.Formats when ScanOptions is supplied. QrCode, MicroQrCode, and RmQrCode are rejected through either selection path; use Get-ImageQRCode, QrCode.Read, or SymbolScanner for QR recognition. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.</para>
     [Parameter]
     public ScanOptions? ScanOptions { get; set; }
 

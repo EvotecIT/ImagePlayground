@@ -16,8 +16,8 @@ These examples are selected from the ImagePlayground repository because they sho
 <div class="ev-example-card-grid">
   <a class="ev-example-card" href="./qr-code-with-logo/">
     <span class="ev-example-card__eyebrow">QR code</span>
-    <h3>Create a QR code with a logo</h3>
-    <p>Generate a QR code and apply a watermark image before saving the result.</p>
+    <h3>Style a QR code with a logo and caption</h3>
+    <p>Choose a preset, draw a local logo, export PNG and SVG, and verify the payload.</p>
   </a>
   <a class="ev-example-card" href="./barcode-roundtrip/">
     <span class="ev-example-card__eyebrow">Barcode</span>

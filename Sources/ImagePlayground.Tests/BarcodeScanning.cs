@@ -58,12 +58,14 @@ public partial class ImagePlayground {
     }
 
     [Fact]
-    public async Task QrLogoSvgEmbedsImageAndInvalidLogoPreservesOutput() {
+    public async Task QrLogoSvgContainsLogoArtworkAndInvalidLogoPreservesOutput() {
         string path = Path.Combine(_directoryWithTests, "qr-logo.svg");
         string logo = Path.Combine(_directoryWithImages, "LogoEvotec.png");
         await QrCode.GenerateAsync("https://example.com/logo", path, logo);
         var document = System.Xml.Linq.XDocument.Load(path);
-        Assert.Contains(document.Descendants(), element => element.Name.LocalName == "image" && element.Attributes().Any(attribute => attribute.Value.StartsWith("data:image/png;base64,")));
+        // This grayscale logo contributes paint beyond the QR's solid black and white.
+        Assert.Contains(document.Descendants(), element => element.Name.LocalName == "path"
+            && element.Attribute("fill") is { } fill && fill.Value != "#000000" && fill.Value != "#FFFFFF");
         string previous = File.ReadAllText(path);
         await Assert.ThrowsAsync<FileNotFoundException>(() => QrCode.GenerateAsync("changed", path, path + ".missing"));
         Assert.Equal(previous, File.ReadAllText(path));

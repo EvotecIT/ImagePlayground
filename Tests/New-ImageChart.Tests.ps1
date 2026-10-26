@@ -470,9 +470,9 @@ Describe 'New-ImageChart' {
             New-ImageChartArea -Name Baseline -Value 1, 1, 1 -SecondaryAxis
         }
 
-        $chart.Series[0].YAxis.ToString() | Should -Be 'Primary'
-        $chart.Series[1].YAxis.ToString() | Should -Be 'Secondary'
-        $chart.Series[2].YAxis.ToString() | Should -Be 'Secondary'
+        $chart.Series[0].ValueAxis.ToString() | Should -Be 'Primary'
+        $chart.Series[1].ValueAxis.ToString() | Should -Be 'Secondary'
+        $chart.Series[2].ValueAxis.ToString() | Should -Be 'Secondary'
         Get-Content -Path $file -Raw | Should -Match 'Error rate \(%\)'
     }
 

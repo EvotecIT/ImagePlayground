@@ -12,13 +12,13 @@ namespace ImagePlayground.PowerShell;
 /// <example>
 ///   <summary>Create a Swiss QR payment code</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath swiss.png</code>
+///   <code>New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -ReferenceType NON -FilePath swiss.png</code>
 ///   <para>Renders a Swiss QR payment code from the payment fields supplied to the cmdlet.</para>
 /// </example>
 /// <example>
 ///   <summary>Create a Swiss QR code with amount, message, and custom colors</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-ImageQRCodeSwiss -Iban 'CH4431999123000889012' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 249.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show</code>
+///   <code>New-ImageQRCodeSwiss -Iban 'CH9300762011623852957' -CreditorName 'Evotec GmbH' -CreditorStreet 'Main Street' -CreditorHouseNumber '1' -CreditorPostalCode '8000' -CreditorCity 'Zurich' -CreditorCountry 'CH' -Amount 249.99 -UnstructuredMessage 'Invoice 2026-041' -FilePath swiss-branded.png -ForegroundColor DarkBlue -BackgroundColor WhiteSmoke -PixelSize 14 -Show</code>
 ///   <para>Creates a styled Swiss QR payment image and opens it immediately after generation.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "ImageQRCodeSwiss")]

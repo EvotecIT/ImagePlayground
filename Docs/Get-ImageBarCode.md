@@ -75,7 +75,7 @@ Accept wildcard characters: False
 ```
 
 ### -ScanOptions
-When omitted, scans allow five seconds and exclude QR, Pharmacode, and Patch Code. Explicit formats can opt into Pharmacode or Patch Code. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.
+When omitted, scans allow five seconds and use CodeGlyphX default scan formats, excluding QR formats. Other catalogue formats can be selected through Type or ScanOptions.Formats when ScanOptions is supplied. QrCode, MicroQrCode, and RmQrCode are rejected through either selection path; use Get-ImageQRCode, QrCode.Read, or SymbolScanner for QR recognition. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.
 
 ```yaml
 Type: ScanOptions
@@ -107,13 +107,13 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-Postnet, Planet, MicroPDF417, and the stacked GS1 DataBar formats cannot be read from images by CodeGlyphX 3.0.0.
+Barcode formats to look for. Defaults to CodeGlyphX default scan formats, excluding QR formats. Select other catalogue formats through Type or ScanOptions.Formats. QrCode, MicroQrCode, and RmQrCode are rejected; use Get-ImageQRCode, QrCode.Read, or SymbolScanner for QR recognition.
 
 ```yaml
 Type: SymbolFormat[]
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: QrCode, MicroQrCode, Aztec, Code128, Gs1Code128, Code39, Code93, Ean, UpcA, UpcE, Itf14, Itf, Industrial2Of5, Matrix2Of5, Iata2Of5, PatchCode, Codabar, Msi, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, Gs1DataBarTruncated, Gs1DataBarOmnidirectional, Gs1DataBarStacked, Gs1DataBarExpanded, Gs1DataBarExpandedStacked, UspsIntelligentMail, KixCode, DataMatrix, Pdf417, MicroPdf417, RmQrCode, Gs1DataBarLimited, Gs1DataBarStackedOmnidirectional, MaxiCode, DotCode, HanXin, Gs1Composite
+Possible values: QrCode, MicroQrCode, Aztec, Code128, Gs1Code128, Code39, Code93, Ean, UpcA, UpcE, Itf14, Itf, Industrial2Of5, Matrix2Of5, Iata2Of5, PatchCode, Codabar, Msi, Code11, Plessey, Telepen, Pharmacode, PharmacodeTwoTrack, Code32, Postnet, Planet, RoyalMail4State, AustraliaPost, JapanPost, Gs1DataBarTruncated, Gs1DataBarOmnidirectional, Gs1DataBarStacked, Gs1DataBarExpanded, Gs1DataBarExpandedStacked, UspsIntelligentMail, KixCode, DataMatrix, Pdf417, MicroPdf417, RmQrCode, Gs1DataBarLimited, Gs1DataBarStackedOmnidirectional, MaxiCode, DotCode, HanXin, Gs1Composite, Ean2, Ean5, TelepenNumeric, Coop2Of5, Datalogic2Of5, Bc412, FacingIdentificationMark, Daft, Flattermarken, ChannelCode, Code16K, Code49, CodablockF, PosiCode, Mailmark4State, D3Aqr, AztecRune, CodeOne, Ultracode
 
 Required: False
 Position: named
