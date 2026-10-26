@@ -75,7 +75,7 @@ Accept wildcard characters: False
 ```
 
 ### -ScanOptions
-When omitted, scans allow five seconds and use CodeGlyphX default scan formats, excluding QR formats. Other formats marked for explicit selection in the library catalogue require Type. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.
+When omitted, scans allow five seconds and use CodeGlyphX default scan formats, excluding QR formats. Other catalogue formats can be selected through Type or ScanOptions.Formats when ScanOptions is supplied. QrCode, MicroQrCode, and RmQrCode are rejected through either selection path; use Get-ImageQRCode, QrCode.Read, or SymbolScanner for QR recognition. A new ScanOptions object uses CodeGlyphX defaults, including its 500 ms total deadline.
 
 ```yaml
 Type: ScanOptions
@@ -107,7 +107,7 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-Formats to look for. Defaults to CodeGlyphX default scan formats, excluding QR Code, Micro QR, and rectangular Micro QR. Other formats marked for explicit selection in the library catalogue require this parameter.
+Barcode formats to look for. Defaults to CodeGlyphX default scan formats, excluding QR formats. Select other catalogue formats through Type or ScanOptions.Formats. QrCode, MicroQrCode, and RmQrCode are rejected; use Get-ImageQRCode, QrCode.Read, or SymbolScanner for QR recognition.
 
 ```yaml
 Type: SymbolFormat[]
