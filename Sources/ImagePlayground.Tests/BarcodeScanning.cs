@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OfficeIMO.Drawing;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace ImagePlayground.Tests;
@@ -42,6 +43,46 @@ public partial class ImagePlayground {
         Assert.Equal(SymbolFormat.Ean, scan.Symbols[0].Format);
         Assert.Same(formats, options.Formats);
         Assert.Equal(5000, options.TimeoutMilliseconds);
+    }
+
+    [Fact]
+    public void BarcodeScanPreservesCalibratedWhiteEdgeCells() {
+        const string expected = "001109900";
+        string path = Path.Combine(_directoryWithTests, "calibrated-collation.png");
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Flattermarken, expected);
+        BarcodePngRenderer.RenderToFile(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3, QuietZone = 0, HeightModules = 12
+        }, path);
+        var grid = new ImageSamplingGrid(expected.Length * 9, 1);
+        var options = new ScanOptions {
+            Formats = new[] { SymbolFormat.Flattermarken }, SamplingGrid = grid,
+            TimeoutMilliseconds = 5000, MaxSymbols = 1, EnableTileScan = false
+        };
+
+        var scan = BarCode.Scan(path, options);
+
+        Assert.Equal(expected, Assert.Single(scan.Symbols).Text);
+        Assert.Same(grid, options.SamplingGrid);
+    }
+
+    [Fact]
+    public void BarcodeReadRejectsAnIncompleteNegativeWhileScanRetainsItsReason() {
+        string path = Path.Combine(_directoryWithTests, "incomplete-calibrated-scan.png");
+        using (var image = global::ImagePlayground.Image.FromRaster(new OfficeRasterImage(2400, 2400, OfficeColor.White))) {
+            image.Save(path);
+        }
+        var options = new ScanOptions {
+            Formats = new[] { SymbolFormat.Flattermarken }, SamplingGrid = new ImageSamplingGrid(9, 1),
+            TimeoutMilliseconds = 0, EnableTileScan = false, MaxSymbols = 1,
+            Image = new ImageDecodeOptions { RecognitionBudgetMilliseconds = 1 }
+        };
+
+        var scan = BarCode.Scan(path, options);
+
+        Assert.Equal(ScanStatus.NoSymbolFound, scan.Status);
+        Assert.Equal(ScanCompletionReason.RecognitionBudgetExceeded, scan.CompletionReason);
+        Assert.True(scan.IsPartial);
+        Assert.Throws<TimeoutException>(() => BarCode.Read(path, options));
     }
 
     [Fact]

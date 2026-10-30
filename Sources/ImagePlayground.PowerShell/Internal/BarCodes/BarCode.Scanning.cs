@@ -9,7 +9,7 @@ namespace ImagePlayground;
 
 public partial class BarCode {
     /// <summary>Reads the first barcode, returning null only when a completed scan finds none.</summary>
-    /// <remarks>Default scans allow five seconds and exclude QR, Pharmacode, and Patch Code. The scan deadline starts after input path resolution, including any URL download. Cancellation throws; a deadline throws TimeoutException. Use Scan to retain partial results and completion details.</remarks>
+    /// <remarks>Default scans allow five seconds and exclude QR, Pharmacode, and Patch Code. The scan deadline starts after input path resolution, including any URL download. Cancellation throws; an exhausted deadline or recognition allowance throws TimeoutException. Other incomplete negative scans throw InvalidOperationException. Use Scan to retain partial results and completion details.</remarks>
     public static DetectedSymbol? Read(string filePath) => ReadAsync(filePath).GetAwaiter().GetResult();
 
     /// <summary>Reads the first barcode with explicit scanning options.</summary>
@@ -33,6 +33,12 @@ public partial class BarCode {
         }
         if (scan.CompletionReason == ScanCompletionReason.DeadlineExceeded) {
             throw new TimeoutException(scan.Failure ?? "Barcode recognition exceeded its deadline.");
+        }
+        if (scan.Status == ScanStatus.NoSymbolFound && scan.IsPartial) {
+            if (scan.CompletionReason == ScanCompletionReason.RecognitionBudgetExceeded) {
+                throw new TimeoutException(scan.Failure ?? "Barcode recognition exhausted its allowance before all requested formats were checked.");
+            }
+            throw new InvalidOperationException(scan.Failure ?? $"Barcode recognition did not complete: {scan.CompletionReason}.");
         }
         return scan.Status switch {
             ScanStatus.Success => scan.Symbols.FirstOrDefault(),
@@ -81,6 +87,10 @@ public partial class BarCode {
         return new ScanOptions {
             Formats = formats,
             Region = source.Region,
+            SamplingGrid = source.SamplingGrid,
+            CompositeCarrier = source.CompositeCarrier,
+            AustraliaPostCustomerTable = source.AustraliaPostCustomerTable,
+            AustraliaPostCustomerInfoLength = source.AustraliaPostCustomerInfoLength,
             TimeoutMilliseconds = source.TimeoutMilliseconds,
             MaxSymbols = source.MaxSymbols,
             Deduplicate = source.Deduplicate,
