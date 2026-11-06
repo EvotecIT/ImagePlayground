@@ -163,7 +163,9 @@ Describe 'ChartForgeX visual artifacts' {
         $artifact.OfficeVisualSvg.Count | Should -BeGreaterThan 100
         $artifact.OfficeVisualInterchangeJson.Count | Should -BeGreaterThan 100
         $artifact.OfficeVisualInterchangeSchema | Should -Be 'chartforgex.visual-artifact'
-        $artifact.OfficeVisualInterchangeVersion | Should -Be 1
+        $envelope = [Text.Encoding]::UTF8.GetString($artifact.OfficeVisualInterchangeJson) | ConvertFrom-Json
+        $envelope.version | Should -Be 1
+        $artifact.OfficeVisualInterchangeVersion | Should -Be $envelope.version
         $artifact.OfficeVisualKind | Should -Be 'Chart'
         $artifact.OfficeVisualId | Should -Be 'portable-chart'
         $artifact.OfficeVisualTitle | Should -Be 'Portable chart'

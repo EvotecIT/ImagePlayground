@@ -58,11 +58,6 @@ jobs:
           name: coverage-reports-windows
           path: '**/coverage.cobertura.xml'
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v7
-        with:
-          files: '**/coverage.cobertura.xml'
-
   test-ubuntu:
     name: 'Ubuntu'
     runs-on: ubuntu-latest
@@ -103,11 +98,6 @@ jobs:
           name: coverage-reports-ubuntu
           path: '**/coverage.cobertura.xml'
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v7
-        with:
-          files: '**/coverage.cobertura.xml'
-
   test-macos:
     name: 'macOS'
     runs-on: macos-latest
@@ -147,8 +137,3 @@ jobs:
         with:
           name: coverage-reports-macos
           path: '**/coverage.cobertura.xml'
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v7
-        with:
-          files: '**/coverage.cobertura.xml'

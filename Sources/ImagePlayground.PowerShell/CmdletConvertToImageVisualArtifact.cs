@@ -115,9 +115,10 @@ public sealed class ConvertToImageVisualArtifactCmdlet : PSCmdlet {
         }
 
         SetPortableProperty(output, "OfficeVisualSvg", Encoding.UTF8.GetBytes(artifact.ToSvg()));
-        SetPortableProperty(output, "OfficeVisualInterchangeJson", artifact.ToInterchangeUtf8Json());
-        SetPortableProperty(output, "OfficeVisualInterchangeSchema", VisualArtifactInterchangeEnvelope.SchemaId);
-        SetPortableProperty(output, "OfficeVisualInterchangeVersion", VisualArtifactInterchangeEnvelope.CurrentVersion);
+        var envelope = artifact.ToInterchangeEnvelope();
+        SetPortableProperty(output, "OfficeVisualInterchangeJson", envelope.ToUtf8Json());
+        SetPortableProperty(output, "OfficeVisualInterchangeSchema", envelope.Schema);
+        SetPortableProperty(output, "OfficeVisualInterchangeVersion", envelope.Version);
         SetPortableProperty(output, "OfficeVisualKind", artifact.Kind.ToString());
         SetPortableProperty(output, "OfficeVisualId", artifact.Id);
         SetPortableProperty(output, "OfficeVisualTitle", artifact.Title);
