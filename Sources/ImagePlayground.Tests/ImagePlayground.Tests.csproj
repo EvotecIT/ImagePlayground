@@ -71,4 +71,8 @@
         <Reference Include="System.Net.Http" />
     </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="OfficeIMO" />
+  </ItemGroup>
+
 </Project>

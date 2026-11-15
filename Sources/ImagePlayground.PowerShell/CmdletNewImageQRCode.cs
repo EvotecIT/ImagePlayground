@@ -85,7 +85,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
     /// <summary>Two foreground colours, from left to right, for example '#9c3411', '#8c2059'.</summary>
     [Parameter]
     [ValidateCount(2, 2)]
-    public OfficeIMO.Drawing.OfficeColor[]? Gradient { get; set; }
+    public OfficeIMO.OfficeColor[]? Gradient { get; set; }
 
     /// <summary>Frame template outside the complete QR quiet zone.</summary>
     [Parameter]
@@ -101,11 +101,11 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>Foreground color of QR modules.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor ForegroundColor { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
+    public OfficeIMO.OfficeColor ForegroundColor { get; set; } = OfficeIMO.OfficeColor.Black;
 
     /// <summary>Background color of the QR code.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor BackgroundColor { get; set; } = OfficeIMO.Drawing.OfficeColor.White;
+    public OfficeIMO.OfficeColor BackgroundColor { get; set; } = OfficeIMO.OfficeColor.White;
 
     /// <summary>Pixel size for each QR module. Ignored when -Size is supplied.</summary>
     [Parameter]
@@ -139,7 +139,7 @@ public sealed class NewImageQrCodeCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>Colour of the three finder patterns (eyes).</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor EyeColor { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
+    public OfficeIMO.OfficeColor EyeColor { get; set; } = OfficeIMO.OfficeColor.Black;
 
     /// <summary>Logo width as a fraction of the symbol width (0.05 to 0.4). Omit this option to use the correction-block budget. Use -ErrorCorrection H for larger logos.</summary>
     [Parameter]

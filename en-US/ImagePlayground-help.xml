@@ -358,7 +358,7 @@ image to disk.</maml:para>
         <maml:title>Edit an image and save it</maml:title>
         <dev:code>$img = Get-Image -FilePath in.png&#xD;
 try {&#xD;
-    $img.AddText(10, 10, 'Sample', [OfficeIMO.Drawing.OfficeColor]::Black, 24)&#xD;
+    $img.AddText(10, 10, 'Sample', [OfficeIMO.OfficeColor]::Black, 24)&#xD;
     Save-Image -Image $img -FilePath out.png&#xD;
 } finally {&#xD;
     $img.Dispose()&#xD;

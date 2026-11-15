@@ -20,7 +20,7 @@ Describe 'Compare-Image' {
 
         if (Test-Path $img2) { Remove-Item $img2 }
 
-        Add-ImageText -FilePath $img1 -OutputPath $img2 -Text 'X' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red)
+        Add-ImageText -FilePath $img1 -OutputPath $img2 -Text 'X' -X 1 -Y 1 -Color ([OfficeIMO.OfficeColor]::Red)
 
         $result = Compare-Image -FilePath $img1 -FilePathToCompare $img2
 
@@ -36,7 +36,7 @@ Describe 'Compare-Image' {
 
         if (Test-Path $modified) { Remove-Item $modified }
 
-        Add-ImageText -FilePath $img1 -OutputPath $modified -Text 'Diff' -X 1 -Y 1 -Color ([OfficeIMO.Drawing.OfficeColor]::Red)
+        Add-ImageText -FilePath $img1 -OutputPath $modified -Text 'Diff' -X 1 -Y 1 -Color ([OfficeIMO.OfficeColor]::Red)
 
         $dest = Join-Path $TestDir 'diff.png'
 

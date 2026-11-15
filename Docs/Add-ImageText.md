@@ -31,7 +31,7 @@ Add-ImageText -FilePath in.png -OutputPath out.png -Text "Sample" -X 10 -Y 10
 ```powershell
 $img = Get-Image -FilePath in.png
 try {
-    $img.AddText(10, 10, 'Sample', [OfficeIMO.Drawing.OfficeColor]::Black, 24)
+    $img.AddText(10, 10, 'Sample', [OfficeIMO.OfficeColor]::Black, 24)
     Save-Image -Image $img -FilePath out.png
 } finally {
     $img.Dispose()

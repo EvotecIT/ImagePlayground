@@ -54,11 +54,11 @@ public sealed class NewImageQrCodeShadowSocksCmdlet : AsyncQrCodeCmdlet {
 
     /// <summary>Foreground color of QR modules.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor ForegroundColor { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
+    public OfficeIMO.OfficeColor ForegroundColor { get; set; } = OfficeIMO.OfficeColor.Black;
 
     /// <summary>Background color of the QR code.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor BackgroundColor { get; set; } = OfficeIMO.Drawing.OfficeColor.White;
+    public OfficeIMO.OfficeColor BackgroundColor { get; set; } = OfficeIMO.OfficeColor.White;
 
     /// <summary>Pixel size for each QR module.</summary>
     [Parameter]

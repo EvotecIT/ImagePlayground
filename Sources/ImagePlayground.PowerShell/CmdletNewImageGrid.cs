@@ -26,7 +26,7 @@ public sealed class NewImageGridCmdlet : PSCmdlet {
 
     /// <summary>Background color.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor Color { get; set; } = OfficeIMO.Drawing.OfficeColor.White;
+    public OfficeIMO.OfficeColor Color { get; set; } = OfficeIMO.OfficeColor.White;
 
     /// <summary>Open the image after creation.</summary>
     [Parameter]

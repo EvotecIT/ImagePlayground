@@ -8,8 +8,8 @@ $Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.W
 $Image.WatermarkImage("$PSScriptRoot\Samples\LogoEvotec.png", [ImagePlayground.WatermarkPlacement]::TopLeft, 1, 18, 90)
 # Add watermark with text
 # There are 2 methods to add watermark with text
-#void Watermark(string text, float x, float y, OfficeIMO.Drawing.OfficeColor color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
-#void Watermark(string text, ImagePlayground.WatermarkPlacement placement, OfficeIMO.Drawing.OfficeColor color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
-$Image.Watermark("Evotec", [ImagePlayground.WatermarkPlacement]::TopRight, [OfficeIMO.Drawing.OfficeColor]::Blue, 50, "Calibri")
+#void Watermark(string text, float x, float y, OfficeIMO.OfficeColor color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
+#void Watermark(string text, ImagePlayground.WatermarkPlacement placement, OfficeIMO.OfficeColor color, float fontSize = 16, string fontFamilyName = "Arial", float padding = 18)
+$Image.Watermark("Evotec", [ImagePlayground.WatermarkPlacement]::TopRight, [OfficeIMO.OfficeColor]::Blue, 50, "Calibri")
 
 Save-Image -Image $Image -Open -FilePath $PSScriptRoot\Output\PrzemyslawKlysAndKulkozaurrWatermarkWithText.jpg

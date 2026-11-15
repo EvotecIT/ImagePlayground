@@ -144,7 +144,7 @@ Describe 'New-ImageChart' {
         New-ImageChart -ChartsDefinition {
             New-ImageChartBar -Name 'Jan' -Value @(1,2)
             New-ImageChartBar -Name 'Feb' -Value @(3,4)
-        } -FilePath $file -Width 200 -Height 150 -Background ([OfficeIMO.Drawing.OfficeColor]::Aqua)
+        } -FilePath $file -Width 200 -Height 150 -Background ([OfficeIMO.OfficeColor]::Aqua)
 
         Test-Path -Path $file | Should -BeTrue
     }

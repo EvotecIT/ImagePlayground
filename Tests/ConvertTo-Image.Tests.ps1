@@ -16,7 +16,7 @@ Describe 'ConvertTo-Image' {
 
     It 'copies icon when converting icon to icon' {
         $src = Join-Path $TestDir 'actual-icon-source.ico'
-        $image = [ImagePlayground.Image]::FromRaster([OfficeIMO.Drawing.OfficeRasterImage]::new(16, 16, [OfficeIMO.Drawing.OfficeColor]::Blue))
+        $image = [ImagePlayground.Image]::FromRaster([OfficeIMO.Drawing.OfficeRasterImage]::new(16, 16, [OfficeIMO.OfficeColor]::Blue))
         try {
             $image.Save($src)
         } finally {
@@ -39,7 +39,7 @@ Describe 'ConvertTo-Image' {
     It 'converts a valid image to an icon with the same dimensions and pixels' {
         $src = Join-Path $TestDir 'icon-input.png'
         $dest = Join-Path $TestDir 'valid.ico'
-        $image = [ImagePlayground.Image]::FromRaster([OfficeIMO.Drawing.OfficeRasterImage]::new(16, 9, [OfficeIMO.Drawing.OfficeColor]::Red))
+        $image = [ImagePlayground.Image]::FromRaster([OfficeIMO.Drawing.OfficeRasterImage]::new(16, 9, [OfficeIMO.OfficeColor]::Red))
         try {
             $image.Save($src)
         } finally {
@@ -50,8 +50,8 @@ Describe 'ConvertTo-Image' {
         try {
             $converted.Width | Should -Be 16
             $converted.Height | Should -Be 9
-            $converted.Raster.GetPixel(0, 0) | Should -Be ([OfficeIMO.Drawing.OfficeColor]::Red)
-            $converted.Raster.GetPixel(15, 8) | Should -Be ([OfficeIMO.Drawing.OfficeColor]::Red)
+            $converted.Raster.GetPixel(0, 0) | Should -Be ([OfficeIMO.OfficeColor]::Red)
+            $converted.Raster.GetPixel(15, 8) | Should -Be ([OfficeIMO.OfficeColor]::Red)
         } finally {
             $converted.Dispose()
         }

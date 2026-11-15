@@ -22,7 +22,7 @@ $presentation | New-ImageVisualStory -FilePath '.\requests.svg'
 
 | Previous type | Current type |
 | --- | --- |
-| `SixLabors.ImageSharp.Color` | `OfficeIMO.Drawing.OfficeColor` |
+| `SixLabors.ImageSharp.Color` | `OfficeIMO.OfficeColor` |
 | `SixLabors.ImageSharp.PointF` | `OfficeIMO.Drawing.OfficePoint` |
 | `SixLabors.ImageSharp.Rectangle` | `ImagePlayground.Rectangle` |
 | `SixLabors.Fonts.HorizontalAlignment` | `OfficeIMO.Drawing.OfficeTextAlignment` |
@@ -42,6 +42,7 @@ $presentation | New-ImageVisualStory -FilePath '.\requests.svg'
 
 ```csharp
 using ImagePlayground;
+using OfficeIMO;
 using OfficeIMO.Drawing;
 
 using var image = Image.Load("photo.png");
@@ -79,7 +80,7 @@ File saves replace the destination atomically after encoding. Stream saves keep 
 ```powershell
 $image = Get-Image -FilePath '.\photo.jpg'
 try {
-    $image.AddText(20, 20, 'Caption', [OfficeIMO.Drawing.OfficeColor]::White, 24)
+    $image.AddText(20, 20, 'Caption', [OfficeIMO.OfficeColor]::White, 24)
     $image.SetExifValue([OfficeIMO.Drawing.OfficeExifTag]::Software, 'ImagePlayground')
     Save-Image -Image $image -FilePath '.\captioned.jpg' -Quality 90
 } finally {

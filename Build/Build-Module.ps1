@@ -194,7 +194,7 @@ Build-Module -ModuleName 'ImagePlayground' -RunMode $RunMode -SkipInstall:$SkipI
             'ImagePlayground.Image'
             'ImagePlayground.PowerShell.ImageConsoleStoryStep'
             'ImagePlayground.Rectangle'
-            'OfficeIMO.Drawing.OfficeColor'
+            'OfficeIMO.OfficeColor'
             'OfficeIMO.Drawing.OfficeExifTag'
             'OfficeIMO.Drawing.OfficeExifValue'
             'OfficeIMO.Drawing.OfficeExifDataType'
