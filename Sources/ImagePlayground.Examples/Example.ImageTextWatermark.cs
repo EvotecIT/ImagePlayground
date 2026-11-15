@@ -1,7 +1,7 @@
 using OfficeIMO.Drawing;
-using Color = OfficeIMO.Drawing.OfficeColor;
+using Color = OfficeIMO.OfficeColor;
 using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
-using Rgba32 = OfficeIMO.Drawing.OfficeColor;
+using Rgba32 = OfficeIMO.OfficeColor;
 using System;
 using System.IO;
 
@@ -48,7 +48,7 @@ internal partial class Example {
             image.AddText(500, 140, "Boot Time: ", Color.DarkCyan, 20);
             var bootTime = System.Diagnostics.Process.GetCurrentProcess().StartTime;
             image.AddText(800, 140, bootTime.ToString(), Color.DarkCyan, 20);
-            // get cpu type 
+            // get cpu type
             image.AddText(500, 180, "CPU Type: ", Color.DarkCyan, 20);
             image.AddText(800, 180, Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), Color.DarkCyan, 30);
 

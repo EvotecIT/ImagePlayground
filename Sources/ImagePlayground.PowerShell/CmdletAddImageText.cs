@@ -17,7 +17,7 @@ namespace ImagePlayground.PowerShell;
 ///   <code>
 /// $img = Get-Image -FilePath in.png
 /// try {
-///     $img.AddText(10, 10, 'Sample', [OfficeIMO.Drawing.OfficeColor]::Black, 24)
+///     $img.AddText(10, 10, 'Sample', [OfficeIMO.OfficeColor]::Black, 24)
 ///     Save-Image -Image $img -FilePath out.png
 /// } finally {
 ///     $img.Dispose()
@@ -53,7 +53,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
 
     /// <summary>Text color.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor Color { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
+    public OfficeIMO.OfficeColor Color { get; set; } = OfficeIMO.OfficeColor.Black;
 
     /// <summary>Font size.</summary>
     [Parameter]
@@ -65,7 +65,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
 
     /// <summary>Color of shadow.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor? ShadowColor { get; set; }
+    public OfficeIMO.OfficeColor? ShadowColor { get; set; }
 
     /// <summary>X offset for shadow.</summary>
     [Parameter]
@@ -77,7 +77,7 @@ public sealed class AddImageTextCmdlet : ImageCmdlet {
 
     /// <summary>Outline color.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor? OutlineColor { get; set; }
+    public OfficeIMO.OfficeColor? OutlineColor { get; set; }
 
     /// <summary>Outline width.</summary>
     [Parameter]

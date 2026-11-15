@@ -212,7 +212,7 @@ try {
     $image.Watermark(
         'Internal',
         [ImagePlayground.WatermarkPlacement]::BottomRight,
-        [OfficeIMO.Drawing.OfficeColor]::White,
+        [OfficeIMO.OfficeColor]::White,
         28)
 
     Save-Image -Image $image -FilePath '.\photo-watermarked.jpg' -Quality 88
@@ -748,6 +748,7 @@ The core package targets .NET Standard 2.0, .NET Framework 4.7.2, .NET 8, and .N
 
 ```csharp
 using ImagePlayground;
+using OfficeIMO;
 using OfficeIMO.Drawing;
 
 using var image = ImagePlayground.Image.Load("photo.jpg");

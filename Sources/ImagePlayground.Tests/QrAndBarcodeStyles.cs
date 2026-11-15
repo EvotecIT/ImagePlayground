@@ -23,7 +23,7 @@ public partial class ImagePlayground {
             QuietZone = 2,
             ModuleShape = QrModuleShape.Rounded,
             EyeShape = QrModuleShape.Circle,
-            EyeColor = OfficeIMO.Drawing.OfficeColor.Parse("#4c1d95")
+            EyeColor = OfficeIMO.OfficeColor.Parse("#4c1d95")
         };
         QrCode.Generate("https://codeglyphx.com", file, style, QrErrorCorrectionLevel.H);
 

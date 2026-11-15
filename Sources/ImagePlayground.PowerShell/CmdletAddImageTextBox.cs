@@ -41,7 +41,7 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
 
     /// <summary>Text color.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor Color { get; set; } = OfficeIMO.Drawing.OfficeColor.Black;
+    public OfficeIMO.OfficeColor Color { get; set; } = OfficeIMO.OfficeColor.Black;
 
     /// <summary>Font size.</summary>
     [Parameter]
@@ -61,7 +61,7 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
 
     /// <summary>Color of shadow.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor? ShadowColor { get; set; }
+    public OfficeIMO.OfficeColor? ShadowColor { get; set; }
 
     /// <summary>X offset for shadow.</summary>
     [Parameter]
@@ -73,7 +73,7 @@ public sealed class AddImageTextBoxCmdlet : ImageCmdlet {
 
     /// <summary>Outline color.</summary>
     [Parameter]
-    public OfficeIMO.Drawing.OfficeColor? OutlineColor { get; set; }
+    public OfficeIMO.OfficeColor? OutlineColor { get; set; }
 
     /// <summary>Outline width.</summary>
     [Parameter]

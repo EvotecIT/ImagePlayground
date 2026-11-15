@@ -67,3 +67,7 @@ changing cmdlet docs; don't edit the generated files.
   (or set `ChartForgeXProjectPath` / `CodeGlyphXProjectPath`).
 - Tests read fixtures from `Sources/ImagePlayground.Tests/Images/`. Don't
   replace or re-encode them.
+
+## Test changes
+
+Before adding or changing tests, read the shared [test-audit authoring gate](skills/test-audit/SKILL.md#authoring-gate) and [contract-focused proof guidance](skills/contract-focused-tests/SKILL.md). Resolve these paths under CODEX_HOME, defaulting to ~/.codex. For deliberate pruning, also read [campaign mode](skills/test-audit/CAMPAIGN.md).

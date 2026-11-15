@@ -10,6 +10,7 @@ Use it for image conversion, resizing, cropping, comparison, composition, drawin
 
 ```csharp
 using ImagePlayground;
+using OfficeIMO;
 using OfficeIMO.Drawing;
 
 ImageHelper.Resize("photo.jpg", "photo-small.jpg", width: 800, height: null);

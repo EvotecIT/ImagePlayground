@@ -1,7 +1,7 @@
 using OfficeIMO.Drawing;
-using Color = OfficeIMO.Drawing.OfficeColor;
+using Color = OfficeIMO.OfficeColor;
 using ExifTag = OfficeIMO.Drawing.OfficeExifTag;
-using Rgba32 = OfficeIMO.Drawing.OfficeColor;
+using Rgba32 = OfficeIMO.OfficeColor;
 using System;
 using System.IO;
 
