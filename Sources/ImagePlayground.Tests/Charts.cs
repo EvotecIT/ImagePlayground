@@ -10,17 +10,33 @@ namespace ImagePlayground.Tests;
 
 public partial class ImagePlayground {
     [Theory]
-    [InlineData(global::ImagePlayground.ChartTheme.Default, false)]
-    [InlineData(global::ImagePlayground.ChartTheme.Light, false)]
-    [InlineData(global::ImagePlayground.ChartTheme.Dark, true)]
-    public void Test_ChartDefaultsUseCanonicalThemeWithoutReplacingExplicitPalette(global::ImagePlayground.ChartTheme theme, bool dark) {
-        var expected = ChartForgeX.Themes.VisualTheme.Graphite();
+    [InlineData(global::ImagePlayground.ChartTheme.Default, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.Light, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.Dark, true, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.Colorblind, false, "accessible")]
+    [InlineData(global::ImagePlayground.ChartTheme.Aurora, true, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.Editorial, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.Candy, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.PeopleInfographic, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.Terminal, true, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.TransparentOverlayDark, true, "overlay")]
+    [InlineData(global::ImagePlayground.ChartTheme.Minimal, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.DashboardLight, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.SaasDashboardLight, false, "graphite")]
+    [InlineData(global::ImagePlayground.ChartTheme.RestaurantDashboardLight, false, "graphite")]
+    public void Test_ChartPresetsUseCanonicalThemeWithoutReplacingExplicitPalette(global::ImagePlayground.ChartTheme theme, bool dark, string preset) {
+        var expected = preset switch {
+            "accessible" => ChartForgeX.Themes.VisualTheme.Accessible(),
+            "overlay" => ChartForgeX.Themes.VisualTheme.TransparentOverlay(),
+            _ => ChartForgeX.Themes.VisualTheme.Graphite()
+        };
         var mode = dark ? ChartForgeX.Themes.VisualThemeMode.Dark : ChartForgeX.Themes.VisualThemeMode.Light;
         var chart = global::ImagePlayground.Charts.Create(theme: theme);
 
         Assert.Equal(mode, chart.Options.ThemeMode);
         Assert.Equal(expected.Typography.Family, chart.Options.Theme.Typography.Family);
         Assert.Equal(expected.Resolve(mode).Foreground, chart.Options.Theme.Resolve(mode).Foreground);
+        Assert.Equal(expected.Resolve(mode).Background, chart.Options.Theme.Resolve(mode).Background);
         Assert.Equal(expected.Typography.TitleSize, chart.Options.Theme.Typography.TitleSize);
         Assert.Equal(expected.Resolve(mode).Palette, chart.Options.Theme.Resolve(mode).Palette);
 

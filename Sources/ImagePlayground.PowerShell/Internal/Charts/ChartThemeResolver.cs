@@ -6,17 +6,8 @@ namespace ImagePlayground;
 internal static class ChartThemeResolver {
     /// <summary>Resolves the immutable shared theme for a public preset.</summary>
     public static VisualTheme Resolve(ChartTheme theme) => theme switch {
-        ChartTheme.Colorblind => VisualTheme.Colorblind(),
-        ChartTheme.Aurora => VisualTheme.Aurora(),
-        ChartTheme.Editorial => VisualTheme.Editorial(),
-        ChartTheme.Candy => VisualTheme.Candy(),
-        ChartTheme.PeopleInfographic => VisualTheme.PeopleInfographic(),
-        ChartTheme.Terminal => VisualTheme.Terminal(),
+        ChartTheme.Colorblind => VisualTheme.Accessible(),
         ChartTheme.TransparentOverlayDark => VisualTheme.TransparentOverlay(),
-        ChartTheme.Minimal => VisualTheme.Minimal(),
-        ChartTheme.DashboardLight => VisualTheme.Dashboard(),
-        ChartTheme.SaasDashboardLight => VisualTheme.SaasDashboard(),
-        ChartTheme.RestaurantDashboardLight => VisualTheme.RestaurantDashboard(),
         _ => VisualTheme.Graphite()
     };
 

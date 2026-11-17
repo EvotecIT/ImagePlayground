@@ -3,6 +3,7 @@ namespace ImagePlayground;
 /// <summary>
 /// Available chart themes.
 /// </summary>
+/// <remarks>Legacy presentation names select the canonical Graphite theme in their original light or dark mode.</remarks>
 public enum ChartTheme
 {
     /// <summary>Use the canonical light ChartForgeX colors, typography, and frame style.</summary>
@@ -11,26 +12,26 @@ public enum ChartTheme
     Dark,
     /// <summary>Apply the canonical light ChartForgeX theme.</summary>
     Light,
-    /// <summary>Apply the colorblind-friendly theme.</summary>
+    /// <summary>Apply the Accessible colorblind-friendly Graphite palette.</summary>
     Colorblind,
-    /// <summary>Apply the Aurora presentation theme.</summary>
+    /// <summary>Apply the canonical dark theme; retained as an Aurora compatibility alias.</summary>
     Aurora,
-    /// <summary>Apply the editorial report theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as an editorial compatibility alias.</summary>
     Editorial,
-    /// <summary>Apply the colorful candy theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as a candy compatibility alias.</summary>
     Candy,
-    /// <summary>Apply the people infographic theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as a people infographic compatibility alias.</summary>
     PeopleInfographic,
-    /// <summary>Apply the terminal-inspired theme.</summary>
+    /// <summary>Apply the canonical dark theme; retained as a terminal compatibility alias.</summary>
     Terminal,
     /// <summary>Apply the transparent dark overlay theme.</summary>
     TransparentOverlayDark,
-    /// <summary>Apply the minimal chart theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as a minimal compatibility alias.</summary>
     Minimal,
-    /// <summary>Apply the general dashboard theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as a dashboard compatibility alias.</summary>
     DashboardLight,
-    /// <summary>Apply the SaaS dashboard theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as a SaaS dashboard compatibility alias.</summary>
     SaasDashboardLight,
-    /// <summary>Apply the restaurant dashboard theme.</summary>
+    /// <summary>Apply the canonical light theme; retained as a restaurant dashboard compatibility alias.</summary>
     RestaurantDashboardLight
 }
