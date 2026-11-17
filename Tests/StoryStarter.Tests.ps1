@@ -64,7 +64,9 @@ Describe 'Script and captured-output story starter' {
             $end = $html.IndexOf('</svg>', $start) + 6
             [xml] $animation = $html.Substring($start, $end - $start)
             $writing = @($animation.SelectNodes("//*[local-name()='g' and @data-cfx-scene='write']"))
-            $image = $writing[1].SelectSingleNode(".//*[local-name()='image']")
+            $reference = $writing[1].SelectSingleNode("./*[local-name()='use']").GetAttribute('href').TrimStart('#')
+            $image = $animation.SelectSingleNode("//*[@id='$reference' and local-name()='image']")
+            $image | Should -Not -BeNullOrEmpty
             $payload = $image.GetAttribute('href').Substring('data:image/svg+xml;base64,'.Length)
             [xml] $frame = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($payload))
             $style = if ($appearance -eq 'Windows') { 'WindowsTerminal' } else { 'Linux' }
@@ -105,7 +107,9 @@ Describe 'Script and captured-output story starter' {
         $end = $html.IndexOf('</svg>', $start) + 6
         [xml] $animation = $html.Substring($start, $end - $start)
         $replay = @($animation.SelectNodes("//*[local-name()='g' and @data-cfx-scene='replay']"))
-        $image = $replay[-1].SelectSingleNode(".//*[local-name()='image']")
+        $reference = $replay[-1].SelectSingleNode("./*[local-name()='use']").GetAttribute('href').TrimStart('#')
+        $image = $animation.SelectSingleNode("//*[@id='$reference' and local-name()='image']")
+        $image | Should -Not -BeNullOrEmpty
         $payload = $image.GetAttribute('href').Substring('data:image/svg+xml;base64,'.Length)
         [xml] $frame = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($payload))
         $viewport = $frame.SelectSingleNode("//*[@data-cfx-role='terminal-viewport']")
