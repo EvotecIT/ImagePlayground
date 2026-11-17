@@ -37,8 +37,7 @@ jobs:
       - name: Setup PowerShell modules
         shell: pwsh
         run: |
-          Install-Module Pester -Force -Scope CurrentUser -AllowClobber
-          Install-Module PSPublishModule -Force -Scope CurrentUser -AllowClobber
+          Install-PSResource -Name Pester, PSPublishModule -Repository PSGallery -Scope CurrentUser -TrustRepository -Reinstall -Quiet -ErrorAction Stop
 
       - name: Refresh module manifest
         run: .\Build\Build-Module.ps1 -RunMode Manifest
@@ -90,8 +89,7 @@ jobs:
       - name: Install PowerShell modules
         shell: pwsh
         run: |
-          Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
-          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-PSResource -Name Pester, PSPublishModule -Repository PSGallery -Scope CurrentUser -TrustRepository -Reinstall -Quiet -ErrorAction Stop
 
       - name: Build module layout
         shell: pwsh
